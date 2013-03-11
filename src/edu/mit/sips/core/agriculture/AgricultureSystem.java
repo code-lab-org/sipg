@@ -85,13 +85,6 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public double getLocalFoodSupply();
 		
 		/**
-		 * Gets the national agriculture system.
-		 *
-		 * @return the national agriculture system
-		 */
-		public AgricultureSystem.Local getNationalAgricultureSystem();
-		
-		/**
 		 * Gets the total food supply.
 		 *
 		 * @return the total food supply

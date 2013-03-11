@@ -152,6 +152,8 @@ public class Country extends DefaultSociety implements Society {
 				new ArrayList<InfrastructureElement>();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
+				// TODO, sort of an infinite loop here... 
+				// need to store elements somewhere
 				elements.addAll(((InfrastructureSystem.Local)system)
 						.getInternalElements());
 			}

@@ -29,39 +29,9 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
-		private final double arableLandArea;
-
-		/**
-		 * Instantiates a new city agriculture system.
-		 */
-		protected Local() {
+	public static abstract class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
+		public Local() {
 			super("Agriculture");
-			this.arableLandArea = 0;
-		}
-		
-		/**
-		 * Instantiates a new city agriculture system.
-		 *
-		 * @param arableLandArea the arable land area
-		 */
-		public Local(double arableLandArea) {
-			super("Agriculture");
-			
-			// Validate arable land area.
-			if(arableLandArea < 0) {
-				throw new IllegalArgumentException(
-						"Arable land area cannot be negative.");
-			}
-			this.arableLandArea = arableLandArea;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.AgricultureSystem#getArableLandArea()
-		 */
-		@Override
-		public double getArableLandArea() {
-			return arableLandArea;
 		}
 		
 		/* (non-Javadoc)
@@ -126,7 +96,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public List<AgricultureElement> getExternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
-			for(AgricultureElement element : getNationalAgricultureSystem().getElements()) {
+			// TODO bad practice, assuming super-system is also local
+			AgricultureSystem.Local agricultureSystem = 
+					(AgricultureSystem.Local)getSociety().getSociety().getAgricultureSystem();
+			for(AgricultureElement element : agricultureSystem.getElements()) {
 				// add element if origin is outside this society but destination
 				// is within this society
 				if(!getSociety().getCities().contains(
@@ -217,7 +190,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public List<AgricultureElement> getInternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
-			for(AgricultureElement element : getNationalAgricultureSystem().getElements()) {
+			// TODO bad practice, assuming super-system is also local
+			AgricultureSystem.Local agricultureSystem = 
+					(AgricultureSystem.Local)getSociety().getSociety().getAgricultureSystem();
+			for(AgricultureElement element : agricultureSystem.getInternalElements()) {
 				// add element if origin is inside this society
 				if(getSociety().getCities().contains(
 						getSociety().getCountry().getCity(element.getOrigin()))) {
@@ -247,14 +223,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return getFoodProduction() 
 					+ getFoodInDistribution() 
 					- getFoodOutDistribution();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getNationalAgricultureSystem()
-		 */
-		@Override
-		public AgricultureSystem.Local getNationalAgricultureSystem() {
-			return (AgricultureSystem.Local) getSociety().getCountry().getAgricultureSystem();
 		}
 
 		/* (non-Javadoc)
@@ -330,6 +298,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			
 			for(City city : cities) {
+				// TODO bad practice: assuming all nested cities have local systems
 				AgricultureSystem.Local agricultureSystem = 
 						(AgricultureSystem.Local) city.getAgricultureSystem();
 				
@@ -442,6 +411,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			
 			for(City city : cities) {
+				// TODO bad practice: assuming all nested cities have local systems
 				AgricultureSystem.Local agricultureSystem = 
 						(AgricultureSystem.Local) city.getAgricultureSystem();
 				
