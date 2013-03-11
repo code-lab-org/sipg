@@ -18,6 +18,13 @@ public class NationalPetroleumSystem extends RegionalPetroleumSystem implements 
 			Collections.synchronizedList(new ArrayList<PetroleumElement>());
 	
 	/**
+	 * Instantiates a new national petroleum system.
+	 */
+	public NationalPetroleumSystem() {
+		super("National Petroleum");
+	}
+	
+	/**
 	 * Adds the element.
 	 *
 	 * @param element the element

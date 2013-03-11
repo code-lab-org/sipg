@@ -4,6 +4,13 @@ package edu.mit.sips.core.energy;
  * The Class CityElectricitySystem.
  */
 public class CityElectricitySystem extends DefaultElectricitySystem {
+	
+	/**
+	 * Instantiates a new city electricity system.
+	 */
+	public CityElectricitySystem() {
+		super("City Electricity");
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#initialize(long)

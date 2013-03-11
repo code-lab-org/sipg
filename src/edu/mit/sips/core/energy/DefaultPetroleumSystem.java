@@ -27,9 +27,18 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	
 	/**
 	 * Instantiates a new default petroleum system.
+	 *
+	 * @param name the name
 	 */
-	public DefaultPetroleumSystem() {
-		super("Petroleum");
+	public DefaultPetroleumSystem(String name) {
+		super(name);
+	}
+	
+	/**
+	 * Instantiates a new default petroleum system.
+	 */
+	protected DefaultPetroleumSystem() {
+		
 	}
 	
 	/* (non-Javadoc)
@@ -162,8 +171,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 */
 	@Override
 	public PetroleumSystem getNationalPetroleumSystem() {
-		return ((EnergySystem.Local)getSociety().getEnergySystem())
-				.getNationalEnergySystem().getPetroleumSystem();
+		return getEnergySystem().getNationalEnergySystem().getPetroleumSystem();
 	}
 
 	/* (non-Javadoc)
@@ -174,8 +182,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		return Math.max(0, getPetroleumProduction() 
 				+ getPetroleumInDistribution()
 				- getPetroleumOutDistribution()
-				- ((EnergySystem.Local)getSociety().getEnergySystem())
-				.getElectricitySystem().getPetroleumConsumption());
+				- getEnergySystem().getElectricitySystem().getPetroleumConsumption());
 	}
 
 	/* (non-Javadoc)
@@ -183,8 +190,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 */
 	@Override
 	public double getPetroleumImport() {
-		return Math.max(0, ((EnergySystem.Local)getSociety().getEnergySystem())
-				.getElectricitySystem().getPetroleumConsumption()
+		return Math.max(0, getEnergySystem().getElectricitySystem().getPetroleumConsumption()
 				+ getPetroleumOutDistribution()
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
@@ -249,8 +255,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	@Override
 	public double getSalesRevenue() {
 		return getSociety().getGlobals().getPetroleumDomesticPrice() 
-				* ((EnergySystem.Local)getSociety().getEnergySystem())
-				.getElectricitySystem().getPetroleumConsumption();
+				* getEnergySystem().getElectricitySystem().getPetroleumConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -490,5 +495,36 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			// Don't overwrite existing values.
 			ignore.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Gets the energy system.
+	 *
+	 * @return the energy system
+	 */
+	private EnergySystem.Local getEnergySystem() {
+		return (EnergySystem.Local) getSociety().getEnergySystem();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getProductionCost()
+	 */
+	@Override
+	public double getProductionCost() {
+		if(getPetroleumProduction() > 0) {
+			return getLifecycleExpense() / getPetroleumProduction();
+		}
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getSupplyCost()
+	 */
+	@Override
+	public double getSupplyCost() {
+		if(getTotalPetroleumSupply() > 0) {
+			return getTotalExpense() / getTotalPetroleumSupply();
+		}
+		return 0;
 	}
 }

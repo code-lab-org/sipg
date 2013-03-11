@@ -18,6 +18,13 @@ public class NationalElectricitySystem extends RegionalElectricitySystem impleme
 			Collections.synchronizedList(new ArrayList<ElectricityElement>());
 	
 	/**
+	 * Instantiates a new national electricity system.
+	 */
+	public NationalElectricitySystem() {
+		super("National Electricity");
+	}
+	
+	/**
 	 * Adds the element.
 	 *
 	 * @param element the element

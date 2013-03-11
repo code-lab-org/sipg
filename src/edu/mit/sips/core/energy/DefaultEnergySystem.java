@@ -38,7 +38,7 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		 * Instantiates a new local.
 		 */
 		protected Local() {
-			super("Energy");
+			
 		}
 		
 		/**
@@ -47,8 +47,8 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		 * @param petroleumSystem the petroleum system
 		 * @param electricitySystem the electricity system
 		 */
-		public Local(PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem)  {
-			super("Energy");
+		public Local(String name, PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem)  {
+			super(name);
 			this.petroleumSystem = petroleumSystem;
 			this.electricitySystem = electricitySystem;
 		}

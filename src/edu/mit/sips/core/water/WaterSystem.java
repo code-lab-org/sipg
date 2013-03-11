@@ -146,6 +146,34 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @return the water supply per capita
 		 */
 		public void setWaterSupplyPerCapita(double waterSupplyPerCapita);
+		
+		/**
+		 * Gets the local water fraction.
+		 *
+		 * @return the local water fraction
+		 */
+		public double getLocalWaterFraction();
+		
+		/**
+		 * Gets the renewable water fraction.
+		 *
+		 * @return the renewable water fraction
+		 */
+		public double getRenewableWaterFraction();
+		
+		/**
+		 * Gets the production cost.
+		 *
+		 * @return the production cost
+		 */
+		public double getProductionCost();
+		
+		/**
+		 * Gets the supply cost.
+		 *
+		 * @return the supply cost
+		 */
+		public double getSupplyCost();
 	}
 	
 	/**

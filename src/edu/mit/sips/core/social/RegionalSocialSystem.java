@@ -6,6 +6,22 @@ import edu.mit.sips.core.Society;
  * The Class RegionalSocialSystem.
  */
 public class RegionalSocialSystem extends DefaultSocialSystem.Local {
+	
+	/**
+	 * Instantiates a new regional social system.
+	 */
+	public RegionalSocialSystem() {
+		super("Regional Society");
+	}
+	
+	/**
+	 * Instantiates a new regional social system.
+	 *
+	 * @param name the name
+	 */
+	protected RegionalSocialSystem(String name) {
+		super(name);
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()

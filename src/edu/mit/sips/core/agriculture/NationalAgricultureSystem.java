@@ -18,6 +18,13 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 			Collections.synchronizedList(new ArrayList<AgricultureElement>());
 	
 	/**
+	 * Instantiates a new national agriculture system.
+	 */
+	public NationalAgricultureSystem() {
+		super("National Agriculture");
+	}
+	
+	/**
 	 * Adds the element.
 	 *
 	 * @param element the element

@@ -19,6 +19,7 @@ public class CityAgricultureSystem extends DefaultAgricultureSystem.Local {
 	 * @param arableLandArea the arable land area
 	 */
 	public CityAgricultureSystem(double arableLandArea) {
+		super("City Agriculture");
 		
 		// Validate arable land area.
 		if(arableLandArea < 0) {

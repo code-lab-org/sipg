@@ -103,6 +103,27 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 * @param deltaProductionCost the delta production cost
 		 */
 		public void optimizeFoodProductionAndDistribution(double deltaProductionCost);
+		
+		/**
+		 * Gets the local food fraction.
+		 *
+		 * @return the local food fraction
+		 */
+		public double getLocalFoodFraction();
+		
+		/**
+		 * Gets the production cost.
+		 *
+		 * @return the production cost
+		 */
+		public double getProductionCost();
+		
+		/**
+		 * Gets the supply cost.
+		 *
+		 * @return the supply cost
+		 */
+		public double getSupplyCost();
 	}
 	
 	/**

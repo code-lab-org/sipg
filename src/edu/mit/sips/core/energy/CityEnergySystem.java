@@ -13,7 +13,7 @@ public class CityEnergySystem extends DefaultEnergySystem.Local {
 	 */
 	public CityEnergySystem(double maxPetroleumReservoir,
 			double initialPetroleumReservoir) {
-		super(new CityPetroleumSystem(maxPetroleumReservoir, 
+		super("City Energy", new CityPetroleumSystem(maxPetroleumReservoir, 
 				initialPetroleumReservoir), new CityElectricitySystem());
 	}
 	

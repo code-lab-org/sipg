@@ -33,14 +33,17 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		/**
 		 * Instantiates a new city water system.
 		 *
-		 * @param coastal the coastal
-		 * @param maxWaterReservoirVolume the max water reservoir volume
-		 * @param initialWaterReservoirVolume the initial water reservoir volume
-		 * @param waterReservoirRechargeRate the water reservoir recharge rate
-		 * @param initialWaterSupplyPerCapita the initial water supply per capita
+		 * @param name the name
 		 */
-		public Local() {
-			super("Water");
+		public Local(String name) {
+			super(name);
+		}
+		
+		/**
+		 * Instantiates a new local.
+		 */
+		protected Local() {
+			
 		}
 
 		/* (non-Javadoc)
@@ -114,14 +117,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getNationalWaterSystem()
-		 */
-		@Override
-		public WaterSystem.Local getNationalWaterSystem() {
-			return (WaterSystem.Local) getSociety().getCountry().getWaterSystem();
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
 		 */
 		@Override
@@ -166,6 +161,21 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getLocalWaterFraction()
+		 */
+		@Override
+		public double getLocalWaterFraction() {
+			if(getSociety().getTotalWaterDemand() > 0) {
+				return Math.max(0, getWaterProduction()
+						+ getWaterFromArtesianWell()
+						- getWaterOutDistribution()
+						- getWaterWasted())
+						/ getSociety().getTotalWaterDemand();
+			} 
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getLocalWaterSupply()
 		 */
 		@Override
@@ -174,6 +184,37 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					+ getWaterFromArtesianWell()
 					+ getWaterInDistribution()
 					- getWaterOutDistribution();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getNationalWaterSystem()
+		 */
+		@Override
+		public WaterSystem.Local getNationalWaterSystem() {
+			return (WaterSystem.Local) getSociety().getCountry().getWaterSystem();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
+		 */
+		@Override
+		public double getProductionCost() {
+			if(getWaterProduction() > 0) {
+				return getLifecycleExpense() / getWaterProduction();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getRenewableWaterFraction()
+		 */
+		@Override
+		public double getRenewableWaterFraction() {
+			if(getWaterProduction() + getWaterFromArtesianWell() > 0) {
+				return getRenewableWaterProduction() 
+						/ (getWaterProduction() + getWaterFromArtesianWell());
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -216,12 +257,24 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
+		 */
+		@Override
+		public double getSupplyCost() {
+			if(getTotalWaterSupply() > 0) {
+				return getTotalExpense() / getTotalWaterSupply();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getTotalWaterSupply()
 		 */
 		public double getTotalWaterSupply() {
 			return getLocalWaterSupply() 
 					+ getWaterImport();
 		}
+
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
@@ -278,8 +331,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterProduction()
 		 */
@@ -291,7 +343,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return waterProduction;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
@@ -304,7 +356,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterOutDistribution()
 					- getSociety().getTotalWaterDemand());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterDistribution()
 		 */
@@ -400,7 +452,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				ignore.printStackTrace();
 			}
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterProductionAndDistribution(double)
 		 */

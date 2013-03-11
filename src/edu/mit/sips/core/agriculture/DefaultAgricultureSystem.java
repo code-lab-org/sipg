@@ -30,8 +30,21 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Local.
 	 */
 	public static abstract class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
-		public Local() {
-			super("Agriculture");
+		
+		/**
+		 * Instantiates a new local.
+		 *
+		 * @param name the name
+		 */
+		public Local(String name) {
+			super(name);
+		}
+		
+		/**
+		 * Instantiates a new local.
+		 */
+		protected Local() {
+			
 		}
 		
 		/* (non-Javadoc)
@@ -215,6 +228,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return landAreaUsed;
 		}
 		
+		/**
+		 * Gets the local food fraction.
+		 *
+		 * @return the local food fraction
+		 */
+		@Override
+		public double getLocalFoodFraction() {
+			if(getSociety().getTotalFoodDemand() > 0) {
+				return Math.max(0, (getFoodProduction()
+						- getFoodOutDistribution()
+						- getFoodExport()))
+						/ getSociety().getTotalFoodDemand();
+			} 
+			return 0;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -356,7 +385,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 				ignore.printStackTrace();
 			}
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#optimizeFoodProductionAndDistribution(double)
 		 */
@@ -542,6 +571,28 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 				}
 				System.out.println("];");
 			}
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
+		 */
+		@Override
+		public double getProductionCost() {
+			if(getFoodProduction() > 0) {
+				return getLifecycleExpense() / getFoodProduction();
+			}
+			return 0;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
+		 */
+		@Override
+		public double getSupplyCost() {
+			if(getTotalFoodSupply() > 0) {
+				return getTotalExpense() / getTotalFoodSupply();
+			}
+			return 0;
 		}
 	}
 	

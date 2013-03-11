@@ -18,6 +18,13 @@ public class NationalWaterSystem extends RegionalWaterSystem implements ElementC
 			Collections.synchronizedList(new ArrayList<WaterElement>());
 	
 	/**
+	 * Instantiates a new national water system.
+	 */
+	public NationalWaterSystem() {
+		super("National Water");
+	}
+	
+	/**
 	 * Adds the element.
 	 *
 	 * @param element the element

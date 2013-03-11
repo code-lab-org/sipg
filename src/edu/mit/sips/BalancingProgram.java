@@ -2,6 +2,8 @@ package edu.mit.sips;
 
 import java.util.Arrays;
 
+import javax.swing.SwingUtilities;
+
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.CityAgricultureSystem;
@@ -13,7 +15,8 @@ import edu.mit.sips.core.social.LogisticGrowthModel;
 import edu.mit.sips.core.social.NationalSocialSystem;
 import edu.mit.sips.core.water.CityWaterSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
-import edu.mit.sips.io.Serialization;
+import edu.mit.sips.gui.DataFrame;
+import edu.mit.sips.sim.Simulator;
 
 /**
  * The Class BalancingProgram.
@@ -85,10 +88,7 @@ public class BalancingProgram {
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1965));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
-
-		System.out.println(Serialization.serialize(ksa));
 		
-		/* TODO
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				DataFrame frame = new DataFrame();
@@ -97,6 +97,5 @@ public class BalancingProgram {
 				frame.setVisible(true);
 			}
 		});
-		*/
 	}
 }

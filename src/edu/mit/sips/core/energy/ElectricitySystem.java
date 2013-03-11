@@ -111,4 +111,32 @@ public interface ElectricitySystem extends InfrastructureSystem.Local {
 	 * Optimize electricity distribution.
 	 */
 	public void optimizeElectricityDistribution();
+	
+	/**
+	 * Gets the local electricity fraction.
+	 *
+	 * @return the local electricity fraction
+	 */
+	public double getLocalElectricityFraction();
+	
+	/**
+	 * Gets the renewable electricity fraction.
+	 *
+	 * @return the renewable electricity fraction
+	 */
+	public double getRenewableElectricityFraction();
+	
+	/**
+	 * Gets the production cost.
+	 *
+	 * @return the production cost
+	 */
+	public double getProductionCost();
+	
+	/**
+	 * Gets the supply cost.
+	 *
+	 * @return the supply cost
+	 */
+	public double getSupplyCost();
 }

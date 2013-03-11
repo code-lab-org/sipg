@@ -120,4 +120,18 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	 * @param deltaProductionCost the delta production cost
 	 */
 	public void optimizePetroleumProductionAndDistribution(double deltaProductionCost);
+	
+	/**
+	 * Gets the production cost.
+	 *
+	 * @return the production cost
+	 */
+	public double getProductionCost();
+	
+	/**
+	 * Gets the supply cost.
+	 *
+	 * @return the supply cost
+	 */
+	public double getSupplyCost();
 }

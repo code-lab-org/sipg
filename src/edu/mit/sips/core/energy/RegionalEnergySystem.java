@@ -9,7 +9,8 @@ public class RegionalEnergySystem extends DefaultEnergySystem.Local {
 	 * Instantiates a new regional energy system.
 	 */
 	public RegionalEnergySystem() {
-		super(new RegionalPetroleumSystem(), new RegionalElectricitySystem());
+		super("Regional Energy", new RegionalPetroleumSystem(), 
+				new RegionalElectricitySystem());
 	}
 	
 	/* (non-Javadoc)

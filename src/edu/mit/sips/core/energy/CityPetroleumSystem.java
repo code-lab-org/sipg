@@ -27,6 +27,7 @@ public class CityPetroleumSystem extends DefaultPetroleumSystem {
 	 */
 	public CityPetroleumSystem(double maxPetroleumReservoirVolume,
 			double initialPetroleumReservoirVolume) {
+		super("City Petroleum");
 
 		// Validate max petroleum reservoir.
 		if(maxPetroleumReservoirVolume < 0) {
