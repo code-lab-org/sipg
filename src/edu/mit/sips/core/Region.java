@@ -1,5 +1,7 @@
 package edu.mit.sips.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -7,96 +9,61 @@ import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
-public class Region implements Society {
+/**
+ * The Class Region.
+ */
+public class Region extends DefaultSociety implements Society {
 
-	@Override
-	public List<? extends InfrastructureSystem> getSystems() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Instantiates a new region.
+	 */
+	protected Region() {
+		
 	}
-
-	@Override
-	public double getCashFlow() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	/**
+	 * Instantiates a new region.
+	 *
+	 * @param name the name
+	 * @param nestedSocieties the nested societies
+	 */
+	public Region(String name, List<Society> nestedSocieties,
+			AgricultureSystem.Local agricultureSystem,
+			WaterSystem.Local waterSystem,
+			EnergySystem.Local energySystem,
+			SocialSystem.Local socialSystem) {
+		super(name, nestedSocieties, agricultureSystem, 
+				waterSystem, energySystem, socialSystem);
 	}
-
-	@Override
-	public double getDomesticProduction() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Society getSociety() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AgricultureSystem getAgricultureSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SocialSystem#getCities()
+	 */
 	@Override
 	public List<City> getCities() {
-		// TODO Auto-generated method stub
-		return null;
+		List<City> cities = new ArrayList<City>();
+		for(Society nestedSociety : getNestedSocieties()) {
+			cities.addAll(nestedSociety.getCities());
+		}
+		return Collections.unmodifiableList(cities);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getCountry()
+	 */
 	@Override
-	public EnergySystem getEnergySystem() {
-		// TODO Auto-generated method stub
-		return null;
+	public Country getCountry() {
+		if(getSociety() == null) {
+			throw new IllegalStateException("Society cannot be null.");
+		}
+		return getSociety().getCountry();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getGlobals()
+	 */
 	@Override
-	public List<? extends Society> getNestedSocieties() {
-		// TODO Auto-generated method stub
-		return null;
+	public Globals getGlobals() {
+		return getCountry().getGlobals();
 	}
-
-	@Override
-	public SocialSystem getSocialSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getTotalElectricityDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalFoodDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalPetroleumDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalWaterDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public WaterSystem getWaterSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

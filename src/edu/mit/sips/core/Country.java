@@ -1,111 +1,68 @@
 package edu.mit.sips.core;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.City;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
-public class Country implements Society {
+/**
+ * The Class Country.
+ */
+public class Country extends DefaultSociety implements Society {
+	private final Globals globals = new Globals();	
+	private final double initialFunds;
 
-	@Override
-	public List<? extends InfrastructureSystem> getSystems() {
-		// TODO Auto-generated method stub
-		return null;
+	private double funds, nextFunds;
+
+	/**
+	 * Instantiates a new country.
+	 */
+	protected Country() {
+		this.initialFunds = 0;
+		
 	}
-
-	@Override
-	public double getCashFlow() {
-		// TODO Auto-generated method stub
-		return 0;
+	
+	/**
+	 * Instantiates a new country.
+	 *
+	 * @param name the name
+	 * @param nestedSocieties the nested societies
+	 */
+	public Country(String name, List<Society> nestedSocieties,
+			AgricultureSystem.Local agricultureSystem,
+			WaterSystem.Local waterSystem,
+			EnergySystem.Local energySystem,
+			SocialSystem.Local socialSystem,
+			double initialFunds) {
+		super(name, nestedSocieties, agricultureSystem, 
+				waterSystem, energySystem, socialSystem);
+		
+		// No validation needed for initial funds.
+		this.initialFunds = initialFunds;
 	}
-
-	@Override
-	public double getDomesticProduction() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Society getSociety() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public AgricultureSystem getAgricultureSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SocialSystem#getCities()
+	 */
 	@Override
 	public List<City> getCities() {
-		// TODO Auto-generated method stub
-		return null;
+		List<City> cities = new ArrayList<City>();
+		for(Society nestedSociety : getNestedSocieties()) {
+			cities.addAll(nestedSociety.getCities());
+		}
+		return Collections.unmodifiableList(cities);
 	}
-
-	@Override
-	public Country getCountry() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public EnergySystem getEnergySystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<? extends Society> getNestedSocieties() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public SocialSystem getSocialSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getTotalElectricityDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalFoodDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalPetroleumDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public double getTotalWaterDemand() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public WaterSystem getWaterSystem() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	/**
+	 * Gets the city.
+	 *
+	 * @param name the name
+	 * @return the city
+	 */
 	public City getCity(String name) {
 		for(City city : getCities()) {
 			if(city.getName().equals(name)) {
@@ -113,5 +70,92 @@ public class Country implements Society {
 			}
 		}
 		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getCountry()
+	 */
+	@Override
+	public Country getCountry() {
+		return this;
+	}
+	
+	/**
+	 * Gets the funds.
+	 *
+	 * @return the funds
+	 */
+	public double getFunds() {
+		return funds;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getGlobals()
+	 */
+	@Override
+	public Globals getGlobals() {
+		return globals;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.InfrastructureSystem#setSocialSystem(SocialSystem)
+	 */
+	@Override
+	public void setSociety(Society society) {
+		throw new IllegalArgumentException(
+				"Country is the top-level society.");
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SimEntity#initialize(int)
+	 */
+	@Override
+	public void initialize(long time) {
+		super.initialize(time); // initializes systems
+		for(InfrastructureElement e : getInternalElements()) {
+			e.initialize(time);
+		}
+		funds = initialFunds;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SimEntity#tick()
+	 */
+	@Override
+	public void tick() {
+		super.tick(); // ticks systems
+		for(InfrastructureElement e : getInternalElements()) {
+			e.tick();
+		}
+		nextFunds = funds + getCashFlow();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
+		super.tock(); // tocks systems
+		for(InfrastructureElement e : getInternalElements()) {
+			e.tock();
+		}
+		funds = nextFunds;
+	}
+	
+	/**
+	 * Gets the internal elements.
+	 *
+	 * @return the internal elements
+	 */
+	private List<InfrastructureElement> getInternalElements() {
+		List<InfrastructureElement> elements = 
+				new ArrayList<InfrastructureElement>();
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				elements.addAll(((InfrastructureSystem.Local)system)
+						.getInternalElements());
+			}
+		}
+		return Collections.unmodifiableList(elements);
 	}
 }

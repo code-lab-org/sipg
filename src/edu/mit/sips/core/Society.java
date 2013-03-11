@@ -7,7 +7,10 @@ import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
-public interface Society extends InfrastructureSoS {
+/**
+ * The Interface Society.
+ */
+public interface Society extends InfrastructureSystem, SimEntity {
 	
 	/**
 	 * Gets the agriculture system.
@@ -45,6 +48,13 @@ public interface Society extends InfrastructureSoS {
 	public Globals getGlobals();
 	
 	/**
+	 * Gets the infrastructure systems.
+	 *
+	 * @return the infrastructure systems
+	 */
+	public List<? extends InfrastructureSystem> getInfrastructureSystems();
+	
+	/**
 	 * Gets the nested societies.
 	 *
 	 * @return the nested societies
@@ -71,13 +81,6 @@ public interface Society extends InfrastructureSoS {
 	 * @return the total food demand
 	 */
 	public double getTotalFoodDemand();
-	
-	/**
-	 * Gets the total petroleum demand.
-	 *
-	 * @return the total petroleum demand
-	 */
-	public double getTotalPetroleumDemand();
 	
 	/**
 	 * Gets the total water demand.

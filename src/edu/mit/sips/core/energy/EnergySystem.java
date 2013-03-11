@@ -1,3 +1,4 @@
+
 package edu.mit.sips.core.energy;
 
 import edu.mit.sips.core.InfrastructureSystem;
@@ -8,16 +9,16 @@ import edu.mit.sips.core.InfrastructureSystem;
 public interface EnergySystem extends InfrastructureSystem {
 	
 	/**
-	 * Gets the water consumption.
-	 *
-	 * @return the water consumption
-	 */
-	public double getWaterConsumption();
-	
-	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends EnergySystem, InfrastructureSystem.Local {
+		
+		/**
+		 * Gets the national energy system.
+		 *
+		 * @return the national energy system
+		 */
+		public EnergySystem.Local getNationalEnergySystem();
 		
 		/**
 		 * Gets the petroleum system.
@@ -32,6 +33,21 @@ public interface EnergySystem extends InfrastructureSystem {
 		 * @return the electricity system
 		 */
 		public ElectricitySystem getElectricitySystem();
+		
+		/**
+		 * Optimize energy production and distribution.
+		 *
+		 * @param deltaPetroleumProductionCost the delta petroleum production cost
+		 * @param deltaElectricityProductionCost the delta electricity production cost
+		 */
+		public void optimizeEnergyProductionAndDistribution(
+				double deltaPetroleumProductionCost, 
+				double deltaElectricityProductionCost);
+		
+		/**
+		 * Optimize energy distribution.
+		 */
+		public void optimizeEnergyDistribution();
 	}
 	
 	/**
@@ -46,4 +62,11 @@ public interface EnergySystem extends InfrastructureSystem {
 		 */
 		public void setWaterConsumption(double waterConsumption);
 	}
+	
+	/**
+	 * Gets the water consumption.
+	 *
+	 * @return the water consumption
+	 */
+	public double getWaterConsumption();
 }

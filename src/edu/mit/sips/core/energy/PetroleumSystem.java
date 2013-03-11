@@ -40,6 +40,13 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	 * @return the max petroleum reservoir volume
 	 */
 	public double getMaxPetroleumReservoirVolume();
+	
+	/**
+	 * Gets the national petroleum system.
+	 *
+	 * @return the national petroleum system
+	 */
+	public PetroleumSystem.Local getNationalPetroleumSystem();
 
 	/**
 	 * Gets the petroleum export.
@@ -96,4 +103,16 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	 * @return the total petroleum supply
 	 */
 	public double getTotalPetroleumSupply();
+	
+	/**
+	 * Optimize petroleum distribution.
+	 */
+	public void optimizePetroleumDistribution();
+	
+	/**
+	 * Optimize petroleum production and distribution.
+	 *
+	 * @param deltaProductionCost the delta production cost
+	 */
+	public void optimizePetroleumProductionAndDistribution(double deltaProductionCost);
 }

@@ -137,8 +137,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					elements.add(element);
 				}
 			}
-			return Collections.unmodifiableList(
-					new ArrayList<AgricultureElement>(elements));
+			return Collections.unmodifiableList(elements);
 		}
 		
 		/* (non-Javadoc)

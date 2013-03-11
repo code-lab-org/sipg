@@ -8,34 +8,6 @@ import java.util.List;
 public interface InfrastructureSystem {
 	
 	/**
-	 * Gets the future cash flow.
-	 *
-	 * @return the future cash flow
-	 */
-	public double getCashFlow();
-	
-	/**
-	 * Gets the domestic production.
-	 *
-	 * @return the domestic production
-	 */
-	public double getDomesticProduction();
-	
-	/**
-	 * Gets the name.
-	 *
-	 * @return the name
-	 */
-	public String getName();
-	
-	/**
-	 * Gets the society.
-	 *
-	 * @return the society
-	 */
-	public Society getSociety();
-	
-	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends InfrastructureSystem, SimEntity {
@@ -60,6 +32,20 @@ public interface InfrastructureSystem {
 		 * @return the decommission expense
 		 */
 		public double getDecommissionExpense();
+		
+		/**
+		 * Gets the distribution expense.
+		 *
+		 * @return the distribution expense
+		 */
+		public double getDistributionExpense();
+		
+		/**
+		 * Gets the distribution revenue.
+		 *
+		 * @return the distribution revenue
+		 */
+		public double getDistributionRevenue();
 		
 		/**
 		 * Gets the elements.
@@ -130,27 +116,6 @@ public interface InfrastructureSystem {
 		 * @return the total revenue
 		 */
 		public double getTotalRevenue();
-		
-		/**
-		 * Sets the society.
-		 *
-		 * @param society the new society
-		 */
-		public void setSociety(Society society);
-		
-		/**
-		 * Gets the distribution expense.
-		 *
-		 * @return the distribution expense
-		 */
-		public double getDistributionExpense();
-		
-		/**
-		 * Gets the distribution revenue.
-		 *
-		 * @return the distribution revenue
-		 */
-		public double getDistributionRevenue();
 	}
 	
 	/**
@@ -178,12 +143,40 @@ public interface InfrastructureSystem {
 		 * @param name the new name
 		 */
 		public void setName(String name);
-		
-		/**
-		 * Gets the society.
-		 *
-		 * @return the new society
-		 */
-		public void setSociety(Society society);
 	}
+	
+	/**
+	 * Gets the future cash flow.
+	 *
+	 * @return the future cash flow
+	 */
+	public double getCashFlow();
+	
+	/**
+	 * Gets the domestic production.
+	 *
+	 * @return the domestic production
+	 */
+	public double getDomesticProduction();
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName();
+	
+	/**
+	 * Gets the society.
+	 *
+	 * @return the society
+	 */
+	public Society getSociety();
+	
+	/**
+	 * Gets the society.
+	 *
+	 * @return the new society
+	 */
+	public void setSociety(Society society);
 }

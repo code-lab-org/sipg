@@ -190,8 +190,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					elements.add(element);
 				}
 			}
-			return Collections.unmodifiableList(
-					new ArrayList<WaterElement>(elements));
+			return Collections.unmodifiableList(elements);
 		}
 
 		/* (non-Javadoc)
