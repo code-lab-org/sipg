@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.Society;
 import edu.mit.sips.hla.AttributeChangeListener;
 
 /**
@@ -452,6 +453,16 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 				// Don't overwrite existing values.
 				ignore.printStackTrace();
 			}
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.DefaultInfrastructureSystem.Local#setSociety(edu.mit.sips.core.Society)
+		 */
+		@Override
+		public void setSociety(Society society) {
+			super.setSociety(society);
+			petroleumSystem.setSociety(society);
+			electricitySystem.setSociety(society);
 		}
 
 		/* (non-Javadoc)

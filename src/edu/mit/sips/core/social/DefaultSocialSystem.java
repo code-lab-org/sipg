@@ -135,7 +135,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
 		@Override
-		public List<InfrastructureElement> getInternalElements() {
+		public List<? extends InfrastructureElement> getInternalElements() {
 			return Collections.unmodifiableList(
 					new ArrayList<InfrastructureElement>());
 		}

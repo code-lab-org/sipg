@@ -165,7 +165,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#setSociety(edu.mit.sips.core.Society)
 		 */
 		@Override
-		public final void setSociety(Society society) {
+		public void setSociety(Society society) {
 			this.society = society;
 		}
 	}

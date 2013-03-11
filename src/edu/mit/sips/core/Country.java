@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.social.SocialSystem;
-import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
+import edu.mit.sips.core.energy.NationalEnergySystem;
+import edu.mit.sips.core.social.NationalSocialSystem;
+import edu.mit.sips.core.water.NationalWaterSystem;
 
 /**
  * The Class Country.
@@ -32,11 +32,11 @@ public class Country extends DefaultSociety implements Society {
 	 * @param name the name
 	 * @param nestedSocieties the nested societies
 	 */
-	public Country(String name, List<Society> nestedSocieties,
-			AgricultureSystem.Local agricultureSystem,
-			WaterSystem.Local waterSystem,
-			EnergySystem.Local energySystem,
-			SocialSystem.Local socialSystem,
+	public Country(String name, List<? extends Society> nestedSocieties,
+			NationalAgricultureSystem agricultureSystem,
+			NationalWaterSystem waterSystem,
+			NationalEnergySystem energySystem,
+			NationalSocialSystem socialSystem,
 			double initialFunds) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
@@ -182,8 +182,6 @@ public class Country extends DefaultSociety implements Society {
 				new ArrayList<InfrastructureElement>();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
-				// TODO, sort of an infinite loop here... 
-				// need to store elements somewhere
 				elements.addAll(((InfrastructureSystem.Local)system)
 						.getInternalElements());
 			}

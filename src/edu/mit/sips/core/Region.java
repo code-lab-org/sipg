@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.social.SocialSystem;
-import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.core.agriculture.RegionalAgricultureSystem;
+import edu.mit.sips.core.energy.RegionalEnergySystem;
+import edu.mit.sips.core.social.RegionalSocialSystem;
+import edu.mit.sips.core.water.RegionalWaterSystem;
 
 /**
  * The Class Region.
@@ -28,10 +28,10 @@ public class Region extends DefaultSociety implements Society {
 	 * @param nestedSocieties the nested societies
 	 */
 	public Region(String name, List<Society> nestedSocieties,
-			AgricultureSystem.Local agricultureSystem,
-			WaterSystem.Local waterSystem,
-			EnergySystem.Local energySystem,
-			SocialSystem.Local socialSystem) {
+			RegionalAgricultureSystem agricultureSystem,
+			RegionalWaterSystem waterSystem,
+			RegionalEnergySystem energySystem,
+			RegionalSocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
 	}

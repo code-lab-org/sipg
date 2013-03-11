@@ -8,7 +8,6 @@ import java.util.List;
 import edu.mit.sips.core.agriculture.CityAgricultureSystem;
 import edu.mit.sips.core.energy.CityEnergySystem;
 import edu.mit.sips.core.social.CitySocialSystem;
-import edu.mit.sips.core.social.PopulationModel;
 import edu.mit.sips.core.water.CityWaterSystem;
 
 public class City extends DefaultSociety implements Society {
@@ -23,29 +22,16 @@ public class City extends DefaultSociety implements Society {
 	 * Instantiates a new city.
 	 *
 	 * @param name the name
-	 * @param populationModel the population model
-	 * @param initialWaterConsumptionPerCapita the initial water consumption per capita
-	 * @param coastal the coastal
-	 * @param arableLandArea the arable land area
-	 * @param maxWaterReservoir the max water reservoir
-	 * @param initialWaterReservoir the initial water reservoir
-	 * @param waterReservoirRechargeRate the water reservoir recharge rate
-	 * @param maxPetroleumReservoir the max petroleum reservoir
-	 * @param initialPetroleumReservoir the initial petroleum reservoir
+	 * @param agricultureSystem the agriculture system
+	 * @param waterSystem the water system
+	 * @param energySystem the energy system
+	 * @param socialSystem the social system
 	 */
-	public City(String name, PopulationModel populationModel, 
-			double initialWaterConsumptionPerCapita, boolean coastal, 
-			double arableLandArea, double maxWaterReservoir, 
-			double initialWaterReservoir, double waterReservoirRechargeRate, 
-			double maxPetroleumReservoir, double initialPetroleumReservoir) {
-		super(name, new ArrayList<Society>(), 
-				new CityAgricultureSystem(arableLandArea),
-				new CityWaterSystem(coastal, maxWaterReservoir,
-						initialWaterReservoir, waterReservoirRechargeRate, 
-						initialWaterConsumptionPerCapita),
-						new CityEnergySystem(maxPetroleumReservoir,
-								initialPetroleumReservoir),
-								new CitySocialSystem(populationModel));
+	public City(String name, CityAgricultureSystem agricultureSystem,
+			CityWaterSystem waterSystem, CityEnergySystem energySystem,
+			CitySocialSystem socialSystem) {
+		super(name, new ArrayList<Society>(), agricultureSystem,
+				waterSystem, energySystem, socialSystem);
 	}
 	
 	/* (non-Javadoc)
