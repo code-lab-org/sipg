@@ -1,7 +1,11 @@
 package edu.mit.sips.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
 
 /**
  * The Class ConsoleLogger.
@@ -22,6 +26,22 @@ public class ConsoleLogger implements UpdateListener {
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		printState(event.getCountry(), event.getTime());
+	}
+	
+	/**
+	 * Gets the local agriculture systems.
+	 *
+	 * @param cities the cities
+	 * @return the local agriculture systems
+	 */
+	private List<AgricultureSystem.Local> getLocalAgricultureSystems(List<City> cities) {
+		List<AgricultureSystem.Local> systems = new ArrayList<AgricultureSystem.Local>();
+		for(City city : cities) {
+			if(city.getAgricultureSystem() instanceof AgricultureSystem.Local){
+				systems.add((AgricultureSystem.Local)city.getAgricultureSystem());
+			}
+		}
+		return systems;
 	}
 	
 	/**
@@ -76,148 +96,147 @@ public class ConsoleLogger implements UpdateListener {
 					city.getWaterSystem().getCashFlow());
 		}
 		System.out.println();
-		System.out.printf("%-15s %-5s %15.0f |", "  Oil", "SAR", 
-				country.getEnergySystem().getPetroleumSystem().getCashFlow());
+		System.out.printf("%-15s %-5s %15.0f |", "  Energy", "SAR", 
+				country.getEnergySystem().getCashFlow());
 		for(City city : country.getCities()) {
 			System.out.printf(" %15.0f", 
-					city.getEnergySystem().getPetroleumSystem().getCashFlow());
-		}
-		System.out.println();
-		System.out.printf("%-15s %-5s %15.0f |", "  Elect", "SAR", 
-				country.getEnergySystem().getElectricitySystem().getCashFlow());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getEnergySystem().getElectricitySystem().getCashFlow());
+					city.getEnergySystem().getCashFlow());
 		}
 		System.out.println();
 		
 		System.out.println();
 		
-		System.out.printf("%-15s %-5s %6.0f / %6.0f |", "Land Area Used", "km^2", 
-				country.getAgricultureSystem().getLandAreaUsed(),
-				country.getAgricultureSystem().getArableLandArea());
-		for(City city : country.getCities()) {
-			System.out.printf(" %6.0f / %6.0f", 
-					city.getAgricultureSystem().getLandAreaUsed(),
-					city.getAgricultureSystem().getArableLandArea());
+		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = 
+					(AgricultureSystem.Local) country.getAgricultureSystem();
+			System.out.printf("%-15s %-5s %6.0f / %6.0f |", "Land Area Used", "km^2", 
+					agricultureSystem.getLandAreaUsed(),
+					agricultureSystem.getArableLandArea());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %6.0f / %6.0f", 
+						system.getLandAreaUsed(),
+						system.getArableLandArea());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Food Product", "Cal", 
+					agricultureSystem.getFoodProduction());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getFoodProduction());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "  Revenue", "SAR", 
+					agricultureSystem.getSalesRevenue());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getSalesRevenue());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Food Distrib", "Cal", 0d);
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getFoodInDistribution() 
+						- system.getFoodOutDistribution());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Water Use", "m^3", 
+					agricultureSystem.getWaterConsumption());
+			for(City city : country.getCities()) {
+				System.out.printf(" %15.0f", 
+						city.getAgricultureSystem().getWaterConsumption());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Total Supply", "Cal", 
+					agricultureSystem.getLocalFoodSupply());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getLocalFoodSupply());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Food Consumpt", "Cal", 
+					country.getSocialSystem().getFoodConsumption());
+			for(City city : country.getCities()) {
+				System.out.printf(" %15.0f", 
+						city.getSocialSystem().getFoodConsumption());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "  per capita", "Cal", 
+					country.getSocialSystem().getFoodConsumption() 
+					/ country.getSocialSystem().getPopulation());
+			for(City city : country.getCities()) {
+				System.out.printf(" %15.0f", 
+						city.getSocialSystem().getFoodConsumption() 
+						/ city.getSocialSystem().getPopulation());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Total Demand", "Cal", 
+					country.getTotalFoodDemand());
+			for(City city : country.getCities()) {
+				System.out.printf(" %15.0f", 
+						city.getTotalFoodDemand());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Food Trade", "Cal", 
+					agricultureSystem.getFoodImport()
+					- agricultureSystem.getFoodExport());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getFoodImport()
+						- system.getFoodExport());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "  Revenue", "SAR", 
+					agricultureSystem.getImportExpense()
+					- agricultureSystem.getExportRevenue());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getImportExpense()
+						- system.getExportRevenue());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Capital Ex", "SAR", 
+					agricultureSystem.getCapitalExpense());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getCapitalExpense());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Operations Ex", "SAR", 
+					agricultureSystem.getOperationsExpense());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getOperationsExpense());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Decomm Ex", "SAR", 
+					agricultureSystem.getDecommissionExpense());
+			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
+				System.out.printf(" %15.0f", 
+						system.getDecommissionExpense());
+			}
+			System.out.println();
+			
+			System.out.printf("%-15s %-5s %15.0f |", "Cash Flow", "SAR", 
+					country.getAgricultureSystem().getCashFlow());
+			for(City city : country.getCities()) {
+				System.out.printf(" %15.0f", 
+						city.getAgricultureSystem().getCashFlow());
+			}
+			System.out.println();
 		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Food Product", "Cal", 
-				country.getAgricultureSystem().getFoodProduction());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getFoodProduction());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "  Revenue", "SAR", 
-				country.getAgricultureSystem().getSalesRevenue());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getSalesRevenue());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Food Distrib", "Cal", 0d);
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getFoodInDistribution() 
-					- city.getAgricultureSystem().getFoodOutDistribution());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Water Use", "m^3", 
-				country.getAgricultureSystem().getWaterConsumption());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getWaterConsumption());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Total Supply", "Cal", 
-				country.getAgricultureSystem().getLocalFoodSupply());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getLocalFoodSupply());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Food Consumpt", "Cal", 
-				country.getSocialSystem().getFoodConsumption());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getSocialSystem().getFoodConsumption());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "  per capita", "Cal", 
-				country.getSocialSystem().getFoodConsumptionPerCapita());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getSocialSystem().getFoodConsumptionPerCapita());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Total Demand", "Cal", 
-				country.getTotalFoodDemand());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getTotalFoodDemand());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Food Trade", "Cal", 
-				country.getAgricultureSystem().getFoodImport()
-				- country.getAgricultureSystem().getFoodExport());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getFoodImport()
-					- city.getAgricultureSystem().getFoodExport());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "  Revenue", "SAR", 
-				country.getAgricultureSystem().getImportExpense()
-				- country.getAgricultureSystem().getExportRevenue());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getImportExpense()
-					- city.getAgricultureSystem().getExportRevenue());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Capital Ex", "SAR", 
-				country.getAgricultureSystem().getCapitalExpense());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getCapitalExpense());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Operations Ex", "SAR", 
-				country.getAgricultureSystem().getOperationsExpense());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getOperationsExpense());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Decomm Ex", "SAR", 
-				country.getAgricultureSystem().getDecommissionExpense());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getDecommissionExpense());
-		}
-		System.out.println();
-		
-		System.out.printf("%-15s %-5s %15.0f |", "Cash Flow", "SAR", 
-				country.getAgricultureSystem().getCashFlow());
-		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", 
-					city.getAgricultureSystem().getCashFlow());
-		}
-		System.out.println();
 
 		System.out.println();
 		
