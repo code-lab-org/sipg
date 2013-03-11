@@ -33,12 +33,11 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
-	/* TODO
+
 	DefaultTableXYDataset foodProductionCost = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodConsumptionCost = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodProductionNetCost = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodConsumptionNetCost = new DefaultTableXYDataset();
-	*/
 
 	public AgricultureSystemPanel(AgricultureSystem.Local agricultureSystem) {
 		super(agricultureSystem);
@@ -80,14 +79,12 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		addTab("Supply Cost", Icons.COST_SUPPLY, createTimeSeriesChart(
 				"Direct Food Supply Cost (SAR/Mj)", 
 						foodSupplyCostData));
-		/* TODO
-		addTab("Production Cost", Icons.COST_PRODUCTION, createStackedAreaChart(
+		addTab("Production Cost*", Icons.COST_PRODUCTION, createStackedAreaChart(
 				"Direct Food Production Cost (SAR/Mj)", 
 						foodProductionCost, foodProductionNetCost));
-		addTab("Consumption Cost", Icons.COST_SUPPLY, createStackedAreaChart(
+		addTab("Consumption Cost*", Icons.COST_SUPPLY, createStackedAreaChart(
 				"Direct Food Consumption Cost (SAR/Mj)", 
 						foodConsumptionCost, foodConsumptionNetCost));
-		*/
 	}
 	
 	/**
@@ -116,12 +113,10 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		localFoodData.removeAllSeries();
 		foodProductCostData.removeAllSeries();
 		foodSupplyCostData.removeAllSeries();
-		/* TODO
 		foodProductionCost.removeAllSeries();
 		foodConsumptionCost.removeAllSeries();
 		foodProductionNetCost.removeAllSeries();
 		foodConsumptionNetCost.removeAllSeries();
-		*/
 		foodConsumptionPerCapita.removeAllSeries();
 		landAvailableDataset.removeAllSeries();
 		foodUseData.removeAllSeries();
@@ -138,7 +133,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 	private List<AgricultureSystem.Local> getNestedAgricultureSystems() {
 		List<AgricultureSystem.Local> systems = new ArrayList<AgricultureSystem.Local>();
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			if(nestedSociety.getWaterSystem() instanceof AgricultureSystem.Local) {
+			if(nestedSociety.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 				systems.add((AgricultureSystem.Local)nestedSociety.getAgricultureSystem());
 			}
 		}
@@ -169,39 +164,41 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 			updateSeriesCollection(foodSupplyCostData, nestedSystem.getSociety().getName(),
 					year, nestedSystem.getSupplyCost());
 		}
-		/* TODO
-		if(society.getAgricultureSystem().getFoodProduction() > 0) {
+		if(getAgricultureSystem().getFoodProduction() > 0) {
 			updateSeries(foodProductionCost, "Capital", year, 
-					society.getAgricultureSystem().getCapitalExpense()
-					/ society.getAgricultureSystem().getFoodProduction());
+					getAgricultureSystem().getCapitalExpense()
+					/ getAgricultureSystem().getFoodProduction());
 			updateSeries(foodProductionCost, "Operations", year, 
-					society.getAgricultureSystem().getOperationsExpense()
-					/ society.getAgricultureSystem().getFoodProduction());
+					getAgricultureSystem().getOperationsExpense()
+					/ getAgricultureSystem().getFoodProduction());
 			updateSeries(foodProductionCost, "Decommission", year, 
-					society.getAgricultureSystem().getDecommissionExpense()
-					/ society.getAgricultureSystem().getFoodProduction());
+					getAgricultureSystem().getDecommissionExpense()
+					/ getAgricultureSystem().getFoodProduction());
 			updateSeries(foodProductionCost, "Water", year, 
-					society.getAgricultureSystem().getWaterConsumption()
-					* society.getGlobals().getWaterDomesticPrice()
-					/ society.getAgricultureSystem().getFoodProduction());
+					getAgricultureSystem().getWaterConsumption()
+					* getSociety().getGlobals().getWaterDomesticPrice()
+					/ getAgricultureSystem().getFoodProduction());
 		}
-		if(society.getTotalFoodDemand() > 0) {
+		if(getSociety().getTotalFoodDemand() > 0) {
 			// TODO this is not quite right
+			updateSeries(foodConsumptionCost, "Production", year, 
+					(getAgricultureSystem().getLifecycleExpense()
+					+ getAgricultureSystem().getConsumptionExpense())
+					/ getSociety().getTotalFoodDemand());
 			updateSeries(foodConsumptionCost, "Net Distribution", year, 
-					(society.getAgricultureSystem().getDistributionExpense()
-					- society.getAgricultureSystem().getDistributionRevenue())
-					/ society.getTotalFoodDemand());
-			updateSeries(foodConsumptionCost, "Import", year, 
-					society.getAgricultureSystem().getImportExpense()
-					/ society.getTotalFoodDemand());
-			updateSeries(foodConsumptionCost, "Export", year, 
-					-society.getAgricultureSystem().getExportRevenue()
-					/ society.getTotalFoodDemand());
+					(getAgricultureSystem().getDistributionExpense()
+					- getAgricultureSystem().getDistributionRevenue())
+					/ getSociety().getTotalFoodDemand());
+			updateSeries(foodConsumptionCost, "Net Trade", year, 
+					(getAgricultureSystem().getImportExpense()
+					-getAgricultureSystem().getExportRevenue())
+					/ getSociety().getTotalFoodDemand());
 			updateSeries(foodConsumptionNetCost, "Net Cost", year, 
-					society.getAgricultureSystem().getTotalExpense()
-					/ society.getTotalFoodDemand());
+					(getAgricultureSystem().getTotalExpense()
+							- (getAgricultureSystem().getTotalRevenue()
+									- getAgricultureSystem().getSalesRevenue()))
+									/ getSociety().getTotalFoodDemand());
 		}
-		*/
 		
 		updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 
 				year, getSociety().getSocialSystem().getFoodConsumptionPerCapita());
@@ -213,14 +210,12 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		
 		if(getAgricultureSystem() instanceof CityAgricultureSystem) {
 			updateSeries(landAvailableDataset, getSociety().getName(), year, 
-					getAgricultureSystem().getArableLandArea()
-					- getAgricultureSystem().getLandAreaUsed());
+					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
 
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName(), 
-						year, nestedSystem.getArableLandArea()
-						- nestedSystem.getLandAreaUsed());
+						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
 			}
 		}
 	
