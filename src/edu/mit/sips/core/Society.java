@@ -40,6 +40,14 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 */
 	public EnergySystem getEnergySystem();
 	
+
+	/**
+	 * Gets the internal elements.
+	 *
+	 * @return the internal elements
+	 */
+	public List<? extends InfrastructureElement> getInternalElements();
+	
 	/**
 	 * Gets the globals.
 	 *

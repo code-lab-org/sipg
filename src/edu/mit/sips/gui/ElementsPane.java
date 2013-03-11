@@ -33,11 +33,15 @@ import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
+import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
 import edu.mit.sips.core.energy.ElectricityElement;
+import edu.mit.sips.core.energy.EnergyElement;
 import edu.mit.sips.core.energy.MutableElectricityElement;
 import edu.mit.sips.core.energy.MutablePetroleumElement;
+import edu.mit.sips.core.energy.NationalEnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.core.water.NationalWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.io.Icons;
 
@@ -243,26 +247,27 @@ public class ElementsPane extends JPanel {
 	private void openElementDialog(InfrastructureElement element) {
 		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
 		if(newElement != null) {
-			if(element instanceof AgricultureElement) {
-				city.getCountry().getAgricultureSystem().removeElement(
-						(AgricultureElement)element);
-				city.getCountry().getAgricultureSystem().addElement(
-						(AgricultureElement)newElement);
-			} else if(element instanceof WaterElement) {
-				city.getCountry().getWaterSystem().removeElement(
-						(WaterElement)element);
-				city.getCountry().getWaterSystem().addElement(
-						(WaterElement)newElement);
-			} else if(element instanceof PetroleumElement) {
-				city.getCountry().getEnergySystem().getPetroleumSystem().removeElement(
-						(PetroleumElement)element);
-				city.getCountry().getEnergySystem().getPetroleumSystem().addElement(
-						(PetroleumElement)newElement);
-			} else if(element instanceof ElectricityElement) {
-				city.getCountry().getEnergySystem().getElectricitySystem().removeElement(
-						(ElectricityElement)element);
-				city.getCountry().getEnergySystem().getElectricitySystem().addElement(
-						(ElectricityElement)newElement);
+			if(element instanceof AgricultureElement 
+					&& city.getCountry().getAgricultureSystem() 
+					instanceof NationalAgricultureSystem) {
+				NationalAgricultureSystem agricultureSystem = 
+						(NationalAgricultureSystem) city.getCountry().getAgricultureSystem();
+				agricultureSystem.removeElement((AgricultureElement)element);
+				agricultureSystem.addElement((AgricultureElement)newElement);
+			} else if(element instanceof WaterElement
+					&& city.getCountry().getWaterSystem() 
+					instanceof NationalWaterSystem) {
+				NationalWaterSystem waterSystem = 
+						(NationalWaterSystem) city.getCountry().getWaterSystem();
+				waterSystem.removeElement((WaterElement)element);
+				waterSystem.addElement((WaterElement)newElement);
+			} else if(element instanceof EnergyElement
+					&& city.getCountry().getEnergySystem() 
+					instanceof NationalEnergySystem) {
+				NationalEnergySystem energySystem = 
+						(NationalEnergySystem) city.getCountry().getEnergySystem();
+				energySystem.removeElement((EnergyElement)element);
+				energySystem.addElement((EnergyElement)newElement);
 			} else {
 				throw new IllegalStateException(
 						"Element was not a known element type.");
@@ -284,18 +289,21 @@ public class ElementsPane extends JPanel {
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, 
 				"Remove " + selection + "?", "Remove Element", 
 				JOptionPane.OK_CANCEL_OPTION)) {
-			if(selection instanceof AgricultureElement) {
-				city.getCountry().getAgricultureSystem().removeElement(
-						(AgricultureElement)selection);
-			} else if(selection instanceof WaterElement) {
-				city.getCountry().getWaterSystem().removeElement(
-						(WaterElement)selection);
-			} else if(selection instanceof PetroleumElement) {
-				city.getCountry().getEnergySystem().getPetroleumSystem().removeElement(
-						(PetroleumElement)selection);
-			} else if(selection instanceof ElectricityElement) {
-				city.getCountry().getEnergySystem().getElectricitySystem().removeElement(
-						(ElectricityElement)selection);
+			if(selection instanceof AgricultureElement
+					&& city.getCountry().getAgricultureSystem() 
+					instanceof NationalAgricultureSystem) {
+				((NationalAgricultureSystem)city.getCountry().getAgricultureSystem())
+				.removeElement((AgricultureElement)selection);
+			} else if(selection instanceof WaterElement
+					&& city.getCountry().getWaterSystem() 
+					instanceof NationalWaterSystem) {
+				((NationalWaterSystem)city.getCountry().getWaterSystem())
+				.removeElement((WaterElement)selection);
+			} else if(selection instanceof EnergyElement
+					&& city.getCountry().getEnergySystem() 
+					instanceof NationalEnergySystem) {
+				((NationalEnergySystem)city.getCountry().getEnergySystem())
+				.removeElement((EnergyElement)selection);
 			} else {
 				throw new IllegalStateException(
 						"Selection was not a known element type.");

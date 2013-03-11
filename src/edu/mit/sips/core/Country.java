@@ -171,21 +171,4 @@ public class Country extends DefaultSociety implements Society {
 		}
 		funds = nextFunds;
 	}
-	
-	/**
-	 * Gets the internal elements.
-	 *
-	 * @return the internal elements
-	 */
-	private List<InfrastructureElement> getInternalElements() {
-		List<InfrastructureElement> elements = 
-				new ArrayList<InfrastructureElement>();
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				elements.addAll(((InfrastructureSystem.Local)system)
-						.getInternalElements());
-			}
-		}
-		return Collections.unmodifiableList(elements);
-	}
 }

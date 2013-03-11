@@ -163,6 +163,22 @@ public abstract class DefaultSociety implements Society {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getInternalElements()
+	 */
+	@Override
+	public List<InfrastructureElement> getInternalElements() {
+		List<InfrastructureElement> elements = 
+				new ArrayList<InfrastructureElement>();
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				elements.addAll(((InfrastructureSystem.Local)system)
+						.getInternalElements());
+			}
+		}
+		return Collections.unmodifiableList(elements);
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
 	 */
 	@Override

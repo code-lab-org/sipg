@@ -72,7 +72,7 @@ public class NationalEnergySystem extends DefaultEnergySystem.Local {
 	 * @param element the element
 	 * @return true, if successful
 	 */
-	public synchronized boolean removeElement(PetroleumElement element) {
+	public synchronized boolean removeElement(EnergyElement element) {
 		if(element instanceof PetroleumElement) {
 			return getPetroleumSystem().removeElement((PetroleumElement)element);
 		} else if(element instanceof ElectricityElement) {
