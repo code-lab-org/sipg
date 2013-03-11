@@ -17,7 +17,18 @@ import edu.mit.sips.core.Country;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.energy.ElectricityElement;
+import edu.mit.sips.core.energy.ElectricitySystem;
+import edu.mit.sips.core.energy.EnergyElement;
+import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.energy.PetroleumSystem;
 import edu.mit.sips.core.social.PopulationModel;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.WaterElement;
+import edu.mit.sips.core.water.WaterSystem;
 
 /**
  * The Class Serialization.
@@ -30,6 +41,30 @@ public final class Serialization {
 				new InterfaceAdapter<LifecycleModel>());
 		gsonBuilder.registerTypeAdapter(PopulationModel.class, 
 				new InterfaceAdapter<PopulationModel>());
+		gsonBuilder.registerTypeAdapter(AgricultureSystem.class, 
+				new InterfaceAdapter<AgricultureSystem>());
+		gsonBuilder.registerTypeAdapter(WaterSystem.class, 
+				new InterfaceAdapter<WaterSystem>());
+		gsonBuilder.registerTypeAdapter(EnergySystem.class, 
+				new InterfaceAdapter<EnergySystem>());
+		gsonBuilder.registerTypeAdapter(PetroleumSystem.class, 
+				new InterfaceAdapter<PetroleumSystem>());
+		gsonBuilder.registerTypeAdapter(ElectricitySystem.class, 
+				new InterfaceAdapter<ElectricitySystem>());
+		gsonBuilder.registerTypeAdapter(SocialSystem.class, 
+				new InterfaceAdapter<SocialSystem>());
+		gsonBuilder.registerTypeAdapter(Society.class, 
+				new InterfaceAdapter<Society>());
+		gsonBuilder.registerTypeAdapter(AgricultureElement.class, 
+				new InterfaceAdapter<AgricultureElement>());
+		gsonBuilder.registerTypeAdapter(WaterElement.class, 
+				new InterfaceAdapter<WaterElement>());
+		gsonBuilder.registerTypeAdapter(EnergyElement.class, 
+				new InterfaceAdapter<EnergyElement>());
+		gsonBuilder.registerTypeAdapter(PetroleumElement.class, 
+				new InterfaceAdapter<PetroleumElement>());
+		gsonBuilder.registerTypeAdapter(ElectricityElement.class, 
+				new InterfaceAdapter<ElectricityElement>());
 	}
 	
 	private static Gson gson = gsonBuilder.create();
