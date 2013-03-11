@@ -1,5 +1,10 @@
 package edu.mit.sips.core;
 
+import javax.swing.event.EventListenerList;
+
+import edu.mit.sips.hla.AttributeChangeEvent;
+import edu.mit.sips.hla.AttributeChangeListener;
+
 /**
  * The Class DefaultInfrastructureSystem.
  */
@@ -11,6 +16,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	public abstract static class Local implements InfrastructureSystem.Local {
 		private final String name;
 		private transient Society society;
+		protected transient EventListenerList listenerList = new EventListenerList();
 		
 		/**
 		 * Instantiates a new local.
@@ -30,6 +36,28 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 				throw new IllegalArgumentException("Name cannot be null.");
 			}
 			this.name = name;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+		 */
+		@Override
+		public final void addAttributeChangeListener(AttributeChangeListener listener) {
+			listenerList.add(AttributeChangeListener.class, listener);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.hla.InfrastructureSystem#fireAttributeChangeEvent(java.lang.String)
+		 */
+		@Override
+		public final void fireAttributeChangeEvent(String propertyName) {
+			AttributeChangeEvent evt = new AttributeChangeEvent(
+					this, propertyName);
+			AttributeChangeListener[] listeners = listenerList.getListeners(
+					AttributeChangeListener.class);
+			for(int i = 0; i < listeners.length; i++) {
+				listeners[i].attributeChanged(evt);
+			}
 		}
 
 		/* (non-Javadoc)
@@ -102,7 +130,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public final Society getSociety() {
 			return society;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalExpense()
 		 */
@@ -114,6 +142,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getImportExpense();
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalRevenue()
 		 */
@@ -122,6 +151,14 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			return getSalesRevenue() 
 					+ getDistributionRevenue()
 					+ getExportRevenue();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+		 */
+		@Override
+		public final void removeAttributeChangeListener(AttributeChangeListener listener) {
+			listenerList.remove(AttributeChangeListener.class, listener);
 		}
 		
 		/* (non-Javadoc)

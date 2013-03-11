@@ -229,6 +229,9 @@ public abstract class DefaultSociety implements Society {
 		return waterSystem;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
+	 */
 	@Override
 	public void initialize(long time) {
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
@@ -246,6 +249,9 @@ public abstract class DefaultSociety implements Society {
 		this.society = society;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
 	@Override
 	public void tick() {
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
@@ -255,6 +261,9 @@ public abstract class DefaultSociety implements Society {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
 	@Override
 	public void tock() {
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
@@ -263,4 +272,5 @@ public abstract class DefaultSociety implements Society {
 			}
 		}
 	}
+	
 }

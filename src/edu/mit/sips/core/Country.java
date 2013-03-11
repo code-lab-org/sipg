@@ -72,6 +72,36 @@ public class Country extends DefaultSociety implements Society {
 		return null;
 	}
 
+	/**
+	 * Gets the society.
+	 *
+	 * @param name the name
+	 * @return the society
+	 */
+	public Society getSociety(String name) {
+		return getSocietyRecursive(name, this);
+	}
+	
+	/**
+	 * Gets the society recursive.
+	 *
+	 * @param name the name
+	 * @param root the root
+	 * @return the society recursive
+	 */
+	private static Society getSocietyRecursive(String name, Society root) {
+		if(root.getName().equals(name)) {
+			return root;
+		}
+		for(Society child : root.getNestedSocieties()) {
+			Society sociey = getSocietyRecursive(name, child);
+			if(sociey != null) {
+				return sociey;
+			}
+		}
+		return null;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getCountry()
 	 */
