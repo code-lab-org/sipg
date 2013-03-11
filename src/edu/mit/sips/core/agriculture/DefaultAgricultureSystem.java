@@ -109,6 +109,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public List<AgricultureElement> getExternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
+			
 			// TODO bad practice, assuming super-system is also local
 			AgricultureSystem.Local agricultureSystem = 
 					(AgricultureSystem.Local)getSociety().getSociety().getAgricultureSystem();

@@ -15,6 +15,7 @@ import edu.mit.sips.core.social.LogisticGrowthModel;
 import edu.mit.sips.core.social.NationalSocialSystem;
 import edu.mit.sips.core.water.CityWaterSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
+import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.sim.Simulator;
 
@@ -89,13 +90,16 @@ public class BalancingProgram {
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 		
+		
+		final Simulator simulator = new Simulator(ksa);
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				DataFrame frame = new DataFrame();
-				frame.setSimulator(new Simulator(ksa));
+				frame.setSimulator(simulator);
 				frame.pack();
 				frame.setVisible(true);
 			}
 		});
+		simulator.addUpdateListener(new ConsoleLogger());
 	}
 }

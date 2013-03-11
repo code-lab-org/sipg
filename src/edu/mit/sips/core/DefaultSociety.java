@@ -264,6 +264,9 @@ public abstract class DefaultSociety implements Society {
 				((InfrastructureSystem.Local)system).initialize(time);
 			}
 		}
+		for(Society society : getNestedSocieties()) {
+			society.initialize(time);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -284,6 +287,9 @@ public abstract class DefaultSociety implements Society {
 				((InfrastructureSystem.Local)system).tick();
 			}
 		}
+		for(Society society : getNestedSocieties()) {
+			society.tick();
+		}
 	}
 
 	/* (non-Javadoc)
@@ -295,6 +301,9 @@ public abstract class DefaultSociety implements Society {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).tock();
 			}
+		}
+		for(Society society : getNestedSocieties()) {
+			society.tock();
 		}
 	}
 	

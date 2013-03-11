@@ -98,16 +98,16 @@ public class ConsoleLogger implements UpdateListener {
 		}
 		System.out.println();
 		
-		System.out.printf("%-15s %-5s %15.0f |", "Econ Production", "SAR", 
-				country.getDomesticProduction());
+		System.out.printf("%-15s %-5s %15.0f |", "Dom Product", "SAR", 
+				country.getSocialSystem().getDomesticProduct());
 		for(City city : country.getCities()) {
-			System.out.printf(" %15.0f", city.getDomesticProduction());
+			System.out.printf(" %15.0f", city.getSocialSystem().getDomesticProduct());
 		}
 		System.out.println();
 		System.out.printf("%-15s %-5s %15.2f |", "  per capita", "SAR", 
-				country.getDomesticProduction() / country.getSocialSystem().getPopulation());
+				country.getSocialSystem().getDomesticProductPerCapita());
 		for(City city : country.getCities()) {
-			System.out.printf(" %15.2f", city.getDomesticProduction() / city.getSocialSystem().getPopulation());
+			System.out.printf(" %15.2f", city.getSocialSystem().getDomesticProductPerCapita());
 		}
 		System.out.println();
 		
@@ -202,12 +202,10 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %15.0f |", "  per capita", "Cal", 
-					country.getSocialSystem().getFoodConsumption() 
-					/ country.getSocialSystem().getPopulation());
+					country.getSocialSystem().getFoodConsumptionPerCapita());
 			for(City city : country.getCities()) {
 				System.out.printf(" %15.0f", 
-						city.getSocialSystem().getFoodConsumption() 
-						/ city.getSocialSystem().getPopulation());
+						city.getSocialSystem().getFoodConsumptionPerCapita());
 			}
 			System.out.println();
 			
@@ -337,12 +335,10 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %15.0f |", "  per capita", "m^3", 
-					country.getSocialSystem().getWaterConsumption()
-					/ country.getSocialSystem().getPopulation());
+					country.getSocialSystem().getWaterConsumptionPerCapita());
 			for(City city : country.getCities()) {
 				System.out.printf(" %15.0f", 
-						city.getSocialSystem().getWaterConsumption()
-						/ city.getSocialSystem().getPopulation());
+						city.getSocialSystem().getWaterConsumptionPerCapita());
 			}
 			System.out.println();
 			
@@ -579,12 +575,10 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %15.0f |", "  per capita", "kWh", 
-					country.getSocialSystem().getElectricityConsumption()
-					/ country.getSocialSystem().getPopulation());
+					country.getSocialSystem().getElectricityConsumptionPerCapita());
 			for(City city : country.getCities()) {
 				System.out.printf(" %15.0f", 
-						city.getSocialSystem().getElectricityConsumption()
-						/ city.getSocialSystem().getPopulation());
+						city.getSocialSystem().getElectricityConsumptionPerCapita());
 			}
 			System.out.println();
 			

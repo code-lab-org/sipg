@@ -67,7 +67,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getDomesticProductPerCapita() {
-			return getDomesticProduct() / getPopulation();
+			if(getPopulation() > 0) {
+				return getDomesticProduct() / getPopulation();
+			} 
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -93,8 +96,11 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getElectricityConsumptionPerCapita() {
-			return getSociety().getGlobals().getElectricityDemand(
-					getDomesticProduct()/getPopulation());
+			if(getPopulation() > 0) {
+				return getSociety().getGlobals().getElectricityDemand(
+						getDomesticProduct()/getPopulation());
+			} 
+			return getSociety().getGlobals().getElectricityDemand(0);
 		}
 
 		/* (non-Javadoc)
@@ -136,8 +142,11 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getFoodConsumptionPerCapita() {
-			return getSociety().getGlobals().getFoodDemand(
-					getDomesticProduct()/getPopulation());
+			if(getPopulation() > 0) {
+				return getSociety().getGlobals().getFoodDemand(
+						getDomesticProduct()/getPopulation());
+			}
+			return getSociety().getGlobals().getFoodDemand(0);
 		}
 
 		/* (non-Javadoc)
@@ -207,7 +216,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getDomesticProductPerCapita() {
-			return domesticProduct / population;
+			if(population > 0) {
+				return domesticProduct / population;
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -223,7 +235,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getElectricityConsumptionPerCapita() {
-			return electricityConsumption / population;
+			if(population > 0) {
+				return electricityConsumption / population;
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -247,7 +262,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getFoodConsumptionPerCapita() {
-			return foodConsumption / population;
+			if(population > 0) {
+				return foodConsumption / population;
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -279,7 +297,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getWaterConsumptionPerCapita() {
-			return waterConsumption / population;
+			if(population > 0) {
+				return waterConsumption / population;
+			} 
+			return 0;
 		}
 
 		/* (non-Javadoc)

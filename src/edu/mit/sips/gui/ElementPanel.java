@@ -1,6 +1,7 @@
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,13 +14,16 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -45,6 +49,19 @@ public class ElementPanel extends JPanel {
 	private final JComboBox originCombo, destinationCombo;
 	private final JPanel lifecycleModelContainer;
 	private LifecycleModelPanel lifecycleModelPanel;
+	private final ListCellRenderer cityRenderer = new DefaultListCellRenderer() {
+		private static final long serialVersionUID = 3761951866857845749L;
+
+		@Override
+		public Component getListCellRendererComponent(JList list,
+				Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			if(value instanceof City) {
+				setText(((City)value).getName());
+			}
+			return this;
+		}
+	};
 	
 	/**
 	 * Instantiates a new element panel.
@@ -99,6 +116,7 @@ public class ElementPanel extends JPanel {
 		c.gridwidth = 1;
 		
 		originCombo = new JComboBox(country.getCities().toArray());
+		originCombo.setRenderer(cityRenderer);
 		originCombo.setSelectedItem(country.getCity(element.getOrigin()));
 		originCombo.addActionListener(new ActionListener() {
 			@Override
@@ -113,6 +131,7 @@ public class ElementPanel extends JPanel {
 		c.gridy--;
 		c.gridx+=2;
 		destinationCombo = new JComboBox(country.getCities().toArray());
+		destinationCombo.setRenderer(cityRenderer);
 		destinationCombo.setSelectedItem(country.getCity(element.getDestination()));
 		destinationCombo.addActionListener(new ActionListener() {
 			@Override

@@ -3,9 +3,9 @@ package edu.mit.sips.sim;
 import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
-import edu.mit.sips.core.energy.NationalEnergySystem;
-import edu.mit.sips.core.water.NationalWaterSystem;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.SimulationControlEvent;
 import edu.mit.sips.gui.SimulationControlEvent.AdvanceToEnd;
 import edu.mit.sips.gui.SimulationControlEvent.Execute;
@@ -240,23 +240,36 @@ public class Simulator implements SimulationControlListener {
 	 */
 	private void runAutoOptimization() {
 		if(autoOptimizeProductionAndDistribution) {
-			((NationalAgricultureSystem)country.getAgricultureSystem())
-			.optimizeFoodProductionAndDistribution(deltaAgricultureCost);
+			if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				((AgricultureSystem.Local)country.getAgricultureSystem())
+				.optimizeFoodProductionAndDistribution(deltaAgricultureCost);
+			}
 			
-			((NationalWaterSystem)country.getWaterSystem())
-			.optimizeWaterProductionAndDistribution(deltaWaterCost);
+			if(country.getWaterSystem() instanceof WaterSystem.Local) {
+				((WaterSystem.Local)country.getWaterSystem())
+				.optimizeWaterProductionAndDistribution(deltaWaterCost);
+			}
 			
-			((NationalEnergySystem)country.getEnergySystem())
-			.optimizeEnergyProductionAndDistribution(deltaPetroleumCost, deltaElectricityCost);
+			if(country.getEnergySystem() instanceof EnergySystem.Local) {
+				((EnergySystem.Local)country.getEnergySystem())
+				.optimizeEnergyProductionAndDistribution(deltaPetroleumCost, 
+						deltaElectricityCost);
+			}
 		} else if(autoOptimizeDistribution) {
-			((NationalAgricultureSystem)country.getAgricultureSystem())
-			.optimizeFoodDistribution();
+			if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				((AgricultureSystem.Local)country.getAgricultureSystem())
+				.optimizeFoodDistribution();
+			}
 			
-			((NationalWaterSystem)country.getWaterSystem())
-			.optimizeWaterDistribution();
+			if(country.getWaterSystem() instanceof WaterSystem.Local) {
+				((WaterSystem.Local)country.getWaterSystem())
+				.optimizeWaterDistribution();
+			}
 			
-			((NationalEnergySystem)country.getEnergySystem())
-			.optimizeEnergyDistribution();
+			if(country.getEnergySystem() instanceof EnergySystem.Local) {
+				((EnergySystem.Local)country.getEnergySystem())
+				.optimizeEnergyDistribution();
+			}
 		}
 	}
 	
