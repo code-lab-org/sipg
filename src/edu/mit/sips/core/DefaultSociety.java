@@ -200,6 +200,7 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public double getTotalElectricityDemand() {
 		return waterSystem.getElectricityConsumption() 
+				+ energySystem.getElectricityConsumption()
 				+ socialSystem.getElectricityConsumption();
 	}
 

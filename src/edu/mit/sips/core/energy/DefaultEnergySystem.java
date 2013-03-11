@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.hla.AttributeChangeListener;
 
 /**
  * The Class DefaultEnergySystem.
@@ -32,29 +33,61 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		private PetroleumSystem petroleumSystem;
 		private ElectricitySystem electricitySystem;
 		
-		public Local(double maxPetroleumReservoir,
-				double initialPetroleumReservoir) {
-			super("Energy");
-			this.petroleumSystem = new DefaultPetroleumSystem(
-					maxPetroleumReservoir, 
-					initialPetroleumReservoir);
-			this.electricitySystem = new DefaultElectricitySystem();
-		}
-		
 		/**
 		 * Instantiates a new local.
 		 */
 		protected Local() {
-			petroleumSystem = new DefaultPetroleumSystem();
-			electricitySystem = new DefaultElectricitySystem();
+			super("Energy");
+		}
+		
+		/**
+		 * Instantiates a new local.
+		 *
+		 * @param petroleumSystem the petroleum system
+		 * @param electricitySystem the electricity system
+		 */
+		public Local(PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem)  {
+			super("Energy");
+			this.petroleumSystem = petroleumSystem;
+			this.electricitySystem = electricitySystem;
+		}
+
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+		 */
+		@Override
+		public void addAttributeChangeListener(AttributeChangeListener listener) {
+			super.addAttributeChangeListener(listener);
+			petroleumSystem.addAttributeChangeListener(listener);
+			electricitySystem.addAttributeChangeListener(listener);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getConsumptionExpense()
+		 */
+		@Override
+		public double getConsumptionExpense() {
+			return petroleumSystem.getConsumptionExpense()
+					+ electricitySystem.getConsumptionExpense();
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.energy.EnergySystem#getWaterConsumption()
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDistributionExpense()
 		 */
 		@Override
-		public double getWaterConsumption() {
-			return electricitySystem.getWaterConsumption();
+		public double getDistributionExpense() {
+			return petroleumSystem.getDistributionExpense()
+					+ electricitySystem.getDistributionExpense();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDistributionRevenue()
+		 */
+		@Override
+		public double getDistributionRevenue() {
+			return petroleumSystem.getDistributionRevenue()
+					+ electricitySystem.getDistributionRevenue();
 		}
 
 		/* (non-Javadoc)
@@ -67,12 +100,19 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getConsumptionExpense()
+		 * @see edu.mit.sips.core.energy.EnergySystem#getElectricityConsumption()
 		 */
 		@Override
-		public double getConsumptionExpense() {
-			return petroleumSystem.getConsumptionExpense()
-					+ electricitySystem.getConsumptionExpense();
+		public double getElectricityConsumption() {
+			return petroleumSystem.getElectricityConsumption();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem.Local#getElectricitySystem()
+		 */
+		@Override
+		public ElectricitySystem getElectricitySystem() {
+			return electricitySystem;
 		}
 
 		/* (non-Javadoc)
@@ -127,57 +167,19 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getSalesRevenue()
+		 * @see edu.mit.sips.core.energy.EnergySystem.Local#getNationalEnergySystem()
 		 */
 		@Override
-		public double getSalesRevenue() {
-			return petroleumSystem.getSalesRevenue()
-					+ electricitySystem.getSalesRevenue();
+		public EnergySystem.Local getNationalEnergySystem() {
+			return (EnergySystem.Local) getSociety().getCountry().getEnergySystem();
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDistributionExpense()
+		 * @see edu.mit.sips.core.energy.EnergySystem#getPetroleumConsumption()
 		 */
 		@Override
-		public double getDistributionExpense() {
-			return petroleumSystem.getDistributionExpense()
-					+ electricitySystem.getDistributionExpense();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDistributionRevenue()
-		 */
-		@Override
-		public double getDistributionRevenue() {
-			return petroleumSystem.getDistributionRevenue()
-					+ electricitySystem.getDistributionRevenue();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#initialize(long)
-		 */
-		@Override
-		public void initialize(long time) {
-			petroleumSystem.initialize(time);
-			electricitySystem.initialize(time);
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tick()
-		 */
-		@Override
-		public void tick() {
-			petroleumSystem.tick();
-			electricitySystem.tick();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tock()
-		 */
-		@Override
-		public void tock() {
-			petroleumSystem.tock();
-			electricitySystem.tock();
+		public double getPetroleumConsumption() {
+			return electricitySystem.getPetroleumConsumption();
 		}
 
 		/* (non-Javadoc)
@@ -189,21 +191,31 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.energy.EnergySystem.Local#getElectricitySystem()
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getSalesRevenue()
 		 */
 		@Override
-		public ElectricitySystem getElectricitySystem() {
-			return electricitySystem;
+		public double getSalesRevenue() {
+			return petroleumSystem.getSalesRevenue()
+					+ electricitySystem.getSalesRevenue();
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem#getWaterConsumption()
+		 */
+		@Override
+		public double getWaterConsumption() {
+			return electricitySystem.getWaterConsumption();
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.energy.EnergySystem.Local#getNationalEnergySystem()
+		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
-		public EnergySystem.Local getNationalEnergySystem() {
-			return (EnergySystem.Local) getSociety().getCountry().getEnergySystem();
+		public void initialize(long time) {
+			petroleumSystem.initialize(time);
+			electricitySystem.initialize(time);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.EnergySystem.Local#optimizeEnergyDistribution()
 		 */
@@ -441,6 +453,34 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 				ignore.printStackTrace();
 			}
 		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+		 */
+		@Override
+		public void removeAttributeChangeListener(AttributeChangeListener listener) {
+			super.removeAttributeChangeListener(listener);
+			petroleumSystem.removeAttributeChangeListener(listener);
+			electricitySystem.removeAttributeChangeListener(listener);
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.SimEntity#tick()
+		 */
+		@Override
+		public void tick() {
+			petroleumSystem.tick();
+			electricitySystem.tick();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.SimEntity#tock()
+		 */
+		@Override
+		public void tock() {
+			petroleumSystem.tock();
+			electricitySystem.tock();
+		}
 		
 	}
 	
@@ -449,13 +489,47 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements EnergySystem.Remote {
 		private double waterConsumption;
+		private double electricityConsumption;
+		private double petroleumConsumption;
 		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem#getElectricityConsumption()
+		 */
+		@Override
+		public double getElectricityConsumption() {
+			return electricityConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem#getPetroleumConsumption()
+		 */
+		@Override
+		public double getPetroleumConsumption() {
+			return petroleumConsumption;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.EnergySystem#getWaterConsumption()
 		 */
 		@Override
 		public double getWaterConsumption() {
 			return waterConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem.Remote#setElectricityConsumption(double)
+		 */
+		@Override
+		public void setElectricityConsumption(double electricityConsumption) {
+			this.electricityConsumption = electricityConsumption;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.EnergySystem.Remote#setPetroleumConsumption(double)
+		 */
+		@Override
+		public void setPetroleumConsumption(double petroleumConsumption) {
+			this.petroleumConsumption = petroleumConsumption;
 		}
 
 		/* (non-Javadoc)

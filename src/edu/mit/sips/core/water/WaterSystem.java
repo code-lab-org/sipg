@@ -8,6 +8,7 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface EnergySystem.
  */
 public interface WaterSystem extends InfrastructureSystem {
+	public String ELECTRICITY_CONSUMED_ATTRIBUTE = "electricityConsumed";
 	
 	/**
 	 * The Interface Local.
@@ -105,6 +106,13 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @return the water production
 		 */
 		public double getWaterProduction();
+		
+		/**
+		 * Gets the water reservoir recharge rate.
+		 *
+		 * @return the water reservoir recharge rate
+		 */
+		public double getWaterReservoirRechargeRate();
 		
 		/**
 		 * Gets the water reservoir volume.

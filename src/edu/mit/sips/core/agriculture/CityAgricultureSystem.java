@@ -1,5 +1,8 @@
 package edu.mit.sips.core.agriculture;
 
+/**
+ * The Class CityAgricultureSystem.
+ */
 public class CityAgricultureSystem extends DefaultAgricultureSystem.Local {
 	private final double arableLandArea;
 
@@ -31,5 +34,29 @@ public class CityAgricultureSystem extends DefaultAgricultureSystem.Local {
 	@Override
 	public double getArableLandArea() {
 		return arableLandArea;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
+	 */
+	@Override
+	public void initialize(long time) {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
+	@Override
+	public void tick() {
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
+		
 	}
 }

@@ -1,10 +1,58 @@
 package edu.mit.sips.core;
 
+
 /**
  * The Interface InfrastructureElement.
  */
 public interface InfrastructureElement extends SimEntity {
+	
+	/**
+	 * Adds the element change listener.
+	 *
+	 * @param listener the listener
+	 */
+	public void addElementChangeListener(ElementChangeListener listener);
+	
+	/**
+	 * Fire element change event.
+	 */
+	public void fireElementChangeEvent();
 
+	/**
+	 * Gets the capital expense.
+	 *
+	 * @return the capital expense
+	 */
+	public double getCapitalExpense();
+	
+	/**
+	 * Gets the decommission expense.
+	 *
+	 * @return the decommission expense
+	 */
+	public double getDecommissionExpense();
+	
+	/**
+	 * Gets the destination.
+	 *
+	 * @return the destination
+	 */
+	public String getDestination();
+	
+	/**
+	 * Gets the fixed operations expense.
+	 *
+	 * @return the fixed operations expense
+	 */
+	public double getFixedOperationsExpense();
+	
+	/**
+	 * Gets the mutable element.
+	 *
+	 * @return the mutable element
+	 */
+	public MutableInfrastructureElement getMutableElement();
+	
 	/**
 	 * Gets the name.
 	 *
@@ -20,39 +68,11 @@ public interface InfrastructureElement extends SimEntity {
 	public String getOrigin();
 	
 	/**
-	 * Gets the destination.
+	 * Gets the total expense.
 	 *
-	 * @return the destination
+	 * @return the total expense
 	 */
-	public String getDestination();
-	
-	/**
-	 * Checks if is operational.
-	 *
-	 * @return true, if is operational
-	 */
-	public boolean isOperational();
-	
-	/**
-	 * Checks if is exists.
-	 *
-	 * @return true, if is exists
-	 */
-	public boolean isExists();
-	
-	/**
-	 * Gets the capital expense.
-	 *
-	 * @return the capital expense
-	 */
-	public double getCapitalExpense();
-	
-	/**
-	 * Gets the fixed operations expense.
-	 *
-	 * @return the fixed operations expense
-	 */
-	public double getFixedOperationsExpense();
+	public double getTotalExpense();
 	
 	/**
 	 * Gets the total operations expense.
@@ -62,23 +82,23 @@ public interface InfrastructureElement extends SimEntity {
 	public double getTotalOperationsExpense();
 	
 	/**
-	 * Gets the decommission expense.
+	 * Checks if is exists.
 	 *
-	 * @return the decommission expense
+	 * @return true, if is exists
 	 */
-	public double getDecommissionExpense();
+	public boolean isExists();
 	
 	/**
-	 * Gets the total expense.
+	 * Checks if is operational.
 	 *
-	 * @return the total expense
+	 * @return true, if is operational
 	 */
-	public double getTotalExpense();
+	public boolean isOperational();
 	
 	/**
-	 * Gets the mutable element.
+	 * Removes the element change listener.
 	 *
-	 * @return the mutable element
+	 * @param listener the listener
 	 */
-	public MutableInfrastructureElement getMutableElement();
+	public void removeElementChangeListener(ElementChangeListener listener);
 }

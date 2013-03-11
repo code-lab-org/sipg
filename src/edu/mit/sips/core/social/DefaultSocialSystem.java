@@ -6,7 +6,6 @@ import java.util.List;
 
 import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.InfrastructureSystem;
 
 /**
  * The Class DefaultSocialSystem.
@@ -16,31 +15,13 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
-		private final PopulationModel populationModel;
-		private double domesticProduct, nextDomesticProduct;
+	public static abstract class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
 		
 		/**
 		 * Instantiates a new local.
 		 */
-		protected Local() {
-			this.populationModel = new DefaultPopulationModel();
-		}
-		
-		/**
-		 * Instantiates a new local.
-		 *
-		 * @param populationModel the population model
-		 */
-		public Local(PopulationModel populationModel) {
+		public Local() {
 			super("Society");
-			
-			// Validate population model.
-			if(populationModel == null) {
-				throw new IllegalArgumentException(
-						"Population model cannot be null.");
-			}
-			this.populationModel = populationModel;
 		}
 
 		/* (non-Javadoc)
@@ -70,14 +51,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public double getDistributionRevenue() {
 			return 0;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SocialSystem#getDomesticProduct()
-		 */
-		@Override
-		public double getDomesticProduct() {
-			return domesticProduct;
 		}
 
 		/* (non-Javadoc)
@@ -167,27 +140,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 					new ArrayList<InfrastructureElement>());
 		}
 
-		/**
-		 * Gets the next economic production.
-		 *
-		 * @return the next economic production
-		 */
-		private double getNextEconomicProduction() {
-			double economicProduction = 0;
-			for(InfrastructureSystem s : getSociety().getInfrastructureSystems()) {
-				economicProduction += s.getDomesticProduction();
-			}
-			return economicProduction;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SocialSystem#getPopulation()
-		 */
-		@Override
-		public long getPopulation() {
-			return populationModel.getPopulation();
-		}
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -212,35 +164,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			return Math.min(getSociety().getGlobals().getMaxWaterDemandPerCapita(), 
 					Math.max(getSociety().getGlobals().getMinWaterDemandPerCapita(), 
 							getSociety().getWaterSystem().getWaterSupplyPerCapita()));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#initialize(long)
-		 */
-		@Override
-		public void initialize(long time) {
-			populationModel.initialize(time);
-			// note: initialize domestic product LAST as 
-			// it depends on other initial values
-			domesticProduct = getNextEconomicProduction();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#tick()
-		 */
-		@Override
-		public void tick() {
-			nextDomesticProduct = getNextEconomicProduction();
-			populationModel.tick();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#tock()
-		 */
-		@Override
-		public void tock() {
-			domesticProduct = nextDomesticProduct;
-			populationModel.tock();
 		}
 	}
 	

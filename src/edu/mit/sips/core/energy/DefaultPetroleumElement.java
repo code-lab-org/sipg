@@ -379,6 +379,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 					"Petroleum input cannot exceed maximum.");
 		}
 		this.petroleumInput = petroleumInput;
+		fireElementChangeEvent();
 	}
 
 	/* (non-Javadoc)
@@ -395,5 +396,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 					"Petroleum production cannot be negative.");
 		}
 		this.petroleumProduction = petroleumProduction;
+		fireElementChangeEvent();
 	}
 }

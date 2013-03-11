@@ -24,7 +24,7 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 /**
  * The Class DefaultElectricitySystem.
  */
-public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local implements
+public abstract class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local implements
 		ElectricitySystem {
 	
 	/**
@@ -272,30 +272,6 @@ public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local 
 			waterConsumption += e.getWaterConsumption();
 		}
 		return waterConsumption;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
-	@Override
-	public void tick() {
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
-	@Override
-	public void tock() {
-		
 	}
 	
 	/* (non-Javadoc)

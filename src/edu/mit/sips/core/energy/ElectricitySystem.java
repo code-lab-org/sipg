@@ -5,6 +5,8 @@ import java.util.List;
 import edu.mit.sips.core.InfrastructureSystem;
 
 public interface ElectricitySystem extends InfrastructureSystem.Local {
+	public static String WATER_CONSUMED_ATTRIBUTE = "waterConsumed";
+	public static String PETROLEUM_CONSUMED_ATTRIBUTE = "petroleumConsumed";
 	
 	/**
 	 * Gets the electricity from burning petroleum.

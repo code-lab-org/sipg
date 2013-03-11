@@ -255,14 +255,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#initialize(long)
-		 */
-		@Override
-		public void initialize(long time) {
-			
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#optimizeFoodDistribution()
 		 */
 		@Override
@@ -551,24 +543,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 				System.out.println("];");
 			}
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#tick()
-		 */
-		@Override
-		public void tick() {
-			
-		}
-
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SimEntity#tock()
-		 */
-		@Override
-		public void tock() {
-			
-		}
-
 	}
 	
 	/**

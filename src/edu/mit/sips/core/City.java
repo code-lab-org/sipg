@@ -6,10 +6,10 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.CityAgricultureSystem;
-import edu.mit.sips.core.energy.DefaultEnergySystem;
-import edu.mit.sips.core.social.DefaultSocialSystem;
+import edu.mit.sips.core.energy.CityEnergySystem;
+import edu.mit.sips.core.social.CitySocialSystem;
 import edu.mit.sips.core.social.PopulationModel;
-import edu.mit.sips.core.water.DefaultWaterSystem;
+import edu.mit.sips.core.water.CityWaterSystem;
 
 public class City extends DefaultSociety implements Society {
 	/**
@@ -40,12 +40,12 @@ public class City extends DefaultSociety implements Society {
 			double maxPetroleumReservoir, double initialPetroleumReservoir) {
 		super(name, new ArrayList<Society>(), 
 				new CityAgricultureSystem(arableLandArea),
-				new DefaultWaterSystem.Local(coastal, maxWaterReservoir,
+				new CityWaterSystem(coastal, maxWaterReservoir,
 						initialWaterReservoir, waterReservoirRechargeRate, 
 						initialWaterConsumptionPerCapita),
-						new DefaultEnergySystem.Local(maxPetroleumReservoir,
+						new CityEnergySystem(maxPetroleumReservoir,
 								initialPetroleumReservoir),
-								new DefaultSocialSystem.Local(populationModel));
+								new CitySocialSystem(populationModel));
 	}
 	
 	/* (non-Javadoc)

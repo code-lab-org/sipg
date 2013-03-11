@@ -1,4 +1,3 @@
-
 package edu.mit.sips.core.energy;
 
 import edu.mit.sips.core.InfrastructureSystem;
@@ -12,6 +11,13 @@ public interface EnergySystem extends InfrastructureSystem {
 	 * The Interface Local.
 	 */
 	public static interface Local extends EnergySystem, InfrastructureSystem.Local {
+		
+		/**
+		 * Gets the electricity system.
+		 *
+		 * @return the electricity system
+		 */
+		public ElectricitySystem getElectricitySystem();
 		
 		/**
 		 * Gets the national energy system.
@@ -28,11 +34,9 @@ public interface EnergySystem extends InfrastructureSystem {
 		public PetroleumSystem getPetroleumSystem();
 		
 		/**
-		 * Gets the electricity system.
-		 *
-		 * @return the electricity system
+		 * Optimize energy distribution.
 		 */
-		public ElectricitySystem getElectricitySystem();
+		public void optimizeEnergyDistribution();
 		
 		/**
 		 * Optimize energy production and distribution.
@@ -43,11 +47,6 @@ public interface EnergySystem extends InfrastructureSystem {
 		public void optimizeEnergyProductionAndDistribution(
 				double deltaPetroleumProductionCost, 
 				double deltaElectricityProductionCost);
-		
-		/**
-		 * Optimize energy distribution.
-		 */
-		public void optimizeEnergyDistribution();
 	}
 	
 	/**
@@ -61,7 +60,35 @@ public interface EnergySystem extends InfrastructureSystem {
 		 * @return the water consumption
 		 */
 		public void setWaterConsumption(double waterConsumption);
+		
+		/**
+		 * Sets the electricity consumption.
+		 *
+		 * @param electricityConsumption the new electricity consumption
+		 */
+		public void setElectricityConsumption(double electricityConsumption);
+		
+		/**
+		 * Sets the petroleum consumption.
+		 *
+		 * @param petroleumConsumption the new petroleum consumption
+		 */
+		public void setPetroleumConsumption(double petroleumConsumption);
 	}
+	
+	/**
+	 * Gets the electricity consumption.
+	 *
+	 * @return the electricity consumption
+	 */
+	public double getElectricityConsumption();
+	
+	/**
+	 * Gets the petroleum consumption.
+	 *
+	 * @return the petroleum consumption
+	 */
+	public double getPetroleumConsumption();
 	
 	/**
 	 * Gets the water consumption.

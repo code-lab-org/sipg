@@ -386,6 +386,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 					"Electricity input cannot exceed maximum.");
 		}
 		this.electricityInput = electricityInput;
+		fireElementChangeEvent();
 	}
 
 	/* (non-Javadoc)
@@ -402,5 +403,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 					"Electricity production cannot be negative.");
 		}
 		this.electricityProduction = electricityProduction;
+		fireElementChangeEvent();
 	}
 }

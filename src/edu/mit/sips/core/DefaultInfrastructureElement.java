@@ -1,5 +1,7 @@
 package edu.mit.sips.core;
 
+import javax.swing.event.EventListenerList;
+
 /**
  * The Class InfrastructureElement.
  * 
@@ -9,6 +11,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	private final String name;
 	private final String origin, destination;
 	private final LifecycleModel lifecycleModel;
+	protected transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
 	 * Instantiates a new infrastructure element.
@@ -53,6 +56,27 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		this.origin = "";
 		this.destination = "";
 		this.lifecycleModel = new DefaultLifecycleModel();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureElement#addElementChangeListener(edu.mit.sips.core.ElementChangeListener)
+	 */
+	@Override
+	public final void addElementChangeListener(ElementChangeListener listener) {
+		listenerList.add(ElementChangeListener.class, listener);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureElement#fireElementChangeEvent()
+	 */
+	@Override
+	public final void fireElementChangeEvent() {
+		ElementChangeEvent evt = new ElementChangeEvent(this);
+		ElementChangeListener[] listeners = listenerList.getListeners(
+				ElementChangeListener.class);
+		for(int i = 0; i < listeners.length; i++) {
+			listeners[i].elementChanged(evt);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -135,6 +159,14 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	@Override
 	public final boolean isOperational() { 
 		return lifecycleModel.isOperational();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureElement#removeElementChangeListener(edu.mit.sips.core.ElementChangeListener)
+	 */
+	@Override
+	public final void removeElementChangeListener(ElementChangeListener listener) {
+		listenerList.remove(ElementChangeListener.class, listener);
 	}
 
 	/* (non-Javadoc)

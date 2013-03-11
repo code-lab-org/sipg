@@ -8,6 +8,7 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface AgricultureSystem.
  */
 public interface AgricultureSystem extends InfrastructureSystem {
+	public static String WATER_CONSUMED_ATTRIBUTE = "waterConsumed";
 	
 	/**
 	 * The Interface Local.

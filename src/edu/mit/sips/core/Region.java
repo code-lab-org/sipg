@@ -32,7 +32,6 @@ public class Region extends DefaultSociety implements Society {
 			WaterSystem.Local waterSystem,
 			EnergySystem.Local energySystem,
 			SocialSystem.Local socialSystem) {
-		// TODO need different level of aggregation for systems
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
 	}

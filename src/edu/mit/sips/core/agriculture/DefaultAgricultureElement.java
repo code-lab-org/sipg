@@ -308,6 +308,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 					"Food input cannot exceed maximum.");
 		}
 		this.foodInput = foodInput;
+		fireElementChangeEvent();
 	}
 
 	/* (non-Javadoc)
@@ -325,6 +326,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 					"Land area cannot be negative.");
 		}
 		this.landArea = landArea;
+		fireElementChangeEvent();
 	}
 	
 	/* (non-Javadoc)

@@ -4,7 +4,12 @@ import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
 
+/**
+ * The Interface PetroleumSystem.
+ */
 public interface PetroleumSystem extends InfrastructureSystem.Local {
+	public static String ELECTRICITY_CONSUMED_ATTRIBUTE = "electricityConsumed";
+	
 	/**
 	 * Gets the electricity consumed.
 	 *

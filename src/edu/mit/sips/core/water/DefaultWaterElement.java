@@ -396,6 +396,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 					"Water input cannot exceed maximum.");
 		}
 		this.waterInput = waterInput;
+		fireElementChangeEvent();
 	}
 
 	/* (non-Javadoc)
@@ -412,5 +413,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 					"Water production cannot be negative.");
 		}
 		this.waterProduction = waterProduction;
+		fireElementChangeEvent();
 	}
 }

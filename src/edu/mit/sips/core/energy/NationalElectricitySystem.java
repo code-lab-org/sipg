@@ -1,4 +1,4 @@
-package edu.mit.sips.core.agriculture;
+package edu.mit.sips.core.energy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,9 +13,9 @@ import edu.mit.sips.core.Society;
 /**
  * The Class NationalAgricultureSystem.
  */
-public class NationalAgricultureSystem extends RegionalAgricultureSystem implements ElementChangeListener {
-	private final List<AgricultureElement> elements = 
-			Collections.synchronizedList(new ArrayList<AgricultureElement>());
+public class NationalElectricitySystem extends RegionalElectricitySystem implements ElementChangeListener {
+	private final List<ElectricityElement> elements = 
+			Collections.synchronizedList(new ArrayList<ElectricityElement>());
 	
 	/**
 	 * Adds the element.
@@ -23,7 +23,7 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 	 * @param element the element
 	 * @return true, if successful
 	 */
-	public synchronized boolean addElement(AgricultureElement element) {
+	public synchronized boolean addElement(ElectricityElement element) {
 		boolean value = elements.add(element);
 		element.addElementChangeListener(this);
 		fireAttributeChanges(element);
@@ -34,15 +34,15 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem.Local#getExternalElements()
 	 */
 	@Override
-	public  List<AgricultureElement> getExternalElements() {
-		return Collections.unmodifiableList(new ArrayList<AgricultureElement>());
+	public  List<ElectricityElement> getExternalElements() {
+		return Collections.unmodifiableList(new ArrayList<ElectricityElement>());
 	}
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem.Local#getInternalElements()
 	 */
 	@Override
-	public synchronized List<AgricultureElement> getInternalElements() {
+	public synchronized List<ElectricityElement> getInternalElements() {
 		return Collections.unmodifiableList(elements);
 	}
 	
@@ -52,7 +52,7 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 	 * @param element the element
 	 * @return true, if successful
 	 */
-	public synchronized boolean removeElement(AgricultureElement element) {
+	public synchronized boolean removeElement(ElectricityElement element) {
 		boolean value = elements.remove(element);
 		element.removeElementChangeListener(this);
 		fireAttributeChanges(element);
@@ -66,8 +66,8 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 	 */
 	@Override
 	public void elementChanged(ElementChangeEvent evt) {
-		if(evt.getSource() instanceof AgricultureElement) {
-			// TODO fireAttributeChanges((AgricultureElement) evt.getSource());
+		if(evt.getSource() instanceof ElectricityElement) {
+			// TODO fireAttributeChanges((WaterElement) evt.getSource());
 		}
 	}
 	
@@ -76,7 +76,7 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 	 *
 	 * @param element the element
 	 */
-	private void fireAttributeChanges(AgricultureElement element) {
+	private void fireAttributeChanges(ElectricityElement element) {
 		Set<Society> affectedSocieties = new HashSet<Society>();
 		getAffectedSocietiesRecursive(getSociety().getCountry().getSociety(element.getOrigin()), 
 				affectedSocieties);
@@ -84,12 +84,13 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 				affectedSocieties);
 		
 		for(Society society : affectedSocieties) {
-			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) { 
-				AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
-						society.getAgricultureSystem();
-				agricultureSystem.fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-				agricultureSystem.fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-				agricultureSystem.fireAttributeChangeEvent(WATER_CONSUMED_ATTRIBUTE);
+			if(society.getEnergySystem() instanceof EnergySystem.Local) { 
+				EnergySystem.Local energySystem = (EnergySystem.Local) 
+						society.getEnergySystem();
+				energySystem.getElectricitySystem().fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
+				energySystem.getElectricitySystem().fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
+				energySystem.getElectricitySystem().fireAttributeChangeEvent(WATER_CONSUMED_ATTRIBUTE);
+				energySystem.getElectricitySystem().fireAttributeChangeEvent(PETROLEUM_CONSUMED_ATTRIBUTE);
 			}
 		}
 	}

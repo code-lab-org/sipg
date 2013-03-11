@@ -42,7 +42,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
 		 */
 		@Override
-		public final void addAttributeChangeListener(AttributeChangeListener listener) {
+		public void addAttributeChangeListener(AttributeChangeListener listener) {
 			listenerList.add(AttributeChangeListener.class, listener);
 		}
 
@@ -157,7 +157,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
 		 */
 		@Override
-		public final void removeAttributeChangeListener(AttributeChangeListener listener) {
+		public void removeAttributeChangeListener(AttributeChangeListener listener) {
 			listenerList.remove(AttributeChangeListener.class, listener);
 		}
 		

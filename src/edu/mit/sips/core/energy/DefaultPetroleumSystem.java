@@ -18,50 +18,18 @@ import org.apache.commons.math3.optim.linear.SimplexSolver;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultInfrastructureSystem.Local;
+import edu.mit.sips.core.DefaultInfrastructureSystem;
 
 /**
  * The Class DefaultPetroleumSystem.
  */
-public class DefaultPetroleumSystem extends Local implements PetroleumSystem {
-	private final double maxPetroleumReservoirVolume;
-	private final double initialPetroleumReservoirVolume;
-	private double petroleumReservoirVolume, nextPetroleumReservoirVolume;
+public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local implements PetroleumSystem {
 	
 	/**
 	 * Instantiates a new default petroleum system.
 	 */
-	protected DefaultPetroleumSystem() {
-		this.maxPetroleumReservoirVolume = 0;
-		this.initialPetroleumReservoirVolume = 0;
-	}
-	
-	/**
-	 * Instantiates a new default petroleum system.
-	 *
-	 * @param maxPetroleumReservoirVolume the max petroleum reservoir volume
-	 * @param initialPetroleumReservoirVolume the initial petroleum reservoir volume
-	 */
-	public DefaultPetroleumSystem(double maxPetroleumReservoirVolume,
-			double initialPetroleumReservoirVolume) {
+	public DefaultPetroleumSystem() {
 		super("Petroleum");
-
-		// Validate max petroleum reservoir.
-		if(maxPetroleumReservoirVolume < 0) {
-			throw new IllegalArgumentException(
-					"Max petroleum reservoir volume cannot be negative.");
-		}
-		this.maxPetroleumReservoirVolume = maxPetroleumReservoirVolume;
-		
-		// Validate initial petroleum reservoir.
-		if(initialPetroleumReservoirVolume < 0) {
-			throw new IllegalArgumentException(
-					"Initial petroleum reservoir volume cannot be negative.");
-		} else if(initialPetroleumReservoirVolume > maxPetroleumReservoirVolume) {
-			throw new IllegalArgumentException(
-					"Initial petroleum reservoir volume cannot exceed maximum.");
-		}
-		this.initialPetroleumReservoirVolume = initialPetroleumReservoirVolume;
 	}
 	
 	/* (non-Javadoc)
@@ -190,14 +158,6 @@ public class DefaultPetroleumSystem extends Local implements PetroleumSystem {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.PetroleumSystem#getMaxPetroleumReservoirVolume()
-	 */
-	@Override
-	public double getMaxPetroleumReservoirVolume() {
-		return maxPetroleumReservoirVolume;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getNationalPetroleumSystem()
 	 */
 	@Override
@@ -272,14 +232,6 @@ public class DefaultPetroleumSystem extends Local implements PetroleumSystem {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.PetroleumSystem#getPetroleumReservoirVolume()
-	 */
-	@Override
-	public double getPetroleumReservoirVolume() {
-		return petroleumReservoirVolume;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
 	 */
 	@Override
@@ -310,15 +262,7 @@ public class DefaultPetroleumSystem extends Local implements PetroleumSystem {
 				+ getPetroleumImport() 
 				- getPetroleumExport();
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) {
-		petroleumReservoirVolume = initialPetroleumReservoirVolume;
-	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#optimizePetroleumDistribution()
 	 */
@@ -546,22 +490,5 @@ public class DefaultPetroleumSystem extends Local implements PetroleumSystem {
 			// Don't overwrite existing values.
 			ignore.printStackTrace();
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
-	@Override
-	public void tick() {
-		nextPetroleumReservoirVolume = Math.min(maxPetroleumReservoirVolume, 
-				petroleumReservoirVolume - getPetroleumWithdrawals());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
-	@Override
-	public void tock() {
-		petroleumReservoirVolume = nextPetroleumReservoirVolume;
 	}
 }
