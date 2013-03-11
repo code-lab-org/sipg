@@ -83,6 +83,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	public double getTotalFoodDemand();
 	
 	/**
+	 * Gets the total petroleum demand.
+	 *
+	 * @return the total petroleum demand
+	 */
+	public double getTotalPetroleumDemand();
+	
+	/**
 	 * Gets the total water demand.
 	 *
 	 * @return the total water demand

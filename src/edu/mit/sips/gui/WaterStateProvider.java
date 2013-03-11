@@ -7,6 +7,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.water.WaterElement;
+import edu.mit.sips.core.water.WaterSystem;
 
 /**
  * The Class WaterStateProvider.
@@ -27,10 +28,14 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
-		for(WaterElement e : society.getWaterSystem().getExternalElements()) {
-			City origCity = society.getCountry().getCity(e.getOrigin());
-			if(origin.getCities().contains(origCity)) {
-				distribution += e.getWaterOutput();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			for(WaterElement e : waterSystem.getExternalElements()) {
+				City origCity = society.getCountry().getCity(e.getOrigin());
+				if(origin.getCities().contains(origCity)) {
+					distribution += e.getWaterOutput();
+				}
 			}
 		}
 		return distribution;
@@ -42,14 +47,18 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
-		for(WaterElement e : society.getWaterSystem().getInternalElements()) {
-			City destCity = society.getCountry().getCity(e.getDestination());
-			if(destination.getCities().contains(destCity)) {
-				if(society.getCities().contains(destCity)) {
-					// if a self-loop, only add distribution losses
-					distribution += e.getWaterInput() - e.getWaterOutput();
-				} else {
-					distribution += e.getWaterInput();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			for(WaterElement e : waterSystem.getInternalElements()) {
+				City destCity = society.getCountry().getCity(e.getDestination());
+				if(destination.getCities().contains(destCity)) {
+					if(society.getCities().contains(destCity)) {
+						// if a self-loop, only add distribution losses
+						distribution += e.getWaterInput() - e.getWaterOutput();
+					} else {
+						distribution += e.getWaterInput();
+					}
 				}
 			}
 		}
@@ -62,8 +71,12 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public List<WaterElement> getElements(Society society) {
 		List<WaterElement> elements = new ArrayList<WaterElement>();
-		for(WaterElement element : society.getWaterSystem().getElements()) {
-			if(element.isExists()) elements.add(element);
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			for(WaterElement element : waterSystem.getElements()) {
+				if(element.isExists()) elements.add(element);
+			}
 		}
 		return elements;
 	}
@@ -81,7 +94,12 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getImport(Society society) {
-		return society.getWaterSystem().getWaterImport();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			return waterSystem.getWaterImport();
+		} 
+		return 0;
 	}
 
 	/* (non-Javadoc)
@@ -101,9 +119,14 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getNetFlow(Society society) {
-		return - society.getWaterSystem().getWaterImport()
-				+ society.getWaterSystem().getWaterOutDistribution()
-				- society.getWaterSystem().getWaterInDistribution();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			return - waterSystem.getWaterImport()
+					+ waterSystem.getWaterOutDistribution()
+					- waterSystem.getWaterInDistribution();
+		} 
+		return 0;
 	}
 	
 	/* (non-Javadoc)
@@ -112,10 +135,14 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
-		for(WaterElement e : society.getWaterSystem().getExternalElements()) {
-			City origCity = society.getCountry().getCity(e.getOrigin());
-			if(!society.getCities().contains(origCity)) {
-				distribution += e.getWaterOutput();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			for(WaterElement e : waterSystem.getExternalElements()) {
+				City origCity = society.getCountry().getCity(e.getOrigin());
+				if(!society.getCities().contains(origCity)) {
+					distribution += e.getWaterOutput();
+				}
 			}
 		}
 		return distribution;
@@ -127,10 +154,14 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
-		for(WaterElement e : society.getWaterSystem().getInternalElements()) {
-			City destCity = society.getCountry().getCity(e.getDestination());
-			if(!society.getCities().contains(destCity)) {
-				distribution += e.getWaterInput();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			for(WaterElement e : waterSystem.getInternalElements()) {
+				City destCity = society.getCountry().getCity(e.getDestination());
+				if(!society.getCities().contains(destCity)) {
+					distribution += e.getWaterInput();
+				}
 			}
 		}
 		return distribution;
@@ -141,7 +172,12 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getOtherProduction(Society society) {
-		return society.getWaterSystem().getWaterFromArtesianWell();
+		if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			WaterSystem.Local waterSystem = (WaterSystem.Local) 
+					society.getWaterSystem(); 
+			return waterSystem.getWaterFromArtesianWell();
+		} 
+		return 0;
 	}
 
 	/* (non-Javadoc)

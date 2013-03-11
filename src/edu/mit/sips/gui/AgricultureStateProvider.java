@@ -7,6 +7,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
 
 /**
  * The Class AgricultureStateProvider.
@@ -27,10 +28,14 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
-		for(AgricultureElement e : society.getAgricultureSystem().getExternalElements()) {
-			City origCity = society.getCountry().getCity(e.getOrigin());
-			if(origin.getCities().contains(origCity)) {
-				distribution += e.getFoodOutput();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			for(AgricultureElement e : agricultureSystem.getExternalElements()) {
+				City origCity = society.getCountry().getCity(e.getOrigin());
+				if(origin.getCities().contains(origCity)) {
+					distribution += e.getFoodOutput();
+				}
 			}
 		}
 		return distribution;
@@ -42,14 +47,18 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
-		for(AgricultureElement e : society.getAgricultureSystem().getInternalElements()) {
-			City destCity = society.getCountry().getCity(e.getDestination());
-			if(destination.getCities().contains(destCity)) {
-				if(society.getCities().contains(destCity)) {
-					// if a self-loop, only add distribution losses
-					distribution += e.getFoodInput() - e.getFoodOutput();
-				} else {
-					distribution += e.getFoodInput();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			for(AgricultureElement e : agricultureSystem.getInternalElements()) {
+				City destCity = society.getCountry().getCity(e.getDestination());
+				if(destination.getCities().contains(destCity)) {
+					if(society.getCities().contains(destCity)) {
+						// if a self-loop, only add distribution losses
+						distribution += e.getFoodInput() - e.getFoodOutput();
+					} else {
+						distribution += e.getFoodInput();
+					}
 				}
 			}
 		}
@@ -62,8 +71,12 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	@Override
 	public List<AgricultureElement> getElements(Society society) {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
-		for(AgricultureElement element : society.getAgricultureSystem().getElements()) {
-			if(element.isExists()) elements.add(element);
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			for(AgricultureElement element : agricultureSystem.getElements()) {
+				if(element.isExists()) elements.add(element);
+			}
 		}
 		return elements;
 	}
@@ -73,7 +86,12 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getExport(Society society) {
-		return society.getAgricultureSystem().getFoodExport();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			return agricultureSystem.getFoodExport();
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)
@@ -81,7 +99,12 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getImport(Society society) {
-		return society.getAgricultureSystem().getFoodImport();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			return agricultureSystem.getFoodImport();
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)
@@ -101,10 +124,15 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getNetFlow(Society society) {
-		return society.getAgricultureSystem().getFoodExport()
-				- society.getAgricultureSystem().getFoodImport()
-				+ society.getAgricultureSystem().getFoodOutDistribution()
-				- society.getAgricultureSystem().getFoodInDistribution();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			return agricultureSystem.getFoodExport()
+					- agricultureSystem.getFoodImport()
+					+ agricultureSystem.getFoodOutDistribution()
+					- agricultureSystem.getFoodInDistribution();
+		} 
+		return 0;
 	}
 	
 	/* (non-Javadoc)
@@ -113,10 +141,14 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
-		for(AgricultureElement e : society.getAgricultureSystem().getExternalElements()) {
-			City origCity = society.getCountry().getCity(e.getOrigin());
-			if(!society.getCities().contains(origCity)) {
-				distribution += e.getFoodOutput();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			for(AgricultureElement e : agricultureSystem.getExternalElements()) {
+				City origCity = society.getCountry().getCity(e.getOrigin());
+				if(!society.getCities().contains(origCity)) {
+					distribution += e.getFoodOutput();
+				}
 			}
 		}
 		return distribution;
@@ -128,10 +160,14 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
-		for(AgricultureElement e : society.getAgricultureSystem().getInternalElements()) {
-			City destCity = society.getCountry().getCity(e.getDestination());
-			if(!society.getCities().contains(destCity)) {
-				distribution += e.getFoodInput();
+		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
+					society.getAgricultureSystem(); 
+			for(AgricultureElement e : agricultureSystem.getInternalElements()) {
+				City destCity = society.getCountry().getCity(e.getDestination());
+				if(!society.getCities().contains(destCity)) {
+					distribution += e.getFoodInput();
+				}
 			}
 		}
 		return distribution;

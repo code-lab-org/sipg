@@ -213,6 +213,14 @@ public abstract class DefaultSociety implements Society {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getTotalPetroleumDemand()
+	 */
+	@Override
+	public double getTotalPetroleumDemand() {
+		return energySystem.getPetroleumConsumption();
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getTotalWaterDemand()
 	 */
 	@Override
