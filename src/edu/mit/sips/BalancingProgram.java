@@ -17,6 +17,7 @@ import edu.mit.sips.core.water.CityWaterSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
 import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
+import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -89,7 +90,17 @@ public class BalancingProgram {
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1965));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
+
 		
+		try {
+			SimAmbassador ambassador = new SimAmbassador(ksa);
+			
+			ambassador.connectAndJoin("SuperUser");
+			
+			//ambassador.resignAndDisconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		final Simulator simulator = new Simulator(ksa);
 		SwingUtilities.invokeLater(new Runnable() {

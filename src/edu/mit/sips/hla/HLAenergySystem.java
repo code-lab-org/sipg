@@ -94,6 +94,8 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws AttributeNotDefined the attribute not defined
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	public static HLAenergySystem createRemoteEnergySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -101,7 +103,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
-					RestoreInProgress {
+					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAenergySystem hlaSystem = new HLAenergySystem(
 				rtiAmbassador, encoderFactory, energySystem);
 		hlaSystem.requestAttributeValueUpdate();
@@ -185,12 +187,18 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAenergySystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
 			EnergySystem energySystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown {
+			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
+			ObjectClassNotPublished, ObjectClassNotDefined, 
+			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, energySystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		petroleumConsumption = encoderFactory.createHLAfloat64BE();

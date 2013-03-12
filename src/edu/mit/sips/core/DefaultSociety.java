@@ -209,6 +209,19 @@ public abstract class DefaultSociety implements Society {
 	public Society getSociety() {
 		return society;
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getSocieties()
+	 */
+	@Override
+	public List<? extends Society> getSocieties() {
+		List<Society> societies = new ArrayList<Society>();
+		societies.add(this);
+		for(Society society : getNestedSocieties()) {
+			societies.addAll(society.getSocieties());
+		}
+		return societies;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getTotalElectricityDemand()

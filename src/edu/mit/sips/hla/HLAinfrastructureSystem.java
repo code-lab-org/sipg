@@ -14,6 +14,7 @@ import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.ObjectClassNotDefined;
+import hla.rti1516e.exceptions.ObjectClassNotPublished;
 import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
 import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
@@ -123,15 +124,20 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAinfrastructureSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
 			InfrastructureSystem infrastructureSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown {
-		super(rtiAmbassador);
+			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
+			ObjectClassNotPublished, ObjectClassNotDefined, SaveInProgress, 
+			RestoreInProgress {
+		super(rtiAmbassador, infrastructureSystem instanceof InfrastructureSystem.Local?true:false);
 		this.infrastructureSystem = infrastructureSystem;
-		objectInstanceHandle = rtiAmbassador.getObjectInstanceHandle(instanceName);
 		name = encoderFactory.createHLAunicodeString();
 		societyName = encoderFactory.createHLAunicodeString();
 		netCashFlow = encoderFactory.createHLAfloat64BE();

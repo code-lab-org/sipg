@@ -99,6 +99,8 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * @throws AttributeNotDefined the attribute not defined
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	public static HLAsocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -106,7 +108,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
-					RestoreInProgress {
+					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAsocialSystem hlaSystem = new HLAsocialSystem(
 				rtiAmbassador, encoderFactory, socialSystem);
 		hlaSystem.requestAttributeValueUpdate();
@@ -192,12 +194,18 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAsocialSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
 			SocialSystem socialSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown {
+			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
+			ObjectClassNotPublished, ObjectClassNotDefined, 
+			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, socialSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		foodConsumption = encoderFactory.createHLAfloat64BE();

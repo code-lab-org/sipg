@@ -90,6 +90,8 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	 * @throws AttributeNotDefined the attribute not defined
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	public static HLAagricultureSystem createRemoteAgricultureSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -97,7 +99,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
-					RestoreInProgress {
+					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
 				rtiAmbassador, encoderFactory, agricultureSystem);
 		hlaSystem.requestAttributeValueUpdate();
@@ -179,12 +181,18 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAagricultureSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
 			AgricultureSystem agricultureSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown {
+			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
+			ObjectClassNotPublished, ObjectClassNotDefined, 
+			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, agricultureSystem);
 		waterConsumption = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 

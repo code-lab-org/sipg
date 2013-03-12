@@ -77,6 +77,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	public SocialSystem getSocialSystem();
 	
 	/**
+	 * Gets the societies.
+	 *
+	 * @return the societies
+	 */
+	public List<? extends Society> getSocieties();
+	
+	/**
 	 * Gets the total electricity demand.
 	 *
 	 * @return the total electricity demand

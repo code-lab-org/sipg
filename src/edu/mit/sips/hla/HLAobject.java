@@ -18,6 +18,7 @@ import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.ObjectClassNotDefined;
+import hla.rti1516e.exceptions.ObjectClassNotPublished;
 import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
 import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
 import hla.rti1516e.exceptions.RTIinternalError;
@@ -33,34 +34,53 @@ import javax.swing.event.EventListenerList;
  * The Class HLAobject.
  */
 public abstract class HLAobject implements AttributeChangeListener {
-	protected final RTIambassador rtiAmbassador;
-	protected final ObjectClassHandle objectClassHandle;
-	protected final Map<String,AttributeHandle> attributeHandles = new HashMap<String,AttributeHandle>();
-	protected final AttributeHandleSet attributeHandleSet;
-	protected String instanceName;
-	protected ObjectInstanceHandle objectInstanceHandle;
-	protected EventListenerList listenerList = new EventListenerList();
+	private final boolean local;
+	private final RTIambassador rtiAmbassador;
+	private final ObjectClassHandle objectClassHandle;
+	private final Map<String,AttributeHandle> attributeHandles = new HashMap<String,AttributeHandle>();
+	private final AttributeHandleSet attributeHandleSet;
+	private String instanceName;
+	private ObjectInstanceHandle objectInstanceHandle;
+	private EventListenerList listenerList = new EventListenerList();
 	
 	/**
 	 * Instantiates a new HLA object.
 	 *
 	 * @param rtiAmbassador the rti ambassador
+	 * @param local the local
 	 * @throws NameNotFound the name not found
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the RTI internal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
+	 * @throws ObjectInstanceNotKnown 
 	 */
-	public HLAobject(RTIambassador rtiAmbassador) 
+	public HLAobject(RTIambassador rtiAmbassador, boolean local) 
 			throws NameNotFound, FederateNotExecutionMember, NotConnected, 
-			RTIinternalError, InvalidObjectClassHandle {
+			RTIinternalError, InvalidObjectClassHandle, 
+			ObjectClassNotPublished, ObjectClassNotDefined, 
+			SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
+		this.local = local;
 		this.rtiAmbassador = rtiAmbassador;
 		
 		objectClassHandle = rtiAmbassador.getObjectClassHandle(getObjectClassName());
 		attributeHandleSet = rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attributeName : getAttributeNames()) {
-			attributeHandles.put(attributeName, rtiAmbassador.getAttributeHandle(objectClassHandle, attributeName));
+			attributeHandles.put(attributeName, 
+					rtiAmbassador.getAttributeHandle(
+							objectClassHandle, attributeName));
 			attributeHandleSet.add(getAttributeHandle(attributeName));
+		}
+		
+		if(local) {
+			objectInstanceHandle = rtiAmbassador.registerObjectInstance(getObjectClassHandle());
+			instanceName = rtiAmbassador.getObjectInstanceName(objectInstanceHandle);
+		} else {
+			objectInstanceHandle = rtiAmbassador.getObjectInstanceHandle(instanceName);
 		}
 	}
 	
@@ -357,5 +377,14 @@ public abstract class HLAobject implements AttributeChangeListener {
 		}
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0]);
+	}
+	
+	/**
+	 * Checks if is local.
+	 *
+	 * @return true, if is local
+	 */
+	public final boolean isLocal() {
+		return local;
 	}
 }

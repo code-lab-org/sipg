@@ -92,6 +92,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws AttributeNotDefined the attribute not defined
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	public static HLAwaterSystem createRemoteWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -99,7 +101,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
-					RestoreInProgress {
+					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
 				rtiAmbassador, encoderFactory, waterSystem);
 		hlaSystem.requestAttributeValueUpdate();
@@ -182,12 +184,18 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws ObjectClassNotDefined 
+	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAwaterSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
 			WaterSystem waterSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown {
+			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
+			ObjectClassNotPublished, ObjectClassNotDefined, 
+			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, waterSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE();
