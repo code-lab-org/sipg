@@ -145,7 +145,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 				year, getWaterSystem().getRenewableWaterFraction());
 		renewableWaterIndicatorPanel.setValue(getWaterSystem().getRenewableWaterFraction());
 		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeriesCollection(renewableWaterData, nestedSystem.getName(), 
+				updateSeriesCollection(renewableWaterData, nestedSystem.getSociety().getName(), 
 						year, nestedSystem.getRenewableWaterFraction());
 		}
 
