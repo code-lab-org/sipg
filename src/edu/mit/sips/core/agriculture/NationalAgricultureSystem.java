@@ -96,7 +96,7 @@ public class NationalAgricultureSystem extends RegionalAgricultureSystem impleme
 						society.getAgricultureSystem();
 				agricultureSystem.fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
 				agricultureSystem.fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-				agricultureSystem.fireAttributeChangeEvent(WATER_CONSUMED_ATTRIBUTE);
+				agricultureSystem.fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
 			}
 		}
 	}

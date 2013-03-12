@@ -8,8 +8,9 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface EnergySystem.
  */
 public interface WaterSystem extends InfrastructureSystem {
-	public String ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-			WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "waterSupplyPerCapita";
+	public static final String 
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "waterSupplyPerCapita";
 	
 	/**
 	 * The Interface Local.

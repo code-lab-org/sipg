@@ -19,18 +19,18 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		
 		/**
 		 * Instantiates a new local.
+		 */
+		protected Local() {
+			
+		}
+		
+		/**
+		 * Instantiates a new local.
 		 *
 		 * @param name the name
 		 */
 		public Local(String name) {
 			super(name);
-		}
-		
-		/**
-		 * Instantiates a new local.
-		 */
-		protected Local() {
-			
 		}
 
 		/* (non-Javadoc)
@@ -63,6 +63,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 		
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
+		 */
+		@Override
+		public double getDomesticProduction() {
+			return getSociety().getGlobals().getEconomicIntensityOfElectricityConsumption() 
+					* getElectricityConsumption()
+					+ getExportRevenue() - getImportExpense();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProductPerCapita()
 		 */
 		@Override
@@ -71,16 +81,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 				return getDomesticProduct() / getPopulation();
 			} 
 			return 0;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-		 */
-		@Override
-		public double getDomesticProduction() {
-			return getSociety().getGlobals().getEconomicIntensityOfElectricityConsumption() 
-					* getElectricityConsumption()
-					+ getExportRevenue() - getImportExpense();
 		}
 
 		/* (non-Javadoc)
@@ -250,14 +250,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getFoodConsumption(double)
-		 */
-		@Override
-		public void getFoodConsumption(double foodConsumption) {
-			this.foodConsumption = foodConsumption;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumptionPerCapita()
 		 */
 		@Override
@@ -282,14 +274,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public double getWaterConsumption() {
 			return waterConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getWaterConsumption(double)
-		 */
-		@Override
-		public void getWaterConsumption(double waterConsumption) {
-			this.waterConsumption = waterConsumption;
 		}
 
 		/* (non-Javadoc)
@@ -320,11 +304,27 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getFoodConsumption(double)
+		 */
+		@Override
+		public void setFoodConsumption(double foodConsumption) {
+			this.foodConsumption = foodConsumption;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setPopulation(long)
 		 */
 		@Override
 		public void setPopulation(long population) {
 			this.population = population;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getWaterConsumption(double)
+		 */
+		@Override
+		public void setWaterConsumption(double waterConsumption) {
+			this.waterConsumption = waterConsumption;
 		}
 	}
 }

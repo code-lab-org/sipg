@@ -6,6 +6,10 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface EnergySystem.
  */
 public interface EnergySystem extends InfrastructureSystem {
+	public static final String 
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+	PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
+	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
 	
 	/**
 	 * The Interface Local.

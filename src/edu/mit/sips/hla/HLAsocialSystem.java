@@ -6,6 +6,7 @@ import hla.rti1516e.RTIambassador;
 import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
+import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.AttributeNotDefined;
 import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
@@ -22,18 +23,21 @@ import hla.rti1516e.exceptions.SaveInProgress;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.core.social.SocialSystem;
 
 /**
- * The Class HLAwaterSystem.
+ * The Class HLAsocialSystem.
  */
-public class HLAwaterSystem extends HLAinfrastructureSystem {
+public class HLAsocialSystem extends HLAinfrastructureSystem {
 	public static final String 
-	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
+	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.SocialSystem";
 	
 	public static final String 
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
-	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "WaterSupplyPerCapita";
+	FOOD_CONSUMPTION_ATTRIBUTE = "FoodConsumption",
+	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
+	POPULATION_ATTRIBUTE = "Population",
+	DOMESTIC_PRODUCT_ATTRIBUTE = "DomesticProduct";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
@@ -41,16 +45,19 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-		WATER_SUPPLY_PER_CAPITA_ATTRIBUTE
+		FOOD_CONSUMPTION_ATTRIBUTE,
+		WATER_CONSUMPTION_ATTRIBUTE,
+		POPULATION_ATTRIBUTE,
+		DOMESTIC_PRODUCT_ATTRIBUTE
 	};
 	
 	/**
-	 * Creates the local water system.
+	 * Creates the local social system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
-	 * @param waterSystem the water system
-	 * @return the hL awater system
+	 * @param socialSystem the social system
+	 * @return the hL asocial system
 	 * @throws NameNotFound the name not found
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
@@ -62,27 +69,27 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws RestoreInProgress the restore in progress
 	 * @throws ObjectInstanceNotKnown the object instance not known
 	 */
-	public static HLAwaterSystem createLocalWaterSystem(
+	public static HLAsocialSystem createLocalSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			WaterSystem.Local waterSystem) 
+			SocialSystem.Local socialSystem) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
-		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, waterSystem);
-		waterSystem.addAttributeChangeListener(hlaSystem);
+		HLAsocialSystem hlaSystem = new HLAsocialSystem(
+				rtiAmbassador, encoderFactory, socialSystem);
+		socialSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
 	
 	/**
-	 * Creates the remote water system.
+	 * Creates the remote social system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param waterSystem the water system
-	 * @return the hL awater system
+	 * @param socialSystem the social system
+	 * @return the hL asocial system
 	 * @throws NameNotFound the name not found
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
@@ -93,15 +100,15 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
 	 */
-	public static HLAwaterSystem createRemoteWaterSystem(
+	public static HLAsocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName, WaterSystem.Remote waterSystem) 
+			String instanceName, SocialSystem.Remote socialSystem) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress {
-		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, waterSystem);
+		HLAsocialSystem hlaSystem = new HLAsocialSystem(
+				rtiAmbassador, encoderFactory, socialSystem);
 		hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -168,14 +175,17 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	}
 
 	private final HLAfloat64BE electricityConsumption;
-	private final HLAfloat64BE waterSupplyPerCapita;
+	private final HLAfloat64BE foodConsumption;
+	private final HLAfloat64BE waterConsumption;
+	private final HLAfloat64BE domesticProduct;
+	private final HLAinteger64BE population;
 	
 	/**
-	 * Instantiates a new hL awater system.
+	 * Instantiates a new hL asocial system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
-	 * @param waterSystem the water system
+	 * @param socialSystem the social system
 	 * @throws NameNotFound the name not found
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
@@ -183,18 +193,27 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws InvalidObjectClassHandle the invalid object class handle
 	 * @throws ObjectInstanceNotKnown the object instance not known
 	 */
-	protected HLAwaterSystem(RTIambassador rtiAmbassador, 
+	protected HLAsocialSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory,
-			WaterSystem waterSystem) throws NameNotFound, 
+			SocialSystem socialSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown {
-		super(rtiAmbassador, encoderFactory, waterSystem);
+		super(rtiAmbassador, encoderFactory, socialSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
-		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE();
+		foodConsumption = encoderFactory.createHLAfloat64BE();
+		waterConsumption = encoderFactory.createHLAfloat64BE();
+		domesticProduct = encoderFactory.createHLAfloat64BE();
+		population = encoderFactory.createHLAinteger64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
-		attributeValues.put(getAttributeHandle(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE), 
-				waterSupplyPerCapita);
+		attributeValues.put(getAttributeHandle(FOOD_CONSUMPTION_ATTRIBUTE), 
+				foodConsumption);
+		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
+				waterConsumption);
+		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCT_ATTRIBUTE), 
+				domesticProduct);
+		attributeValues.put(getAttributeHandle(POPULATION_ATTRIBUTE), 
+				population);
 	}
 	
 	/**
@@ -202,8 +221,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 *
 	 * @return the water system
 	 */
-	public WaterSystem getWaterSystem() {
-		return (WaterSystem) getInfrastructureSystem();
+	public SocialSystem getSocialSystem() {
+		return (SocialSystem) getInfrastructureSystem();
 	}
 
 	/* (non-Javadoc)
@@ -216,31 +235,58 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 			// object model changed values -- send updates to federation
 			try {
 				if(evt.getAttributeName().equals(
-						WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
+						SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
-							getWaterSystem().getElectricityConsumption());
+							getSocialSystem().getElectricityConsumption());
 					updateAttribute(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				} else if(evt.getAttributeName().equals(
-						WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
-					waterSupplyPerCapita.setValue(
-							getWaterSystem().getWaterSupplyPerCapita());
-					updateAttribute(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
+						SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE)) {
+					foodConsumption.setValue(
+							getSocialSystem().getFoodConsumption());
+					updateAttribute(FOOD_CONSUMPTION_ATTRIBUTE);
+				} else if(evt.getAttributeName().equals(
+						SocialSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
+					waterConsumption.setValue(
+							getSocialSystem().getWaterConsumption());
+					updateAttribute(WATER_CONSUMPTION_ATTRIBUTE);
+				} else if(evt.getAttributeName().equals(
+						SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE)) {
+					domesticProduct.setValue(
+							getSocialSystem().getDomesticProduct());
+					updateAttribute(DOMESTIC_PRODUCT_ATTRIBUTE);
+				} else if(evt.getAttributeName().equals(
+						SocialSystem.POPULATION_ATTRIBUTE)) {
+					population.setValue(
+							getSocialSystem().getPopulation());
+					updateAttribute(POPULATION_ATTRIBUTE);
 				}
 			} catch(AttributeNotOwned ignored) {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
-		} else if(getWaterSystem() instanceof WaterSystem.Remote) {
-			WaterSystem.Remote remote = (WaterSystem.Remote) getWaterSystem();
+		} else if(getSocialSystem() instanceof SocialSystem.Remote) {
+			SocialSystem.Remote remote = (SocialSystem.Remote) getSocialSystem();
 			// federation changed values -- send updates to object model
 			if(evt.getAttributeName().equals(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
 			} else if(evt.getAttributeName().equals(
-					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
-				remote.setWaterSupplyPerCapita(
-						waterSupplyPerCapita.getValue());
+					FOOD_CONSUMPTION_ATTRIBUTE)) {
+				remote.setFoodConsumption(
+						foodConsumption.getValue());
+			} else if(evt.getAttributeName().equals(
+					WATER_CONSUMPTION_ATTRIBUTE)) {
+				remote.setWaterConsumption(
+						waterConsumption.getValue());
+			} else if(evt.getAttributeName().equals(
+					DOMESTIC_PRODUCT_ATTRIBUTE)) {
+				remote.setDomesticProduct(
+						domesticProduct.getValue());
+			} else if(evt.getAttributeName().equals(
+					POPULATION_ATTRIBUTE)) {
+				remote.setPopulation(
+						population.getValue());
 			}
 		}
 	}
