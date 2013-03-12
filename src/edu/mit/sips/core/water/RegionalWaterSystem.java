@@ -94,7 +94,10 @@ public class RegionalWaterSystem extends DefaultWaterSystem.Local {
 						society.getSocialSystem().getPopulation();
 			}
 		}
-		return value / getSociety().getSocialSystem().getPopulation();
+		if(getSociety().getSocialSystem().getPopulation() > 0) {
+			return value / getSociety().getSocialSystem().getPopulation();
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)
@@ -119,5 +122,22 @@ public class RegionalWaterSystem extends DefaultWaterSystem.Local {
 	@Override
 	public void tock() {
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.DefaultWaterSystem.Local#getWaterFromArtesianWell()
+	 */
+	@Override
+	public double getWaterFromArtesianWell() {
+		// need to override this function to prevent cross-linking
+		// reservoir capacity at the regional level
+		double value = 0;
+		for(Society society : getSociety().getNestedSocieties()) {
+			if(society.getWaterSystem() instanceof WaterSystem.Local) {
+				value += ((WaterSystem.Local)
+						society.getWaterSystem()).getWaterFromArtesianWell();
+			}
+		}
+		return value;
 	}
 }

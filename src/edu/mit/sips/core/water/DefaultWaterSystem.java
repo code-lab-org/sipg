@@ -180,6 +180,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public WaterSystem.Local getNationalWaterSystem() {
+			// TODO a bit of a hack
 			return (WaterSystem.Local) getSociety().getCountry().getWaterSystem();
 		}
 

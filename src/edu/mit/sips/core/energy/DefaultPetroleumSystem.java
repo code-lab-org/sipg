@@ -182,7 +182,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		return Math.max(0, getPetroleumProduction() 
 				+ getPetroleumInDistribution()
 				- getPetroleumOutDistribution()
-				- getEnergySystem().getElectricitySystem().getPetroleumConsumption());
+				- getSociety().getTotalPetroleumDemand());
 	}
 
 	/* (non-Javadoc)
@@ -190,7 +190,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 */
 	@Override
 	public double getPetroleumImport() {
-		return Math.max(0, getEnergySystem().getElectricitySystem().getPetroleumConsumption()
+		return Math.max(0, getSociety().getTotalPetroleumDemand()
 				+ getPetroleumOutDistribution()
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
@@ -255,7 +255,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	@Override
 	public double getSalesRevenue() {
 		return getSociety().getGlobals().getPetroleumDomesticPrice() 
-				* getEnergySystem().getElectricitySystem().getPetroleumConsumption();
+				* getSociety().getTotalPetroleumDemand();
 	}
 
 	/* (non-Javadoc)
@@ -329,7 +329,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			flowCoefficients[elements.size() + cities.size() + cities.indexOf(city)] = -1;
 			// Constrain in-flow to meet net demand.
 			constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-					energySystem.getElectricitySystem().getPetroleumConsumption() 
+					energySystem.getSociety().getTotalPetroleumDemand() 
 					- energySystem.getPetroleumSystem().getPetroleumProduction()));
 
 			// Set import cost in each city.
@@ -455,7 +455,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			
 			// Constrain in-flow and production to meet demand.
 			constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-					energySystem.getElectricitySystem().getPetroleumConsumption()));
+					energySystem.getSociety().getTotalPetroleumDemand()));
 
 			// Set import cost in each city.
 			costCoefficients[2*elements.size() + cities.indexOf(city)] 
