@@ -112,18 +112,18 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public double getLocalFoodFraction();
 		
 		/**
-		 * Gets the production cost.
+		 * Gets the unit production cost.
 		 *
-		 * @return the production cost
+		 * @return the unit production cost
 		 */
-		public double getProductionCost();
+		public double getUnitProductionCost();
 		
 		/**
-		 * Gets the supply cost.
+		 * Gets the unit supply cost.
 		 *
-		 * @return the supply cost
+		 * @return the unit supply cost
 		 */
-		public double getSupplyCost();
+		public double getUnitSupplyProfit();
 	}
 	
 	/**

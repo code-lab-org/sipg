@@ -532,23 +532,24 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getProductionCost()
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
 	 */
 	@Override
-	public double getProductionCost() {
+	public double getUnitProductionCost() {
 		if(getElectricityProduction() > 0) {
-			return getLifecycleExpense() / getElectricityProduction();
+			return (getLifecycleExpense() + getConsumptionExpense()) 
+					/ getElectricityProduction();
 		}
 		return 0;
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getSupplyCost()
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyCost()
 	 */
 	@Override
-	public double getSupplyCost() {
+	public double getUnitSupplyProfit() {
 		if(getTotalElectricitySupply() > 0) {
-			return getTotalExpense() / getTotalElectricitySupply();
+			return getCashFlow() / getTotalElectricitySupply();
 		}
 		return 0;
 	}

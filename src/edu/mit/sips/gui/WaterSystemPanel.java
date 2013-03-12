@@ -35,7 +35,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 	
 	TimeSeriesCollection localWaterData = new TimeSeriesCollection();
 	TimeSeriesCollection waterProductCostData = new TimeSeriesCollection();
-	TimeSeriesCollection waterSupplyCostData = new TimeSeriesCollection();
+	TimeSeriesCollection waterSupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection renewableWaterData = new TimeSeriesCollection();
 	TimeSeriesCollection waterConsumptionPerCapita = new TimeSeriesCollection();
 
@@ -90,11 +90,11 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 		addTab("Reservoir", Icons.WATER_RESERVOIR, createStackedAreaChart(
 				"Water Reservoir Volume (m^3)", waterReservoirDataset));
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Direct Water Production Cost (SAR/m^3)", 
+				"Unit Production Cost (SAR/m^3)", 
 				waterProductCostData));
-		addTab("Supply Cost", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Direct Water Supply Cost (SAR/m^3)", 
-				waterSupplyCostData));
+		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
+				"Unit Supply Profit (SAR/m^3)", 
+				waterSupplyProfitData));
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 		localWaterData.removeAllSeries();
 		renewableWaterData.removeAllSeries();
 		waterProductCostData.removeAllSeries();
-		waterSupplyCostData.removeAllSeries();
+		waterSupplyProfitData.removeAllSeries();
 		waterConsumptionPerCapita.removeAllSeries();
 		waterReservoirDataset.removeAllSeries();
 		
@@ -150,17 +150,17 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 		}
 
 		updateSeriesCollection(waterProductCostData, getSociety().getName(), 
-				year, getWaterSystem().getProductionCost());
+				year, getWaterSystem().getUnitProductionCost());
 		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 			updateSeriesCollection(waterProductCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getProductionCost());
+					year, nestedSystem.getUnitProductionCost());
 		}
 		
-		updateSeriesCollection(waterSupplyCostData, getSociety().getName(), 
-				year, getWaterSystem().getSupplyCost());
+		updateSeriesCollection(waterSupplyProfitData, getSociety().getName(), 
+				year, getWaterSystem().getUnitSupplyProfit());
 		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-			updateSeriesCollection(waterSupplyCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getSupplyCost());
+			updateSeriesCollection(waterSupplyProfitData, nestedSystem.getSociety().getName(), 
+					year, nestedSystem.getUnitSupplyProfit());
 		}
 
 		updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), 

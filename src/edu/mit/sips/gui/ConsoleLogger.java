@@ -320,9 +320,9 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %15.0f |", "Total Supply", "m^3",  
-					waterSystem.getLocalWaterSupply());
+					waterSystem.getTotalWaterSupply());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
-				System.out.printf(" %15.0f", system.getLocalWaterSupply());
+				System.out.printf(" %15.0f", system.getTotalWaterSupply());
 			}
 			System.out.println();
 			

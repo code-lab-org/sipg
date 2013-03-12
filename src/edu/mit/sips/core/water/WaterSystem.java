@@ -31,13 +31,6 @@ public interface WaterSystem extends InfrastructureSystem {
 		public List<? extends WaterElement> getInternalElements();
 		
 		/**
-		 * Gets the total water supply.
-		 *
-		 * @return the total water supply
-		 */
-		public double getLocalWaterSupply();
-		
-		/**
 		 * Gets the max water reservoir volume.
 		 *
 		 * @return the max water reservoir volume
@@ -162,18 +155,18 @@ public interface WaterSystem extends InfrastructureSystem {
 		public double getRenewableWaterFraction();
 		
 		/**
-		 * Gets the production cost.
+		 * Gets the unit production cost.
 		 *
-		 * @return the production cost
+		 * @return the unit production cost
 		 */
-		public double getProductionCost();
+		public double getUnitProductionCost();
 		
 		/**
-		 * Gets the supply cost.
+		 * Gets the unit supply cost.
 		 *
-		 * @return the supply cost
+		 * @return the unit supply cost
 		 */
-		public double getSupplyCost();
+		public double getUnitSupplyProfit();
 	}
 	
 	/**

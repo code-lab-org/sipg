@@ -25,7 +25,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 	
 	TimeSeriesCollection localFoodData = new TimeSeriesCollection();
 	TimeSeriesCollection foodProductCostData = new TimeSeriesCollection();
-	TimeSeriesCollection foodSupplyCostData = new TimeSeriesCollection();
+	TimeSeriesCollection foodSupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection foodConsumptionPerCapita = new TimeSeriesCollection();
 
 	DefaultTableXYDataset landAvailableDataset = new DefaultTableXYDataset();
@@ -33,11 +33,6 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
-
-	DefaultTableXYDataset foodProductionCost = new DefaultTableXYDataset();
-	DefaultTableXYDataset foodConsumptionCost = new DefaultTableXYDataset();
-	DefaultTableXYDataset foodProductionNetCost = new DefaultTableXYDataset();
-	DefaultTableXYDataset foodConsumptionNetCost = new DefaultTableXYDataset();
 
 	public AgricultureSystemPanel(AgricultureSystem.Local agricultureSystem) {
 		super(agricultureSystem);
@@ -74,17 +69,11 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land Available (km^2)", landAvailableDataset));
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Direct Food Production Cost (SAR/Mj)", 
+				"Unit Production Cost (SAR/Mj)", 
 						foodProductCostData));
-		addTab("Supply Cost", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Direct Food Supply Cost (SAR/Mj)", 
-						foodSupplyCostData));
-		addTab("Production Cost*", Icons.COST_PRODUCTION, createStackedAreaChart(
-				"Direct Food Production Cost (SAR/Mj)", 
-						foodProductionCost, foodProductionNetCost));
-		addTab("Consumption Cost*", Icons.COST_SUPPLY, createStackedAreaChart(
-				"Direct Food Consumption Cost (SAR/Mj)", 
-						foodConsumptionCost, foodConsumptionNetCost));
+		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
+				"Unit Supply Profit (SAR/Mj)", 
+						foodSupplyProfitData));
 	}
 	
 	/**
@@ -112,11 +101,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		foodConsumptionIndicatorPanel.initialize();
 		localFoodData.removeAllSeries();
 		foodProductCostData.removeAllSeries();
-		foodSupplyCostData.removeAllSeries();
-		foodProductionCost.removeAllSeries();
-		foodConsumptionCost.removeAllSeries();
-		foodProductionNetCost.removeAllSeries();
-		foodConsumptionNetCost.removeAllSeries();
+		foodSupplyProfitData.removeAllSeries();
 		foodConsumptionPerCapita.removeAllSeries();
 		landAvailableDataset.removeAllSeries();
 		foodUseData.removeAllSeries();
@@ -152,52 +137,17 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		}
 
 		updateSeriesCollection(foodProductCostData, getSociety().getName(), 
-				year, getAgricultureSystem().getProductionCost());
+				year, getAgricultureSystem().getUnitProductionCost());
 		for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 			updateSeriesCollection(foodProductCostData, nestedSystem.getSociety().getName(),
-					year, nestedSystem.getProductionCost());
+					year, nestedSystem.getUnitProductionCost());
 		}
 
-		updateSeriesCollection(foodSupplyCostData, getSociety().getName(), 
-				year, getAgricultureSystem().getSupplyCost());
+		updateSeriesCollection(foodSupplyProfitData, getSociety().getName(), 
+				year, getAgricultureSystem().getUnitSupplyProfit());
 		for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-			updateSeriesCollection(foodSupplyCostData, nestedSystem.getSociety().getName(),
-					year, nestedSystem.getSupplyCost());
-		}
-		if(getAgricultureSystem().getFoodProduction() > 0) {
-			updateSeries(foodProductionCost, "Capital", year, 
-					getAgricultureSystem().getCapitalExpense()
-					/ getAgricultureSystem().getFoodProduction());
-			updateSeries(foodProductionCost, "Operations", year, 
-					getAgricultureSystem().getOperationsExpense()
-					/ getAgricultureSystem().getFoodProduction());
-			updateSeries(foodProductionCost, "Decommission", year, 
-					getAgricultureSystem().getDecommissionExpense()
-					/ getAgricultureSystem().getFoodProduction());
-			updateSeries(foodProductionCost, "Water", year, 
-					getAgricultureSystem().getWaterConsumption()
-					* getSociety().getGlobals().getWaterDomesticPrice()
-					/ getAgricultureSystem().getFoodProduction());
-		}
-		if(getSociety().getTotalFoodDemand() > 0) {
-			// TODO this is not quite right
-			updateSeries(foodConsumptionCost, "Production", year, 
-					(getAgricultureSystem().getLifecycleExpense()
-					+ getAgricultureSystem().getConsumptionExpense())
-					/ getSociety().getTotalFoodDemand());
-			updateSeries(foodConsumptionCost, "Net Distribution", year, 
-					(getAgricultureSystem().getDistributionExpense()
-					- getAgricultureSystem().getDistributionRevenue())
-					/ getSociety().getTotalFoodDemand());
-			updateSeries(foodConsumptionCost, "Net Trade", year, 
-					(getAgricultureSystem().getImportExpense()
-					-getAgricultureSystem().getExportRevenue())
-					/ getSociety().getTotalFoodDemand());
-			updateSeries(foodConsumptionNetCost, "Net Cost", year, 
-					(getAgricultureSystem().getTotalExpense()
-							- (getAgricultureSystem().getTotalRevenue()
-									- getAgricultureSystem().getSalesRevenue()))
-									/ getSociety().getTotalFoodDemand());
+			updateSeriesCollection(foodSupplyProfitData, nestedSystem.getSociety().getName(),
+					year, nestedSystem.getUnitSupplyProfit());
 		}
 		
 		updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 

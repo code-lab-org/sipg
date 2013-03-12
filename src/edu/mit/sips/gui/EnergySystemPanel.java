@@ -30,10 +30,10 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 	private final SpatialStatePanel petroleumStatePanel, electricityStatePanel;
 	
 	TimeSeriesCollection petroleumProductCostData = new TimeSeriesCollection();
-	TimeSeriesCollection petroleumSupplyCostData = new TimeSeriesCollection();
+	TimeSeriesCollection petroleumSupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection localElectricityData = new TimeSeriesCollection();
 	TimeSeriesCollection electricityProductCostData = new TimeSeriesCollection();
-	TimeSeriesCollection electricitySupplyCostData = new TimeSeriesCollection();
+	TimeSeriesCollection electricitySupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection renewableElectricityData = new TimeSeriesCollection();
 	TimeSeriesCollection electricityConsumptionPerCapita = new TimeSeriesCollection();
 	
@@ -91,11 +91,11 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 				"Oil Reservoir Volume (bbl)", 
 				petroleumReservoirDataset), "Reservoir");
 		petroleumPane.addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Direct Petroleum Production Cost (SAR/bbl)", 
+				"Unit Production Cost (SAR/bbl)", 
 				petroleumProductCostData));
-		petroleumPane.addTab("Supply Cost", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Direct Petroleum Supply Cost (SAR/bbl)", 
-				petroleumSupplyCostData));
+		petroleumPane.addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
+				"Unit Supply Profit (SAR/bbl)", 
+				petroleumSupplyProfitData));
 		
 		JTabbedPane electricityPane = new JTabbedPane();
 		addTab(energySystem.getElectricitySystem().getName(), 
@@ -123,11 +123,11 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 				"Electricity Consumption per Capita (MWh/person)", 
 				electricityConsumptionPerCapita), "Consumption");
 		electricityPane.addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Direct Electricity Production Cost (SAR/MWh)", 
+				"Unit Production Cost (SAR/MWh)", 
 				electricityProductCostData));
-		electricityPane.addTab("Supply Cost", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Direct Electricity Supply Cost (SAR/MWh)", 
-				electricitySupplyCostData));
+		electricityPane.addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
+				"Unit Supply Profit (SAR/MWh)", 
+				electricitySupplyProfitData));
 	}
 	
 	/**
@@ -158,11 +158,11 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		localEnergyIndicatorPanel.initialize();
 		electricityConsumptionIndicatorPanel.initialize();
 		petroleumProductCostData.removeAllSeries();
-		petroleumSupplyCostData.removeAllSeries();
+		petroleumSupplyProfitData.removeAllSeries();
 		localElectricityData.removeAllSeries();
 		renewableElectricityData.removeAllSeries();
 		electricityProductCostData.removeAllSeries();
-		electricitySupplyCostData.removeAllSeries();
+		electricitySupplyProfitData.removeAllSeries();
 		electricityConsumptionPerCapita.removeAllSeries();
 		petroleumReservoirDataset.removeAllSeries();
 		electricityUseData.removeAllSeries();
@@ -210,31 +210,31 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		}
 
 		updateSeriesCollection(petroleumProductCostData, getSociety().getName(), 
-				year, getEnergySystem().getPetroleumSystem().getProductionCost());
+				year, getEnergySystem().getPetroleumSystem().getUnitProductionCost());
 		for(EnergySystem.Local nestedSystem : getNestedEnergySystems()) {
 			updateSeriesCollection(petroleumProductCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getPetroleumSystem().getProductionCost());
+					year, nestedSystem.getPetroleumSystem().getUnitProductionCost());
 		}
 		
-		updateSeriesCollection(petroleumSupplyCostData, getSociety().getName(), 
-				year, getEnergySystem().getPetroleumSystem().getSupplyCost());
+		updateSeriesCollection(petroleumSupplyProfitData, getSociety().getName(), 
+				year, getEnergySystem().getPetroleumSystem().getUnitSupplyProfit());
 		for(EnergySystem.Local nestedSystem : getNestedEnergySystems()) {
-			updateSeriesCollection(petroleumSupplyCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getPetroleumSystem().getSupplyCost());
+			updateSeriesCollection(petroleumSupplyProfitData, nestedSystem.getSociety().getName(), 
+					year, nestedSystem.getPetroleumSystem().getUnitSupplyProfit());
 		}
 
 		updateSeriesCollection(electricityProductCostData, getSociety().getName(), 
-				year, getEnergySystem().getElectricitySystem().getProductionCost());
+				year, getEnergySystem().getElectricitySystem().getUnitProductionCost());
 		for(EnergySystem.Local nestedSystem : getNestedEnergySystems()) {
 			updateSeriesCollection(electricityProductCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getElectricitySystem().getProductionCost());
+					year, nestedSystem.getElectricitySystem().getUnitProductionCost());
 		}
 
-		updateSeriesCollection(electricitySupplyCostData, getSociety().getName(), 
-				year, getEnergySystem().getElectricitySystem().getSupplyCost());
+		updateSeriesCollection(electricitySupplyProfitData, getSociety().getName(), 
+				year, getEnergySystem().getElectricitySystem().getUnitSupplyProfit());
 		for(EnergySystem.Local nestedSystem : getNestedEnergySystems()) {
-			updateSeriesCollection(electricitySupplyCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getElectricitySystem().getSupplyCost());
+			updateSeriesCollection(electricitySupplyProfitData, nestedSystem.getSociety().getName(), 
+					year, nestedSystem.getElectricitySystem().getUnitSupplyProfit());
 		}
 		
 		updateSeriesCollection(electricityConsumptionPerCapita, getSociety().getName(), 

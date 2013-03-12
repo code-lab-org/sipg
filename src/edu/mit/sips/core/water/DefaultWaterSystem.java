@@ -31,19 +31,19 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	public static abstract class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
 
 		/**
+		 * Instantiates a new local.
+		 */
+		protected Local() {
+			
+		}
+		
+		/**
 		 * Instantiates a new city water system.
 		 *
 		 * @param name the name
 		 */
 		public Local(String name) {
 			super(name);
-		}
-		
-		/**
-		 * Instantiates a new local.
-		 */
-		protected Local() {
-			
 		}
 
 		/* (non-Javadoc)
@@ -176,33 +176,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#getLocalWaterSupply()
-		 */
-		@Override
-		public double getLocalWaterSupply() {
-			return getWaterProduction() 
-					+ getWaterFromArtesianWell()
-					+ getWaterInDistribution()
-					- getWaterOutDistribution();
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getNationalWaterSystem()
 		 */
 		@Override
 		public WaterSystem.Local getNationalWaterSystem() {
 			return (WaterSystem.Local) getSociety().getCountry().getWaterSystem();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
-		 */
-		@Override
-		public double getProductionCost() {
-			if(getWaterProduction() > 0) {
-				return getLifecycleExpense() / getWaterProduction();
-			}
-			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -257,22 +235,36 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
+		 * @see edu.mit.sips.WaterSystem#getTotalWaterSupply()
+		 */
+		public double getTotalWaterSupply() {
+			return getWaterProduction() 
+					+ getWaterInDistribution()
+					- getWaterOutDistribution()
+					+ getWaterImport();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
 		 */
 		@Override
-		public double getSupplyCost() {
-			if(getTotalWaterSupply() > 0) {
-				return getTotalExpense() / getTotalWaterSupply();
+		public double getUnitProductionCost() {
+			if(getWaterProduction() > 0) {
+				return (getLifecycleExpense() + getConsumptionExpense()) 
+						/ getWaterProduction();
 			}
 			return 0;
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#getTotalWaterSupply()
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
 		 */
-		public double getTotalWaterSupply() {
-			return getLocalWaterSupply() 
-					+ getWaterImport();
+		@Override
+		public double getUnitSupplyProfit() {
+			if(getTotalWaterSupply() > 0) {
+				return getCashFlow() / getTotalWaterSupply();
+			}
+			return 0;
 		}
 
 

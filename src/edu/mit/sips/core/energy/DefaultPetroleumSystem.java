@@ -510,9 +510,10 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getProductionCost()
 	 */
 	@Override
-	public double getProductionCost() {
+	public double getUnitProductionCost() {
 		if(getPetroleumProduction() > 0) {
-			return getLifecycleExpense() / getPetroleumProduction();
+			return (getLifecycleExpense() + getConsumptionExpense()) 
+					/ getPetroleumProduction();
 		}
 		return 0;
 	}
@@ -521,9 +522,9 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getSupplyCost()
 	 */
 	@Override
-	public double getSupplyCost() {
+	public double getUnitSupplyProfit() {
 		if(getTotalPetroleumSupply() > 0) {
-			return getTotalExpense() / getTotalPetroleumSupply();
+			return getCashFlow() / getTotalPetroleumSupply();
 		}
 		return 0;
 	}

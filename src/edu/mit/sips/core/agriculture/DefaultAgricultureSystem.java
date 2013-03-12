@@ -575,23 +575,24 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
 		 */
 		@Override
-		public double getProductionCost() {
+		public double getUnitProductionCost() {
 			if(getFoodProduction() > 0) {
-				return getLifecycleExpense() / getFoodProduction();
+				return (getLifecycleExpense() + getConsumptionExpense()) 
+						/ getFoodProduction();
 			}
 			return 0;
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#geUnitSupplyCost()
 		 */
 		@Override
-		public double getSupplyCost() {
+		public double getUnitSupplyProfit() {
 			if(getTotalFoodSupply() > 0) {
-				return getTotalExpense() / getTotalFoodSupply();
+				return getCashFlow() / getTotalFoodSupply();
 			}
 			return 0;
 		}
