@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<objectModel xsi:schemaLocation="http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd" xmlns="http://standards.ieee.org/IEEE1516-2010" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelIdentification>
+        <name>SIPS Simulation Game</name>
+        <type>FOM</type>
+        <version>1.0</version>
+        <modificationDate>2013-03-07</modificationDate>
+        <securityClassification>unclassified</securityClassification>
+        <purpose>Sustainable Infrastructure Planning System</purpose>
+        <applicationDomain>Analysis</applicationDomain>
+        <description>Provides simulation state variables for member infrastructure systems.</description>
+        <useLimitation></useLimitation>
+        <poc>
+            <pocType>Primary author</pocType>
+            <pocName>Paul Grogan</pocName>
+            <pocOrg>MIT</pocOrg>
+            <pocEmail>ptgrogan@mit.edu</pocEmail>
+        </poc>
+        <other></other>
+    </modelIdentification>
+    <objects>
+        <objectClass>
+            <name>HLAobjectRoot</name>
+            <objectClass>
+                <name>InfrastructureSystem</name>
+                <sharing>Neither</sharing>
+                <semantics></semantics>
+                <attribute>
+                    <name>Name</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>On initialization.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Name of this infrastructure system.</semantics>
+                </attribute>
+                <attribute>
+                    <name>SocietyName</name>
+                    <dataType>HLAunicodeString</dataType>
+                    <updateType>Static</updateType>
+                    <updateCondition>On initialization.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Name of the society within which this infrastructure system exists.</semantics>
+                </attribute>
+                <attribute>
+                    <name>NetCashFlow</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <updateCondition>Every time step.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Net cash flow (SAR) from this infrastructure system.</semantics>
+                </attribute>
+                <attribute>
+                    <name>DomesticProduction</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <updateCondition>Every time step.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>Receive</order>
+                    <semantics>Domestic production (SAR) contributed from this infrastructure system.</semantics>
+                </attribute>
+                <objectClass>
+                    <name>WaterSystem</name>
+                    <sharing>Neither</sharing>
+                    <semantics></semantics>
+                    <attribute>
+                        <name>ElectricityConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Electricity consumed (MWh) by the water system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>WaterSupplyPerCapita</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>On water supply policy change.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>Neither</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Water supplied per capita (m^3) to the social system.</semantics>
+                    </attribute>
+                </objectClass>
+                <objectClass>
+                    <name>AgricultureSystem</name>
+                    <sharing>Neither</sharing>
+                    <semantics></semantics>
+                    <attribute>
+                        <name>WaterConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Water consumed (m^3) by the agriculture system.</semantics>
+                    </attribute>
+                </objectClass>
+                <objectClass>
+                    <name>EnergySystem</name>
+                    <sharing>Neither</sharing>
+                    <semantics></semantics>
+                    <attribute>
+                        <name>WaterConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Water consumed (m^3) by the energy system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>ElectricityConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Electricity consumed (kWh) by the energy system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>PetroleumConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Petroleum consumed (bbl) by the energy system.</semantics>
+                    </attribute>
+                </objectClass>
+                <objectClass>
+                    <name>SocialSystem</name>
+                    <sharing>Neither</sharing>
+                    <semantics></semantics>
+                    <attribute>
+                        <name>Population</name>
+                        <dataType>HLAinteger64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Total population in this social system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>ElectricityConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Electricity consumed (MWh) by the social system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>FoodConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Food consumed (Mj) by the social system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>WaterConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Water consumed (m^3) by the social system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>DomesticProduct</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>Receive</order>
+                        <semantics>Domestic product (SAR) of this social system.</semantics>
+                    </attribute>
+                </objectClass>
+            </objectClass>
+        </objectClass>
+    </objects>
+    <interactions>
+        <interactionClass>
+            <name>HLAinteractionRoot</name>
+        </interactionClass>
+    </interactions>
+    <switches>
+        <autoProvide isEnabled="true"/>
+        <conveyRegionDesignatorSets isEnabled="false"/>
+        <conveyProducingFederate isEnabled="false"/>
+        <attributeScopeAdvisory isEnabled="false"/>
+        <attributeRelevanceAdvisory isEnabled="false"/>
+        <objectClassRelevanceAdvisory isEnabled="false"/>
+        <interactionRelevanceAdvisory isEnabled="false"/>
+        <serviceReporting isEnabled="false"/>
+        <exceptionReporting isEnabled="false"/>
+        <delaySubscriptionEvaluation isEnabled="false"/>
+        <automaticResignAction resignAction="CancelThenDeleteThenDivest"/>
+    </switches>
+    <dataTypes>
+        <simpleDataTypes/>
+        <enumeratedDataTypes/>
+        <arrayDataTypes/>
+        <fixedRecordDataTypes/>
+        <variantRecordDataTypes/>
+    </dataTypes>
+    <notes/>
+</objectModel>

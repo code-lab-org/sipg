@@ -126,7 +126,8 @@ public class CityWaterSystem extends DefaultWaterSystem.Local {
 		this.waterSupplyPerCapita = waterSupplyPerCapita;
 		fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
 		fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-		fireAttributeChangeEvent(ELECTRICITY_CONSUMED_ATTRIBUTE);
+		fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+		fireAttributeChangeEvent(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
 	}
 
 	/* (non-Javadoc)

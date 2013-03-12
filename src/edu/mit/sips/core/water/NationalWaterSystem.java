@@ -96,7 +96,8 @@ public class NationalWaterSystem extends RegionalWaterSystem implements ElementC
 						society.getWaterSystem();
 				waterSystem.fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
 				waterSystem.fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-				waterSystem.fireAttributeChangeEvent(ELECTRICITY_CONSUMED_ATTRIBUTE);
+				waterSystem.fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+				waterSystem.fireAttributeChangeEvent(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
 			}
 		}
 	}
