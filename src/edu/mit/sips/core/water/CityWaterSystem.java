@@ -151,4 +151,32 @@ public class CityWaterSystem extends DefaultWaterSystem.Local {
 	public void tock() {
 		waterReservoirVolume = nextWaterReservoirVolume;
 	}
+
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
+	 */
+	@Override
+	public double getWaterFromArtesianWell() {
+		// Artesian water used to meet shortfall in reaching minimum demand.
+		return Math.min(getWaterReservoirVolume() - getReservoirWaterWithdrawals(), 
+				Math.max(0, getSociety().getTotalWaterDemand()
+						+ getWaterOutDistribution()
+						- getWaterInDistribution()
+						- getWaterProduction()));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.WaterSystem#getWaterImport()
+	 */
+	@Override
+	public double getWaterImport() {
+		// Water is imported to meet shortfall in reaching minimum demand.
+		// Note that water cannot be exported, and is wasted if excess.
+		return Math.max(0, getSociety().getTotalWaterDemand()
+				+ getWaterOutDistribution()
+				- getWaterInDistribution()
+				- getWaterProduction()
+				- getWaterFromArtesianWell());
+	}
 }

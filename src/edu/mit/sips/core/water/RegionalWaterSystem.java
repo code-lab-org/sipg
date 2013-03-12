@@ -129,13 +129,26 @@ public class RegionalWaterSystem extends DefaultWaterSystem.Local {
 	 */
 	@Override
 	public double getWaterFromArtesianWell() {
-		// need to override this function to prevent cross-linking
-		// reservoir capacity at the regional level
 		double value = 0;
 		for(Society society : getSociety().getNestedSocieties()) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
 				value += ((WaterSystem.Local)
 						society.getWaterSystem()).getWaterFromArtesianWell();
+			}
+		}
+		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterImport()
+	 */
+	@Override
+	public double getWaterImport() {
+		double value = 0;
+		for(Society society : getSociety().getNestedSocieties()) {
+			if(society.getWaterSystem() instanceof WaterSystem.Local) {
+				value += ((WaterSystem.Local)
+						society.getWaterSystem()).getWaterImport();
 			}
 		}
 		return value;
