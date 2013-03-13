@@ -22,10 +22,15 @@ public abstract class DefaultSociety implements Society {
 	private final List<? extends Society> nestedSocieties;
 	private transient Society society;
 	
-	private final AgricultureSystem agricultureSystem;
-	private final WaterSystem waterSystem;
-	private final EnergySystem energySystem;
-	private final SocialSystem socialSystem;
+	private AgricultureSystem.Local agricultureSystem;
+	private WaterSystem.Local waterSystem;
+	private EnergySystem.Local energySystem;
+	private SocialSystem.Local socialSystem;
+	
+	private transient AgricultureSystem.Remote remoteAgricultureSystem;
+	private transient WaterSystem.Remote remoteWaterSystem;
+	private transient EnergySystem.Remote remoteEnergySystem;
+	private transient SocialSystem.Remote remoteSocialSystem;
 	
 	/**
 	 * Instantiates a new default society.
@@ -34,14 +39,14 @@ public abstract class DefaultSociety implements Society {
 		this.name = "";
 		this.nestedSocieties = Collections.unmodifiableList(
 				new ArrayList<Society>());
-		this.agricultureSystem = new DefaultAgricultureSystem.Remote();
-		agricultureSystem.setSociety(this);
-		this.waterSystem = new DefaultWaterSystem.Remote();
-		waterSystem.setSociety(this);
-		this.energySystem = new DefaultEnergySystem.Remote();
-		energySystem.setSociety(this);
-		this.socialSystem = new DefaultSocialSystem.Remote();
-		socialSystem.setSociety(this);
+		this.remoteAgricultureSystem = new DefaultAgricultureSystem.Remote();
+		remoteAgricultureSystem.setSociety(this);
+		this.remoteWaterSystem = new DefaultWaterSystem.Remote();
+		remoteWaterSystem.setSociety(this);
+		this.remoteEnergySystem = new DefaultEnergySystem.Remote();
+		remoteEnergySystem.setSociety(this);
+		this.remoteSocialSystem = new DefaultSocialSystem.Remote();
+		remoteSocialSystem.setSociety(this);
 	}
 	
 	/**
@@ -85,32 +90,32 @@ public abstract class DefaultSociety implements Society {
 		}
 		
 		if(agricultureSystem == null) {
-			this.agricultureSystem = new DefaultAgricultureSystem.Remote();
+			this.remoteAgricultureSystem = new DefaultAgricultureSystem.Remote();
 		} else {
 			this.agricultureSystem = agricultureSystem;
 		}
-		agricultureSystem.setSociety(this);
+		getAgricultureSystem().setSociety(this);
 		
 		if(waterSystem == null) {
-			this.waterSystem = new DefaultWaterSystem.Remote();
+			this.remoteWaterSystem = new DefaultWaterSystem.Remote();
 		} else {
 			this.waterSystem = waterSystem;
 		}
-		waterSystem.setSociety(this);
+		getWaterSystem().setSociety(this);
 		
 		if(energySystem == null) {
-			this.energySystem = new DefaultEnergySystem.Remote();
+			this.remoteEnergySystem = new DefaultEnergySystem.Remote();
 		} else {
 			this.energySystem = energySystem;
 		}
-		energySystem.setSociety(this);
+		getEnergySystem().setSociety(this);
 		
 		if(socialSystem == null) {
-			this.socialSystem = new DefaultSocialSystem.Remote();
+			this.remoteSocialSystem = new DefaultSocialSystem.Remote();
 		} else {
 			this.socialSystem = socialSystem;
 		}
-		socialSystem.setSociety(this);
+		getSocialSystem().setSociety(this);
 	}
 
 	/* (non-Javadoc)
@@ -118,7 +123,10 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public AgricultureSystem getAgricultureSystem() {
-		return agricultureSystem;
+		if(agricultureSystem != null) {
+			return agricultureSystem;
+		}
+		return remoteAgricultureSystem;
 	}
 
 	/* (non-Javadoc)
@@ -150,7 +158,10 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public EnergySystem getEnergySystem() {
-		return energySystem;
+		if(energySystem != null) {
+			return energySystem;
+		}
+		return remoteEnergySystem;
 	}
 
 	/* (non-Javadoc)
@@ -158,8 +169,8 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public List<? extends InfrastructureSystem> getInfrastructureSystems() {
-		return Arrays.asList(agricultureSystem, waterSystem, 
-				energySystem, socialSystem);
+		return Arrays.asList(getAgricultureSystem(), getWaterSystem(), 
+				getEnergySystem(), getSocialSystem());
 	}
 	
 	/* (non-Javadoc)
@@ -199,7 +210,10 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public SocialSystem getSocialSystem() {
-		return socialSystem;
+		if(socialSystem != null) {
+			return socialSystem;
+		}
+		return remoteSocialSystem;
 	}
 
 	/* (non-Javadoc)
@@ -228,9 +242,9 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalElectricityDemand() {
-		return waterSystem.getElectricityConsumption() 
-				+ energySystem.getElectricityConsumption()
-				+ socialSystem.getElectricityConsumption();
+		return getWaterSystem().getElectricityConsumption() 
+				+ getEnergySystem().getElectricityConsumption()
+				+ getSocialSystem().getElectricityConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -238,7 +252,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalFoodDemand() {
-		return socialSystem.getFoodConsumption();
+		return getSocialSystem().getFoodConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -246,7 +260,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalPetroleumDemand() {
-		return energySystem.getPetroleumConsumption();
+		return getEnergySystem().getPetroleumConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -254,9 +268,9 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalWaterDemand() {
-		return agricultureSystem.getWaterConsumption()
-				+ energySystem.getWaterConsumption()
-				+ socialSystem.getWaterConsumption();
+		return getAgricultureSystem().getWaterConsumption()
+				+ getEnergySystem().getWaterConsumption()
+				+ getSocialSystem().getWaterConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -264,7 +278,10 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public WaterSystem getWaterSystem() {
-		return waterSystem;
+		if(waterSystem != null) {
+			return waterSystem;
+		}
+		return remoteWaterSystem;
 	}
 
 	/* (non-Javadoc)

@@ -12,10 +12,9 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.LifecycleModel;
-import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -41,18 +40,26 @@ public final class Serialization {
 				new InterfaceAdapter<LifecycleModel>());
 		gsonBuilder.registerTypeAdapter(PopulationModel.class, 
 				new InterfaceAdapter<PopulationModel>());
-		gsonBuilder.registerTypeAdapter(AgricultureSystem.class, 
-				new InterfaceAdapter<AgricultureSystem>());
-		gsonBuilder.registerTypeAdapter(WaterSystem.class, 
-				new InterfaceAdapter<WaterSystem>());
-		gsonBuilder.registerTypeAdapter(EnergySystem.class, 
-				new InterfaceAdapter<EnergySystem>());
+		gsonBuilder.registerTypeAdapter(AgricultureSystem.Local.class, 
+				new InterfaceAdapter<AgricultureSystem.Local>());
+		gsonBuilder.registerTypeAdapter(AgricultureSystem.Remote.class, 
+				new InterfaceAdapter<AgricultureSystem.Remote>());
+		gsonBuilder.registerTypeAdapter(WaterSystem.Local.class, 
+				new InterfaceAdapter<WaterSystem.Local>());
+		gsonBuilder.registerTypeAdapter(WaterSystem.Remote.class, 
+				new InterfaceAdapter<WaterSystem.Remote>());
+		gsonBuilder.registerTypeAdapter(EnergySystem.Local.class, 
+				new InterfaceAdapter<EnergySystem.Local>());
+		gsonBuilder.registerTypeAdapter(EnergySystem.Remote.class, 
+				new InterfaceAdapter<EnergySystem.Remote>());
 		gsonBuilder.registerTypeAdapter(PetroleumSystem.class, 
 				new InterfaceAdapter<PetroleumSystem>());
 		gsonBuilder.registerTypeAdapter(ElectricitySystem.class, 
 				new InterfaceAdapter<ElectricitySystem>());
-		gsonBuilder.registerTypeAdapter(SocialSystem.class, 
-				new InterfaceAdapter<SocialSystem>());
+		gsonBuilder.registerTypeAdapter(SocialSystem.Local.class, 
+				new InterfaceAdapter<SocialSystem.Local>());
+		gsonBuilder.registerTypeAdapter(SocialSystem.Remote.class, 
+				new InterfaceAdapter<SocialSystem.Remote>());
 		gsonBuilder.registerTypeAdapter(Society.class, 
 				new InterfaceAdapter<Society>());
 		gsonBuilder.registerTypeAdapter(AgricultureElement.class, 
@@ -87,7 +94,7 @@ public final class Serialization {
 	 */
 	public static Country deserialize(String json) {
 		Country country = getGson().fromJson(json, Country.class);
-		replaceCircularReferences(country);
+		recursiveReplaceCircularReferences(country);
 		return country;
 	}
 	
@@ -104,59 +111,18 @@ public final class Serialization {
 	}
 	
 	/**
-	 * Replace circular references.
+	 * Recursive replace circular references.
 	 *
-	 * @param system the system
+	 * @param society the society
 	 */
-	public static void replaceCircularReferences(Society society) {
-		if(society instanceof Country) {
-			replaceCircularReferences((Country)society);
-		} else if(society instanceof Region) {
-			replaceCircularReferences((Region)society);
-		} else if(society instanceof City) {
-			replaceCircularReferences((City)society);
+	private static void recursiveReplaceCircularReferences(Society society) {
+		for(InfrastructureSystem system : society.getInfrastructureSystems()) {
+			system.setSociety(society);
 		}
-	}
-	
-	/**
-	 * Replace circular references.
-	 *
-	 * @param country the country
-	 */
-	private static void replaceCircularReferences(Country country) {
-		country.getAgricultureSystem().setSociety(country);
-		country.getWaterSystem().setSociety(country);
-		country.getEnergySystem().setSociety(country);
-		for(Society nestedSociety : country.getNestedSocieties()) {
-			nestedSociety.setSociety(country);
-			replaceCircularReferences(nestedSociety);
+		for(Society nestedSociety : society.getNestedSocieties()) {
+			nestedSociety.setSociety(society);
+			recursiveReplaceCircularReferences(nestedSociety);
 		}
-	}
-	
-	/**
-	 * Replace circular references.
-	 *
-	 * @param region the region
-	 */
-	private static void replaceCircularReferences(Region region) {
-		region.getAgricultureSystem().setSociety(region);
-		region.getWaterSystem().setSociety(region);
-		region.getEnergySystem().setSociety(region);
-		for(Society nestedSociety : region.getNestedSocieties()) {
-			nestedSociety.setSociety(region);
-			replaceCircularReferences(nestedSociety);
-		}
-	}
-	
-	/**
-	 * Replace circular references.
-	 *
-	 * @param city the city
-	 */
-	private static void replaceCircularReferences(City city) {
-		city.getAgricultureSystem().setSociety(city);
-		city.getWaterSystem().setSociety(city);
-		city.getEnergySystem().setSociety(city);
 	}
 	
 	/**
