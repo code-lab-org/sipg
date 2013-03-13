@@ -283,6 +283,9 @@ implements ActionListener, ConnectionListener {
 							connectButton.setEnabled(true);
 							connectButton.setText("Connect");
 							statusLabel.setIcon(null);
+							try {
+								ambassador.resignAndDisconnect(connection);
+							} catch (Exception ignored) { }
 							statusLabel.setText("Failed (" + ex.getMessage() + ")");
 						}
 						return null;

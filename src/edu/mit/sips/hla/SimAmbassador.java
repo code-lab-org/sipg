@@ -50,6 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
@@ -62,8 +63,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
 	
-	private final Map<ObjectInstanceHandle, HLAobject> objects = 
-			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAobject>());
+	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
+			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAinfrastructureSystem>());
 	private final List<ObjectInstanceHandle> deletedRemoteObjects = 
 			new ArrayList<ObjectInstanceHandle>();
 	
@@ -114,8 +115,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAagricultureSystem hlaObject = HLAagricultureSystem.
 							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(objects) {
-						objects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					}	
 				}
 			}
@@ -133,8 +134,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAwaterSystem hlaObject = HLAwaterSystem.
 							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(objects) {
-						objects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					}	
 				}
 			}
@@ -152,8 +153,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAenergySystem hlaObject = HLAenergySystem.
 							createLocalEnergySystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(objects) {
-						objects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					}	
 				}
 			}
@@ -169,8 +170,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 				HLAsocialSystem hlaObject = HLAsocialSystem.
 						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
 								localSystem);
-				synchronized(objects) {
-					objects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+				synchronized(hlaObjects) {
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 				}	
 			}
 		}
@@ -182,6 +183,16 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void resignAndDisconnect(FederationConnection connection) throws InvalidResignAction, OwnershipAcquisitionPending, 
 			FederateOwnsAttributes, CallNotAllowedFromWithinCallback, 
 			RTIinternalError, FederateIsExecutionMember {
+		synchronized(hlaObjects) {
+			for(HLAinfrastructureSystem system : hlaObjects.values()) {
+				if(system.isLocal()) {
+					// remove hla object as attribute change listener
+					((InfrastructureSystem.Local)system.getInfrastructureSystem())
+					.removeAttributeChangeListener(system);
+				}
+			}
+		}
+		
 		try {
 			rtiAmbassador.resignFederationExecution(ResignAction.DELETE_OBJECTS_THEN_DIVEST);
 		} catch (FederateNotExecutionMember ignored) {
@@ -196,13 +207,13 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		rtiAmbassador.disconnect();
 		
-		synchronized(objects) {
-			for(HLAobject object : objects.values()) {
-				if(!object.isLocal()) {
+		synchronized(hlaObjects) {
+			for(HLAinfrastructureSystem system : hlaObjects.values()) {
+				if(!system.isLocal()) {
 					// TODO fireElementActionEvent(ElementAction.REMOVE, new ElementActionEvent(this, element.getElement()));
 				}
 			}
-			objects.clear();
+			hlaObjects.clear();
 		}
 		deletedRemoteObjects.clear();
 		
