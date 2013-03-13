@@ -1,5 +1,14 @@
 package edu.mit.sips;
 
+import hla.rti1516e.exceptions.CallNotAllowedFromWithinCallback;
+import hla.rti1516e.exceptions.FederateIsExecutionMember;
+import hla.rti1516e.exceptions.FederateOwnsAttributes;
+import hla.rti1516e.exceptions.InvalidResignAction;
+import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
+import hla.rti1516e.exceptions.RTIinternalError;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
@@ -91,26 +100,33 @@ public class BalancingProgram {
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 		nes.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
 
-		
+		final Simulator simulator = new Simulator(ksa);
+		simulator.addUpdateListener(new ConsoleLogger());
+
 		try {
-			SimAmbassador ambassador = new SimAmbassador(ksa);
-			
+			final SimAmbassador ambassador = new SimAmbassador(ksa);
 			ambassador.connectAndJoin("SuperUser");
 			
-			//ambassador.resignAndDisconnect();
+			SwingUtilities.invokeLater(new Runnable() {
+				public void run() {
+					DataFrame frame = new DataFrame();
+					frame.setSimulator(simulator);
+					frame.pack();
+					frame.setVisible(true);
+					frame.addWindowListener(new WindowAdapter() {
+						public void windowClosing(WindowEvent e) {
+							try {
+								ambassador.resignAndDisconnect();
+							} catch (Exception ex) {
+								ex.printStackTrace();
+							}
+						}
+					});
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(1);
 		}
-		
-		final Simulator simulator = new Simulator(ksa);
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				DataFrame frame = new DataFrame();
-				frame.setSimulator(simulator);
-				frame.pack();
-				frame.setVisible(true);
-			}
-		});
-		simulator.addUpdateListener(new ConsoleLogger());
 	}
 }

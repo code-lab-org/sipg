@@ -49,12 +49,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.event.EventListenerList;
+
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.event.ConnectionEvent;
+import edu.mit.sips.gui.event.ConnectionListener;
 
 public class SimAmbassador extends NullFederateAmbassador {
 	private static final String LOCAL_SETTINGS_DESIGNATOR = 
@@ -65,6 +69,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private final Country country;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
+	private final EventListenerList listenerList = new EventListenerList();
 	
 	private transient boolean connected = false;
 	
@@ -215,12 +220,52 @@ public class SimAmbassador extends NullFederateAmbassador {
 		setConnected(false);
 	}
 	
+	/**
+	 * Checks if is connected.
+	 *
+	 * @return true, if is connected
+	 */
 	public boolean isConnected() {
 		return connected;
 	}
 	
+	/**
+	 * Sets the connected.
+	 *
+	 * @param connected the new connected
+	 */
 	public void setConnected(boolean connected) {
 		this.connected = connected;
-		// TODO fireConnectionEvent(new ConnectionEvent(this, connected));
+		fireConnectionEvent(new ConnectionEvent(this, connected));
+	}
+
+	/**
+	 * Adds the connection listener.
+	 *
+	 * @param listener the listener
+	 */
+	public void addConnectionListener(ConnectionListener listener) {
+		listenerList.add(ConnectionListener.class, listener);
+	}
+	
+	/**
+	 * Removes the connection listener.
+	 *
+	 * @param listener the listener
+	 */
+	public void removeConnectionListener(ConnectionListener listener) {
+		listenerList.remove(ConnectionListener.class, listener);
+	}
+	
+	/**
+	 * Fires a connection event.
+	 *
+	 * @param event the event
+	 */
+	private void fireConnectionEvent(ConnectionEvent event) {
+		ConnectionListener[] listeners = listenerList.getListeners(ConnectionListener.class);
+		for(int i = 0; i < listeners.length; i++) {
+			listeners[i].connectionEventOccurred(event);
+		}
 	}
 }

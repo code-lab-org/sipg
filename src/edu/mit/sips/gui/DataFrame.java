@@ -240,9 +240,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	private void exit() {
 		dispose();
-		System.exit(0);
 	}
-
 
 	/**
 	 * Sets the simulator.
