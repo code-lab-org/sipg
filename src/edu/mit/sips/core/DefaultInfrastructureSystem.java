@@ -16,7 +16,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	public abstract static class Local implements InfrastructureSystem.Local {
 		private final String name;
 		private transient Society society;
-		protected transient EventListenerList listenerList = new EventListenerList();
+		private transient EventListenerList listenerList = new EventListenerList();
 		
 		/**
 		 * Instantiates a new local.

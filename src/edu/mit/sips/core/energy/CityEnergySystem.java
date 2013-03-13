@@ -7,6 +7,13 @@ public class CityEnergySystem extends DefaultEnergySystem.Local {
 	
 	/**
 	 * Instantiates a new city energy system.
+	 */
+	protected CityEnergySystem() {
+		
+	}
+	
+	/**
+	 * Instantiates a new city energy system.
 	 *
 	 * @param maxPetroleumReservoir the max petroleum reservoir
 	 * @param initialPetroleumReservoir the initial petroleum reservoir

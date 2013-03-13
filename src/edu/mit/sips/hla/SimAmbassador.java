@@ -49,29 +49,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.event.EventListenerList;
-
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.gui.event.ConnectionEvent;
-import edu.mit.sips.gui.event.ConnectionListener;
 
 public class SimAmbassador extends NullFederateAmbassador {
-	private static final String LOCAL_SETTINGS_DESIGNATOR = 
-			"crcHost=alchemy.mit.edu:8989";
-	private static final String FEDERATION_NAME = "SIPS Test";
-	private static final String FOM_PATH = "sips.xml";
 	
 	private final Country country;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
-	private final EventListenerList listenerList = new EventListenerList();
-	
-	private transient boolean connected = false;
 	
 	private final Map<ObjectInstanceHandle, HLAobject> objects = 
 			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAobject>());
@@ -89,7 +78,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		encoderFactory = rtiFactory.getEncoderFactory();
 	}
 	
-	public void connectAndJoin(String federateType) 
+	public void connectAndJoin(FederationConnection connection) 
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
 			UnsupportedCallbackModel, CallNotAllowedFromWithinCallback, 
 			RTIinternalError, CouldNotCreateLogicalTimeFactory, 
@@ -101,17 +90,17 @@ public class SimAmbassador extends NullFederateAmbassador {
 			ObjectInstanceNotKnown, InterruptedException {
 		try {
 			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
-					LOCAL_SETTINGS_DESIGNATOR);
+					connection.getLocalSettingsDesignator());
 		} catch(AlreadyConnected ignored) { }
 		
 		try {
-			rtiAmbassador.createFederationExecution(FEDERATION_NAME, 
-					new File(FOM_PATH).toURI().toURL());
+			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
+					new File(connection.getFomPath()).toURI().toURL());
 		} catch(FederationExecutionAlreadyExists ignored) { }
 		
 		try {
-			rtiAmbassador.joinFederationExecution(federateType, 
-					FEDERATION_NAME);
+			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
+					connection.getFederateType(), connection.getFederationName());
 		} catch(FederateAlreadyExecutionMember ignored) { }
 
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -187,10 +176,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
 		
-		setConnected(true);
+		connection.setConnected(true);
 	}
 	
-	public void resignAndDisconnect() throws InvalidResignAction, OwnershipAcquisitionPending, 
+	public void resignAndDisconnect(FederationConnection connection) throws InvalidResignAction, OwnershipAcquisitionPending, 
 			FederateOwnsAttributes, CallNotAllowedFromWithinCallback, 
 			RTIinternalError, FederateIsExecutionMember {
 		try {
@@ -199,7 +188,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		} catch (NotConnected ignored) { }
 		
 		try {
-			rtiAmbassador.destroyFederationExecution(FEDERATION_NAME);
+			rtiAmbassador.destroyFederationExecution(connection.getFederationName());
 		} catch (FederatesCurrentlyJoined ignored) {
 		} catch(FederationExecutionDoesNotExist ignored) {
 		} catch(NotConnected ignored) {
@@ -217,55 +206,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		deletedRemoteObjects.clear();
 		
-		setConnected(false);
-	}
-	
-	/**
-	 * Checks if is connected.
-	 *
-	 * @return true, if is connected
-	 */
-	public boolean isConnected() {
-		return connected;
-	}
-	
-	/**
-	 * Sets the connected.
-	 *
-	 * @param connected the new connected
-	 */
-	public void setConnected(boolean connected) {
-		this.connected = connected;
-		fireConnectionEvent(new ConnectionEvent(this, connected));
-	}
-
-	/**
-	 * Adds the connection listener.
-	 *
-	 * @param listener the listener
-	 */
-	public void addConnectionListener(ConnectionListener listener) {
-		listenerList.add(ConnectionListener.class, listener);
-	}
-	
-	/**
-	 * Removes the connection listener.
-	 *
-	 * @param listener the listener
-	 */
-	public void removeConnectionListener(ConnectionListener listener) {
-		listenerList.remove(ConnectionListener.class, listener);
-	}
-	
-	/**
-	 * Fires a connection event.
-	 *
-	 * @param event the event
-	 */
-	private void fireConnectionEvent(ConnectionEvent event) {
-		ConnectionListener[] listeners = listenerList.getListeners(ConnectionListener.class);
-		for(int i = 0; i < listeners.length; i++) {
-			listeners[i].connectionEventOccurred(event);
-		}
+		connection.setConnected(false);
 	}
 }

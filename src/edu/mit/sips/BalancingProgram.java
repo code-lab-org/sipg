@@ -1,14 +1,5 @@
 package edu.mit.sips;
 
-import hla.rti1516e.exceptions.CallNotAllowedFromWithinCallback;
-import hla.rti1516e.exceptions.FederateIsExecutionMember;
-import hla.rti1516e.exceptions.FederateOwnsAttributes;
-import hla.rti1516e.exceptions.InvalidResignAction;
-import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
-import hla.rti1516e.exceptions.RTIinternalError;
-
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
@@ -26,7 +17,6 @@ import edu.mit.sips.core.water.CityWaterSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
 import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
-import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -102,31 +92,13 @@ public class BalancingProgram {
 
 		final Simulator simulator = new Simulator(ksa);
 		simulator.addUpdateListener(new ConsoleLogger());
-
-		try {
-			final SimAmbassador ambassador = new SimAmbassador(ksa);
-			ambassador.connectAndJoin("SuperUser");
-			
-			SwingUtilities.invokeLater(new Runnable() {
-				public void run() {
-					DataFrame frame = new DataFrame();
-					frame.setSimulator(simulator);
-					frame.pack();
-					frame.setVisible(true);
-					frame.addWindowListener(new WindowAdapter() {
-						public void windowClosing(WindowEvent e) {
-							try {
-								ambassador.resignAndDisconnect();
-							} catch (Exception ex) {
-								ex.printStackTrace();
-							}
-						}
-					});
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(1);
-		}
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				DataFrame frame = new DataFrame();
+				frame.initialize(simulator);
+				frame.pack();
+				frame.setVisible(true);
+			}
+		});
 	}
 }

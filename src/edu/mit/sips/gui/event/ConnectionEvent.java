@@ -2,6 +2,8 @@ package edu.mit.sips.gui.event;
 
 import java.util.EventObject;
 
+import edu.mit.sips.hla.FederationConnection;
+
 /**
  * The Class ConnectionEvent.
  * 
@@ -10,25 +12,27 @@ import java.util.EventObject;
 public class ConnectionEvent extends EventObject {
 	private static final long serialVersionUID = -389874206436130676L;
 	
-	private final boolean connected;
+	private final FederationConnection connection;
 	
 	/**
 	 * Instantiates a new connection event.
 	 *
 	 * @param source the source
 	 * @param connected the connected
+	 * @param host the host
+	 * @param federationName the federation name
 	 */
-	public ConnectionEvent(Object source, boolean connected) {
+	public ConnectionEvent(Object source, FederationConnection connection) {
 		super(source);
-		this.connected = connected;
+		this.connection = connection;
 	}
 	
 	/**
-	 * Checks if is connected.
+	 * Gets the connection.
 	 *
-	 * @return true, if is connected
+	 * @return the connection
 	 */
-	public boolean isConnected() {
-		return connected;
+	public FederationConnection getConnection() {
+		return connection;
 	}
 }

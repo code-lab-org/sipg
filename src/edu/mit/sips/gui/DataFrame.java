@@ -1,5 +1,7 @@
 package edu.mit.sips.gui;
 
+import hla.rti1516e.exceptions.RTIinternalError;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -34,6 +36,8 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.hla.FederationConnection;
+import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.sim.Simulator;
@@ -67,7 +71,11 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 	
 	private final JPanel contentPane;
+	private final ConnectionPanel connectionPanel;
+	private final ConnectionToolbar connectionToolbar;
+	private FederationConnection connection;
 	private Simulator simulator;
+	private SimAmbassador simAmbassador;
 	private JSplitPane nationalPane;
 	private SimulationControlPane simulationPane;
 	private JTabbedPane elementsListPane;
@@ -90,9 +98,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(closeScenario.isEnabled()) {
-				closeScenario.actionPerformed(e);
-			}
+			close();
+			
 			// create file chooser to browse for json file
 			JFileChooser fileChooser = new JFileChooser(".");
 			fileChooser.setFileFilter(
@@ -115,7 +122,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					br.close();
 					fr.close();
 					
-					setSimulator(new Simulator(Serialization.deserialize(jsonBuilder.toString())));
+					initialize(new Simulator(Serialization.deserialize(jsonBuilder.toString())));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
 							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,11 +166,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
-					getContentPane(), "Close scenario?", "Confirm", 
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
-				setSimulator(null);
-			}
+			close();
 		}
 	};
 	
@@ -173,6 +176,15 @@ public class DataFrame extends JFrame implements UpdateListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			exit();
+		}
+	};
+	
+	private final Action editConnection = new AbstractAction("Edit Connection") {
+		private static final long serialVersionUID = 4589751151727368209L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			showConnectionDialog();
 		}
 	};
 	
@@ -214,12 +226,17 @@ public class DataFrame extends JFrame implements UpdateListener {
 				KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
 		exitItem.setMnemonic(KeyEvent.VK_X);
 		fileMenu.add(exitItem);
+		JMenu editMenu = new JMenu("Edit");
+		JMenuItem connectionItem = new JMenuItem(editConnection);
+		editMenu.add(connectionItem);
+		menuBar.add(editMenu);
 		setJMenuBar(menuBar);
-		
+
+		connectionToolbar = new ConnectionToolbar();
+		connectionPanel = new ConnectionPanel();
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.gray);
-		
 		setContentPane(contentPane);
 		setPreferredSize(new Dimension(1000,600));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -230,15 +247,25 @@ public class DataFrame extends JFrame implements UpdateListener {
 			}
 		});
 		
-		newScenario.setEnabled(simulator == null);
-		saveScenario.setEnabled(simulator != null);
-		closeScenario.setEnabled(simulator != null);
+		initialize(null);
+	}
+	
+	/**
+	 * Close.
+	 */
+	private void close() {
+		if(simulator != null && JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
+				getContentPane(), "Close scenario?", "Confirm", 
+				JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
+			initialize(null);
+		}
 	}
 	
 	/**
 	 * Exit.
 	 */
 	private void exit() {
+		close();
 		dispose();
 	}
 
@@ -247,13 +274,30 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 *
 	 * @param simulator the new simulator
 	 */
-	public void setSimulator(final Simulator simulator) {
+	public void initialize(final Simulator simulator) {
 		if(simulator == null) {
-			this.simulator.removeUpdateListener(this);
-			this.simulator.removeUpdateListener(simulationPane);
-			this.simulator.removeUpdateListener(societyPane);
-			contentPane.remove(nationalPane);
-			this.simulator = null;
+			if(this.simulator != null) {
+				this.simulator.removeUpdateListener(this);
+				this.simulator.removeUpdateListener(simulationPane);
+				this.simulator.removeUpdateListener(societyPane);
+				this.simulator = null;
+			}
+			if(contentPane.getComponentCount() > 0) {
+				contentPane.removeAll();
+			}
+			if(connection != null) {
+				if(connection.isConnected()) {
+					try {
+						simAmbassador.resignAndDisconnect(connection);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				connection.removeConnectionListener(connectionPanel);
+				connection.removeConnectionListener(connectionToolbar);
+				connection = null;
+			}
+			simAmbassador = null;
 			societyPane = null;
 			elementsListPane = null;
 			nationalPane = null;
@@ -264,6 +308,18 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
+			try {
+				simAmbassador = new SimAmbassador(simulator.getCountry());
+			} catch (RTIinternalError ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(getContentPane(), 
+						ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			}
+			connection = new FederationConnection();
+			connectionPanel.initialize(connection, simAmbassador);
+			connection.addConnectionListener(connectionPanel);
+			connection.addConnectionListener(connectionToolbar);
+			
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			societyPane = new SocietyPane(this.simulator.getCountry());
 			societyPane.initialize();
@@ -293,6 +349,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 			nationalPane.setRightComponent(societyPane);
 			nationalPane.setResizeWeight(0);
 			contentPane.add(nationalPane, BorderLayout.CENTER);
+			contentPane.add(connectionToolbar, BorderLayout.SOUTH);
+
 			validate();
 			repaint();
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -301,6 +359,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		newScenario.setEnabled(simulator == null);
 		saveScenario.setEnabled(simulator != null);
 		closeScenario.setEnabled(simulator != null);
+		editConnection.setEnabled(connection != null);
 	}
 
 	/* (non-Javadoc)
@@ -356,5 +415,13 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Show connection dialog.
+	 */
+	private void showConnectionDialog() {
+		JOptionPane.showMessageDialog(this, connectionPanel,
+				"Edit Connection", JOptionPane.PLAIN_MESSAGE);
 	}
 }
