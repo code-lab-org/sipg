@@ -2,9 +2,12 @@ package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -16,8 +19,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
@@ -66,7 +73,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private JTabbedPane elementsListPane;
 	private SocietyPane societyPane;
 	
-	private final Action newFile = new AbstractAction() {
+	private final Action newScenario = new AbstractAction("New") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
 		/* (non-Javadoc)
@@ -78,11 +85,14 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	};
 	
-	private final Action openFile = new AbstractAction() {
+	private final Action openScenario = new AbstractAction("Open") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if(closeScenario.isEnabled()) {
+				closeScenario.actionPerformed(e);
+			}
 			// create file chooser to browse for json file
 			JFileChooser fileChooser = new JFileChooser(".");
 			fileChooser.setFileFilter(
@@ -115,7 +125,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	};
 	
-	private final Action saveFile = new AbstractAction() {
+	private final Action saveScenario = new AbstractAction("Save as...") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
 		@Override
@@ -144,12 +154,25 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	};
 	
-	private final Action closeSim = new AbstractAction() {
+	private final Action closeScenario = new AbstractAction("Close") {
 		private static final long serialVersionUID = 4589751151727368209L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			setSimulator(null);
+			if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
+					getContentPane(), "Close scenario?", "Confirm", 
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
+				setSimulator(null);
+			}
+		}
+	};
+	
+	private final Action exitAction = new AbstractAction("Exit") {
+		private static final long serialVersionUID = 4589751151727368209L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			exit();
 		}
 	};
 	
@@ -160,30 +183,64 @@ public class DataFrame extends JFrame implements UpdateListener {
 		super("Data Viewer");
 		setIconImage(Icons.SYSTEM_MONITOR);
 		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu fileMenu = new JMenu("File");
+		menuBar.add(fileMenu);
+		JMenuItem newItem = new JMenuItem(newScenario);
+		newItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
+		newItem.setMnemonic(KeyEvent.VK_N);
+		fileMenu.add(newItem);
+		JMenuItem openItem = new JMenuItem(openScenario);
+		openItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+		openItem.setMnemonic(KeyEvent.VK_O);
+		fileMenu.add(openItem);
+		fileMenu.add(new JSeparator());
+		JMenuItem closeItem = new JMenuItem(closeScenario);
+		closeItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK));
+		closeItem.setMnemonic(KeyEvent.VK_C);
+		fileMenu.add(closeItem);
+		fileMenu.add(new JSeparator());
+		JMenuItem saveItem = new JMenuItem(saveScenario);
+		saveItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		saveItem.setMnemonic(KeyEvent.VK_S);
+		fileMenu.add(saveItem);
+		fileMenu.add(new JSeparator());
+		JMenuItem exitItem = new JMenuItem(exitAction);
+		exitItem.setAccelerator(KeyStroke.getKeyStroke(
+				KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+		exitItem.setMnemonic(KeyEvent.VK_X);
+		fileMenu.add(exitItem);
+		setJMenuBar(menuBar);
+		
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.gray);
-		contentPane.getInputMap().put(KeyStroke.getKeyStroke(
-				KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "new");
-		contentPane.getActionMap().put("new", newFile);
-		contentPane.getInputMap().put(KeyStroke.getKeyStroke(
-				KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK), "save");
-		contentPane.getActionMap().put("save", saveFile);
-		contentPane.getInputMap().put(KeyStroke.getKeyStroke(
-				KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK), "open");
-		contentPane.getActionMap().put("open", openFile);
-		contentPane.getInputMap().put(KeyStroke.getKeyStroke(
-				KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK), "closeSim");
-		contentPane.getActionMap().put("closeSim", closeSim);
 		
 		setContentPane(contentPane);
 		setPreferredSize(new Dimension(1000,600));
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				exit();
+			}
+		});
 		
-		newFile.setEnabled(simulator == null);
-		openFile.setEnabled(simulator == null);
-		saveFile.setEnabled(simulator != null);
-		closeSim.setEnabled(simulator != null);
+		newScenario.setEnabled(simulator == null);
+		saveScenario.setEnabled(simulator != null);
+		closeScenario.setEnabled(simulator != null);
+	}
+	
+	/**
+	 * Exit.
+	 */
+	private void exit() {
+		dispose();
+		System.exit(0);
 	}
 
 
@@ -209,6 +266,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			societyPane = new SocietyPane(this.simulator.getCountry());
 			societyPane.initialize();
 			this.simulator.addUpdateListener(societyPane);
@@ -239,12 +297,12 @@ public class DataFrame extends JFrame implements UpdateListener {
 			contentPane.add(nationalPane, BorderLayout.CENTER);
 			validate();
 			repaint();
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
-		newFile.setEnabled(simulator == null);
-		openFile.setEnabled(simulator == null);
-		saveFile.setEnabled(simulator != null);
-		closeSim.setEnabled(simulator != null);
+		newScenario.setEnabled(simulator == null);
+		saveScenario.setEnabled(simulator != null);
+		closeScenario.setEnabled(simulator != null);
 	}
 
 	/* (non-Javadoc)
