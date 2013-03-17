@@ -255,7 +255,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	@Override
 	public double getSalesRevenue() {
 		return getSociety().getGlobals().getElectricityDomesticPrice()
-				* getSociety().getTotalElectricityDemand();
+				* (getSociety().getTotalElectricityDemand() - getElectricityFromBurningPetroleum());
 	}
 
 	/* (non-Javadoc)
