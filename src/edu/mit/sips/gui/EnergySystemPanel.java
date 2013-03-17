@@ -36,6 +36,9 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 	TimeSeriesCollection electricitySupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection renewableElectricityData = new TimeSeriesCollection();
 	TimeSeriesCollection electricityConsumptionPerCapita = new TimeSeriesCollection();
+
+	DefaultTableXYDataset energyRevenue = new DefaultTableXYDataset();
+	DefaultTableXYDataset energyNetRevenue = new DefaultTableXYDataset();
 	
 	DefaultTableXYDataset petroleumReservoirDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumSourceData = new DefaultTableXYDataset();
@@ -70,6 +73,10 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		indicatorsPanel.add(localEnergyIndicatorPanel);
 		indicatorsPanel.add(electricityConsumptionIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
+		
+		addTab("Revenue", Icons.REVENUE, 
+				createStackedAreaChart("Energy Revenue (SAR/year)", 
+				energyRevenue, energyNetRevenue));
 
 		JTabbedPane petroleumPane = new JTabbedPane();
 		addTab(energySystem.getPetroleumSystem().getName(), 
@@ -157,6 +164,8 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		renewableEnergyIndicatorPanel.initialize();
 		localEnergyIndicatorPanel.initialize();
 		electricityConsumptionIndicatorPanel.initialize();
+		energyRevenue.removeAllSeries();
+		energyNetRevenue.removeAllSeries();
 		petroleumProductCostData.removeAllSeries();
 		petroleumSupplyProfitData.removeAllSeries();
 		localElectricityData.removeAllSeries();
@@ -248,6 +257,27 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		
 		petroleumReservoirIndicatorPanel.setValue(
 				getEnergySystem().getPetroleumSystem().getPetroleumReservoirVolume());
+		
+		updateSeries(energyRevenue, "Capital", year, 
+				-getEnergySystem().getCapitalExpense());
+		updateSeries(energyRevenue, "Operations", year, 
+				-getEnergySystem().getOperationsExpense());
+		updateSeries(energyRevenue, "Decommission", year, 
+				-getEnergySystem().getDecommissionExpense());
+		updateSeries(energyRevenue, "Consumption", year, 
+				-getEnergySystem().getConsumptionExpense());
+		updateSeries(energyRevenue, "In-Distribution", year, 
+				-getEnergySystem().getDistributionExpense());
+		updateSeries(energyRevenue, "Import", year, 
+				-getEnergySystem().getImportExpense());
+		updateSeries(energyRevenue, "Out-Distribution", year, 
+				getEnergySystem().getDistributionRevenue());
+		updateSeries(energyRevenue, "Export", year,
+				getEnergySystem().getExportRevenue());
+		updateSeries(energyRevenue, "Sales", year, 
+				getEnergySystem().getSalesRevenue());
+		updateSeries(energyNetRevenue, "Net Revenue", year, 
+				getEnergySystem().getCashFlow());
 		
 		if(getEnergySystem() instanceof CityEnergySystem) {
 			updateSeries(petroleumReservoirDataset, getSociety().getName(), year, 
