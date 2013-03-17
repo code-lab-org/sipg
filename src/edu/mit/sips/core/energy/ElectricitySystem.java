@@ -30,6 +30,13 @@ public interface ElectricitySystem extends InfrastructureSystem.Local {
 	public double getElectricityOutDistribution();
 	
 	/**
+	 * Gets the electricity out distribution losses.
+	 *
+	 * @return the electricity out distribution losses
+	 */
+	public double getElectricityOutDistributionLosses();
+	
+	/**
 	 * Gets the electricity production.
 	 *
 	 * @return the electricity production

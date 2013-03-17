@@ -65,7 +65,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	@Override
 	public double getDistributionRevenue() {
 		return getSociety().getGlobals().getElectricityDomesticPrice()
-				* getElectricityOutDistribution();
+				* (getElectricityOutDistribution() - getElectricityOutDistributionLosses());
 	}
 	
 	/* (non-Javadoc)
@@ -76,6 +76,18 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		return (getSociety().getGlobals().getElectricityDomesticPrice()
 				+ getSociety().getGlobals().getEconomicIntensityOfElectricityProduction())
 				* getElectricityProduction();
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
+	 */
+	@Override
+	public double getElectricityInDistribution() {
+		double distribution = 0;
+		for(ElectricityElement e : getExternalElements()) {
+			distribution += e.getElectricityOutput();
+		}
+		return distribution;
 	}
 
 	/* (non-Javadoc)
@@ -88,32 +100,30 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 				- getElectricityInDistribution()
 				- getElectricityProduction());
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElectricitySystem#getNetElectricityDistribution()
-	 */
-	@Override
-	public double getElectricityInDistribution() {
-		double distribution = 0;
-		for(ElectricityElement e : getExternalElements()) {
-			distribution += e.getElectricityOutput();
-		}
-		return distribution;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElectricitySystem#getElectricityOutDistribution()
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistribution()
 	 */
 	@Override
 	public double getElectricityOutDistribution() {
 		double distribution = 0;
 		for(ElectricityElement e : getInternalElements()) {
-			if(e.getDestination() == e.getOrigin()) {
-				// if a self-loop, only add distribution losses
-				distribution += e.getElectricityInput() - e.getElectricityOutput();
-			} else {
+			if(!getSociety().getCities().contains(
+					getSociety().getCountry().getCity(e.getDestination()))) {
 				distribution += e.getElectricityInput();
 			}
+		}
+		return distribution;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistributionLosses()
+	 */
+	@Override
+	public double getElectricityOutDistributionLosses() {
+		double distribution = 0;
+		for(ElectricityElement e : getInternalElements()) {
+			distribution += e.getElectricityInput() - e.getElectricityOutput();
 		}
 		return distribution;
 	}

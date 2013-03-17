@@ -61,6 +61,13 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public double getFoodOutDistribution();
 		
 		/**
+		 * Gets the food out distribution losses.
+		 *
+		 * @return the food out distribution losses
+		 */
+		public double getFoodOutDistributionLosses();
+		
+		/**
 		 * Gets the food production.
 		 *
 		 * @return the food production

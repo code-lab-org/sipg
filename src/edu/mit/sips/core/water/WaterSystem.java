@@ -96,6 +96,13 @@ public interface WaterSystem extends InfrastructureSystem {
 		public double getWaterOutDistribution();
 		
 		/**
+		 * Gets the water out distribution losses.
+		 *
+		 * @return the water out distribution losses
+		 */
+		public double getWaterOutDistributionLosses();
+		
+		/**
 		 * Gets the water production.
 		 *
 		 * @return the water production

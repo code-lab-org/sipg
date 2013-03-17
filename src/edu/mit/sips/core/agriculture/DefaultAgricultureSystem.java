@@ -71,7 +71,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public double getDistributionRevenue() {
 			return getSociety().getGlobals().getFoodDomesticPrice()
-					* getFoodOutDistribution();
+					* (getFoodOutDistribution() - getFoodOutDistributionLosses());
 		}
 		
 		/* (non-Javadoc)
@@ -168,12 +168,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodOutDistribution() {
 			double distribution = 0;
 			for(AgricultureElement e : getInternalElements()) {
-				if(e.getDestination() == e.getOrigin()) {
-					// if a self-loop, only add distribution losses
-					distribution += e.getFoodInput() - e.getFoodOutput();
-				} else {
+				if(!getSociety().getCities().contains(
+						getSociety().getCountry().getCity(e.getDestination()))) {
 					distribution += e.getFoodInput();
 				}
+			}
+			return distribution;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
+		 */
+		@Override
+		public double getFoodOutDistributionLosses() {
+			double distribution = 0;
+			for(AgricultureElement e : getInternalElements()) {
+				distribution += e.getFoodInput() - e.getFoodOutput();
 			}
 			return distribution;
 		}

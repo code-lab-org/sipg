@@ -65,7 +65,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	@Override
 	public double getDistributionRevenue() {
 		return getSociety().getGlobals().getPetroleumDomesticPrice()
-				* getPetroleumOutDistribution();
+				* (getPetroleumOutDistribution() - getPetroleumOutDistributionLosses());
 	}
 	
 	/* (non-Javadoc)
@@ -195,9 +195,9 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.PetroleumSystem#getPetroleumInDistribution()
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumInDistribution()
 	 */
 	@Override
 	public double getPetroleumInDistribution() {
@@ -207,20 +207,30 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		return distribution;
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.PetroleumSystem#getPetroleumOutDistribution()
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistribution()
 	 */
 	@Override
 	public double getPetroleumOutDistribution() {
 		double distribution = 0;
 		for(PetroleumElement e : getInternalElements()) {
-			if(e.getDestination() == e.getOrigin()) {
-				// if a self-loop, only add distribution losses
-				distribution += e.getPetroleumInput() - e.getPetroleumOutput();
-			} else {
+			if(!getSociety().getCities().contains(
+					getSociety().getCountry().getCity(e.getDestination()))) {
 				distribution += e.getPetroleumInput();
 			}
+		}
+		return distribution;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistributionLosses()
+	 */
+	@Override
+	public double getPetroleumOutDistributionLosses() {
+		double distribution = 0;
+		for(PetroleumElement e : getInternalElements()) {
+			distribution += e.getPetroleumInput() - e.getPetroleumOutput();
 		}
 		return distribution;
 	}

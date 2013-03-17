@@ -70,7 +70,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getDistributionRevenue() {
 			return getSociety().getGlobals().getWaterDomesticPrice()
-					* getWaterOutDistribution();
+					* (getWaterOutDistribution() - getWaterOutDistributionLosses());
 		}
 
 		/* (non-Javadoc)
@@ -267,9 +267,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#getWaterInDistribution()
+		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
 		 */
 		@Override
 		public double getWaterInDistribution() {
@@ -279,20 +279,30 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#getWaterOutDistribution()
+		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistribution()
 		 */
 		@Override
 		public double getWaterOutDistribution() {
 			double distribution = 0;
 			for(WaterElement e : getInternalElements()) {
-				if(e.getDestination() == e.getOrigin()) {
-					// if a self-loop, only add distribution losses
-					distribution += e.getWaterInput() - e.getWaterOutput();
-				} else {
+				if(!getSociety().getCities().contains(
+						getSociety().getCountry().getCity(e.getDestination()))) {
 					distribution += e.getWaterInput();
 				}
+			}
+			return distribution;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistributionLosses()
+		 */
+		@Override
+		public double getWaterOutDistributionLosses() {
+			double distribution = 0;
+			for(WaterElement e : getInternalElements()) {
+				distribution += e.getWaterInput() - e.getWaterOutput();
 			}
 			return distribution;
 		}

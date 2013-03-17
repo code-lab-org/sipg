@@ -80,6 +80,13 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	 * @return the petroleum out distribution
 	 */
 	public double getPetroleumOutDistribution();
+	
+	/**
+	 * Gets the petroleum out distribution losses.
+	 *
+	 * @return the petroleum out distribution losses
+	 */
+	public double getPetroleumOutDistributionLosses();
 
 	/**
 	 * Gets the petroleum production.
