@@ -117,17 +117,27 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	@Override
 	public List<PetroleumElement> getExternalElements() {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
-		for(PetroleumElement element : getNationalPetroleumSystem().getElements()) {
-			// add element if origin is outside this society but destination
-			// is within this society
-			if(!getSociety().getCities().contains(
-					getSociety().getCountry().getCity(element.getOrigin()))
-					&& getSociety().getCities().contains(
-							getSociety().getCountry().getCity(
-									element.getDestination()))) {
-				elements.add(element);
+		
+		// see if super-system is also local
+		if(getSociety().getSociety().getEnergySystem()
+				instanceof EnergySystem.Local) {
+			PetroleumSystem system = ((EnergySystem.Local)
+					getSociety().getSociety().getEnergySystem())
+					.getPetroleumSystem();
+			for(PetroleumElement element : system.getElements()) {
+				City origin = getSociety().getCountry().getCity(
+						element.getOrigin());
+				City dest = getSociety().getCountry().getCity(
+						element.getDestination());
+				// add element if origin is outside this society but 
+				// destination is within this society
+				if(!getSociety().getCities().contains(origin)
+						&& getSociety().getCities().contains(dest)) {
+					elements.add(element);
+				}
 			}
 		}
+		
 		return Collections.unmodifiableList(elements);
 	}
 
@@ -146,13 +156,23 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	@Override
 	public List<PetroleumElement> getInternalElements() {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
-		for(PetroleumElement element : getNationalPetroleumSystem().getElements()) {
-			// add element if origin is inside this society
-			if(getSociety().getCities().contains(
-					getSociety().getCountry().getCity(element.getOrigin()))) {
-				elements.add(element);
+		
+		// see if super-system is also local
+		if(getSociety().getSociety().getEnergySystem() 
+				instanceof EnergySystem.Local) {
+			PetroleumSystem system = ((EnergySystem.Local)
+					getSociety().getSociety().getEnergySystem())
+					.getPetroleumSystem();
+			for(PetroleumElement element : system.getInternalElements()) {
+				City origin = getSociety().getCountry().getCity(
+						element.getOrigin());
+				// add element if origin is inside this society
+				if(getSociety().getCities().contains(origin)) {
+					elements.add(element);
+				}
 			}
 		}
+		
 		return Collections.unmodifiableList(elements);
 	}
 
@@ -164,15 +184,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		return getPetroleumProduction() 
 				+ getPetroleumInDistribution()
 				- getPetroleumOutDistribution();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getNationalPetroleumSystem()
-	 */
-	@Override
-	public PetroleumSystem getNationalPetroleumSystem() {
-		return getEnergySystem().getNationalEnergySystem().getPetroleumSystem();
-	}
+	}			
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumExport()
@@ -505,15 +517,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			// Don't overwrite existing values.
 			ignore.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Gets the energy system.
-	 *
-	 * @return the energy system
-	 */
-	private EnergySystem.Local getEnergySystem() {
-		return (EnergySystem.Local) getSociety().getEnergySystem();
 	}
 
 	/* (non-Javadoc)

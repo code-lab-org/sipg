@@ -177,17 +177,27 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	@Override
 	public List<ElectricityElement> getExternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
-		for(ElectricityElement element : getNationalElectricitySystem().getElements()) {
-			// add element if origin is outside this society but destination
-			// is within this society
-			if(!getSociety().getCities().contains(
-					getSociety().getCountry().getCity(element.getOrigin()))
-					&& getSociety().getCities().contains(
-							getSociety().getCountry().getCity(
-									element.getDestination()))) {
-				elements.add(element);
+		
+		// see if super-system is also local
+		if(getSociety().getSociety().getEnergySystem()
+				instanceof EnergySystem.Local) {
+			ElectricitySystem system = ((EnergySystem.Local)
+					getSociety().getSociety().getEnergySystem())
+					.getElectricitySystem();
+			for(ElectricityElement element : system.getElements()) {
+				City origin = getSociety().getCountry().getCity(
+						element.getOrigin());
+				City dest = getSociety().getCountry().getCity(
+						element.getDestination());
+				// add element if origin is outside this society but 
+				// destination is within this society
+				if(!getSociety().getCities().contains(origin)
+						&& getSociety().getCities().contains(dest)) {
+					elements.add(element);
+				}
 			}
 		}
+		
 		return Collections.unmodifiableList(elements);
 	}
 
@@ -205,22 +215,24 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	@Override
 	public List<ElectricityElement> getInternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
-		for(ElectricityElement element : getNationalElectricitySystem().getElements()) {
-			// add element if origin is inside this society
-			if(getSociety().getCities().contains(
-					getSociety().getCountry().getCity(element.getOrigin()))) {
-				elements.add(element);
+		
+		// see if super-system is also local
+		if(getSociety().getSociety().getEnergySystem() 
+				instanceof EnergySystem.Local) {
+			ElectricitySystem system = ((EnergySystem.Local)
+					getSociety().getSociety().getEnergySystem())
+					.getElectricitySystem();
+			for(ElectricityElement element : system.getInternalElements()) {
+				City origin = getSociety().getCountry().getCity(
+						element.getOrigin());
+				// add element if origin is inside this society
+				if(getSociety().getCities().contains(origin)) {
+					elements.add(element);
+				}
 			}
 		}
-		return Collections.unmodifiableList(elements);
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getNationalElectricitySystem()
-	 */
-	@Override
-	public ElectricitySystem getNationalElectricitySystem() {
-		return getEnergySystem().getNationalEnergySystem().getElectricitySystem();
+		return Collections.unmodifiableList(elements);
 	}
 
 	/* (non-Javadoc)

@@ -45,13 +45,6 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	 * @return the max petroleum reservoir volume
 	 */
 	public double getMaxPetroleumReservoirVolume();
-	
-	/**
-	 * Gets the national petroleum system.
-	 *
-	 * @return the national petroleum system
-	 */
-	public PetroleumSystem.Local getNationalPetroleumSystem();
 
 	/**
 	 * Gets the petroleum export.

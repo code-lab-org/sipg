@@ -40,13 +40,6 @@ public interface WaterSystem extends InfrastructureSystem {
 		public double getMaxWaterReservoirVolume();
 		
 		/**
-		 * Gets the national water system.
-		 *
-		 * @return the national water system
-		 */
-		public WaterSystem.Local getNationalWaterSystem();
-		
-		/**
 		 * Gets the renewable water production.
 		 *
 		 * @return the renewable water production

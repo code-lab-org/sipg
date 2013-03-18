@@ -110,20 +110,25 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public List<AgricultureElement> getExternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
 			
-			// TODO bad practice, assuming super-system is also local
-			AgricultureSystem.Local agricultureSystem = 
-					(AgricultureSystem.Local)getSociety().getSociety().getAgricultureSystem();
-			for(AgricultureElement element : agricultureSystem.getElements()) {
-				// add element if origin is outside this society but destination
-				// is within this society
-				if(!getSociety().getCities().contains(
-						getSociety().getCountry().getCity(element.getOrigin()))
-						&& getSociety().getCities().contains(
-								getSociety().getCountry().getCity(
-										element.getDestination()))) {
-					elements.add(element);
+			// see if super-system is also local
+			if(getSociety().getSociety().getAgricultureSystem() 
+					instanceof AgricultureSystem.Local) {
+				AgricultureSystem.Local system = (AgricultureSystem.Local)
+						getSociety().getSociety().getAgricultureSystem();
+				for(AgricultureElement element : system.getElements()) {
+					City origin = getSociety().getCountry().getCity(
+							element.getOrigin());
+					City dest = getSociety().getCountry().getCity(
+							element.getDestination());
+					// add element if origin is outside this society but 
+					// destination is within this society
+					if(!getSociety().getCities().contains(origin)
+							&& getSociety().getCities().contains(dest)) {
+						elements.add(element);
+					}
 				}
 			}
+			
 			return Collections.unmodifiableList(elements);
 		}
 		
@@ -214,16 +219,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public List<AgricultureElement> getInternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
-			// TODO bad practice, assuming super-system is also local
-			AgricultureSystem.Local agricultureSystem = 
-					(AgricultureSystem.Local)getSociety().getSociety().getAgricultureSystem();
-			for(AgricultureElement element : agricultureSystem.getInternalElements()) {
-				// add element if origin is inside this society
-				if(getSociety().getCities().contains(
-						getSociety().getCountry().getCity(element.getOrigin()))) {
-					elements.add(element);
+			
+			// see if super-system is also local
+			if(getSociety().getSociety().getAgricultureSystem() 
+					instanceof AgricultureSystem.Local) {
+				AgricultureSystem.Local system = (AgricultureSystem.Local)
+						getSociety().getSociety().getAgricultureSystem();
+				for(AgricultureElement element : system.getInternalElements()) {
+					City origin = getSociety().getCountry().getCity(
+							element.getOrigin());
+					// add element if origin is inside this society
+					if(getSociety().getCities().contains(origin)) {
+						elements.add(element);
+					}
 				}
 			}
+
 			return Collections.unmodifiableList(elements);
 		}
 
@@ -239,10 +250,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return landAreaUsed;
 		}
 		
-		/**
-		 * Gets the local food fraction.
-		 *
-		 * @return the local food fraction
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
 		 */
 		@Override
 		public double getLocalFoodFraction() {

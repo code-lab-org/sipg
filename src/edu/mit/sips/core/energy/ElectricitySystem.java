@@ -66,13 +66,6 @@ public interface ElectricitySystem extends InfrastructureSystem.Local {
 	public List<? extends ElectricityElement> getInternalElements();
 	
 	/**
-	 * Gets the national electricity system.
-	 *
-	 * @return the national electricity system
-	 */
-	public ElectricitySystem getNationalElectricitySystem();
-	
-	/**
 	 * Gets the petroleum burned.
 	 *
 	 * @return the petroleum burned
