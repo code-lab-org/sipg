@@ -22,6 +22,7 @@ import hla.rti1516e.exceptions.SaveInProgress;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -70,7 +71,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, waterSystem);
+				rtiAmbassador, encoderFactory, null, waterSystem);
 		waterSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
@@ -97,13 +98,14 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 */
 	public static HLAwaterSystem createRemoteWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName, WaterSystem.Remote waterSystem) 
+			String instanceName) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, waterSystem);
+				rtiAmbassador, encoderFactory, instanceName,
+				new DefaultWaterSystem.Remote());
 		hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -190,13 +192,13 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAwaterSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory,
+			EncoderFactory encoderFactory, String instanceName,
 			WaterSystem waterSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
-		super(rtiAmbassador, encoderFactory, waterSystem);
+		super(rtiAmbassador, encoderFactory, instanceName, waterSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 

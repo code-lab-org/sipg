@@ -42,13 +42,6 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	
 
 	/**
-	 * Gets the internal elements.
-	 *
-	 * @return the internal elements
-	 */
-	public List<? extends InfrastructureElement> getInternalElements();
-	
-	/**
 	 * Gets the globals.
 	 *
 	 * @return the globals
@@ -61,6 +54,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the infrastructure systems
 	 */
 	public List<? extends InfrastructureSystem> getInfrastructureSystems();
+	
+	/**
+	 * Gets the internal elements.
+	 *
+	 * @return the internal elements
+	 */
+	public List<? extends InfrastructureElement> getInternalElements();
 	
 	/**
 	 * Gets the nested societies.
@@ -117,4 +117,32 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the water system
 	 */
 	public WaterSystem getWaterSystem();
+	
+	/**
+	 * Sets the agriculture system.
+	 *
+	 * @param agricultureSystem the new agriculture system
+	 */
+	public void setAgricultureSystem(AgricultureSystem agricultureSystem);
+	
+	/**
+	 * Sets the energy system.
+	 *
+	 * @param energySystem the new energy system
+	 */
+	public void setEnergySystem(EnergySystem energySystem);
+	
+	/**
+	 * Sets the social system.
+	 *
+	 * @param socialSystem the new social system
+	 */
+	public void setSocialSystem(SocialSystem socialSystem);
+	
+	/**
+	 * Sets the water system.
+	 *
+	 * @param waterSystem the new water system
+	 */
+	public void setWaterSystem(WaterSystem waterSystem);
 }

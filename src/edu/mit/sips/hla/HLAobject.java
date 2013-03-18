@@ -47,24 +47,24 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * Instantiates a new HLA object.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @param local the local
+	 * @param instanceName the instance name
 	 * @throws NameNotFound the name not found
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the RTI internal error
 	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws RestoreInProgress 
-	 * @throws SaveInProgress 
-	 * @throws ObjectClassNotDefined 
-	 * @throws ObjectClassNotPublished 
-	 * @throws ObjectInstanceNotKnown 
+	 * @throws ObjectClassNotPublished the object class not published
+	 * @throws ObjectClassNotDefined the object class not defined
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectInstanceNotKnown the object instance not known
 	 */
-	public HLAobject(RTIambassador rtiAmbassador, boolean local) 
+	public HLAobject(RTIambassador rtiAmbassador, String instanceName) 
 			throws NameNotFound, FederateNotExecutionMember, NotConnected, 
 			RTIinternalError, InvalidObjectClassHandle, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
-		this.local = local;
+		this.local = instanceName == null;
 		this.rtiAmbassador = rtiAmbassador;
 		
 		objectClassHandle = rtiAmbassador.getObjectClassHandle(getObjectClassName());
@@ -78,8 +78,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 		
 		if(local) {
 			objectInstanceHandle = rtiAmbassador.registerObjectInstance(getObjectClassHandle());
-			instanceName = rtiAmbassador.getObjectInstanceName(objectInstanceHandle);
+			this.instanceName = rtiAmbassador.getObjectInstanceName(objectInstanceHandle);
 		} else {
+			this.instanceName = instanceName;
 			objectInstanceHandle = rtiAmbassador.getObjectInstanceHandle(instanceName);
 		}
 	}

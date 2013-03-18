@@ -130,13 +130,13 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAinfrastructureSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory,
+			EncoderFactory encoderFactory, String instanceName,
 			InfrastructureSystem infrastructureSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, SaveInProgress, 
 			RestoreInProgress {
-		super(rtiAmbassador, infrastructureSystem instanceof InfrastructureSystem.Local?true:false);
+		super(rtiAmbassador, instanceName);
 		this.infrastructureSystem = infrastructureSystem;
 		name = encoderFactory.createHLAunicodeString();
 		societyName = encoderFactory.createHLAunicodeString();
@@ -188,7 +188,8 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 			if(evt.getAttributeName().equals(NAME_ATTRIBUTE)) {
 				remote.setName(name.getValue());
 			} else if(evt.getAttributeName().equals(SOCIETY_NAME_ATTRIBUTE)) {
-				remote.setSociety(remote.getSociety().getCountry().getSociety(societyName.getValue()));
+				// handled in the federate ambassador
+				// remote.setSociety(remote.getSociety().getCountry().getSociety(societyName.getValue()));
 			} else if(evt.getAttributeName().equals(NET_CASH_FLOW_ATTRIBUTE)) {
 				remote.setCashFlow(netCashFlow.getValue());
 			} else if(evt.getAttributeName().equals(DOMESTIC_PRODUCTION_ATTRIBUTE)) {
@@ -219,5 +220,14 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
+	}
+	
+	/**
+	 * Gets the society name.
+	 *
+	 * @return the society name
+	 */
+	public String getSocietyName() {
+		return societyName.getValue();
 	}
 }

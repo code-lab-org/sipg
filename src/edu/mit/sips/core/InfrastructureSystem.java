@@ -8,29 +8,10 @@ import edu.mit.sips.hla.AttributeChangeListener;
  * The Interface InfrastructureSystem.
  */
 public interface InfrastructureSystem {
-	public static final String NAME_ATTRIBUTE = "name", 
-			SOCIETY_ATTRIBUTE = "society", 
-			CASH_FLOW_ATTRIBUTE = "cashFlow", 
-			DOMESTIC_PRODUCTION_ATTRIBUTE = "domesticProduction";
-	
 	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends InfrastructureSystem, SimEntity {
-		
-		/**
-		 * Adds the property change listener.
-		 *
-		 * @param listener the listener
-		 */
-		public void addAttributeChangeListener(AttributeChangeListener listener);
-		
-		/**
-		 * Fire attribute change event.
-		 *
-		 * @param propertyName the property name
-		 */
-		public void fireAttributeChangeEvent(String propertyName);
 		
 		/**
 		 * Gets the capital expense.
@@ -136,13 +117,6 @@ public interface InfrastructureSystem {
 		 * @return the total revenue
 		 */
 		public double getTotalRevenue();
-		
-		/**
-		 * Removes the property change listener.
-		 *
-		 * @param listener the listener
-		 */
-		public void removeAttributeChangeListener(AttributeChangeListener listener);
 	}
 	
 	/**
@@ -172,6 +146,25 @@ public interface InfrastructureSystem {
 		public void setName(String name);
 	}
 	
+	public static final String NAME_ATTRIBUTE = "name", 
+			SOCIETY_ATTRIBUTE = "society", 
+			CASH_FLOW_ATTRIBUTE = "cashFlow", 
+			DOMESTIC_PRODUCTION_ATTRIBUTE = "domesticProduction";
+	
+	/**
+	 * Adds the property change listener.
+	 *
+	 * @param listener the listener
+	 */
+	public void addAttributeChangeListener(AttributeChangeListener listener);
+	
+	/**
+	 * Fire attribute change event.
+	 *
+	 * @param propertyName the property name
+	 */
+	public void fireAttributeChangeEvent(String propertyName);
+	
 	/**
 	 * Gets the future cash flow.
 	 *
@@ -199,6 +192,13 @@ public interface InfrastructureSystem {
 	 * @return the society
 	 */
 	public Society getSociety();
+	
+	/**
+	 * Removes the property change listener.
+	 *
+	 * @param listener the listener
+	 */
+	public void removeAttributeChangeListener(AttributeChangeListener listener);
 	
 	/**
 	 * Gets the society.

@@ -23,6 +23,7 @@ import hla.rti1516e.exceptions.SaveInProgress;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystem;
 
 /**
@@ -77,7 +78,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
 		HLAsocialSystem hlaSystem = new HLAsocialSystem(
-				rtiAmbassador, encoderFactory, socialSystem);
+				rtiAmbassador, encoderFactory, null, socialSystem);
 		socialSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
@@ -104,13 +105,13 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 */
 	public static HLAsocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName, SocialSystem.Remote socialSystem) 
+			String instanceName) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
-		HLAsocialSystem hlaSystem = new HLAsocialSystem(
-				rtiAmbassador, encoderFactory, socialSystem);
+		HLAsocialSystem hlaSystem = new HLAsocialSystem(rtiAmbassador, 
+				encoderFactory, instanceName, new DefaultSocialSystem.Remote());
 		hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -200,13 +201,13 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAsocialSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory,
+			EncoderFactory encoderFactory, String instanceName,
 			SocialSystem socialSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
-		super(rtiAmbassador, encoderFactory, socialSystem);
+		super(rtiAmbassador, encoderFactory, instanceName, socialSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		foodConsumption = encoderFactory.createHLAfloat64BE();
 		waterConsumption = encoderFactory.createHLAfloat64BE();

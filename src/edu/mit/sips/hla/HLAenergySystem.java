@@ -22,6 +22,7 @@ import hla.rti1516e.exceptions.SaveInProgress;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.energy.EnergySystem;
 
 /**
@@ -72,7 +73,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
 		HLAenergySystem hlaSystem = new HLAenergySystem(
-				rtiAmbassador, encoderFactory, energySystem);
+				rtiAmbassador, encoderFactory, null, energySystem);
 		energySystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
@@ -99,13 +100,14 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 */
 	public static HLAenergySystem createRemoteEnergySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName, EnergySystem.Remote energySystem) 
+			String instanceName) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAenergySystem hlaSystem = new HLAenergySystem(
-				rtiAmbassador, encoderFactory, energySystem);
+				rtiAmbassador, encoderFactory, instanceName, 
+				new DefaultEnergySystem.Remote());
 		hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -193,13 +195,13 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAenergySystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory,
+			EncoderFactory encoderFactory, String instanceName,
 			EnergySystem energySystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
-		super(rtiAmbassador, encoderFactory, energySystem);
+		super(rtiAmbassador, encoderFactory, instanceName, energySystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		petroleumConsumption = encoderFactory.createHLAfloat64BE();
 		waterConsumption = encoderFactory.createHLAfloat64BE();

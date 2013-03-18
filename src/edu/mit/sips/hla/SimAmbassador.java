@@ -1,12 +1,20 @@
 package edu.mit.sips.hla;
 
+import hla.rti1516e.AttributeHandleSet;
+import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
+import hla.rti1516e.FederateHandle;
+import hla.rti1516e.LogicalTime;
+import hla.rti1516e.MessageRetractionHandle;
 import hla.rti1516e.NullFederateAmbassador;
+import hla.rti1516e.ObjectClassHandle;
 import hla.rti1516e.ObjectInstanceHandle;
+import hla.rti1516e.OrderType;
 import hla.rti1516e.RTIambassador;
 import hla.rti1516e.ResignAction;
 import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
+import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AttributeNotDefined;
@@ -43,12 +51,13 @@ import hla.rti1516e.exceptions.UnsupportedCallbackModel;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
+import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
@@ -65,8 +74,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 	
 	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
 			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAinfrastructureSystem>());
-	private final List<ObjectInstanceHandle> deletedRemoteObjects = 
-			new ArrayList<ObjectInstanceHandle>();
 	
 	/**
 	 * Instantiates a new sim ambassador.
@@ -161,12 +168,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAenergySystem.subscribeAll(rtiAmbassador);
 
-		// always publish social system attributes
+		// always publish city social system attributes
 		HLAsocialSystem.publishAll(rtiAmbassador);
-		for(Society society : country.getSocieties()) {
-			if(society.getSocialSystem() instanceof SocialSystem.Local) {
+		for(City city : country.getCities()) {
+			if(city.getSocialSystem() instanceof SocialSystem.Local) {
 				SocialSystem.Local localSystem = 
-						(SocialSystem.Local) society.getSocialSystem();
+						(SocialSystem.Local) city.getSocialSystem();
 				HLAsocialSystem hlaObject = HLAsocialSystem.
 						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
 								localSystem);
@@ -208,15 +215,180 @@ public class SimAmbassador extends NullFederateAmbassador {
 		rtiAmbassador.disconnect();
 		
 		synchronized(hlaObjects) {
-			for(HLAinfrastructureSystem system : hlaObjects.values()) {
-				if(!system.isLocal()) {
-					// TODO fireElementActionEvent(ElementAction.REMOVE, new ElementActionEvent(this, element.getElement()));
-				}
-			}
 			hlaObjects.clear();
 		}
-		deletedRemoteObjects.clear();
 		
 		connection.setConnected(false);
+	}
+	
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#discoverObjectInstance(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.ObjectClassHandle, java.lang.String)
+	 */
+	public void discoverObjectInstance(ObjectInstanceHandle theObject,
+			ObjectClassHandle theObjectClass,
+			String objectName,
+			FederateHandle producingFederate) {
+		try {
+			if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
+					HLAagricultureSystem.CLASS_NAME))) {
+				HLAagricultureSystem remoteSystem = 
+						HLAagricultureSystem.createRemoteAgricultureSystem(
+								rtiAmbassador, encoderFactory, objectName);
+				synchronized(hlaObjects) {
+					hlaObjects.put(theObject, remoteSystem);
+				}
+			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
+					HLAwaterSystem.CLASS_NAME))) {
+				HLAwaterSystem remoteSystem = 
+						HLAwaterSystem.createRemoteWaterSystem(
+								rtiAmbassador, encoderFactory, objectName);
+				synchronized(hlaObjects) {
+					hlaObjects.put(theObject, remoteSystem);
+				}
+			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
+					HLAenergySystem.CLASS_NAME))) {
+				HLAenergySystem remoteSystem = 
+						HLAenergySystem.createRemoteEnergySystem(
+								rtiAmbassador, encoderFactory, objectName);
+				synchronized(hlaObjects) {
+					hlaObjects.put(theObject, remoteSystem);
+				}
+			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
+					HLAsocialSystem.CLASS_NAME))) {
+				HLAsocialSystem remoteSystem = 
+						HLAsocialSystem.createRemoteSocialSystem(
+								rtiAmbassador, encoderFactory, objectName);
+				synchronized(hlaObjects) {
+					hlaObjects.put(theObject, remoteSystem);
+				}
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An exception of type " 
+					+ ex.getMessage() 
+					+ " occurred while discovering an object."
+					+ " See stack trace for more information.", 
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#discoverObjectInstance(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.ObjectClassHandle, java.lang.String)
+	 */
+	public void discoverObjectInstance(ObjectInstanceHandle theObject,
+			ObjectClassHandle theObjectClass, String objectName) {
+		discoverObjectInstance(theObject, theObjectClass, objectName, null);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#provideAttributeValueUpdate(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleSet, byte[])
+	 */
+	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject,
+			AttributeHandleSet theAttributes, byte[] userSuppliedTag) {
+		HLAinfrastructureSystem localSystem;
+		synchronized(hlaObjects) {
+			localSystem = hlaObjects.get(theObject);
+		}
+		if(localSystem != null) {
+			try {
+				localSystem.updateAttributes(theAttributes);
+				return;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(null, "An exception of type " 
+						+ ex.getMessage() 
+						+ " occurred while providing attribute updates."
+						+ " See stack trace for more information.", 
+						"Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
+	 */
+	public void reflectAttributeValues(ObjectInstanceHandle theObject,
+			AttributeHandleValueMap theAttributes,
+			byte[] userSuppliedTag,
+			OrderType sentOrdering,
+			TransportationTypeHandle theTransport,
+			SupplementalReflectInfo reflectInfo) {
+		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, null, null, reflectInfo);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.LogicalTime, hla.rti1516e.OrderType, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
+	 */
+	public void reflectAttributeValues(ObjectInstanceHandle theObject,
+			AttributeHandleValueMap theAttributes,
+			byte[] userSuppliedTag,
+			OrderType sentOrdering,
+			TransportationTypeHandle theTransport,
+			LogicalTime theTime,
+			OrderType receivedOrdering,
+			SupplementalReflectInfo reflectInfo) {
+		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, theTime, receivedOrdering, null, reflectInfo);
+	}
+	
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.LogicalTime, hla.rti1516e.OrderType, hla.rti1516e.MessageRetractionHandle, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
+	 */
+	public void reflectAttributeValues(ObjectInstanceHandle theObject,
+			AttributeHandleValueMap theAttributes,
+			byte[] userSuppliedTag,
+			OrderType sentOrdering,
+			TransportationTypeHandle theTransport,
+			LogicalTime theTime,
+			OrderType receivedOrdering,
+			MessageRetractionHandle retractionHandle,
+			SupplementalReflectInfo reflectInfo) {
+		try {
+			synchronized(hlaObjects) {
+				if(hlaObjects.containsKey(theObject)) {
+					if(hlaObjects.get(theObject) instanceof HLAagricultureSystem) {
+						HLAagricultureSystem system = (HLAagricultureSystem) hlaObjects.get(theObject);
+						system.setAllAttributes(theAttributes);
+						if(system.getInfrastructureSystem().getSociety() == null 
+								&& !system.getSocietyName().isEmpty()) {
+							country.getSociety(system.getSocietyName()).setAgricultureSystem(
+									system.getAgricultureSystem());
+							// TODO fire system update event to reset attribute change listeners
+						}
+					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
+						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
+						system.setAllAttributes(theAttributes);
+						if(system.getInfrastructureSystem().getSociety() == null 
+								&& !system.getSocietyName().isEmpty()) {
+							country.getSociety(system.getSocietyName()).setWaterSystem(
+									system.getWaterSystem());
+							// TODO fire system update event to reset attribute change listeners
+						}
+					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
+						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
+						system.setAllAttributes(theAttributes);
+						if(system.getInfrastructureSystem().getSociety() == null 
+								&& !system.getSocietyName().isEmpty()) {
+							country.getSociety(system.getSocietyName()).setEnergySystem(
+									system.getEnergySystem());
+							// TODO fire system update event to reset attribute change listeners
+						}
+					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
+						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
+						system.setAllAttributes(theAttributes);
+						if(system.getInfrastructureSystem().getSociety() == null 
+								&& !system.getSocietyName().isEmpty()) {
+							country.getSociety(system.getSocietyName()).setSocialSystem(
+									system.getSocialSystem());
+							// TODO fire system update event to reset attribute change listeners
+						}
+					}
+				} 
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An exception of type " + ex.getMessage() 
+					+ " occurred while decoding an attribute update. See stack trace for more information.", 
+					"Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

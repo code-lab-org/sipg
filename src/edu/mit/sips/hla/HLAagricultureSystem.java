@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 
 /**
  * The Class HLAwaterSystem.
@@ -68,7 +69,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
-				rtiAmbassador, encoderFactory, agricultureSystem);
+				rtiAmbassador, encoderFactory, null, agricultureSystem);
 		agricultureSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
@@ -95,13 +96,13 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	 */
 	public static HLAagricultureSystem createRemoteAgricultureSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName, AgricultureSystem.Remote agricultureSystem) 
+			String instanceName) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
-				rtiAmbassador, encoderFactory, agricultureSystem);
+				rtiAmbassador, encoderFactory, instanceName, new DefaultAgricultureSystem.Remote());
 		hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -187,13 +188,13 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotPublished 
 	 */
 	protected HLAagricultureSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory,
+			EncoderFactory encoderFactory, String instanceName,
 			AgricultureSystem agricultureSystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
-		super(rtiAmbassador, encoderFactory, agricultureSystem);
+		super(rtiAmbassador, encoderFactory, instanceName, agricultureSystem);
 		waterConsumption = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);

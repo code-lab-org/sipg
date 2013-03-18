@@ -9,14 +9,12 @@ import edu.mit.sips.hla.AttributeChangeListener;
  * The Class DefaultInfrastructureSystem.
  */
 public abstract class DefaultInfrastructureSystem implements InfrastructureSystem {
-	
 	/**
 	 * The Class Local.
 	 */
-	public abstract static class Local implements InfrastructureSystem.Local {
+	public abstract static class Local extends DefaultInfrastructureSystem implements InfrastructureSystem.Local {
 		private final String name;
 		private transient Society society;
-		private transient EventListenerList listenerList = new EventListenerList();
 		
 		/**
 		 * Instantiates a new local.
@@ -36,28 +34,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 				throw new IllegalArgumentException("Name cannot be null.");
 			}
 			this.name = name;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
-		 */
-		@Override
-		public void addAttributeChangeListener(AttributeChangeListener listener) {
-			listenerList.add(AttributeChangeListener.class, listener);
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.hla.InfrastructureSystem#fireAttributeChangeEvent(java.lang.String)
-		 */
-		@Override
-		public final void fireAttributeChangeEvent(String propertyName) {
-			AttributeChangeEvent evt = new AttributeChangeEvent(
-					this, propertyName);
-			AttributeChangeListener[] listeners = listenerList.getListeners(
-					AttributeChangeListener.class);
-			for(int i = 0; i < listeners.length; i++) {
-				listeners[i].attributeChanged(evt);
-			}
 		}
 
 		/* (non-Javadoc)
@@ -152,14 +128,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getDistributionRevenue()
 					+ getExportRevenue();
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
-		 */
-		@Override
-		public void removeAttributeChangeListener(AttributeChangeListener listener) {
-			listenerList.remove(AttributeChangeListener.class, listener);
-		}
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#setSociety(edu.mit.sips.core.Society)
@@ -173,8 +141,8 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	/**
 	 * The Class Remote.
 	 */
-	public abstract static class Remote implements InfrastructureSystem.Remote {
-		private String name;
+	public abstract static class Remote extends DefaultInfrastructureSystem implements InfrastructureSystem.Remote {
+		private String name = "";
 		private double cashFlow;
 		private double domesticProduction;
 		private Society society;
@@ -217,6 +185,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setCashFlow(double cashFlow) {
 			this.cashFlow = cashFlow;
+			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -225,6 +194,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setDomesticProduction(double domesticProduction) {
 			this.domesticProduction = domesticProduction;
+			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -233,6 +203,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setName(String name) {
 			this.name = name;
+			fireAttributeChangeEvent(NAME_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -241,7 +212,40 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setSociety(Society society) {
 			this.society = society;
+			fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
 		}
+	}
+
+	private transient EventListenerList listenerList = new EventListenerList();
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+	 */
+	@Override
+	public void addAttributeChangeListener(AttributeChangeListener listener) {
+		listenerList.add(AttributeChangeListener.class, listener);
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.hla.InfrastructureSystem#fireAttributeChangeEvent(java.lang.String)
+	 */
+	@Override
+	public final void fireAttributeChangeEvent(String propertyName) {
+		AttributeChangeEvent evt = new AttributeChangeEvent(
+				this, propertyName);
+		AttributeChangeListener[] listeners = listenerList.getListeners(
+				AttributeChangeListener.class);
+		for(int i = 0; i < listeners.length; i++) {
+			listeners[i].attributeChanged(evt);
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+	 */
+	@Override
+	public void removeAttributeChangeListener(AttributeChangeListener listener) {
+		listenerList.remove(AttributeChangeListener.class, listener);
 	}
 
 }
