@@ -341,59 +341,39 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 * @see edu.mit.sips.core.Society#setAgricultureSystem(edu.mit.sips.core.agriculture.AgricultureSystem)
 	 */
 	@Override
-	public void setAgricultureSystem(AgricultureSystem agricultureSystem) {
+	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
 		agricultureSystem.setSociety(this);
-		if(agricultureSystem instanceof AgricultureSystem.Local) {
-			this.agricultureSystem = (AgricultureSystem.Local) agricultureSystem;
-			this.remoteAgricultureSystem = null;
-		} else if(agricultureSystem instanceof AgricultureSystem.Remote) {
-			this.agricultureSystem = null;
-			this.remoteAgricultureSystem = (AgricultureSystem.Remote) agricultureSystem;
-		}
+		this.agricultureSystem = null;
+		this.remoteAgricultureSystem = agricultureSystem;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#setEnergySystem(edu.mit.sips.core.energy.EnergySystem)
 	 */
 	@Override
-	public void setEnergySystem(EnergySystem energySystem) {
+	public void setEnergySystem(EnergySystem.Remote energySystem) {
 		energySystem.setSociety(this);
-		if(energySystem instanceof EnergySystem.Local) {
-			this.energySystem = (EnergySystem.Local) energySystem;
-			this.remoteEnergySystem = null;
-		} else if(energySystem instanceof EnergySystem.Remote) {
-			this.energySystem = null;
-			this.remoteEnergySystem = (EnergySystem.Remote) energySystem;
-		}
+		this.energySystem = null;
+		this.remoteEnergySystem = energySystem;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
+	public void setSocialSystem(SocialSystem.Remote socialSystem) {
 		socialSystem.setSociety(this);
-		if(socialSystem instanceof SocialSystem.Local) {
-			this.socialSystem = (SocialSystem.Local) socialSystem;
-			this.remoteSocialSystem = null;
-		} else if(socialSystem instanceof SocialSystem.Remote) {
-			this.socialSystem = null;
-			this.remoteSocialSystem = (SocialSystem.Remote) socialSystem;
-		}
+		this.socialSystem = null;
+		this.remoteSocialSystem = socialSystem;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#setWaterSystem(edu.mit.sips.core.water.WaterSystem)
 	 */
 	@Override
-	public void setWaterSystem(WaterSystem waterSystem) {
+	public void setWaterSystem(WaterSystem.Remote waterSystem) {
 		waterSystem.setSociety(this);
-		if(waterSystem instanceof WaterSystem.Local) {
-			this.waterSystem = (WaterSystem.Local) waterSystem;
-			this.remoteWaterSystem = null;
-		} else if(waterSystem instanceof WaterSystem.Remote) {
-			this.waterSystem = null;
-			this.remoteWaterSystem = (WaterSystem.Remote) waterSystem;
-		}
+		this.waterSystem = null;
+		this.remoteWaterSystem = waterSystem;
 	}
 }

@@ -62,6 +62,7 @@ import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.AgricultureSystem.Remote;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
@@ -351,7 +352,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
 							country.getSociety(system.getSocietyName()).setAgricultureSystem(
-									system.getAgricultureSystem());
+									(AgricultureSystem.Remote) system.getAgricultureSystem());
 							// TODO fire system update event to reset attribute change listeners
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
@@ -360,7 +361,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
 							country.getSociety(system.getSocietyName()).setWaterSystem(
-									system.getWaterSystem());
+									(WaterSystem.Remote) system.getWaterSystem());
 							// TODO fire system update event to reset attribute change listeners
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
@@ -369,7 +370,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
 							country.getSociety(system.getSocietyName()).setEnergySystem(
-									system.getEnergySystem());
+									(EnergySystem.Remote) system.getEnergySystem());
 							// TODO fire system update event to reset attribute change listeners
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
@@ -378,7 +379,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
 							country.getSociety(system.getSocietyName()).setSocialSystem(
-									system.getSocialSystem());
+									(SocialSystem.Remote) system.getSocialSystem());
 							// TODO fire system update event to reset attribute change listeners
 						}
 					}

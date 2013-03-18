@@ -123,26 +123,26 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 *
 	 * @param agricultureSystem the new agriculture system
 	 */
-	public void setAgricultureSystem(AgricultureSystem agricultureSystem);
+	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem);
 	
 	/**
 	 * Sets the energy system.
 	 *
 	 * @param energySystem the new energy system
 	 */
-	public void setEnergySystem(EnergySystem energySystem);
+	public void setEnergySystem(EnergySystem.Remote energySystem);
 	
 	/**
 	 * Sets the social system.
 	 *
 	 * @param socialSystem the new social system
 	 */
-	public void setSocialSystem(SocialSystem socialSystem);
+	public void setSocialSystem(SocialSystem.Remote socialSystem);
 	
 	/**
 	 * Sets the water system.
 	 *
 	 * @param waterSystem the new water system
 	 */
-	public void setWaterSystem(WaterSystem waterSystem);
+	public void setWaterSystem(WaterSystem.Remote waterSystem);
 }
