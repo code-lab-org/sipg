@@ -21,6 +21,8 @@ public class GlobalsPane extends JTabbedPane {
 
 	private final Country country;
 
+	private final JTextField initialFunds = new JTextField(15);
+
 	private final JTextField foodDomesticPrice = new JTextField(15);
 	private final JTextField foodImportPrice = new JTextField(15);
 	private final JTextField foodExportPrice = new JTextField(15);
@@ -55,6 +57,14 @@ public class GlobalsPane extends JTabbedPane {
 	 */
 	public GlobalsPane(final Country country) {
 		this.country = country;
+		initialFunds.getDocument().addDocumentListener(new DocumentChangeListener() {
+			@Override
+			public void documentChanged() {
+				country.getGlobals().setInitialFunds(tryParse(
+						initialFunds, 
+						country.getGlobals().getInitialFunds()));
+			}
+		});
 		foodDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
@@ -255,11 +265,27 @@ public class GlobalsPane extends JTabbedPane {
 						country.getGlobals().getEconProductMaxElectricityDemand()));
 			}
 		});
-
+		
+		addTab("National", Icons.COUNTRY, createNationalPanel());
 		addTab("Agriculture", Icons.AGRICULTURE, createAgriculturePanel());
 		addTab("Water", Icons.WATER, createWaterPanel());
 		addTab("Energy", Icons.ENERGY, createEnergyPanel());
 		initialize();
+	}
+	
+	private JPanel createNationalPanel() {
+		JPanel nationalPanel = new JPanel();
+		nationalPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(2,2,2,2);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		addField(nationalPanel, "Initial Funds (SAR)", 
+				initialFunds, c);
+		c.weighty = 1;
+		nationalPanel.add(new JPanel(), c);
+		return nationalPanel;
 	}
 
 	/**

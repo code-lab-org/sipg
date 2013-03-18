@@ -12,7 +12,6 @@ import edu.mit.sips.core.energy.CityEnergySystem;
 import edu.mit.sips.core.energy.NationalEnergySystem;
 import edu.mit.sips.core.social.CitySocialSystem;
 import edu.mit.sips.core.social.LogisticGrowthModel;
-import edu.mit.sips.core.social.NationalSocialSystem;
 import edu.mit.sips.core.water.CityWaterSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
 import edu.mit.sips.gui.ConsoleLogger;
@@ -33,7 +32,7 @@ public class BalancingProgram {
 		String jeddah = "Jeddah";
 		String sakakah = "Sakakah";
 		
-		final Country ksa = new Country("KSA", Arrays.asList(
+		final Country ksa = Country.buildCountry("KSA", Arrays.asList(
 				new City(riyadh, 
 						new CityAgricultureSystem(3000),
 						new CityWaterSystem(true, 3e9, 3e9, 3e6, 0),
@@ -48,13 +47,8 @@ public class BalancingProgram {
 						new CityAgricultureSystem(5000),
 						new CityWaterSystem(false, 1e9, 1e9, 1e6, 0),
 						new CityEnergySystem(0, 0),
-						new CitySocialSystem(new LogisticGrowthModel(1950, 10000, 0.05, 750000)))
-			),
-			new NationalAgricultureSystem(),
-			new NationalWaterSystem(),
-			new NationalEnergySystem(),
-			new NationalSocialSystem(),
-			100000);
+						null)
+			));
 		
 		NationalAgricultureSystem nas = (NationalAgricultureSystem) ksa.getAgricultureSystem();
 		nas.addElement(ElementFactory.createGrazingLand(sakakah));

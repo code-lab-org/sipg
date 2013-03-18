@@ -10,27 +10,7 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * The Interface Local.
 	 */
 	public static interface Local extends SocialSystem, InfrastructureSystem.Local {
-		
-		/**
-		 * Gets the electricity consumption per capita.
-		 *
-		 * @return the electricity consumption per capita
-		 */
-		public double getElectricityConsumptionPerCapita();
-		
-		/**
-		 * Gets the food consumption per capita.
-		 *
-		 * @return the food consumption per capita
-		 */
-		public double getFoodConsumptionPerCapita();
-		
-		/**
-		 * Gets the water consumption per capita.
-		 *
-		 * @return the water consumption per capita
-		 */
-		public double getWaterConsumptionPerCapita();
+
 	}
 	
 	/**

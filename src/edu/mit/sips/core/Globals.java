@@ -4,17 +4,17 @@ package edu.mit.sips.core;
  * The Class Globals.
  */
 public class Globals {
+	private double initialFunds = 10000;								// SAR
+	
 	private double waterImportPrice = 40;								// SAR/m^3
 	private double waterDomesticPrice = 6.;								// SAR/m^3
 	private double economicIntensityOfWaterProduction = 0;				// SAR/m^3
 	private double minWaterDemandPerCapita = 10;						// m^3
 	private double maxWaterDemandPerCapita = 100;						// m^3
-	
 	private double agricultureLaborParticipationRate = 0.50;			// -
-
 	private double electricityDomesticPrice = 375.;						// SAR/MWh
+	
 	private double petroleumDomesticPrice = 50.;						// SAR/bbl
-
 	private double economicIntensityOfElectricityProduction = 0;		// SAR/MWh
 	private double economicIntensityOfElectricityConsumption = 0.5;		// SAR/MWh
 	private double economicIntensityOfPetroleumProduction = 0;			// SAR/bbl
@@ -23,9 +23,9 @@ public class Globals {
 	private double petroleumImportPrice = 375;							// SAR/bbl
 	private double minElectricityDemandPerCapita = 1;					// MWh/person
 	private double maxElectricityDemandPerCapita = 10;					// MWh/person
-
 	private double econProductMinElectricityDemand = 0;					// SAR/person
 	private double econProductMaxElectricityDemand = 100000;			// SAR/person
+
 	private double foodDomesticPrice = 0.25;							// SAR/Mj
 	private double foodImportPrice = 0.25;								// SAR/Mj
 	private double foodExportPrice = 0.20;								// SAR/Mj
@@ -33,6 +33,7 @@ public class Globals {
 	private double maxFoodDemandPerCapita = 4500;						// Mj/person
 	private double econProductMinFoodDemand = 0;						// SAR/SAR
 	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
+	
 	/**
 	 * Instantiates a new globals.
 	 */
@@ -47,7 +48,6 @@ public class Globals {
 	public double getAgricultureLaborParticipationRate() {
 		return agricultureLaborParticipationRate;
 	}
-
 	/**
 	 * Gets the economic intensity of electricity consumption.
 	 *
@@ -56,7 +56,6 @@ public class Globals {
 	public double getEconomicIntensityOfElectricityConsumption() {
 		return economicIntensityOfElectricityConsumption;
 	}
-
 	/**
 	 * Gets the economic intensity of electricity production.
 	 *
@@ -149,7 +148,7 @@ public class Globals {
 	public double getElectricityDomesticPrice() {
 		return electricityDomesticPrice;
 	}
-	
+
 	/**
 	 * Gets the food demand.
 	 *
@@ -170,7 +169,7 @@ public class Globals {
 	public double getFoodDomesticPrice() {
 		return foodDomesticPrice;
 	}
-
+	
 	/**
 	 * Gets the food export price.
 	 *
@@ -187,6 +186,15 @@ public class Globals {
 	 */
 	public double getFoodImportPrice() {
 		return foodImportPrice;
+	}
+
+	/**
+	 * Gets the initial funds.
+	 *
+	 * @return the initial funds
+	 */
+	public double getInitialFunds() {
+		return initialFunds;
 	}
 
 	/**
@@ -356,6 +364,7 @@ public class Globals {
 	public void setEconProductMaxFoodDemand(double econProductMaxFoodDemand) {
 		this.econProductMaxFoodDemand = econProductMaxFoodDemand;
 	}
+
 	/**
 	 * Sets the econ product min electricity demand.
 	 *
@@ -365,7 +374,6 @@ public class Globals {
 			double econProductMinElectricityDemand) {
 		this.econProductMinElectricityDemand = econProductMinElectricityDemand;
 	}
-
 	/**
 	 * Sets the econ product min food demand.
 	 *
@@ -374,7 +382,7 @@ public class Globals {
 	public void setEconProductMinFoodDemand(double econProductMinFoodDemand) {
 		this.econProductMinFoodDemand = econProductMinFoodDemand;
 	}
-	
+
 	/**
 	 * Sets the electrical intensity of burning petroleum.
 	 *
@@ -384,7 +392,7 @@ public class Globals {
 			double electricalIntensityOfBurningPetroleum) {
 		this.electricalIntensityOfBurningPetroleum = electricalIntensityOfBurningPetroleum;
 	}
-
+	
 	/**
 	 * Sets the electricity domestic price.
 	 *
@@ -393,6 +401,7 @@ public class Globals {
 	public void setElectricityDomesticPrice(double electricityDomesticPrice) {
 		this.electricityDomesticPrice = electricityDomesticPrice;
 	}
+
 	/**
 	 * Sets the food domestic price.
 	 *
@@ -416,6 +425,14 @@ public class Globals {
 	 */
 	public void setFoodImportPrice(double foodImportPrice) {
 		this.foodImportPrice = foodImportPrice;
+	}
+	/**
+	 * Sets the initial funds.
+	 *
+	 * @param initialFunds the new initial funds
+	 */
+	public void setInitialFunds(double initialFunds) {
+		this.initialFunds = initialFunds;
 	}
 	/**
 	 * Sets the max electricity demand per capita.

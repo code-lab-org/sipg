@@ -4,17 +4,62 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
+import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.NationalEnergySystem;
 import edu.mit.sips.core.social.NationalSocialSystem;
 import edu.mit.sips.core.water.NationalWaterSystem;
+import edu.mit.sips.core.water.WaterSystem;
 
 /**
  * The Class Country.
  */
 public class Country extends DefaultSociety implements Society {
+	
+	/**
+	 * Builds the country.
+	 *
+	 * @param name the name
+	 * @param nestedSocieties the nested societies
+	 * @return the country
+	 */
+	public static Country buildCountry(String name, List<? extends Society> nestedSocieties) {
+		NationalAgricultureSystem agricultureSystem = null;
+		// agriculture system is national if there is a nested local system
+		for(Society society : nestedSocieties) {
+			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				agricultureSystem = new NationalAgricultureSystem();
+				break;
+			}
+		}
+		
+		NationalWaterSystem waterSystem = null;
+		// water system is national if there is a nested local system
+		for(Society society : nestedSocieties) {
+			if(society.getWaterSystem() instanceof WaterSystem.Local) {
+				waterSystem = new NationalWaterSystem();
+				break;
+			}
+		}
+		
+		NationalEnergySystem energySystem = null;
+		// energy system is national if there is a nested local system
+		for(Society society : nestedSocieties) {
+			if(society.getEnergySystem() instanceof EnergySystem.Local) {
+				energySystem = new NationalEnergySystem();
+				break;
+			}
+		}
+
+		// social system is always national
+		NationalSocialSystem socialSystem = new NationalSocialSystem();
+		
+		return new Country(name, nestedSocieties, agricultureSystem, 
+				waterSystem, energySystem, socialSystem);
+	}
+	
 	private final Globals globals = new Globals();	
-	private final double initialFunds;
 
 	private double funds, nextFunds;
 
@@ -22,7 +67,6 @@ public class Country extends DefaultSociety implements Society {
 	 * Instantiates a new country.
 	 */
 	protected Country() {
-		this.initialFunds = 0;
 		
 	}
 	
@@ -32,17 +76,13 @@ public class Country extends DefaultSociety implements Society {
 	 * @param name the name
 	 * @param nestedSocieties the nested societies
 	 */
-	public Country(String name, List<? extends Society> nestedSocieties,
+	private Country(String name, List<? extends Society> nestedSocieties,
 			NationalAgricultureSystem agricultureSystem,
 			NationalWaterSystem waterSystem,
 			NationalEnergySystem energySystem,
-			NationalSocialSystem socialSystem,
-			double initialFunds) {
+			NationalSocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
-		
-		// No validation needed for initial funds.
-		this.initialFunds = initialFunds;
 	}
 	
 	/* (non-Javadoc)
@@ -145,7 +185,7 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.initialize(time);
 		}
-		funds = initialFunds;
+		funds = globals.getInitialFunds();
 	}
 
 	/* (non-Javadoc)
