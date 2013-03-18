@@ -107,6 +107,7 @@ public class CityWaterSystem extends DefaultWaterSystem.Local {
 	public void initialize(long time) {
 		waterReservoirVolume = initialWaterReservoirVolume;
 		setWaterSupplyPerCapita(initialWaterSupplyPerCapita);
+		super.initialize(time);
 	}
 
 	/**
@@ -151,6 +152,7 @@ public class CityWaterSystem extends DefaultWaterSystem.Local {
 	@Override
 	public void tock() {
 		waterReservoirVolume = nextWaterReservoirVolume;
+		super.tock();
 	}
 
 

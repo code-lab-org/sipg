@@ -19,11 +19,19 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.InfrastructureElement;
 
 /**
  * The Class DefaultPetroleumSystem.
  */
 public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local implements PetroleumSystem {
+	
+	/**
+	 * Instantiates a new default petroleum system.
+	 */
+	protected DefaultPetroleumSystem() {
+		
+	}
 	
 	/**
 	 * Instantiates a new default petroleum system.
@@ -34,13 +42,22 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		super(name);
 	}
 	
-	/**
-	 * Instantiates a new default petroleum system.
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
 	 */
-	protected DefaultPetroleumSystem() {
-		
+	@Override
+	public void fireAttributeChanges() {
+		getEnergySystem().fireAttributeChanges();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
+	 */
+	@Override
+	public void fireAttributeChanges(InfrastructureElement element) {
+		getEnergySystem().fireAttributeChanges(element);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 	 */
@@ -67,7 +84,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		return getSociety().getGlobals().getPetroleumDomesticPrice()
 				* (getPetroleumOutDistribution() - getPetroleumOutDistributionLosses());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
 	 */
@@ -100,6 +117,15 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		elements.addAll(getInternalElements());
 		elements.addAll(getExternalElements());
 		return Collections.unmodifiableList(elements);
+	}
+
+	/**
+	 * Gets the energy system.
+	 *
+	 * @return the energy system
+	 */
+	private EnergySystem.Local getEnergySystem() {
+		return (EnergySystem.Local) getSociety().getEnergySystem();
 	}
 
 	/* (non-Javadoc)
@@ -139,7 +165,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		
 		return Collections.unmodifiableList(elements);
-	}
+	}			
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
@@ -175,7 +201,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		
 		return Collections.unmodifiableList(elements);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getLocalPetroleumSupply()
 	 */
@@ -184,8 +210,8 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		return getPetroleumProduction() 
 				+ getPetroleumInDistribution()
 				- getPetroleumOutDistribution();
-	}			
-
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumExport()
 	 */
@@ -207,7 +233,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumInDistribution()
 	 */
@@ -219,7 +245,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		return distribution;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistribution()
 	 */
@@ -258,7 +284,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		return petroleumProduction;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
 	 */
@@ -290,6 +316,29 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 				- getPetroleumExport();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getProductionCost()
+	 */
+	@Override
+	public double getUnitProductionCost() {
+		if(getPetroleumProduction() > 0) {
+			return (getLifecycleExpense() + getConsumptionExpense()) 
+					/ getPetroleumProduction();
+		}
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.PetroleumSystem#getSupplyCost()
+	 */
+	@Override
+	public double getUnitSupplyProfit() {
+		if(getTotalPetroleumSupply() > 0) {
+			return getCashFlow() / getTotalPetroleumSupply();
+		}
+		return 0;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#optimizePetroleumDistribution()
 	 */
@@ -395,7 +444,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			ignore.printStackTrace();
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#optimizePetroleumProductionAndDistribution(double)
 	 */
@@ -525,28 +574,5 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			// Don't overwrite existing values.
 			ignore.printStackTrace();
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getProductionCost()
-	 */
-	@Override
-	public double getUnitProductionCost() {
-		if(getPetroleumProduction() > 0) {
-			return (getLifecycleExpense() + getConsumptionExpense()) 
-					/ getPetroleumProduction();
-		}
-		return 0;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getSupplyCost()
-	 */
-	@Override
-	public double getUnitSupplyProfit() {
-		if(getTotalPetroleumSupply() > 0) {
-			return getCashFlow() / getTotalPetroleumSupply();
-		}
-		return 0;
 	}
 }

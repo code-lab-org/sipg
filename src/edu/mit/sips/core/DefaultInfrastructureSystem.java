@@ -135,6 +135,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public void setSociety(Society society) {
 			this.society = society;
+			fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
 		}
 	}
 

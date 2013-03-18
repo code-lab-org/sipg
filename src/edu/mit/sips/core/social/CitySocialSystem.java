@@ -70,7 +70,7 @@ public class CitySocialSystem extends DefaultSocialSystem.Local {
 		// note: initialize domestic product LAST as 
 		// it depends on other initial values
 		domesticProduct = getNextEconomicProduction();
-		fireAttributeChanges();
+		super.initialize(time);
 	}
 
 	/* (non-Javadoc)
@@ -89,19 +89,6 @@ public class CitySocialSystem extends DefaultSocialSystem.Local {
 	public void tock() {
 		domesticProduct = nextDomesticProduct;
 		populationModel.tock();
-		fireAttributeChanges();
-	}
-	
-	/**
-	 * Fire attribute changes.
-	 */
-	private void fireAttributeChanges() {
-		fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-		fireAttributeChangeEvent(DOMESTIC_PRODUCT_ATTRIBUTE);
-		fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-		fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-		fireAttributeChangeEvent(FOOD_CONSUMPTION_ATTRIBUTE);
-		fireAttributeChangeEvent(POPULATION_ATTRIBUTE);
-		fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
+		super.tock();
 	}
 }

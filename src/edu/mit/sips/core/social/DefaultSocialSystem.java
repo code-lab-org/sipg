@@ -2,10 +2,13 @@ package edu.mit.sips.core.social;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.core.Society;
 
 /**
  * The Class DefaultSocialSystem.
@@ -191,6 +194,77 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 					Math.max(getSociety().getGlobals().getMinWaterDemandPerCapita(), 
 							getSociety().getWaterSystem().getWaterSupplyPerCapita()));
 		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.SimEntity#initialize(long)
+		 */
+		@Override
+		public void initialize(long time) {
+			fireAttributeChanges();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.SimEntity#tick()
+		 */
+		@Override
+		public void tick() {
+			
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.SimEntity#tock()
+		 */
+		@Override
+		public void tock() {
+			fireAttributeChanges();
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
+		 */
+		@Override
+		public void fireAttributeChanges() {
+			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(FOOD_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(POPULATION_ATTRIBUTE);
+			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
+			fireAttributeChangeEvent(DOMESTIC_PRODUCT_ATTRIBUTE);
+			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
+		 */
+		@Override
+		public void fireAttributeChanges(InfrastructureElement element) {
+			Set<Society> affectedSocieties = new HashSet<Society>();
+			affectedSocieties.addAll(getAffectedSocietiesRecursive(
+					getSociety().getCountry().getSociety(element.getOrigin())));
+			affectedSocieties.addAll(getAffectedSocietiesRecursive(
+					getSociety().getCountry().getSociety(element.getDestination())));
+			
+			for(Society society : affectedSocieties) {
+				if(society.getSocialSystem() instanceof SocialSystem.Local) {
+					((SocialSystem.Local)society.getSocialSystem()).fireAttributeChanges();
+				}
+			}
+		}
+		
+		/**
+		 * Gets the affected societies recursive.
+		 *
+		 * @param society the society
+		 * @return the affected societies recursive
+		 */
+		private static Set<Society> getAffectedSocietiesRecursive(Society society) {
+			Set<Society> affectedSocieties = new HashSet<Society>();
+			affectedSocieties.add(society);
+			if(society.getSociety() != null) {
+				affectedSocieties.addAll(getAffectedSocietiesRecursive(society.getSociety()));
+			}
+			return affectedSocieties;
+		}
 	}
 	
 	/**
@@ -293,6 +367,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setDomesticProduct(double domesticProduct) {
 			this.domesticProduct = domesticProduct;
+			fireAttributeChangeEvent(DOMESTIC_PRODUCT_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -301,6 +376,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setElectricityConsumption(double electricityConsumption) {
 			this.electricityConsumption = electricityConsumption;
+			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -309,6 +385,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setFoodConsumption(double foodConsumption) {
 			this.foodConsumption = foodConsumption;
+			fireAttributeChangeEvent(FOOD_CONSUMPTION_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -317,6 +394,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setPopulation(long population) {
 			this.population = population;
+			fireAttributeChangeEvent(POPULATION_ATTRIBUTE);
 		}
 
 		/* (non-Javadoc)
@@ -325,6 +403,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setWaterConsumption(double waterConsumption) {
 			this.waterConsumption = waterConsumption;
+			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
 		}
 	}
 }

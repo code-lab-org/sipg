@@ -117,6 +117,18 @@ public interface InfrastructureSystem {
 		 * @return the total revenue
 		 */
 		public double getTotalRevenue();
+		
+		/**
+		 * Fire attribute changes.
+		 */
+		public void fireAttributeChanges();
+		
+		/**
+		 * Fire attribute changes.
+		 *
+		 * @param element the element
+		 */
+		public void fireAttributeChanges(InfrastructureElement element);
 	}
 	
 	/**

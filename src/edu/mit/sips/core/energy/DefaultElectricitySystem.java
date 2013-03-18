@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.InfrastructureElement;
 
 
 /**
@@ -30,17 +31,33 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	/**
 	 * Instantiates a new default electricity system.
 	 */
-	public DefaultElectricitySystem(String name) {
-		super(name);
+	protected DefaultElectricitySystem() {
+		
 	}
 	
 	/**
 	 * Instantiates a new default electricity system.
 	 */
-	protected DefaultElectricitySystem() {
-		
+	public DefaultElectricitySystem(String name) {
+		super(name);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
+	 */
+	@Override
+	public void fireAttributeChanges() {
+		getEnergySystem().fireAttributeChanges();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
+	 */
+	@Override
+	public void fireAttributeChanges(InfrastructureElement element) {
+		getEnergySystem().fireAttributeChanges(element);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 	 */
@@ -49,7 +66,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		return getSociety().getGlobals().getPetroleumDomesticPrice()
 				* getPetroleumConsumption();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 	 */
@@ -58,7 +75,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		return getSociety().getGlobals().getElectricityDomesticPrice()
 				* getElectricityInDistribution();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
 	 */
@@ -67,7 +84,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		return getSociety().getGlobals().getElectricityDomesticPrice()
 				* (getElectricityOutDistribution() - getElectricityOutDistributionLosses());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
 	 */
@@ -79,6 +96,17 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
+	 */
+	@Override
+	public double getElectricityFromBurningPetroleum() {
+		return Math.max(0, getSociety().getTotalElectricityDemand()  
+				+ getElectricityOutDistribution()
+				- getElectricityInDistribution()
+				- getElectricityProduction());
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
 	 */
 	@Override
@@ -88,17 +116,6 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 			distribution += e.getElectricityOutput();
 		}
 		return distribution;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
-	 */
-	@Override
-	public double getElectricityFromBurningPetroleum() {
-		return Math.max(0, getSociety().getTotalElectricityDemand()  
-				+ getElectricityOutDistribution()
-				- getElectricityInDistribution()
-				- getElectricityProduction());
 	}
 	
 	/* (non-Javadoc)
@@ -151,7 +168,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 				- getElectricityOutDistribution()
 				- getSociety().getTotalElectricityDemand());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getElements()
 	 */
@@ -161,6 +178,15 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		elements.addAll(getInternalElements());
 		elements.addAll(getExternalElements());
 		return Collections.unmodifiableList(elements);
+	}
+
+	/**
+	 * Gets the energy system.
+	 *
+	 * @return the energy system
+	 */
+	private EnergySystem.Local getEnergySystem() {
+		return (EnergySystem.Local) getSociety().getEnergySystem();
 	}
 
 	/* (non-Javadoc)
@@ -236,6 +262,31 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
+	 */
+	@Override
+	public double getLocalElectricityFraction() {
+		if(getSociety().getTotalElectricityDemand() > 0) {
+			double electricityFromBurningLocalPetroleum = 0;
+			if(getPetroleumBurned() > 0) {
+				electricityFromBurningLocalPetroleum = getElectricityFromBurningPetroleum()
+						* Math.min(getPetroleumBurned(), 
+								getEnergySystem().getPetroleumSystem().getPetroleumProduction()
+								- getEnergySystem().getPetroleumSystem().getPetroleumOutDistribution()
+								- getEnergySystem().getPetroleumSystem().getPetroleumExport())
+						/ getPetroleumBurned();
+			}
+			
+			return Math.max(0, getElectricityProduction()
+					- getElectricityOutDistribution()
+					- getElectricityWasted()
+					+ electricityFromBurningLocalPetroleum)
+					/ getSociety().getTotalElectricityDemand();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.ElectricitySystem#getPetroleumBurned()
 	 */
 	@Override
@@ -256,6 +307,18 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 		return petroleumConsumption;
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
+	 */
+	@Override
+	public double getRenewableElectricityFraction() {
+		if(getElectricityProduction() + getElectricityFromBurningPetroleum() > 0) {
+			return getRenewableElectricityProduction() / (getElectricityProduction() 
+					+ getElectricityFromBurningPetroleum());
+		}
+		return 0;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.ElectricitySystem#getRenewableEnergyProduction()
@@ -270,7 +333,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 		return production;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 	 */
@@ -279,7 +342,7 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		return getSociety().getGlobals().getElectricityDomesticPrice()
 				* (getSociety().getTotalElectricityDemand() - getElectricityFromBurningPetroleum());
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.EnergySystem#getNetEnergySupply()
 	 */
@@ -289,7 +352,30 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 				+ getElectricityInDistribution()
 				- getElectricityOutDistribution();
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
+	 */
+	@Override
+	public double getUnitProductionCost() {
+		if(getElectricityProduction() > 0) {
+			return (getLifecycleExpense() + getConsumptionExpense()) 
+					/ getElectricityProduction();
+		}
+		return 0;
+	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyCost()
+	 */
+	@Override
+	public double getUnitSupplyProfit() {
+		if(getTotalElectricitySupply() > 0) {
+			return getCashFlow() / getTotalElectricitySupply();
+		}
+		return 0;
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.EnergySystem#getWaterConsumption()
 	 */
@@ -515,72 +601,4 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
-	 */
-	@Override
-	public double getLocalElectricityFraction() {
-		if(getSociety().getTotalElectricityDemand() > 0) {
-			double electricityFromBurningLocalPetroleum = 0;
-			if(getPetroleumBurned() > 0) {
-				electricityFromBurningLocalPetroleum = getElectricityFromBurningPetroleum()
-						* Math.min(getPetroleumBurned(), 
-								getEnergySystem().getPetroleumSystem().getPetroleumProduction()
-								- getEnergySystem().getPetroleumSystem().getPetroleumOutDistribution()
-								- getEnergySystem().getPetroleumSystem().getPetroleumExport())
-						/ getPetroleumBurned();
-			}
-			
-			return Math.max(0, getElectricityProduction()
-					- getElectricityOutDistribution()
-					- getElectricityWasted()
-					+ electricityFromBurningLocalPetroleum)
-					/ getSociety().getTotalElectricityDemand();
-		}
-		return 0;
-	}
-	
-	/**
-	 * Gets the energy system.
-	 *
-	 * @return the energy system
-	 */
-	private EnergySystem.Local getEnergySystem() {
-		return (EnergySystem.Local) getSociety().getEnergySystem();
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
-	 */
-	@Override
-	public double getRenewableElectricityFraction() {
-		if(getElectricityProduction() + getElectricityFromBurningPetroleum() > 0) {
-			return getRenewableElectricityProduction() / (getElectricityProduction() 
-					+ getElectricityFromBurningPetroleum());
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
-	 */
-	@Override
-	public double getUnitProductionCost() {
-		if(getElectricityProduction() > 0) {
-			return (getLifecycleExpense() + getConsumptionExpense()) 
-					/ getElectricityProduction();
-		}
-		return 0;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyCost()
-	 */
-	@Override
-	public double getUnitSupplyProfit() {
-		if(getTotalElectricitySupply() > 0) {
-			return getCashFlow() / getTotalElectricitySupply();
-		}
-		return 0;
-	}
 }

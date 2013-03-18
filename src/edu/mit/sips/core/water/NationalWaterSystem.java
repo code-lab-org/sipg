@@ -2,13 +2,10 @@ package edu.mit.sips.core.water;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import edu.mit.sips.core.ElementChangeEvent;
 import edu.mit.sips.core.ElementChangeListener;
-import edu.mit.sips.core.Society;
 
 /**
  * The Class NationalAgricultureSystem.
@@ -66,54 +63,13 @@ public class NationalWaterSystem extends RegionalWaterSystem implements ElementC
 		return value;
 	}
 
-	/**
-	 * Element changed.
-	 *
-	 * @param evt the evt
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.ElementChangeListener#elementChanged(edu.mit.sips.core.ElementChangeEvent)
 	 */
 	@Override
 	public void elementChanged(ElementChangeEvent evt) {
-		if(evt.getSource() instanceof WaterElement) {
-			// TODO fireAttributeChanges((WaterElement) evt.getSource());
-		}
-	}
-	
-	/**
-	 * Fire attribute changes.
-	 *
-	 * @param element the element
-	 */
-	private void fireAttributeChanges(WaterElement element) {
-		Set<Society> affectedSocieties = new HashSet<Society>();
-		getAffectedSocietiesRecursive(getSociety().getCountry().getSociety(element.getOrigin()), 
-				affectedSocieties);
-		getAffectedSocietiesRecursive(getSociety().getCountry().getSociety(element.getDestination()), 
-				affectedSocieties);
-		
-		for(Society society : affectedSocieties) {
-			if(society.getWaterSystem() instanceof WaterSystem.Local) { 
-				WaterSystem.Local waterSystem = (WaterSystem.Local) 
-						society.getWaterSystem();
-				waterSystem.fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-				waterSystem.fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-				waterSystem.fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				waterSystem.fireAttributeChangeEvent(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
-			}
-		}
-	}
-	
-	/**
-	 * Gets the affected societies recursive.
-	 *
-	 * @param society the society
-	 * @param affectedSocieties the affected societies
-	 * @return the affected societies recursive
-	 */
-	private static void getAffectedSocietiesRecursive(Society society, 
-			Set<Society> affectedSocieties) {
-		affectedSocieties.add(society);
-		if(society.getSociety() != null) {
-			getAffectedSocietiesRecursive(society.getSociety(), affectedSocieties);
+		if(elements.contains(evt.getSource())) {
+			fireAttributeChanges((WaterElement)evt.getSource());
 		}
 	}
 }
