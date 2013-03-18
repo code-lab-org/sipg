@@ -138,14 +138,23 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 			RestoreInProgress {
 		super(rtiAmbassador, instanceName);
 		this.infrastructureSystem = infrastructureSystem;
-		name = encoderFactory.createHLAunicodeString();
-		societyName = encoderFactory.createHLAunicodeString();
-		netCashFlow = encoderFactory.createHLAfloat64BE();
-		domesticProduction = encoderFactory.createHLAfloat64BE();
-		attributeValues.put(getAttributeHandle(NAME_ATTRIBUTE), name);
-		attributeValues.put(getAttributeHandle(SOCIETY_NAME_ATTRIBUTE), societyName);
-		attributeValues.put(getAttributeHandle(NET_CASH_FLOW_ATTRIBUTE), netCashFlow);
-		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCTION_ATTRIBUTE), domesticProduction);
+		name = encoderFactory.createHLAunicodeString(
+				infrastructureSystem.getName());
+		societyName = encoderFactory.createHLAunicodeString(
+				infrastructureSystem.getSociety()==null?"":
+					infrastructureSystem.getSociety().getName());
+		netCashFlow = encoderFactory.createHLAfloat64BE(
+				infrastructureSystem.getCashFlow());
+		domesticProduction = encoderFactory.createHLAfloat64BE(
+				infrastructureSystem.getDomesticProduction());
+		attributeValues.put(getAttributeHandle(NAME_ATTRIBUTE), 
+				name);
+		attributeValues.put(getAttributeHandle(SOCIETY_NAME_ATTRIBUTE), 
+				societyName);
+		attributeValues.put(getAttributeHandle(NET_CASH_FLOW_ATTRIBUTE), 
+				netCashFlow);
+		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCTION_ATTRIBUTE), 
+				domesticProduction);
 	}
 	
 	/**

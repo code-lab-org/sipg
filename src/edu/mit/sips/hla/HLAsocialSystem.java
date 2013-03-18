@@ -208,11 +208,16 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, instanceName, socialSystem);
-		electricityConsumption = encoderFactory.createHLAfloat64BE();
-		foodConsumption = encoderFactory.createHLAfloat64BE();
-		waterConsumption = encoderFactory.createHLAfloat64BE();
-		domesticProduct = encoderFactory.createHLAfloat64BE();
-		population = encoderFactory.createHLAinteger64BE();
+		electricityConsumption = encoderFactory.createHLAfloat64BE(
+				socialSystem.getElectricityConsumption());
+		foodConsumption = encoderFactory.createHLAfloat64BE(
+				socialSystem.getFoodConsumption());
+		waterConsumption = encoderFactory.createHLAfloat64BE(
+				socialSystem.getWaterConsumption());
+		domesticProduct = encoderFactory.createHLAfloat64BE(
+				socialSystem.getDomesticProduct());
+		population = encoderFactory.createHLAinteger64BE(
+				socialSystem.getPopulation());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
 		attributeValues.put(getAttributeHandle(FOOD_CONSUMPTION_ATTRIBUTE), 

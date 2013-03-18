@@ -199,8 +199,10 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, instanceName, waterSystem);
-		electricityConsumption = encoderFactory.createHLAfloat64BE();
-		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE();
+		electricityConsumption = encoderFactory.createHLAfloat64BE(
+				waterSystem.getElectricityConsumption());
+		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE(
+				waterSystem.getWaterSupplyPerCapita());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
 		attributeValues.put(getAttributeHandle(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE), 

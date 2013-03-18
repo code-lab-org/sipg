@@ -62,7 +62,6 @@ import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.AgricultureSystem.Remote;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
@@ -293,7 +292,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 		if(localSystem != null) {
 			try {
 				localSystem.updateAttributes(theAttributes);
-				return;
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				JOptionPane.showMessageDialog(null, "An exception of type " 
@@ -376,7 +374,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
 						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null 
+						if(system.getSocialSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
 							country.getSociety(system.getSocietyName()).setSocialSystem(
 									(SocialSystem.Remote) system.getSocialSystem());

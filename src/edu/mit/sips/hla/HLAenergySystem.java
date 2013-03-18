@@ -202,9 +202,12 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, instanceName, energySystem);
-		electricityConsumption = encoderFactory.createHLAfloat64BE();
-		petroleumConsumption = encoderFactory.createHLAfloat64BE();
-		waterConsumption = encoderFactory.createHLAfloat64BE();
+		electricityConsumption = encoderFactory.createHLAfloat64BE(
+				energySystem.getElectricityConsumption());
+		petroleumConsumption = encoderFactory.createHLAfloat64BE(
+				energySystem.getPetroleumConsumption());
+		waterConsumption = encoderFactory.createHLAfloat64BE(
+				energySystem.getWaterConsumption());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
 		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
