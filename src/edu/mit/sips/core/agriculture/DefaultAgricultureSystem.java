@@ -339,7 +339,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			
 			for(City city : cities) {
-				// TODO bad practice: assuming all nested cities have local systems
+				if(!(city.getAgricultureSystem() instanceof AgricultureSystem.Local)) {
+					continue;
+				}
+
 				AgricultureSystem.Local agricultureSystem = 
 						(AgricultureSystem.Local) city.getAgricultureSystem();
 				
@@ -452,7 +455,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			
 			for(City city : cities) {
-				// TODO bad practice: assuming all nested cities have local systems
+				if(!(city.getAgricultureSystem() instanceof AgricultureSystem.Local)) {
+					continue;
+				}
+
 				AgricultureSystem.Local agricultureSystem = 
 						(AgricultureSystem.Local) city.getAgricultureSystem();
 				

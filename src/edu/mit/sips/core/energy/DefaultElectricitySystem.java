@@ -338,6 +338,10 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 		
 		for(City city : cities) {
+			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
+				continue;
+			}
+
 			ElectricitySystem electricitySystem = ((EnergySystem.Local)
 					city.getEnergySystem()).getElectricitySystem();
 			
@@ -443,6 +447,10 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 		
 		for(City city : cities) {
+			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
+				continue;
+			}
+
 			ElectricitySystem electricitySystem = ((EnergySystem.Local)
 					city.getEnergySystem()).getElectricitySystem();
 			

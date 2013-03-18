@@ -320,6 +320,10 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 			}
 			
 			for(City city : cities) {
+				if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
+					continue;
+				}
+
 				EnergySystem.Local energySystem = (EnergySystem.Local) city.getEnergySystem();
 				// Constrain maximum resource in each city.
 				double[] resourceConstraint = new double[numVariables];

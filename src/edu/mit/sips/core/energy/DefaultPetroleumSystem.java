@@ -328,6 +328,10 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		
 		for(City city : cities) {
+			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
+				continue;
+			}
+			
 			EnergySystem.Local energySystem = (EnergySystem.Local) city.getEnergySystem();
 			
 			// Add constraints for city supply/demand, i.e. the in-flow less
@@ -439,6 +443,10 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		}
 		
 		for(City city : cities) {
+			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
+				continue;
+			}
+			
 			EnergySystem.Local energySystem = (EnergySystem.Local) city.getEnergySystem();
 			
 			// Constrain maximum resource in each city.

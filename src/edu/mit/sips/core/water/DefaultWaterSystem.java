@@ -379,6 +379,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 
 			for(City city : cities) {
+				if(!(city.getWaterSystem() instanceof WaterSystem.Local)) {
+					continue;
+				}
+				
 				WaterSystem.Local waterSystem = 
 						(WaterSystem.Local) city.getWaterSystem();
 				
@@ -486,6 +490,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 
 			for(City city : cities) {
+				if(!(city.getWaterSystem() instanceof WaterSystem.Local)) {
+					continue;
+				}
+				
 				WaterSystem.Local waterSystem = 
 						(WaterSystem.Local) city.getWaterSystem();
 				
