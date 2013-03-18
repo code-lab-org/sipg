@@ -417,6 +417,9 @@ public class GlobalsPane extends JTabbedPane {
 	 * Initialize.
 	 */
 	private void initialize() {
+		initialFunds.setText(new Double(
+				country.getGlobals().getInitialFunds()).toString());
+		
 		foodDomesticPrice.setText(new Double(
 				country.getGlobals().getFoodDomesticPrice()).toString());
 		foodImportPrice.setText(new Double(
