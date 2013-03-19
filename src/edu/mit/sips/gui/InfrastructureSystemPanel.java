@@ -8,6 +8,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.DateAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
@@ -76,7 +77,8 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @return the j free chart
 	 */
 	protected ChartPanel createStackedAreaChart(String valueAxis,
-			TableXYDataset areaDataset, TableXYDataset lineDataset) {
+			TableXYDataset areaDataset, String valueAxis2, 
+			TableXYDataset lineDataset) {
 		JFreeChart chart = ChartFactory.createStackedXYAreaChart(
 						null, "Year", valueAxis, areaDataset, 
 						PlotOrientation.VERTICAL, true, false, false);
@@ -93,6 +95,14 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 			
 			if(lineDataset != null) {
 				xyPlot.setDataset(1, lineDataset);
+				if(valueAxis2 != null) {
+					xyPlot.setRangeAxis(1,new NumberAxis(valueAxis2));
+					xyPlot.getRangeAxis(1).setLabelFont(
+							xyPlot.getRangeAxis(0).getLabelFont());
+					xyPlot.getRangeAxis(1).setTickLabelFont(
+							xyPlot.getRangeAxis(0).getTickLabelFont());
+					xyPlot.mapDatasetToRangeAxis(1, 1);
+				}
 				xyPlot.setRenderer(1, new XYLineAndShapeRenderer());
 				xyPlot.getRenderer(1).setSeriesPaint(0, Color.black);
 				xyPlot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
@@ -105,6 +115,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 		chartPanel.setMaximumDrawWidth(1680);
 		return chartPanel;
 	}
+	
 	/**
 	 * Creates the stacked area chart.
 	 *
@@ -114,7 +125,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 */
 	protected ChartPanel createStackedAreaChart(String valueAxis,
 			TableXYDataset areaDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, null);
+		return createStackedAreaChart(valueAxis, areaDataset, null, null);
 	}
 	
 	/**

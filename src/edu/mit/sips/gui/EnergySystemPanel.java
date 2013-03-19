@@ -76,7 +76,7 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		
 		addTab("Revenue", Icons.REVENUE, 
 				createStackedAreaChart("Energy Revenue (SAR/year)", 
-				energyRevenue, energyNetRevenue));
+				energyRevenue, null, energyNetRevenue));
 
 		JTabbedPane petroleumPane = new JTabbedPane();
 		addTab(energySystem.getPetroleumSystem().getName(), 
@@ -88,7 +88,7 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 
 		petroleumPane.addTab("Revenue", Icons.REVENUE, 
 				createStackedAreaChart("Petroleum Revenue (SAR/year)", 
-				petroleumRevenue, petroleumNetRevenue));
+				petroleumRevenue, null, petroleumNetRevenue));
 		petroleumPane.addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
 				"Petroleum Source (bbl/year)", petroleumSourceData));
 		petroleumPane.addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
@@ -114,7 +114,7 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 
 		electricityPane.addTab("Revenue", Icons.REVENUE, 
 				createStackedAreaChart("Electricity Revenue (SAR/year)", 
-				electricityRevenue, electricityNetRevenue));
+				electricityRevenue, null, electricityNetRevenue));
 		electricityPane.addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
 				"Electricity Source (MWh/year)", electricitySourceData));
 		electricityPane.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(

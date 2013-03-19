@@ -73,7 +73,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 		
 		addTab("Revenue", Icons.REVENUE, 
 				createStackedAreaChart("Water Revenue (SAR/year)", 
-				waterRevenue, waterNetRevenue));
+				waterRevenue, null, waterNetRevenue));
 		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
 				"Water Source (m^3/year)", waterSourceData));
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(

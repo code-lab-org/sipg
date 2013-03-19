@@ -8,6 +8,7 @@ import javax.swing.JTabbedPane;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -36,7 +37,12 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param society the society
 	 */
 	public SocietyPane(Society society) {
-		JTabbedPane infraPane;
+		int localSystemCount = 0;
+		for(InfrastructureSystem system : society.getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				localSystemCount++;
+			}
+		}
 		
 		if(society.getSocialSystem() instanceof SocialSystem.Local) {
 			socialTab = new SocialSystemPanel(
@@ -46,8 +52,10 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			socialTab = null;
 		}
 		
-		if(society instanceof City) {
+		JTabbedPane infraPane;
+		if(society instanceof City || localSystemCount <= 1) {
 			// add infrastructure directly to society panel if city
+			// or if there are only 0 or 1 local infrastructure
 			infraPane = this;
 		} else {
 			// otherwise create sub-tab for infrastructure

@@ -56,7 +56,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Agriculture Revenue (SAR/year)", 
-				agricultureRevenue, agricultureNetRevenue));
+				agricultureRevenue, null, agricultureNetRevenue));
 		addTab("Source", Icons.AGRICULTURE_SOURCE, createStackedAreaChart(
 				"Food Source (Mj/year)", foodSourceData));
 		addTab("Use", Icons.AGRICULTURE_USE, createStackedAreaChart(
