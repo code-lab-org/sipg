@@ -15,8 +15,6 @@ public class CitySocialSystem extends DefaultSocialSystem.Local {
 	 * @param populationModel the population model
 	 */
 	public CitySocialSystem(PopulationModel populationModel) {
-		super("City Society");
-		
 		// Validate population model.
 		if(populationModel == null) {
 			throw new IllegalArgumentException(

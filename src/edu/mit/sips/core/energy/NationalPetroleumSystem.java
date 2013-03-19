@@ -13,14 +13,7 @@ import edu.mit.sips.core.ElementChangeListener;
 public class NationalPetroleumSystem extends RegionalPetroleumSystem implements ElementChangeListener {
 	private final List<PetroleumElement> elements = 
 			Collections.synchronizedList(new ArrayList<PetroleumElement>());
-	
-	/**
-	 * Instantiates a new national petroleum system.
-	 */
-	public NationalPetroleumSystem() {
-		super("National Petroleum");
-	}
-	
+
 	/**
 	 * Adds the element.
 	 *

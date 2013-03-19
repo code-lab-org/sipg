@@ -33,22 +33,12 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static abstract class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
-		
-		/**
-		 * Instantiates a new local.
-		 *
-		 * @param name the name
-		 */
-		public Local(String name) {
-			super(name);
-		}
-		
+	public static abstract class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {	
 		/**
 		 * Instantiates a new local.
 		 */
-		protected Local() {
-			
+		public Local() {
+			super("Agriculture");
 		}
 		
 		/* (non-Javadoc)

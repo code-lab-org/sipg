@@ -20,7 +20,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * Instantiates a new local.
 		 */
 		protected Local() {
-			this.name = "";
+			this.name = "Infrastructure";
 		}
 		
 		/**
@@ -84,7 +84,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 */
 		@Override
 		public final String getName() {
-			return name;
+			return getSociety().getName() + " " + name;
 		}
 
 		/* (non-Javadoc)
@@ -136,6 +136,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public void setSociety(Society society) {
 			this.society = society;
 			fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
+			fireAttributeChangeEvent(NAME_ATTRIBUTE);
 		}
 	}
 

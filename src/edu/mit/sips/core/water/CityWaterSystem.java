@@ -36,8 +36,6 @@ public class CityWaterSystem extends DefaultWaterSystem.Local {
 	public CityWaterSystem(boolean coastal, double maxWaterReservoirVolume,
 			double initialWaterReservoirVolume, double waterReservoirRechargeRate,
 			double initialWaterSupplyPerCapita) {
-		super("City Water");
-		
 		// Validate max water reservoir volume.
 		if(maxWaterReservoirVolume < 0) {
 			throw new IllegalArgumentException(

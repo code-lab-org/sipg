@@ -6,22 +6,6 @@ import edu.mit.sips.core.Society;
  * The Class RegionalWaterSystem.
  */
 public class RegionalPetroleumSystem extends DefaultPetroleumSystem {
-	
-	/**
-	 * Instantiates a new regional petroleum system.
-	 */
-	public RegionalPetroleumSystem() {
-		super("Regional Petroleum");
-	}
-	
-	/**
-	 * Instantiates a new regional petroleum system.
-	 *
-	 * @param name the name
-	 */
-	protected RegionalPetroleumSystem(String name) {
-		super(name);
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getMaxPetroleumReservoirVolume()

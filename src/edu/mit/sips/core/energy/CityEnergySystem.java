@@ -9,7 +9,7 @@ public class CityEnergySystem extends DefaultEnergySystem.Local {
 	 * Instantiates a new city energy system.
 	 */
 	protected CityEnergySystem() {
-		
+		super(new CityPetroleumSystem(), new CityElectricitySystem());
 	}
 	
 	/**
@@ -20,7 +20,7 @@ public class CityEnergySystem extends DefaultEnergySystem.Local {
 	 */
 	public CityEnergySystem(double maxPetroleumReservoir,
 			double initialPetroleumReservoir) {
-		super("City Energy", new CityPetroleumSystem(maxPetroleumReservoir, 
+		super(new CityPetroleumSystem(maxPetroleumReservoir, 
 				initialPetroleumReservoir), new CityElectricitySystem());
 	}
 	

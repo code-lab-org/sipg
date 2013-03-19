@@ -31,15 +31,8 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	/**
 	 * Instantiates a new default electricity system.
 	 */
-	protected DefaultElectricitySystem() {
-		
-	}
-	
-	/**
-	 * Instantiates a new default electricity system.
-	 */
-	public DefaultElectricitySystem(String name) {
-		super(name);
+	public DefaultElectricitySystem() {
+		super("Electricity");
 	}
 	
 	/* (non-Javadoc)

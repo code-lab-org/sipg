@@ -48,21 +48,12 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return affectedSocieties;
 		}
-		
-		/**
-		 * Instantiates a new local.
-		 */
-		protected Local() {
-			
-		}
 
 		/**
 		 * Instantiates a new city water system.
-		 *
-		 * @param name the name
 		 */
-		public Local(String name) {
-			super(name);
+		public Local() {
+			super("Water");
 		}
 
 		/* (non-Javadoc)

@@ -28,18 +28,11 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	
 	/**
 	 * Instantiates a new default petroleum system.
-	 */
-	protected DefaultPetroleumSystem() {
-		
-	}
-	
-	/**
-	 * Instantiates a new default petroleum system.
 	 *
 	 * @param name the name
 	 */
-	public DefaultPetroleumSystem(String name) {
-		super(name);
+	public DefaultPetroleumSystem() {
+		super("Petroleum");
 	}
 	
 	/* (non-Javadoc)

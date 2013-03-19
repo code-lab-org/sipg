@@ -22,18 +22,11 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		
 		/**
 		 * Instantiates a new local.
-		 */
-		protected Local() {
-			
-		}
-		
-		/**
-		 * Instantiates a new local.
 		 *
 		 * @param name the name
 		 */
-		public Local(String name) {
-			super(name);
+		public Local() {
+			super("Society");
 		}
 
 		/* (non-Javadoc)

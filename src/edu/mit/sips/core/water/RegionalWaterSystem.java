@@ -6,22 +6,6 @@ import edu.mit.sips.core.Society;
  * The Class RegionalWaterSystem.
  */
 public class RegionalWaterSystem extends DefaultWaterSystem.Local {
-	
-	/**
-	 * Instantiates a new regional water system.
-	 */
-	public RegionalWaterSystem() {
-		super("Regional Water");
-	}
-	
-	/**
-	 * Instantiates a new regional water system.
-	 *
-	 * @param name the name
-	 */
-	protected RegionalWaterSystem(String name) {
-		super(name);
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getMaxWaterReservoirVolume()

@@ -13,7 +13,7 @@ public class NationalEnergySystem extends DefaultEnergySystem.Local {
 	 * Instantiates a new national energy system.
 	 */
 	public NationalEnergySystem() {
-		super("National Energy", new NationalPetroleumSystem(), 
+		super(new NationalPetroleumSystem(), 
 				new NationalElectricitySystem());
 	}
 	
