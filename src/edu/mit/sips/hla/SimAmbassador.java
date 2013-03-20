@@ -31,7 +31,6 @@ import hla.rti1516e.exceptions.FederateOwnsAttributes;
 import hla.rti1516e.exceptions.FederatesCurrentlyJoined;
 import hla.rti1516e.exceptions.FederationExecutionAlreadyExists;
 import hla.rti1516e.exceptions.FederationExecutionDoesNotExist;
-import hla.rti1516e.exceptions.IllegalName;
 import hla.rti1516e.exceptions.InconsistentFDD;
 import hla.rti1516e.exceptions.InvalidLocalSettingsDesignator;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
@@ -40,8 +39,6 @@ import hla.rti1516e.exceptions.NameNotFound;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.ObjectClassNotDefined;
 import hla.rti1516e.exceptions.ObjectClassNotPublished;
-import hla.rti1516e.exceptions.ObjectInstanceNameInUse;
-import hla.rti1516e.exceptions.ObjectInstanceNameNotReserved;
 import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
 import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
 import hla.rti1516e.exceptions.RTIinternalError;
@@ -68,6 +65,7 @@ import edu.mit.sips.core.water.WaterSystem;
 
 public class SimAmbassador extends NullFederateAmbassador {
 	
+	private FederationConnection connection;
 	private final Country country;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
@@ -79,28 +77,67 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Instantiates a new sim ambassador.
 	 * @throws RTIinternalError 
 	 */
-	public SimAmbassador(Country country) throws RTIinternalError {
+	public SimAmbassador(Country country)
+			throws RTIinternalError {
 		this.country = country;
 		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
 		rtiAmbassador = rtiFactory.getRtiAmbassador();
 		encoderFactory = rtiFactory.getEncoderFactory();
 	}
 	
-	public void connectAndJoin(FederationConnection connection) 
+	/**
+	 * Connect.
+	 *
+	 * @throws ConnectionFailed the connection failed
+	 * @throws InvalidLocalSettingsDesignator the invalid local settings designator
+	 * @throws UnsupportedCallbackModel the unsupported callback model
+	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
+	 * @throws RTIinternalError the rT iinternal error
+	 */
+	public void connect(FederationConnection connection) 
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
 			UnsupportedCallbackModel, CallNotAllowedFromWithinCallback, 
-			RTIinternalError, CouldNotCreateLogicalTimeFactory, 
-			FederateNameAlreadyInUse, InconsistentFDD, ErrorReadingFDD, 
-			CouldNotOpenFDD, SaveInProgress, RestoreInProgress, NotConnected, 
-			FederationExecutionDoesNotExist, MalformedURLException, FederateNotExecutionMember, 
-			NameNotFound, InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
-			IllegalName, ObjectInstanceNameInUse, ObjectInstanceNameNotReserved, ObjectClassNotPublished, 
-			ObjectInstanceNotKnown, InterruptedException {
+			RTIinternalError {
+		this.connection = connection;
 		try {
 			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
 					connection.getLocalSettingsDesignator());
 		} catch(AlreadyConnected ignored) { }
-		
+	}
+	
+	/**
+	 * Creates the and join.
+	 *
+	 * @throws InconsistentFDD the inconsistent fdd
+	 * @throws ErrorReadingFDD the error reading fdd
+	 * @throws CouldNotOpenFDD the could not open fdd
+	 * @throws NotConnected the not connected
+	 * @throws RTIinternalError the rT iinternal error
+	 * @throws MalformedURLException the malformed url exception
+	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
+	 * @throws FederateNameAlreadyInUse the federate name already in use
+	 * @throws FederationExecutionDoesNotExist the federation execution does not exist
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
+	 * @throws FederateNotExecutionMember the federate not execution member
+	 * @throws NameNotFound the name not found
+	 * @throws InvalidObjectClassHandle the invalid object class handle
+	 * @throws AttributeNotDefined the attribute not defined
+	 * @throws ObjectClassNotDefined the object class not defined
+	 * @throws ObjectClassNotPublished the object class not published
+	 * @throws ObjectInstanceNotKnown the object instance not known
+	 */
+	public void joinFederation() 
+			throws InconsistentFDD, ErrorReadingFDD, CouldNotOpenFDD, 
+			NotConnected, RTIinternalError, MalformedURLException, 
+			CouldNotCreateLogicalTimeFactory, FederateNameAlreadyInUse, 
+			FederationExecutionDoesNotExist, SaveInProgress, 
+			RestoreInProgress, CallNotAllowedFromWithinCallback, 
+			FederateNotExecutionMember, NameNotFound, 
+			InvalidObjectClassHandle, AttributeNotDefined, 
+			ObjectClassNotDefined, ObjectClassNotPublished, 
+			ObjectInstanceNotKnown {
 		try {
 			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
 					new File(connection.getFomPath()).toURI().toURL());
@@ -187,9 +224,19 @@ public class SimAmbassador extends NullFederateAmbassador {
 		connection.setConnected(true);
 	}
 	
-	public void resignAndDisconnect(FederationConnection connection) throws InvalidResignAction, OwnershipAcquisitionPending, 
+	/**
+	 * Resign federation.
+	 *
+	 * @throws InvalidResignAction the invalid resign action
+	 * @throws OwnershipAcquisitionPending the ownership acquisition pending
+	 * @throws FederateOwnsAttributes the federate owns attributes
+	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
+	 * @throws RTIinternalError the rT iinternal error
+	 */
+	public void resignFederation() 
+			throws InvalidResignAction, OwnershipAcquisitionPending, 
 			FederateOwnsAttributes, CallNotAllowedFromWithinCallback, 
-			RTIinternalError, FederateIsExecutionMember {
+			RTIinternalError {
 		synchronized(hlaObjects) {
 			for(HLAinfrastructureSystem system : hlaObjects.values()) {
 				if(system.isLocal()) {
@@ -212,11 +259,22 @@ public class SimAmbassador extends NullFederateAmbassador {
 		} catch(NotConnected ignored) {
 		}
 		
-		rtiAmbassador.disconnect();
-		
 		synchronized(hlaObjects) {
 			hlaObjects.clear();
 		}
+	}
+	
+	/**
+	 * Disconnect.
+	 * @throws RTIinternalError 
+	 * @throws CallNotAllowedFromWithinCallback 
+	 * @throws FederateIsExecutionMember 
+	 */
+	public void disconnect() 
+			throws FederateIsExecutionMember, 
+			CallNotAllowedFromWithinCallback, RTIinternalError {
+		
+		rtiAmbassador.disconnect();
 		
 		connection.setConnected(false);
 	}

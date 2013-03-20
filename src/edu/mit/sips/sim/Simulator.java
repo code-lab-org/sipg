@@ -1,5 +1,8 @@
 package edu.mit.sips.sim;
 
+import hla.rti1516e.exceptions.RTIinternalError;
+
+import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.core.Country;
@@ -13,6 +16,7 @@ import edu.mit.sips.gui.SimulationControlEvent.Reset;
 import edu.mit.sips.gui.SimulationControlListener;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.hla.SimAmbassador;
 
 /**
  * The Class Simulator.
@@ -29,6 +33,8 @@ public class Simulator implements SimulationControlListener {
 	private long startTime, endTime;
 	
 	private long time;
+	
+	private transient SimAmbassador simAmbassador;
 
 	private transient EventListenerList listenerList = new EventListenerList(); // mutableO
 	
@@ -41,17 +47,33 @@ public class Simulator implements SimulationControlListener {
 	}
 	
 	/**
+	 * Gets the ambassador.
+	 *
+	 * @return the ambassador
+	 */
+	public SimAmbassador getAmbassador() {
+		return simAmbassador;
+	}
+	
+	/**
 	 * Instantiates a new simulator.
 	 *
 	 * @param country the country
 	 */
-	public Simulator(final Country country) {
+	public Simulator(Country country) {
 		
 		// Validate country.
 		if(country == null) {
 			throw new IllegalArgumentException("Country cannot be null.");
 		}
 		this.country = country;
+		try {
+			simAmbassador = new SimAmbassador(country);
+		} catch (RTIinternalError ex) {
+			ex.printStackTrace();
+			JOptionPane.showMessageDialog(null, 
+					ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 	
 	/**

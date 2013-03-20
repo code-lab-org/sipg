@@ -1,7 +1,5 @@
 package edu.mit.sips.gui;
 
-import hla.rti1516e.exceptions.RTIinternalError;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -37,7 +35,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.hla.FederationConnection;
-import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.sim.Simulator;
@@ -75,7 +72,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private final ConnectionToolbar connectionToolbar;
 	private FederationConnection connection;
 	private Simulator simulator;
-	private SimAmbassador simAmbassador;
 	private JSplitPane nationalPane;
 	private SimulationControlPane simulationPane;
 	private JTabbedPane elementsListPane;
@@ -122,7 +118,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 					br.close();
 					fr.close();
 					
-					initialize(new Simulator(Serialization.deserialize(jsonBuilder.toString())));
+					initialize(new Simulator(
+							Serialization.deserialize(jsonBuilder.toString())));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
 							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -266,7 +263,9 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	private void exit() {
 		close();
-		dispose();
+		if(simulator == null) {
+			dispose();
+		}
 	}
 
 	/**
@@ -276,6 +275,19 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	public void initialize(final Simulator simulator) {
 		if(simulator == null) {
+			if(connection != null) {
+				if(connection.isConnected()) {
+					try {
+						this.simulator.getAmbassador().resignFederation();
+						this.simulator.getAmbassador().disconnect();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				}
+				connection.removeConnectionListener(connectionPanel);
+				connection.removeConnectionListener(connectionToolbar);
+				connection = null;
+			}
 			if(this.simulator != null) {
 				this.simulator.removeUpdateListener(this);
 				this.simulator.removeUpdateListener(simulationPane);
@@ -285,19 +297,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 			if(contentPane.getComponentCount() > 0) {
 				contentPane.removeAll();
 			}
-			if(connection != null) {
-				if(connection.isConnected()) {
-					try {
-						simAmbassador.resignAndDisconnect(connection);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				connection.removeConnectionListener(connectionPanel);
-				connection.removeConnectionListener(connectionToolbar);
-				connection = null;
-			}
-			simAmbassador = null;
 			societyPane = null;
 			elementsListPane = null;
 			nationalPane = null;
@@ -308,15 +307,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
-			try {
-				simAmbassador = new SimAmbassador(simulator.getCountry());
-			} catch (RTIinternalError ex) {
-				ex.printStackTrace();
-				JOptionPane.showMessageDialog(getContentPane(), 
-						ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			}
 			connection = new FederationConnection();
-			connectionPanel.initialize(connection, simAmbassador);
+			connectionPanel.initialize(connection, simulator.getAmbassador());
 			connection.addConnectionListener(connectionPanel);
 			connection.addConnectionListener(connectionToolbar);
 			
