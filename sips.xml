@@ -34,7 +34,7 @@
                     <sharing>PublishSubscribe</sharing>
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
+                    <order>TimeStamp</order>
                     <semantics>Name of this infrastructure system.</semantics>
                 </attribute>
                 <attribute>
@@ -46,7 +46,7 @@
                     <sharing>PublishSubscribe</sharing>
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
+                    <order>TimeStamp</order>
                     <semantics>Name of the society within which this infrastructure system exists.</semantics>
                 </attribute>
                 <attribute>
@@ -58,7 +58,7 @@
                     <sharing>PublishSubscribe</sharing>
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
+                    <order>TimeStamp</order>
                     <semantics>Net cash flow (SAR) from this infrastructure system.</semantics>
                 </attribute>
                 <attribute>
@@ -70,7 +70,7 @@
                     <sharing>PublishSubscribe</sharing>
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
-                    <order>Receive</order>
+                    <order>TimeStamp</order>
                     <semantics>Domestic production (SAR) contributed from this infrastructure system.</semantics>
                 </attribute>
                 <objectClass>
@@ -86,7 +86,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Electricity consumed (MWh) by the water system.</semantics>
                     </attribute>
                     <attribute>
@@ -98,7 +98,7 @@
                         <sharing>Neither</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Water supplied per capita (m^3) to the social system.</semantics>
                     </attribute>
                 </objectClass>
@@ -115,7 +115,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Water consumed (m^3) by the agriculture system.</semantics>
                     </attribute>
                 </objectClass>
@@ -132,7 +132,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Water consumed (m^3) by the energy system.</semantics>
                     </attribute>
                     <attribute>
@@ -144,7 +144,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Electricity consumed (kWh) by the energy system.</semantics>
                     </attribute>
                     <attribute>
@@ -156,7 +156,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Petroleum consumed (bbl) by the energy system.</semantics>
                     </attribute>
                 </objectClass>
@@ -173,7 +173,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Total population in this social system.</semantics>
                     </attribute>
                     <attribute>
@@ -185,7 +185,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Electricity consumed (MWh) by the social system.</semantics>
                     </attribute>
                     <attribute>
@@ -197,7 +197,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Food consumed (Mj) by the social system.</semantics>
                     </attribute>
                     <attribute>
@@ -209,7 +209,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Water consumed (m^3) by the social system.</semantics>
                     </attribute>
                     <attribute>
@@ -221,7 +221,7 @@
                         <sharing>PublishSubscribe</sharing>
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
-                        <order>Receive</order>
+                        <order>TimeStamp</order>
                         <semantics>Domestic product (SAR) of this social system.</semantics>
                     </attribute>
                 </objectClass>
