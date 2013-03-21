@@ -259,8 +259,8 @@ public class SpatialStatePanel extends JPanel {
 					+ g.getFontMetrics().getHeight()/2);
 			
 			double productionValue = stateProvider.getOtherProduction(city);
-			double maxProduction = stateProvider.getConsumption(city);
-			int fillDiameter = (int) Math.min(2*getElementRadius(), productionValue/maxProduction*2*getElementRadius());
+			// double maxProduction = stateProvider.getConsumption(city);
+			int fillDiameter = 2*getElementRadius(); //(int) Math.min(2*getElementRadius(), productionValue/maxProduction*2*getElementRadius());
 			g.setColor(Color.GREEN);
 			g.fillOval(loc.x - fillDiameter/2, loc.y - fillDiameter/2, 
 					fillDiameter, fillDiameter);
