@@ -270,7 +270,6 @@ implements ActionListener, ConnectionListener {
 					protected Void doInBackground() {
 						try {
 							ambassador.connect(connection);
-							ambassador.joinFederation();
 						} catch (Exception ex) {
 							ex.printStackTrace();
 							federateName.setEnabled(true);

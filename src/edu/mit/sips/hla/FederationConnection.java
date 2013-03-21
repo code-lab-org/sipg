@@ -1,6 +1,7 @@
 package edu.mit.sips.hla;
 
 import java.io.Serializable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.event.EventListenerList;
 
@@ -14,7 +15,7 @@ public class FederationConnection implements Serializable {
 	private static final long serialVersionUID = -4649447975331252471L;
 	private String host, federationName, fomPath, federateName, federateType;
 	private int port;
-	private transient boolean connected = false;
+	private transient volatile AtomicBoolean connected = new AtomicBoolean(false);
 	
 	private final transient EventListenerList listenerList = 
 			new EventListenerList();
@@ -198,7 +199,9 @@ public class FederationConnection implements Serializable {
 	 * @return true, if is connected
 	 */
 	public boolean isConnected() {
-		return connected;
+		synchronized(connected) {
+			return connected.get();
+		}
 	}
 	
 	/**
@@ -207,9 +210,10 @@ public class FederationConnection implements Serializable {
 	 * @param connected the new connected
 	 */
 	public void setConnected(boolean connected) {
-		this.connected = connected;
-		fireConnectionEvent(new ConnectionEvent(
-				this, this));
+		synchronized(this.connected) {
+			this.connected.set(connected);
+			fireConnectionEvent(new ConnectionEvent(this, this));
+		}
 	}
 	
 	/**

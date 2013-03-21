@@ -100,6 +100,14 @@ public class Simulator implements SimulationControlListener {
 			runAutoOptimization();
 			fireUpdateEvent();
 		}
+		
+		if(time == endTime) {
+			try {
+				simAmbassador.resignFederation();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -177,10 +185,26 @@ public class Simulator implements SimulationControlListener {
 		}
 		this.endTime = endTime;
 		
+		if(simAmbassador.isInitialized()) {
+			try {
+				simAmbassador.resignFederation();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(!simAmbassador.isInitialized()) {
+			try {
+				simAmbassador.initialize(startTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		time = startTime;
 		country.initialize(startTime);
 		runAutoOptimization();
 		fireInitializeEvent();
+		
 		initialized = true;
 	}
 
@@ -216,6 +240,11 @@ public class Simulator implements SimulationControlListener {
 	 */
 	private long tickTock() {
 		country.tick();
+		try {
+			simAmbassador.advance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		country.tock();
 		return ++time;
 	}
