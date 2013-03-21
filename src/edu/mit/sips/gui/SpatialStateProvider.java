@@ -130,6 +130,14 @@ public interface SpatialStateProvider {
 	public String getUnits();
 	
 	/**
+	 * Checks if is distribution.
+	 *
+	 * @param element the element
+	 * @return true, if is distribution
+	 */
+	public boolean isDistribution(InfrastructureElement element);
+	
+	/**
 	 * Checks if is export allowed.
 	 *
 	 * @return true, if is export allowed
@@ -149,4 +157,12 @@ public interface SpatialStateProvider {
 	 * @return true, if is other production allowed
 	 */
 	public boolean isOtherProductionAllowed();
+	
+	/**
+	 * Checks if is production.
+	 *
+	 * @param element the element
+	 * @return true, if is production
+	 */
+	public boolean isProduction(InfrastructureElement element);
 }

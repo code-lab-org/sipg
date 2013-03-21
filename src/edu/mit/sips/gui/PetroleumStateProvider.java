@@ -222,6 +222,18 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.SpatialStateProvider#isDistribution(edu.mit.sips.InfrastructureElement)
+	 */
+	@Override
+	public boolean isDistribution(InfrastructureElement element) {
+		if(element instanceof PetroleumElement) {
+			return ((PetroleumElement)element).getMaxPetroleumInput() > 0;
+		} else {
+			return false;
+		}
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#isExportAllowed()
 	 */
 	@Override
@@ -243,5 +255,17 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public boolean isOtherProductionAllowed() {
 		return false;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.SpatialStateProvider#isProduction(edu.mit.sips.InfrastructureElement)
+	 */
+	@Override
+	public boolean isProduction(InfrastructureElement element) {
+		if(element instanceof PetroleumElement) {
+			return ((PetroleumElement)element).getMaxPetroleumProduction() > 0;
+		} else {
+			return false;
+		}
 	}
 }

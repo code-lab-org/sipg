@@ -215,6 +215,18 @@ public class ElectricityStateProvider implements SpatialStateProvider {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.SpatialStateProvider#isDistribution(edu.mit.sips.InfrastructureElement)
+	 */
+	@Override
+	public boolean isDistribution(InfrastructureElement element) {
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityInput() > 0;
+		} else {
+			return false;
+		}
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#isExportAllowed()
 	 */
 	@Override
@@ -236,5 +248,17 @@ public class ElectricityStateProvider implements SpatialStateProvider {
 	@Override
 	public boolean isOtherProductionAllowed() {
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.SpatialStateProvider#isProduction(edu.mit.sips.InfrastructureElement)
+	 */
+	@Override
+	public boolean isProduction(InfrastructureElement element) {
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityProduction() > 0;
+		} else {
+			return false;
+		}
 	}
 }

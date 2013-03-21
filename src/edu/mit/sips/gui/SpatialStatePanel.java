@@ -378,36 +378,38 @@ public class SpatialStatePanel extends JPanel {
 				p.y - getElementRadius(), 
 				2*getElementRadius(), 
 				2*getElementRadius());
-		
-		double distribInValue = city.getName().equals(element.getDestination()) ? stateProvider.getOutput(element) : 0;
-		if(distribInValue > 0) {
-			g.setColor(Color.GREEN);
-		} else {
-			g.setColor(Color.GRAY);
-		}
-		Line2D.Double distribInLine = new Line2D.Double(
-				p.x - getElementRadius()*Math.cos(theta), 
-				p.y - getElementRadius()*Math.sin(theta), 
-				p.x - Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.cos(theta), 
-				p.y - Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.sin(theta));
-		drawArrowLineWithHeadLabel(g, 
-				new Line2D.Float(distribInLine.getP1(), distribInLine.getP2()),
-				formatValue(distribInValue));
 
-		double distribOutValue = city.getName().equals(element.getOrigin()) ? stateProvider.getInput(element) : 0;
-		if(distribOutValue > 0) {
-			g.setColor(Color.RED);
-		} else {
-			g.setColor(Color.GRAY);
+		if(stateProvider.isDistribution(element)) {
+			double distribInValue = city.getName().equals(element.getDestination()) ? stateProvider.getOutput(element) : 0;
+			if(distribInValue > 0) {
+				g.setColor(Color.GREEN);
+			} else {
+				g.setColor(Color.GRAY);
+			}
+			Line2D.Double distribInLine = new Line2D.Double(
+					p.x - getElementRadius()*Math.cos(theta), 
+					p.y - getElementRadius()*Math.sin(theta), 
+					p.x - Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.cos(theta), 
+					p.y - Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.sin(theta));
+			drawArrowLineWithHeadLabel(g, 
+					new Line2D.Float(distribInLine.getP1(), distribInLine.getP2()),
+					formatValue(distribInValue));
+	
+			double distribOutValue = city.getName().equals(element.getOrigin()) ? stateProvider.getInput(element) : 0;
+			if(distribOutValue > 0) {
+				g.setColor(Color.RED);
+			} else {
+				g.setColor(Color.GRAY);
+			}
+			Line2D.Double distribOutLine = new Line2D.Double(
+					p.x + getElementRadius()*Math.cos(theta), 
+					p.y + getElementRadius()*Math.sin(theta), 
+					p.x + Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.cos(theta), 
+					p.y + Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.sin(theta));
+			drawArrowLineWithHeadLabel(g, 
+					new Line2D.Float(distribOutLine.getP1(), distribOutLine.getP2()), 
+					formatValue(distribOutValue));
 		}
-		Line2D.Double distribOutLine = new Line2D.Double(
-				p.x + getElementRadius()*Math.cos(theta), 
-				p.y + getElementRadius()*Math.sin(theta), 
-				p.x + Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.cos(theta), 
-				p.y + Math.min(1.5*getElementRadius(), getElementRingRadius()/2)*Math.sin(theta));
-		drawArrowLineWithHeadLabel(g, 
-				new Line2D.Float(distribOutLine.getP1(), distribOutLine.getP2()), 
-				formatValue(distribOutValue));
 		g.dispose();
 	}
 	
