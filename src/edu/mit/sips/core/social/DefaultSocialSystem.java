@@ -1,6 +1,7 @@
 package edu.mit.sips.core.social;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -217,13 +218,12 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(FOOD_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(POPULATION_ATTRIBUTE);
-			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-			fireAttributeChangeEvent(DOMESTIC_PRODUCT_ATTRIBUTE);
-			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					WATER_CONSUMPTION_ATTRIBUTE, 
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
+					FOOD_CONSUMPTION_ATTRIBUTE, POPULATION_ATTRIBUTE, 
+					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCT_ATTRIBUTE, 
+					DOMESTIC_PRODUCTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -360,7 +360,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setDomesticProduct(double domesticProduct) {
 			this.domesticProduct = domesticProduct;
-			fireAttributeChangeEvent(DOMESTIC_PRODUCT_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					DOMESTIC_PRODUCT_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -369,7 +370,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setElectricityConsumption(double electricityConsumption) {
 			this.electricityConsumption = electricityConsumption;
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -378,7 +380,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setFoodConsumption(double foodConsumption) {
 			this.foodConsumption = foodConsumption;
-			fireAttributeChangeEvent(FOOD_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					FOOD_CONSUMPTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -387,7 +390,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setPopulation(long population) {
 			this.population = population;
-			fireAttributeChangeEvent(POPULATION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					POPULATION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -396,7 +400,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void setWaterConsumption(double waterConsumption) {
 			this.waterConsumption = waterConsumption;
-			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					WATER_CONSUMPTION_ATTRIBUTE));
 		}
 	}
 }

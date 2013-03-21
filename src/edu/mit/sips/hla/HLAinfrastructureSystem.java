@@ -20,7 +20,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.InfrastructureSystem;
@@ -174,19 +176,24 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 		if(evt.getSource().equals(infrastructureSystem)) {
 			// object model changed values -- send updates to federation
 			try {
-				if(evt.getAttributeName().equals(InfrastructureSystem.NAME_ATTRIBUTE)) {
+				List<String> attributesToUpdate = new ArrayList<String>();
+				if(evt.getAttributeNames().contains(InfrastructureSystem.NAME_ATTRIBUTE)) {
 					name.setValue(infrastructureSystem.getName());
-					updateAttribute(NAME_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(InfrastructureSystem.SOCIETY_ATTRIBUTE)) {
+					attributesToUpdate.add(NAME_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(InfrastructureSystem.SOCIETY_ATTRIBUTE)) {
 					societyName.setValue(infrastructureSystem.getSociety().getName());
-					updateAttribute(SOCIETY_NAME_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(InfrastructureSystem.CASH_FLOW_ATTRIBUTE)) {
+					attributesToUpdate.add(SOCIETY_NAME_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(InfrastructureSystem.CASH_FLOW_ATTRIBUTE)) {
 					netCashFlow.setValue(infrastructureSystem.getCashFlow());
-					updateAttribute(NET_CASH_FLOW_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(InfrastructureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE)) {
+					attributesToUpdate.add(NET_CASH_FLOW_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(InfrastructureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE)) {
 					domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
-					updateAttribute(DOMESTIC_PRODUCTION_ATTRIBUTE);
+					attributesToUpdate.add(DOMESTIC_PRODUCTION_ATTRIBUTE);
 				} 
+				updateAttributes(attributesToUpdate);
 			} catch(AttributeNotOwned ignored) {
 			} catch(Exception ex) {
 				ex.printStackTrace();
@@ -194,14 +201,17 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 		} else if(infrastructureSystem instanceof InfrastructureSystem.Remote) {
 			InfrastructureSystem.Remote remote = (InfrastructureSystem.Remote) infrastructureSystem;
 			// federation changed values -- send updates to object model
-			if(evt.getAttributeName().equals(NAME_ATTRIBUTE)) {
+			if(evt.getAttributeNames().contains(NAME_ATTRIBUTE)) {
 				remote.setName(name.getValue());
-			} else if(evt.getAttributeName().equals(SOCIETY_NAME_ATTRIBUTE)) {
+			}
+			if(evt.getAttributeNames().contains(SOCIETY_NAME_ATTRIBUTE)) {
 				// handled in the federate ambassador
 				// remote.setSociety(remote.getSociety().getCountry().getSociety(societyName.getValue()));
-			} else if(evt.getAttributeName().equals(NET_CASH_FLOW_ATTRIBUTE)) {
+			}
+			if(evt.getAttributeNames().contains(NET_CASH_FLOW_ATTRIBUTE)) {
 				remote.setCashFlow(netCashFlow.getValue());
-			} else if(evt.getAttributeName().equals(DOMESTIC_PRODUCTION_ATTRIBUTE)) {
+			}
+			if(evt.getAttributeNames().contains(DOMESTIC_PRODUCTION_ATTRIBUTE)) {
 				remote.setDomesticProduction(domesticProduction.getValue());
 			}
 		}

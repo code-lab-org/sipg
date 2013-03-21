@@ -1,5 +1,8 @@
 package edu.mit.sips.core;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.hla.AttributeChangeEvent;
@@ -135,8 +138,8 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public void setSociety(Society society) {
 			this.society = society;
-			fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
-			fireAttributeChangeEvent(NAME_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					SOCIETY_ATTRIBUTE, NAME_ATTRIBUTE));
 		}
 	}
 
@@ -187,7 +190,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setCashFlow(double cashFlow) {
 			this.cashFlow = cashFlow;
-			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(CASH_FLOW_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -196,7 +199,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setDomesticProduction(double domesticProduction) {
 			this.domesticProduction = domesticProduction;
-			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(DOMESTIC_PRODUCTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -205,7 +208,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setName(String name) {
 			this.name = name;
-			fireAttributeChangeEvent(NAME_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -214,7 +217,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final void setSociety(Society society) {
 			this.society = society;
-			fireAttributeChangeEvent(SOCIETY_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
 		}
 	}
 
@@ -232,9 +235,9 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	 * @see edu.mit.sips.hla.InfrastructureSystem#fireAttributeChangeEvent(java.lang.String)
 	 */
 	@Override
-	public final void fireAttributeChangeEvent(String propertyName) {
+	public final void fireAttributeChangeEvent(List<String> propertyNames) {
 		AttributeChangeEvent evt = new AttributeChangeEvent(
-				this, propertyName);
+				this, propertyNames);
 		AttributeChangeListener[] listeners = listenerList.getListeners(
 				AttributeChangeListener.class);
 		for(int i = 0; i < listeners.length; i++) {

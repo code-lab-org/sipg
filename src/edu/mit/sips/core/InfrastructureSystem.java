@@ -173,9 +173,9 @@ public interface InfrastructureSystem {
 	/**
 	 * Fire attribute change event.
 	 *
-	 * @param propertyName the property name
+	 * @param propertyNames the property names
 	 */
-	public void fireAttributeChangeEvent(String propertyName);
+	public void fireAttributeChangeEvent(List<String> propertyNames);
 	
 	/**
 	 * Gets the future cash flow.

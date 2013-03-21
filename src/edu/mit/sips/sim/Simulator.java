@@ -246,6 +246,12 @@ public class Simulator implements SimulationControlListener {
 			e.printStackTrace();
 		}
 		country.tock();
+		try {
+			// TODO: patch to allow for updates to take place
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return ++time;
 	}
 	

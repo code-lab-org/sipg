@@ -1,6 +1,7 @@
 package edu.mit.sips.core.water;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -61,10 +62,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCTION_ATTRIBUTE, 
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
+					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -661,7 +662,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public void setElectricityConsumption(double electricityConsumption) {
 			this.electricityConsumption = electricityConsumption;
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -670,7 +672,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public void setWaterSupplyPerCapita(double waterSupplyPerCapita) {
 			this.waterSupplyPerCapita = waterSupplyPerCapita;
-			fireAttributeChangeEvent(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
 		}
 
 	}

@@ -19,7 +19,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -227,17 +229,20 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
 			try {
-				if(evt.getAttributeName().equals(
+				List<String> attributesToUpdate = new ArrayList<String>();
+				if(evt.getAttributeNames().contains(
 						WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getWaterSystem().getElectricityConsumption());
-					updateAttribute(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
 					waterSupplyPerCapita.setValue(
 							getWaterSystem().getWaterSupplyPerCapita());
-					updateAttribute(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
+					attributesToUpdate.add(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
 				}
+				updateAttributes(attributesToUpdate);
 			} catch(AttributeNotOwned ignored) {
 			} catch(Exception ex) {
 				ex.printStackTrace();
@@ -245,11 +250,12 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		} else if(getWaterSystem() instanceof WaterSystem.Remote) {
 			WaterSystem.Remote remote = (WaterSystem.Remote) getWaterSystem();
 			// federation changed values -- send updates to object model
-			if(evt.getAttributeName().equals(
+			if(evt.getAttributeNames().contains(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
 				remote.setWaterSupplyPerCapita(
 						waterSupplyPerCapita.getValue());

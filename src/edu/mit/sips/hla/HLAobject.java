@@ -25,7 +25,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.event.EventListenerList;
@@ -280,7 +282,7 @@ public abstract class HLAobject implements AttributeChangeListener {
 			if(wrapper != null) {
 				getAttributeValues().get(attributeHandle).decode(wrapper);
 				fireAttributeChangeEvent(new AttributeChangeEvent(this, 
-						getAttributeName(attributeHandle)));
+						Arrays.asList(getAttributeName(attributeHandle))));
 			}
 		}
 	}
@@ -334,9 +336,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 	}
 	
 	/**
-	 * Update attribute.
+	 * Update attributes.
 	 *
-	 * @param attributeName the attribute name
+	 * @param attributeNames the attribute names
 	 * @throws AttributeNotOwned the attribute not owned
 	 * @throws AttributeNotDefined the attribute not defined
 	 * @throws ObjectInstanceNotKnown the object instance not known
@@ -346,12 +348,16 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the RTI internal error
 	 */
-	public final void updateAttribute(String attributeName) 
+	public final void updateAttributes(List<String> attributeNames) 
 			throws AttributeNotOwned, AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
 			RestoreInProgress, FederateNotExecutionMember, NotConnected, RTIinternalError {
-		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(1);
-		attributes.put(getAttributeHandle(attributeName), 
-				getAttributeValues().get(getAttributeHandle(attributeName)).toByteArray());
+		AttributeHandleValueMap attributes = rtiAmbassador.
+				getAttributeHandleValueMapFactory().create(attributeNames.size());
+		for(String attributeName : attributeNames) {
+			attributes.put(getAttributeHandle(attributeName), 
+					getAttributeValues().get(
+							getAttributeHandle(attributeName)).toByteArray());
+		}
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0]);
 	}

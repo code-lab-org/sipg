@@ -1,6 +1,7 @@
 package edu.mit.sips.core.agriculture;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -645,9 +646,9 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					WATER_CONSUMPTION_ATTRIBUTE, CASH_FLOW_ATTRIBUTE, 
+					DOMESTIC_PRODUCTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)

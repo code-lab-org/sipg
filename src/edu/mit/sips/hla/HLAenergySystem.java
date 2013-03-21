@@ -19,7 +19,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.energy.DefaultEnergySystem;
@@ -234,22 +236,26 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
 			try {
-				if(evt.getAttributeName().equals(
+				List<String> attributesToUpdate = new ArrayList<String>();
+				if(evt.getAttributeNames().contains(
 						EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getEnergySystem().getElectricityConsumption());
-					updateAttribute(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
 					petroleumConsumption.setValue(
 							getEnergySystem().getPetroleumConsumption());
-					updateAttribute(PETROLEUM_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(PETROLEUM_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						EnergySystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
 							getEnergySystem().getWaterConsumption());
-					updateAttribute(WATER_CONSUMPTION_ATTRIBUTE);
+					attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
+				updateAttributes(attributesToUpdate);
 			} catch(AttributeNotOwned ignored) {
 			} catch(Exception ex) {
 				ex.printStackTrace();
@@ -257,15 +263,17 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		} else if(getEnergySystem() instanceof EnergySystem.Remote) {
 			EnergySystem.Remote remote = (EnergySystem.Remote) getEnergySystem();
 			// federation changed values -- send updates to object model
-			if(evt.getAttributeName().equals(
+			if(evt.getAttributeNames().contains(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
 				remote.setPetroleumConsumption(
 						petroleumConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					WATER_CONSUMPTION_ATTRIBUTE)) {
 				remote.setWaterConsumption(
 						waterConsumption.getValue());

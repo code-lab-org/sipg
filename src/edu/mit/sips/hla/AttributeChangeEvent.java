@@ -1,6 +1,7 @@
 package edu.mit.sips.hla;
 
 import java.util.EventObject;
+import java.util.List;
 
 /**
  * The Class StateChangeEvent.
@@ -8,25 +9,25 @@ import java.util.EventObject;
 public class AttributeChangeEvent extends EventObject {
 	private static final long serialVersionUID = -8507407666558946152L;
 	
-	private final String attributeName;
+	private final List<String> attributeNames;
 	
 	/**
 	 * Instantiates a new state change event.
 	 *
 	 * @param source the source
-	 * @param attributeName the attribute name
+	 * @param attributeNames the attribute names
 	 */
-	public AttributeChangeEvent(Object source, String attributeName) {
+	public AttributeChangeEvent(Object source, List<String> attributeNames) {
 		super(source);
-		this.attributeName = attributeName;
+		this.attributeNames = attributeNames;
 	}
 	
 	/**
-	 * Gets the attribute name.
+	 * Gets the attribute names.
 	 *
-	 * @return the attribute name
+	 * @return the attribute names
 	 */
-	public String getAttributeName() {
-		return attributeName;
+	public List<String> getAttributeNames() {
+		return attributeNames;
 	}
 }

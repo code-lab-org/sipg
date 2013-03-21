@@ -88,7 +88,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private final Country country;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
-	private HLAinteger64Time logicalTime, startTime, endTime;
+	private HLAinteger64Time logicalTime, startTime;
 	private HLAinteger64Interval lookaheadInterval, tickInterval;
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
@@ -343,7 +343,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
-		lookaheadInterval = timeFactory.makeInterval(0);
+		lookaheadInterval = timeFactory.makeInterval(1);
 		tickInterval = timeFactory.makeInterval(1);
 
 		try {
@@ -366,19 +366,22 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		TimeQueryReturn query = rtiAmbassador.queryGALT();
 		this.startTime = timeFactory.makeTime(startTime);
-		if(query.timeIsValid) {
-			rtiAmbassador.timeAdvanceRequest(query.time);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-		} else {
+		if(!query.timeIsValid) {
 			// first federate
 			rtiAmbassador.timeAdvanceRequest(this.startTime);
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
 			}
 			timeAdvanceGranted.set(false);
+		} else {
+			/* use for non-time regulating federates
+			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
+			rtiAmbassador.timeAdvanceRequest(query.time);
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+			*/
 		}
 		initialized.set(true);
 	}
@@ -579,6 +582,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			throws FederateInternalError {
 		timeAdvanceGranted.set(true);
 		logicalTime = (HLAinteger64Time) theTime;
+		System.out.println("(TAG) Logical time is " + logicalTime.getValue());
 	}
 
 	/* (non-Javadoc)
@@ -589,6 +593,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			throws FederateInternalError {
 		timeConstrained.set(true);
 		logicalTime = (HLAinteger64Time) time;
+		System.out.println("(TCE) Logical time is " + logicalTime.getValue());
 	}
 	
 	/* (non-Javadoc)
@@ -599,5 +604,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 			throws FederateInternalError {
 		timeRegulating.set(true);
 		logicalTime = (HLAinteger64Time) time;
+		System.out.println("(TRE) Logical time is " + logicalTime.getValue());
 	}
 }

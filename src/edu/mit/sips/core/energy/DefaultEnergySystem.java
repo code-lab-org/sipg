@@ -1,6 +1,7 @@
 package edu.mit.sips.core.energy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -507,11 +508,11 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		 */
 		@Override
 		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(CASH_FLOW_ATTRIBUTE);
-			fireAttributeChangeEvent(DOMESTIC_PRODUCTION_ATTRIBUTE);
-			fireAttributeChangeEvent(PETROLEUM_CONSUMPTION_ATTRIBUTE);
-			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE, CASH_FLOW_ATTRIBUTE,
+					DOMESTIC_PRODUCTION_ATTRIBUTE, 
+					PETROLEUM_CONSUMPTION_ATTRIBUTE, 
+					WATER_CONSUMPTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -586,7 +587,8 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		@Override
 		public void setElectricityConsumption(double electricityConsumption) {
 			this.electricityConsumption = electricityConsumption;
-			fireAttributeChangeEvent(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 		}
 		
 		/* (non-Javadoc)
@@ -595,7 +597,8 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		@Override
 		public void setPetroleumConsumption(double petroleumConsumption) {
 			this.petroleumConsumption = petroleumConsumption;
-			fireAttributeChangeEvent(PETROLEUM_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					PETROLEUM_CONSUMPTION_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -604,7 +607,8 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		@Override
 		public void setWaterConsumption(double waterConsumption) {
 			this.waterConsumption = waterConsumption;
-			fireAttributeChangeEvent(WATER_CONSUMPTION_ATTRIBUTE);
+			fireAttributeChangeEvent(Arrays.asList(
+					WATER_CONSUMPTION_ATTRIBUTE));
 		}
 	}
 }

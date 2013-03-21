@@ -20,7 +20,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.social.DefaultSocialSystem;
@@ -248,32 +250,38 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
 			try {
-				if(evt.getAttributeName().equals(
+				List<String> attributesToUpdate = new ArrayList<String>();
+				if(evt.getAttributeNames().contains(
 						SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getSocialSystem().getElectricityConsumption());
-					updateAttribute(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+				} 
+				if(evt.getAttributeNames().contains(
 						SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE)) {
 					foodConsumption.setValue(
 							getSocialSystem().getFoodConsumption());
-					updateAttribute(FOOD_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(FOOD_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						SocialSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
 							getSocialSystem().getWaterConsumption());
-					updateAttribute(WATER_CONSUMPTION_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE)) {
 					domesticProduct.setValue(
 							getSocialSystem().getDomesticProduct());
-					updateAttribute(DOMESTIC_PRODUCT_ATTRIBUTE);
-				} else if(evt.getAttributeName().equals(
+					attributesToUpdate.add(DOMESTIC_PRODUCT_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
 						SocialSystem.POPULATION_ATTRIBUTE)) {
 					population.setValue(
 							getSocialSystem().getPopulation());
-					updateAttribute(POPULATION_ATTRIBUTE);
+					attributesToUpdate.add(POPULATION_ATTRIBUTE);
 				}
+				updateAttributes(attributesToUpdate);
 			} catch(AttributeNotOwned ignored) {
 			} catch(Exception ex) {
 				ex.printStackTrace();
@@ -281,23 +289,27 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		} else if(getSocialSystem() instanceof SocialSystem.Remote) {
 			SocialSystem.Remote remote = (SocialSystem.Remote) getSocialSystem();
 			// federation changed values -- send updates to object model
-			if(evt.getAttributeName().equals(
+			if(evt.getAttributeNames().contains(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			} 
+			if(evt.getAttributeNames().contains(
 					FOOD_CONSUMPTION_ATTRIBUTE)) {
 				remote.setFoodConsumption(
 						foodConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					WATER_CONSUMPTION_ATTRIBUTE)) {
 				remote.setWaterConsumption(
 						waterConsumption.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					DOMESTIC_PRODUCT_ATTRIBUTE)) {
 				remote.setDomesticProduct(
 						domesticProduct.getValue());
-			} else if(evt.getAttributeName().equals(
+			}
+			if(evt.getAttributeNames().contains(
 					POPULATION_ATTRIBUTE)) {
 				remote.setPopulation(
 						population.getValue());
