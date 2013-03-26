@@ -17,16 +17,22 @@ import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.ElectricityElement;
+import edu.mit.sips.core.energy.ElectricitySoS;
 import edu.mit.sips.core.energy.ElectricitySystem;
 import edu.mit.sips.core.energy.EnergyElement;
+import edu.mit.sips.core.energy.EnergySoS;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.energy.PetroleumSoS;
 import edu.mit.sips.core.energy.PetroleumSystem;
 import edu.mit.sips.core.social.PopulationModel;
+import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterElement;
+import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -40,26 +46,52 @@ public final class Serialization {
 				new InterfaceAdapter<LifecycleModel>());
 		gsonBuilder.registerTypeAdapter(PopulationModel.class, 
 				new InterfaceAdapter<PopulationModel>());
+		gsonBuilder.registerTypeAdapter(AgricultureSystem.class, 
+				new InterfaceAdapter<AgricultureSystem>());
 		gsonBuilder.registerTypeAdapter(AgricultureSystem.Local.class, 
 				new InterfaceAdapter<AgricultureSystem.Local>());
 		gsonBuilder.registerTypeAdapter(AgricultureSystem.Remote.class, 
 				new InterfaceAdapter<AgricultureSystem.Remote>());
+		gsonBuilder.registerTypeAdapter(AgricultureSoS.Local.class, 
+				new InterfaceAdapter<AgricultureSoS.Local>());
+		gsonBuilder.registerTypeAdapter(AgricultureSoS.class, 
+				new InterfaceAdapter<AgricultureSoS>());
+		gsonBuilder.registerTypeAdapter(WaterSystem.class, 
+				new InterfaceAdapter<WaterSystem>());
 		gsonBuilder.registerTypeAdapter(WaterSystem.Local.class, 
 				new InterfaceAdapter<WaterSystem.Local>());
 		gsonBuilder.registerTypeAdapter(WaterSystem.Remote.class, 
 				new InterfaceAdapter<WaterSystem.Remote>());
+		gsonBuilder.registerTypeAdapter(WaterSoS.Local.class, 
+				new InterfaceAdapter<WaterSoS.Local>());
+		gsonBuilder.registerTypeAdapter(WaterSoS.class, 
+				new InterfaceAdapter<WaterSoS>());
+		gsonBuilder.registerTypeAdapter(EnergySystem.class, 
+				new InterfaceAdapter<EnergySystem>());
 		gsonBuilder.registerTypeAdapter(EnergySystem.Local.class, 
 				new InterfaceAdapter<EnergySystem.Local>());
 		gsonBuilder.registerTypeAdapter(EnergySystem.Remote.class, 
 				new InterfaceAdapter<EnergySystem.Remote>());
+		gsonBuilder.registerTypeAdapter(EnergySoS.Local.class, 
+				new InterfaceAdapter<EnergySoS.Local>());
+		gsonBuilder.registerTypeAdapter(EnergySoS.class, 
+				new InterfaceAdapter<EnergySoS>());
 		gsonBuilder.registerTypeAdapter(PetroleumSystem.class, 
 				new InterfaceAdapter<PetroleumSystem>());
+		gsonBuilder.registerTypeAdapter(PetroleumSoS.class, 
+				new InterfaceAdapter<PetroleumSoS>());
 		gsonBuilder.registerTypeAdapter(ElectricitySystem.class, 
 				new InterfaceAdapter<ElectricitySystem>());
+		gsonBuilder.registerTypeAdapter(ElectricitySoS.class, 
+				new InterfaceAdapter<ElectricitySoS>());
+		gsonBuilder.registerTypeAdapter(SocialSystem.class, 
+				new InterfaceAdapter<SocialSystem>());
 		gsonBuilder.registerTypeAdapter(SocialSystem.Local.class, 
 				new InterfaceAdapter<SocialSystem.Local>());
 		gsonBuilder.registerTypeAdapter(SocialSystem.Remote.class, 
 				new InterfaceAdapter<SocialSystem.Remote>());
+		gsonBuilder.registerTypeAdapter(SocialSoS.class, 
+				new InterfaceAdapter<SocialSoS>());
 		gsonBuilder.registerTypeAdapter(Society.class, 
 				new InterfaceAdapter<Society>());
 		gsonBuilder.registerTypeAdapter(AgricultureElement.class, 

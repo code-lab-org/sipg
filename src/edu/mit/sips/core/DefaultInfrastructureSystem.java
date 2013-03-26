@@ -31,7 +31,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public Local(String name) {
 			super(name);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCapitalExpense()
 		 */
@@ -76,6 +76,17 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getName()
+		 */
+		@Override
+		public String getName() {
+			if(getSociety() != null) {
+				return getSociety().getName() + " " + super.getName();
+			}
+			return super.getName();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
 		 */
 		@Override
@@ -107,6 +118,15 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			return getSalesRevenue() 
 					+ getDistributionRevenue()
 					+ getExportRevenue();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
+		 */
+		@Override
+		public void setSociety(Society society) {
+			super.setSociety(society);
+			fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
 		}
 	}
 
@@ -153,7 +173,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	}
 
 	private String name;
-	private Society society;
+	private transient Society society;
 	private transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
@@ -202,7 +222,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
 	 */
 	@Override
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 

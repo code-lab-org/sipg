@@ -14,6 +14,13 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 		
 		/**
 		 * Instantiates a new local.
+		 */
+		protected Local() {
+			super("Infrastructure");
+		}
+		
+		/**
+		 * Instantiates a new local.
 		 *
 		 * @param name the name
 		 */
@@ -21,19 +28,6 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			super(name);
 		}
 		
-		/**
-		 * Instantiates a new local.
-		 */
-		protected Local() {
-			super("Infrastructure");
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
-		 */
-		@Override
-		public abstract List<? extends InfrastructureSystem.Local> getNestedSystems();
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCapitalExpense()
 		 */
@@ -45,7 +39,7 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getConsumptionExpense()
 		 */
@@ -117,7 +111,7 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			}
 			return value;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getLifecycleExpense()
 		 */
@@ -129,6 +123,23 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			}
 			return value;
 		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getName()
+		 */
+		@Override
+		public String getName() {
+			if(getSociety() != null) {
+				return getSociety().getName() + " " + super.getName();
+			}
+			return super.getName();
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
+		 */
+		@Override
+		public abstract List<? extends InfrastructureSystem.Local> getNestedSystems();
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
@@ -181,18 +192,18 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 	
 	/**
 	 * Instantiates a new default infrastructure so s.
+	 */
+	protected DefaultInfrastructureSoS() {
+		super("Infrastructure");
+	}
+	
+	/**
+	 * Instantiates a new default infrastructure so s.
 	 *
 	 * @param name the name
 	 */
 	public DefaultInfrastructureSoS(String name) {
 		super(name);
-	}
-	
-	/**
-	 * Instantiates a new default infrastructure so s.
-	 */
-	protected DefaultInfrastructureSoS() {
-		super("Infrastructure");
 	}
 	
 	/* (non-Javadoc)
