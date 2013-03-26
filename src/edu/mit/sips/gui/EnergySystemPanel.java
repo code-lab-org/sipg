@@ -11,7 +11,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.energy.CityEnergySystem;
+import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.energy.ElectricityElement;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
@@ -279,7 +279,7 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 		updateSeries(energyNetRevenue, "Net Revenue", year, 
 				getEnergySystem().getCashFlow());
 		
-		if(getEnergySystem() instanceof CityEnergySystem) {
+		if(getEnergySystem() instanceof DefaultEnergySystem.Local) {
 			updateSeries(petroleumReservoirDataset, getSociety().getName(), year, 
 					getEnergySystem().getPetroleumSystem().getPetroleumReservoirVolume());
 			

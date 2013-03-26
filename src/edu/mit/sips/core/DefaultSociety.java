@@ -18,35 +18,28 @@ import edu.mit.sips.core.water.WaterSystem;
  * The Class DefaultSociety.
  */
 public abstract class DefaultSociety extends DefaultInfrastructureSystem implements Society {
-	private final String name;
 	private final List<? extends Society> nestedSocieties;
-	private transient Society society;
 	
-	private AgricultureSystem.Local agricultureSystem;
-	private WaterSystem.Local waterSystem;
-	private EnergySystem.Local energySystem;
-	private SocialSystem.Local socialSystem;
-	
-	private transient AgricultureSystem.Remote remoteAgricultureSystem;
-	private transient WaterSystem.Remote remoteWaterSystem;
-	private transient EnergySystem.Remote remoteEnergySystem;
-	private transient SocialSystem.Remote remoteSocialSystem;
+	private AgricultureSystem agricultureSystem;
+	private WaterSystem waterSystem;
+	private EnergySystem energySystem;
+	private SocialSystem socialSystem;
 	
 	/**
 	 * Instantiates a new default society.
 	 */
 	protected DefaultSociety() {
-		this.name = "";
+		super("Society");
 		this.nestedSocieties = Collections.unmodifiableList(
 				new ArrayList<Society>());
-		this.remoteAgricultureSystem = new DefaultAgricultureSystem.Remote();
-		remoteAgricultureSystem.setSociety(this);
-		this.remoteWaterSystem = new DefaultWaterSystem.Remote();
-		remoteWaterSystem.setSociety(this);
-		this.remoteEnergySystem = new DefaultEnergySystem.Remote();
-		remoteEnergySystem.setSociety(this);
-		this.remoteSocialSystem = new DefaultSocialSystem.Remote();
-		remoteSocialSystem.setSociety(this);
+		this.agricultureSystem = new DefaultAgricultureSystem.Remote();
+		agricultureSystem.setSociety(this);
+		this.waterSystem = new DefaultWaterSystem.Remote();
+		waterSystem.setSociety(this);
+		this.energySystem = new DefaultEnergySystem.Remote();
+		energySystem.setSociety(this);
+		this.socialSystem = new DefaultSocialSystem.Remote();
+		socialSystem.setSociety(this);
 	}
 	
 	/**
@@ -59,18 +52,10 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 * @param energySystem the energy system
 	 * @param socialSystem the social system
 	 */
-	public DefaultSociety(String name, 
-			List<? extends Society> nestedSocieties,
-			AgricultureSystem.Local agricultureSystem,
-			WaterSystem.Local waterSystem,
-			EnergySystem.Local energySystem,
-			SocialSystem.Local socialSystem) {
-		// Validate name.
-		if(name == null) {
-			throw new IllegalArgumentException(
-					"Name cannot be null.");
-		}
-		this.name = name;
+	public DefaultSociety(String name, List<? extends Society> nestedSocieties,
+			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
+			EnergySystem energySystem, SocialSystem socialSystem) {
+		super(name);
 		
 		// Validate cities.
 		if(nestedSocieties == null) {
@@ -88,34 +73,18 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		for(Society nestedSociety : nestedSocieties) {
 			nestedSociety.setSociety(this);
 		}
-		
-		if(agricultureSystem == null) {
-			this.remoteAgricultureSystem = new DefaultAgricultureSystem.Remote();
-		} else {
-			this.agricultureSystem = agricultureSystem;
-		}
-		getAgricultureSystem().setSociety(this);
-		
-		if(waterSystem == null) {
-			this.remoteWaterSystem = new DefaultWaterSystem.Remote();
-		} else {
-			this.waterSystem = waterSystem;
-		}
-		getWaterSystem().setSociety(this);
-		
-		if(energySystem == null) {
-			this.remoteEnergySystem = new DefaultEnergySystem.Remote();
-		} else {
-			this.energySystem = energySystem;
-		}
-		getEnergySystem().setSociety(this);
-		
-		if(socialSystem == null) {
-			this.remoteSocialSystem = new DefaultSocialSystem.Remote();
-		} else {
-			this.socialSystem = socialSystem;
-		}
-		getSocialSystem().setSociety(this);
+
+		this.agricultureSystem = agricultureSystem;
+		this.agricultureSystem.setSociety(this);
+
+		this.waterSystem = waterSystem;
+		this.waterSystem.setSociety(this);
+
+		this.energySystem = energySystem;
+		this.energySystem.setSociety(this);
+
+		this.socialSystem = socialSystem;
+		this.socialSystem.setSociety(this);
 	}
 
 	/* (non-Javadoc)
@@ -123,10 +92,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	@Override
 	public AgricultureSystem getAgricultureSystem() {
-		if(agricultureSystem != null) {
-			return agricultureSystem;
-		}
-		return remoteAgricultureSystem;
+		return agricultureSystem;
 	}
 
 	/* (non-Javadoc)
@@ -158,10 +124,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	@Override
 	public EnergySystem getEnergySystem() {
-		if(energySystem != null) {
-			return energySystem;
-		}
-		return remoteEnergySystem;
+		return energySystem;
 	}
 
 	/* (non-Javadoc)
@@ -188,14 +151,6 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		}
 		return Collections.unmodifiableList(elements);
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
-	 */
-	@Override
-	public String getName() {
-		return name;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getNestedSocieties()
@@ -210,18 +165,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	@Override
 	public SocialSystem getSocialSystem() {
-		if(socialSystem != null) {
-			return socialSystem;
-		}
-		return remoteSocialSystem;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
-	 */
-	@Override
-	public Society getSociety() {
-		return society;
+		return socialSystem;
 	}
 	
 	/* (non-Javadoc)
@@ -278,10 +222,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	@Override
 	public WaterSystem getWaterSystem() {
-		if(waterSystem != null) {
-			return waterSystem;
-		}
-		return remoteWaterSystem;
+		return waterSystem;
 	}
 
 	/* (non-Javadoc)
@@ -297,14 +238,6 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		for(Society society : getNestedSocieties()) {
 			society.initialize(time);
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#setSociety(edu.mit.sips.core.Society)
-	 */
-	@Override
-	public void setSociety(Society society) {
-		this.society = society;
 	}
 
 	/* (non-Javadoc)
@@ -343,8 +276,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
 		agricultureSystem.setSociety(this);
-		this.agricultureSystem = null;
-		this.remoteAgricultureSystem = agricultureSystem;
+		this.agricultureSystem = agricultureSystem;
 	}
 
 	/* (non-Javadoc)
@@ -353,8 +285,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public void setEnergySystem(EnergySystem.Remote energySystem) {
 		energySystem.setSociety(this);
-		this.energySystem = null;
-		this.remoteEnergySystem = energySystem;
+		this.energySystem = energySystem;
 	}
 
 	/* (non-Javadoc)
@@ -363,8 +294,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public void setSocialSystem(SocialSystem.Remote socialSystem) {
 		socialSystem.setSociety(this);
-		this.socialSystem = null;
-		this.remoteSocialSystem = socialSystem;
+		this.socialSystem = socialSystem;
 	}
 
 	/* (non-Javadoc)
@@ -373,7 +303,6 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public void setWaterSystem(WaterSystem.Remote waterSystem) {
 		waterSystem.setSociety(this);
-		this.waterSystem = null;
-		this.remoteWaterSystem = waterSystem;
+		this.waterSystem = waterSystem;
 	}
 }

@@ -9,7 +9,6 @@ import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.social.DefaultSocialSystem;
-import edu.mit.sips.core.social.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.sim.Simulator;
@@ -17,7 +16,7 @@ import edu.mit.sips.sim.Simulator;
 /**
  * The Class BalancingProgram.
  */
-public class Player1 {
+public class NullPlayer {
 	/**
 	 * The main method.
 	 *
@@ -32,36 +31,19 @@ public class Player1 {
 				new City(riyadh, 
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Local(1e10, 1e10),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000))),
+						new DefaultEnergySystem.Remote(),
+						new DefaultSocialSystem.Remote()),
 				new City(jeddah, 
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Local(0, 0),
+						new DefaultEnergySystem.Remote(),
 						new DefaultSocialSystem.Remote()),
 				new City(sakakah, 
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Local(0, 0),
+						new DefaultEnergySystem.Remote(),
 						new DefaultSocialSystem.Remote())
 			));
-		
-		DefaultEnergySystem.Local res = (DefaultEnergySystem.Local) ksa.getCity(riyadh).getEnergySystem();
-		res.addElement(ElementFactory.createPetroleumWell(riyadh, 1942));
-		res.addElement(ElementFactory.createPetroleumWell(riyadh, 1955));
-		res.addElement(ElementFactory.createPetroleumWell(riyadh, 1965));
-		res.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
-		res.addElement(ElementFactory.createPetroleumWell(riyadh, 1975));
-		
-		for(City origin : ksa.getCities()) {
-			for(City destination : ksa.getCities()) {
-				if(!origin.equals(destination)) {
-					DefaultEnergySystem.Local les = (DefaultEnergySystem.Local) origin.getEnergySystem();
-					les.addElement(ElementFactory.createDefaultPetroleumDistribution(
-							origin.getName(), destination.getName()));
-				}
-			}
-		}
 
 		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());

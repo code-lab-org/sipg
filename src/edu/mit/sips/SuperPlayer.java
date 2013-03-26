@@ -17,7 +17,7 @@ import edu.mit.sips.sim.Simulator;
 /**
  * The Class BalancingProgram.
  */
-public class Player1 {
+public class SuperPlayer {
 	/**
 	 * The main method.
 	 *
@@ -30,18 +30,18 @@ public class Player1 {
 		
 		final Country ksa = Country.buildCountry("KSA", Arrays.asList(
 				new City(riyadh, 
-						new DefaultAgricultureSystem.Remote(),
-						new DefaultWaterSystem.Remote(),
+						new DefaultAgricultureSystem.Local(3000),
+						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0),
 						new DefaultEnergySystem.Local(1e10, 1e10),
 						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000))),
 				new City(jeddah, 
-						new DefaultAgricultureSystem.Remote(),
-						new DefaultWaterSystem.Remote(),
+						new DefaultAgricultureSystem.Local(4000),
+						new DefaultWaterSystem.Local(true, 2e9, 2e9, 2e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
-						new DefaultSocialSystem.Remote()),
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000))),
 				new City(sakakah, 
-						new DefaultAgricultureSystem.Remote(),
-						new DefaultWaterSystem.Remote(),
+						new DefaultAgricultureSystem.Local(5000),
+						new DefaultWaterSystem.Local(false, 1e9, 1e9, 1e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
 						new DefaultSocialSystem.Remote())
 			));
@@ -58,6 +58,35 @@ public class Player1 {
 				if(!origin.equals(destination)) {
 					DefaultEnergySystem.Local les = (DefaultEnergySystem.Local) origin.getEnergySystem();
 					les.addElement(ElementFactory.createDefaultPetroleumDistribution(
+							origin.getName(), destination.getName()));
+				}
+			}
+		}
+
+		DefaultWaterSystem.Local jws = (DefaultWaterSystem.Local) ksa.getCity(jeddah).getWaterSystem();
+		jws.addElement(ElementFactory.createAquiferWell(riyadh, 1940));
+		jws.addElement(ElementFactory.createAquiferWell(riyadh, 1965));
+		
+
+		DefaultAgricultureSystem.Local ras = (DefaultAgricultureSystem.Local) ksa.getCity(riyadh).getAgricultureSystem();
+		DefaultAgricultureSystem.Local sas = (DefaultAgricultureSystem.Local) ksa.getCity(sakakah).getAgricultureSystem();
+		DefaultAgricultureSystem.Local jas = (DefaultAgricultureSystem.Local) ksa.getCity(jeddah).getAgricultureSystem();
+		sas.addElement(ElementFactory.createGrazingLand(sakakah));
+		sas.addElement(ElementFactory.createDateFarm(sakakah));
+		sas.addElement(ElementFactory.createDateFarm(sakakah));
+		ras.addElement(ElementFactory.createDateFarm(riyadh));
+		ras.addElement(ElementFactory.createDateFarm(riyadh));
+		ras.addElement(ElementFactory.createDateFarm(riyadh));
+		jas.addElement(ElementFactory.createDateFarm(jeddah));
+		jas.addElement(ElementFactory.createDateFarm(jeddah));
+		jas.addElement(ElementFactory.createDateFarm(jeddah));
+		jas.addElement(ElementFactory.createDateFarm(jeddah));
+		
+		for(City origin : ksa.getCities()) {
+			for(City destination : ksa.getCities()) {
+				if(!origin.equals(destination)) {
+					DefaultAgricultureSystem.Local las = (DefaultAgricultureSystem.Local) origin.getAgricultureSystem();
+					las.addElement(ElementFactory.createDefaultFoodDistribution(
 							origin.getName(), destination.getName()));
 				}
 			}

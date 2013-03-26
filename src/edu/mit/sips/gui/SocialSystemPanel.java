@@ -9,7 +9,7 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.social.CitySocialSystem;
+import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.io.Icons;
 
@@ -47,7 +47,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Revenue (SAR/year)", infrastructureSystemRevenue, 
 				null, infrastructureSystemNetRevenue));
-		if(!(getSocialSystem() instanceof CitySocialSystem)) {
+		if(!(getSocialSystem() instanceof DefaultSocialSystem.Local)) {
 			addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 					"Revenue (SAR/year)", societyRevenue, null, societyNetRevenue));
 		}
@@ -113,7 +113,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 		domesticProductIndicatorPanel.setValue(
 				getSocialSystem().getDomesticProductPerCapita());
 		
-		if(getSocialSystem() instanceof CitySocialSystem) {
+		if(getSocialSystem() instanceof DefaultSocialSystem.Local) {
 			updateSeries(populationDataset, getSociety().getName(), year, 
 					getSocialSystem().getPopulation());
 			

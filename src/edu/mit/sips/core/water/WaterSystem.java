@@ -8,20 +8,24 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface EnergySystem.
  */
 public interface WaterSystem extends InfrastructureSystem {
-	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "waterSupplyPerCapita";
-	
 	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends WaterSystem, InfrastructureSystem.Local {
-
+		
+		/**
+		 * Adds the element.
+		 *
+		 * @param element the element
+		 * @return true, if successful
+		 */
+		public boolean addElement(WaterElement element);
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
 		public List<? extends WaterElement> getElements();
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
 		 */
@@ -33,11 +37,25 @@ public interface WaterSystem extends InfrastructureSystem {
 		public List<? extends WaterElement> getInternalElements();
 		
 		/**
+		 * Gets the local water fraction.
+		 *
+		 * @return the local water fraction
+		 */
+		public double getLocalWaterFraction();
+		
+		/**
 		 * Gets the max water reservoir volume.
 		 *
 		 * @return the max water reservoir volume
 		 */
 		public double getMaxWaterReservoirVolume();
+		
+		/**
+		 * Gets the renewable water fraction.
+		 *
+		 * @return the renewable water fraction
+		 */
+		public double getRenewableWaterFraction();
 		
 		/**
 		 * Gets the renewable water production.
@@ -59,6 +77,20 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @return the total water supply
 		 */
 		public double getTotalWaterSupply();
+		
+		/**
+		 * Gets the unit production cost.
+		 *
+		 * @return the unit production cost
+		 */
+		public double getUnitProductionCost();
+		
+		/**
+		 * Gets the unit supply cost.
+		 *
+		 * @return the unit supply cost
+		 */
+		public double getUnitSupplyProfit();
 		
 		/**
 		 * Gets the water from artesian well.
@@ -124,16 +156,12 @@ public interface WaterSystem extends InfrastructureSystem {
 		public double getWaterWasted();
 		
 		/**
-		 * Optimize water distribution.
-		 */
-		public void optimizeWaterDistribution();
-		
-		/**
-		 * Optimize water production and distribution.
+		 * Removes the element.
 		 *
-		 * @param deltaProductionCost the delta production cost
+		 * @param element the element
+		 * @return true, if successful
 		 */
-		public void optimizeWaterProductionAndDistribution(double deltaProductionCost);
+		public boolean removeElement(WaterElement element);
 		
 		/**
 		 * Sets the water supply per capita.
@@ -141,34 +169,6 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @return the water supply per capita
 		 */
 		public void setWaterSupplyPerCapita(double waterSupplyPerCapita);
-		
-		/**
-		 * Gets the local water fraction.
-		 *
-		 * @return the local water fraction
-		 */
-		public double getLocalWaterFraction();
-		
-		/**
-		 * Gets the renewable water fraction.
-		 *
-		 * @return the renewable water fraction
-		 */
-		public double getRenewableWaterFraction();
-		
-		/**
-		 * Gets the unit production cost.
-		 *
-		 * @return the unit production cost
-		 */
-		public double getUnitProductionCost();
-		
-		/**
-		 * Gets the unit supply cost.
-		 *
-		 * @return the unit supply cost
-		 */
-		public double getUnitSupplyProfit();
 	}
 	
 	/**
@@ -191,6 +191,10 @@ public interface WaterSystem extends InfrastructureSystem {
 		public void setWaterSupplyPerCapita(double waterSupplyPerCapita);
 
 	}
+	
+	public static final String 
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "waterSupplyPerCapita";
 	
 	/**
 	 * Gets the energy consumption.

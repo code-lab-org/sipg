@@ -12,7 +12,7 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.CityAgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.io.Icons;
 
 public class AgricultureSystemPanel extends InfrastructureSystemPanel {
@@ -158,7 +158,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 					year, nestedSociety.getSocialSystem().getFoodConsumptionPerCapita());
 		}
 		
-		if(getAgricultureSystem() instanceof CityAgricultureSystem) {
+		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
 			updateSeries(landAvailableDataset, getSociety().getName(), year, 
 					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
 
@@ -191,7 +191,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 				getAgricultureSystem().getSalesRevenue());
 		updateSeries(agricultureNetRevenue, "Net Revenue", year, 
 				getAgricultureSystem().getCashFlow());
-		if(getAgricultureSystem() instanceof CityAgricultureSystem) {
+		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getMaxLandArea() > 0) {
 					updateSeries(foodSourceData, element.getName(), year, 

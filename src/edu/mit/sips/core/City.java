@@ -5,10 +5,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.agriculture.CityAgricultureSystem;
-import edu.mit.sips.core.energy.CityEnergySystem;
-import edu.mit.sips.core.social.CitySocialSystem;
-import edu.mit.sips.core.water.CityWaterSystem;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.WaterSystem;
 
 public class City extends DefaultSociety implements Society {
 	/**
@@ -27,9 +27,9 @@ public class City extends DefaultSociety implements Society {
 	 * @param energySystem the energy system
 	 * @param socialSystem the social system
 	 */
-	public City(String name, CityAgricultureSystem agricultureSystem,
-			CityWaterSystem waterSystem, CityEnergySystem energySystem,
-			CitySocialSystem socialSystem) {
+	public City(String name, AgricultureSystem agricultureSystem,
+			WaterSystem waterSystem, EnergySystem energySystem,
+			SocialSystem socialSystem) {
 		super(name, new ArrayList<Society>(), agricultureSystem,
 				waterSystem, energySystem, socialSystem);
 	}

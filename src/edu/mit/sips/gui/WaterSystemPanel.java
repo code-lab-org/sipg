@@ -10,7 +10,7 @@ import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.water.CityWaterSystem;
+import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
@@ -203,7 +203,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 		updateSeries(waterUseData, "Wasted", year, 
 				getWaterSystem().getWaterWasted());
 		
-		if(getWaterSystem() instanceof CityWaterSystem) {
+		if(getWaterSystem() instanceof DefaultWaterSystem.Local) {
 			for(WaterElement element : getWaterSystem().getInternalElements()) {
 				if(element.getMaxWaterProduction() > 0) {
 					updateSeries(waterSourceData, element.getName(), year, 

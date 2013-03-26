@@ -16,14 +16,11 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	 * The Class Local.
 	 */
 	public abstract static class Local extends DefaultInfrastructureSystem implements InfrastructureSystem.Local {
-		private final String name;
-		private transient Society society;
-		
 		/**
 		 * Instantiates a new local.
 		 */
 		protected Local() {
-			this.name = "Infrastructure";
+			super("Infrastructure");
 		}
 		
 		/**
@@ -32,11 +29,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @param name the name
 		 */
 		public Local(String name) {
-			// Validate name.
-			if(name == null) {
-				throw new IllegalArgumentException("Name cannot be null.");
-			}
-			this.name = name;
+			super(name);
 		}
 
 		/* (non-Javadoc)
@@ -83,14 +76,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getName()
-		 */
-		@Override
-		public final String getName() {
-			return getSociety().getName() + " " + name;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
 		 */
 		@Override
@@ -100,14 +85,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 				value += e.getTotalOperationsExpense();
 			}
 			return value;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
-		 */
-		@Override
-		public final Society getSociety() {
-			return society;
 		}
 		
 		/* (non-Javadoc)
@@ -131,26 +108,14 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getDistributionRevenue()
 					+ getExportRevenue();
 		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#setSociety(edu.mit.sips.core.Society)
-		 */
-		@Override
-		public void setSociety(Society society) {
-			this.society = society;
-			fireAttributeChangeEvent(Arrays.asList(
-					SOCIETY_ATTRIBUTE, NAME_ATTRIBUTE));
-		}
 	}
 
 	/**
 	 * The Class Remote.
 	 */
 	public abstract static class Remote extends DefaultInfrastructureSystem implements InfrastructureSystem.Remote {
-		private String name = "";
 		private double cashFlow;
 		private double domesticProduction;
-		private Society society;
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
@@ -166,22 +131,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		@Override
 		public final double getDomesticProduction() {
 			return domesticProduction;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getName()
-		 */
-		@Override
-		public final String getName() {
-			return name;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
-		 */
-		@Override
-		public final Society getSociety() {
-			return society;
 		}
 
 		/* (non-Javadoc)
@@ -201,27 +150,31 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			this.domesticProduction = domesticProduction;
 			fireAttributeChangeEvent(Arrays.asList(DOMESTIC_PRODUCTION_ATTRIBUTE));
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setName(java.lang.String)
-		 */
-		@Override
-		public final void setName(String name) {
-			this.name = name;
-			fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
-		 */
-		@Override
-		public final void setSociety(Society society) {
-			this.society = society;
-			fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
-		}
 	}
 
+	private String name;
+	private Society society;
 	private transient EventListenerList listenerList = new EventListenerList();
+	
+	/**
+	 * Instantiates a new default infrastructure system.
+	 */
+	protected DefaultInfrastructureSystem() {
+		this.name = "";
+	}
+	
+	/**
+	 * Instantiates a new default infrastructure system.
+	 *
+	 * @param name the name
+	 */
+	public DefaultInfrastructureSystem(String name) {
+		// Validate name.
+		if(name == null) {
+			throw new IllegalArgumentException("Name cannot be null.");
+		}
+		this.name = name;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
@@ -246,6 +199,23 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
+	 */
+	@Override
+	public final String getName() {
+		return name;
+	}
+
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
+	 */
+	@Override
+	public final Society getSociety() {
+		return society;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
 	 */
 	@Override
@@ -253,4 +223,21 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		listenerList.remove(AttributeChangeListener.class, listener);
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setName(java.lang.String)
+	 */
+	@Override
+	public void setName(String name) {
+		this.name = name;
+		fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
+	 */
+	@Override
+	public void setSociety(Society society) {
+		this.society = society;
+		fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
+	}
 }

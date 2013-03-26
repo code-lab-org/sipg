@@ -110,18 +110,6 @@ public interface PetroleumSystem extends InfrastructureSystem.Local {
 	public double getTotalPetroleumSupply();
 	
 	/**
-	 * Optimize petroleum distribution.
-	 */
-	public void optimizePetroleumDistribution();
-	
-	/**
-	 * Optimize petroleum production and distribution.
-	 *
-	 * @param deltaProductionCost the delta production cost
-	 */
-	public void optimizePetroleumProductionAndDistribution(double deltaProductionCost);
-	
-	/**
 	 * Gets the unit production cost.
 	 *
 	 * @return the unit production cost

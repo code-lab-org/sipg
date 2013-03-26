@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
+import edu.mit.sips.core.energy.DefaultEnergySoS;
 import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.energy.NationalEnergySystem;
-import edu.mit.sips.core.social.NationalSocialSystem;
-import edu.mit.sips.core.water.NationalWaterSystem;
+import edu.mit.sips.core.social.DefaultSocialSoS;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.DefaultWaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -25,42 +26,41 @@ public class Country extends DefaultSociety implements Society {
 	 * @return the country
 	 */
 	public static Country buildCountry(String name, List<? extends Society> nestedSocieties) {
-		NationalAgricultureSystem agricultureSystem = null;
+		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
 		// agriculture system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				agricultureSystem = new NationalAgricultureSystem();
+				agricultureSystem = new DefaultAgricultureSoS.Local();
 				break;
 			}
 		}
 		
-		NationalWaterSystem waterSystem = null;
+		WaterSystem waterSystem = null;
 		// water system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
-				waterSystem = new NationalWaterSystem();
+				waterSystem = new DefaultWaterSoS.Local();
 				break;
 			}
 		}
 		
-		NationalEnergySystem energySystem = null;
+		EnergySystem energySystem = new DefaultEnergySoS();
 		// energy system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getEnergySystem() instanceof EnergySystem.Local) {
-				energySystem = new NationalEnergySystem();
+				energySystem = new DefaultEnergySoS.Local();
 				break;
 			}
 		}
 
 		// social system is always national
-		NationalSocialSystem socialSystem = new NationalSocialSystem();
+		SocialSystem socialSystem = new DefaultSocialSoS();
 		
 		return new Country(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
 	}
 	
 	private final Globals globals = new Globals();	
-
 	private double funds, nextFunds;
 
 	/**
@@ -77,10 +77,8 @@ public class Country extends DefaultSociety implements Society {
 	 * @param nestedSocieties the nested societies
 	 */
 	private Country(String name, List<? extends Society> nestedSocieties,
-			NationalAgricultureSystem agricultureSystem,
-			NationalWaterSystem waterSystem,
-			NationalEnergySystem energySystem,
-			NationalSocialSystem socialSystem) {
+			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
+			EnergySystem energySystem, SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
 	}
@@ -165,15 +163,6 @@ public class Country extends DefaultSociety implements Society {
 	@Override
 	public Globals getGlobals() {
 		return globals;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#setSocialSystem(SocialSystem)
-	 */
-	@Override
-	public void setSociety(Society society) {
-		throw new IllegalArgumentException(
-				"Country is the top-level society.");
 	}
 
 	/* (non-Javadoc)

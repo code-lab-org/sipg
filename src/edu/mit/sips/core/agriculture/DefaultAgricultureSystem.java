@@ -1,30 +1,11 @@
 package edu.mit.sips.core.agriculture;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.math3.exception.TooManyIterationsException;
-import org.apache.commons.math3.linear.ArrayRealVector;
-import org.apache.commons.math3.optim.InitialGuess;
-import org.apache.commons.math3.optim.MaxIter;
-import org.apache.commons.math3.optim.PointValuePair;
-import org.apache.commons.math3.optim.linear.LinearConstraint;
-import org.apache.commons.math3.optim.linear.LinearConstraintSet;
-import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
-import org.apache.commons.math3.optim.linear.NoFeasibleSolutionException;
-import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
-import org.apache.commons.math3.optim.linear.Relationship;
-import org.apache.commons.math3.optim.linear.SimplexSolver;
-import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
-import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.Society;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -34,14 +15,51 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static abstract class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {	
+	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
+		private final double arableLandArea;	
+		private final List<AgricultureElement> elements = 
+				Collections.synchronizedList(new ArrayList<AgricultureElement>());
+		
 		/**
 		 * Instantiates a new local.
 		 */
 		public Local() {
 			super("Agriculture");
+			this.arableLandArea = 0;
 		}
 		
+		/**
+		 * Instantiates a new local.
+		 *
+		 * @param arableLandArea the arable land area
+		 */
+		public Local(double arableLandArea) {
+			super("Agriculture");
+			
+			// Validate arable land area.
+			if(arableLandArea < 0) {
+				throw new IllegalArgumentException(
+						"Arable land area cannot be negative.");
+			}
+			this.arableLandArea = arableLandArea;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
+		 */
+		@Override
+		public synchronized boolean addElement(AgricultureElement element) {
+			return elements.add(element);
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.AgricultureSystem#getArableLandArea()
+		 */
+		@Override
+		public double getArableLandArea() {
+			return arableLandArea;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 		 */
@@ -50,7 +68,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return getSociety().getGlobals().getWaterDomesticPrice()
 					* getWaterConsumption();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
@@ -105,11 +123,11 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public List<AgricultureElement> getExternalElements() {
 			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
 			
-			// see if super-system is also local
-			if(getSociety().getSociety().getAgricultureSystem() 
+			// see if country system is also local
+			if(getSociety().getCountry().getAgricultureSystem() 
 					instanceof AgricultureSystem.Local) {
 				AgricultureSystem.Local system = (AgricultureSystem.Local)
-						getSociety().getSociety().getAgricultureSystem();
+						getSociety().getCountry().getAgricultureSystem();
 				for(AgricultureElement element : system.getElements()) {
 					City origin = getSociety().getCountry().getCity(
 							element.getOrigin());
@@ -126,7 +144,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			
 			return Collections.unmodifiableList(elements);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodExport()
 		 */
@@ -148,7 +166,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					- getFoodInDistribution()
 					- getFoodProduction());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodInDistribution()
 		 */
@@ -160,7 +178,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodOutDistribution()
 		 */
@@ -175,7 +193,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 		 */
@@ -213,23 +231,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public List<AgricultureElement> getInternalElements() {
-			List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
-			
-			// see if super-system is also local
-			if(getSociety().getSociety().getAgricultureSystem() 
-					instanceof AgricultureSystem.Local) {
-				AgricultureSystem.Local system = (AgricultureSystem.Local)
-						getSociety().getSociety().getAgricultureSystem();
-				for(AgricultureElement element : system.getInternalElements()) {
-					City origin = getSociety().getCountry().getCity(
-							element.getOrigin());
-					// add element if origin is inside this society
-					if(getSociety().getCities().contains(origin)) {
-						elements.add(element);
-					}
-				}
-			}
-
 			return Collections.unmodifiableList(elements);
 		}
 
@@ -244,7 +245,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return landAreaUsed;
 		}
-		
+
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
 		 */
@@ -258,7 +260,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			} 
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -268,7 +270,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					+ getFoodInDistribution() 
 					- getFoodOutDistribution();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -285,7 +287,30 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getTotalFoodSupply() {
 			return getLocalFoodSupply() + getFoodImport() - getFoodExport();
 		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
+		 */
+		@Override
+		public double getUnitProductionCost() {
+			if(getFoodProduction() > 0) {
+				return (getLifecycleExpense() + getConsumptionExpense()) 
+						/ getFoodProduction();
+			}
+			return 0;
+		}
 
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#geUnitSupplyCost()
+		 */
+		@Override
+		public double getUnitSupplyProfit() {
+			if(getTotalFoodSupply() > 0) {
+				return getCashFlow() / getTotalFoodSupply();
+			}
+			return 0;
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 		 */
@@ -299,390 +324,30 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#optimizeFoodDistribution()
-		 */
-		@Override
-		public void optimizeFoodDistribution() {
-			// Make a list of cities and infrastructure elements. The vector
-			// of decision variables includes the throughput of each distribution
-			// element and the import and export amounts in each city.
-			List<City> cities = getSociety().getCities();
-			List<AgricultureElement> elements = getInternalElements();
-			
-			// Count number of variables.
-			int numVariables = elements.size() + 2*cities.size();
-			
-			// Create a list to hold the linear constraints.
-			List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-
-			double[] costCoefficients = new double[numVariables];
-			double[] initialValues = new double[numVariables];
-
-			for(AgricultureElement element : elements) {
-				// Add constraints for distribution throughput, i.e. the
-				// throughput for each distribution element cannot exceed the maximum.
-				double[] distributionConstraint = new double[numVariables];
-				distributionConstraint[elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(distributionConstraint, 
-						Relationship.LEQ, element.getMaxFoodInput()));
-				
-				// Set distribution cost.
-				costCoefficients[elements.indexOf(element)] 
-						= element.getVariableOperationsCostOfFoodDistribution();
-				initialValues[elements.indexOf(element)] 
-						= element.getFoodInput();
-			}
-			
-			for(City city : cities) {
-				if(!(city.getAgricultureSystem() instanceof AgricultureSystem.Local)) {
-					continue;
-				}
-
-				AgricultureSystem.Local agricultureSystem = 
-						(AgricultureSystem.Local) city.getAgricultureSystem();
-				
-				// Add constraints for city supply/demand, i.e. the in-flow less
-				// out-flow (corrected for efficiency of distribution) must equal
-				// the total demand less any local production.
-				double[] flowCoefficients = new double[numVariables];
-				for(AgricultureElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						// Set coefficient for in-flow to the distribution element.
-						// Order origin first to never distribute in self loop.
-						flowCoefficients[elements.indexOf(element)] 
-								= -1;
-					} else if(city.getName().equals(element.getDestination())) {
-						// Set coefficient for out-flow from the distribution element.
-						flowCoefficients[elements.indexOf(element)] 
-								= element.getDistributionEfficiency();
-					}
-				}
-				// Allow import in this city.
-				flowCoefficients[elements.size() + cities.indexOf(city)] = 1;
-				// Allow export from this city.
-				flowCoefficients[elements.size() + cities.size() + cities.indexOf(city)] = -1;
-				// Constrain in-flow to meet net demand.
-				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						city.getTotalFoodDemand() 
-						- agricultureSystem.getFoodProduction()));
-
-				// Set import cost in each city.
-				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getFoodImportPrice();
-				initialValues[elements.size() + cities.indexOf(city)] = 
-						agricultureSystem.getFoodImport();
-				// Set export price in each city.
-				costCoefficients[elements.size() + cities.size() + cities.indexOf(city)] = 
-						-city.getGlobals().getFoodExportPrice();
-				initialValues[elements.size() + cities.size() + cities.indexOf(city)] = 
-						agricultureSystem.getFoodExport();
-			}
-			
-			try {
-				// Run optimization and get results.
-				PointValuePair output = new SimplexSolver().optimize(
-						GoalType.MINIMIZE,
-						new MaxIter(1000),
-						new NonNegativeConstraint(true), 
-						new LinearConstraintSet(constraints), 
-						new LinearObjectiveFunction(costCoefficients, 0d),
-						new InitialGuess(initialValues));
-				
-				// For each flow variable, set the food input in the
-				// corresponding distribution element.
-				for(int i = 0; i < elements.size(); i++) {
-					// Add Math.min checks in case error exceeds bounds.
-					elements.get(i).setFoodInput(Math.min(output.getPoint()[i],
-							elements.get(i).getMaxFoodInput()));
-				}
-			} catch(TooManyIterationsException ignore) { 
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			} catch(NoFeasibleSolutionException ignore) {
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			}
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#optimizeFoodProductionAndDistribution(double)
-		 */
-		@Override
-		public void optimizeFoodProductionAndDistribution(double deltaProductionCost) {
-			List<City> cities = getSociety().getCities();
-			List<AgricultureElement> elements = getInternalElements();
-			
-			// Count number of variables.
-			int numVariables = 2*elements.size() + 2*cities.size();
-
-			List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-			
-			double[] costCoefficients = new double[numVariables];
-			double[] initialValues = new double[numVariables];
-			
-			for(AgricultureElement element : elements) {
-				// Constrain maximum land use in each fixed element.
-				double[] productionConstraint = new double[numVariables];
-				productionConstraint[elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(productionConstraint, 
-						Relationship.LEQ, element.getMaxLandArea()));
-
-				// Constrain maximum throughput in each distribution element.
-				double[] throughputConstraint = new double[numVariables];
-				throughputConstraint[elements.size() + elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(throughputConstraint, 
-						Relationship.LEQ, element.getMaxFoodInput()));
-
-				// Minimize costs - most obvious cost is importing, though also 
-				// minimize transportation even if free.
-				costCoefficients[elements.indexOf(element)] = 
-						element.getProduct().getCostIntensityOfLandUsed() 
-						+ element.getProduct().getWaterIntensityOfLandUsed()
-						* getSociety().getGlobals().getWaterDomesticPrice()
-						+ deltaProductionCost;
-				initialValues[elements.indexOf(element)] = element.getLandArea();
-
-				// Set the distribution cost.
-				costCoefficients[elements.size() + elements.indexOf(element)] 
-						= element.getVariableOperationsCostOfFoodDistribution();
-				initialValues[elements.size() + elements.indexOf(element)] 
-						= element.getFoodInput();
-			}
-			
-			for(City city : cities) {
-				if(!(city.getAgricultureSystem() instanceof AgricultureSystem.Local)) {
-					continue;
-				}
-
-				AgricultureSystem.Local agricultureSystem = 
-						(AgricultureSystem.Local) city.getAgricultureSystem();
-				
-				// Constrain maximum arable land and labor in each city.
-				double[] resourceConstraint = new double[numVariables];
-				double[] laborConstraint = new double[numVariables];
-				for(AgricultureElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						resourceConstraint[elements.indexOf(element)] = 1.0;
-						laborConstraint[elements.indexOf(element)] = 
-								element.getProduct().getLaborIntensityOfLandUsed();
-					}
-				}
-				constraints.add(new LinearConstraint(resourceConstraint, 
-						Relationship.LEQ, agricultureSystem.getArableLandArea()));
-				constraints.add(new LinearConstraint(laborConstraint, 
-						Relationship.LEQ, city.getSocialSystem().getPopulation() 
-						* city.getGlobals().getAgricultureLaborParticipationRate()));
-				
-				// Constrain supply = demand in each city.
-				double[] flowCoefficients = new double[numVariables];
-				for(AgricultureElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						flowCoefficients[elements.indexOf(element)] 
-								= element.getProduct().getFoodIntensityOfLandUsed();
-					}
-					
-					if(city.getName().equals(element.getOrigin())) {
-						// Set coefficient for in-flow to the distribution element.
-						// Order origin first to never distribute in self loop.
-						flowCoefficients[elements.size() + elements.indexOf(element)] 
-								= -1;
-					} else if(city.getName().equals(element.getDestination())) {
-						// Set coefficient for out-flow from the distribution element.
-						flowCoefficients[elements.size() + elements.indexOf(element)] 
-								= element.getDistributionEfficiency();
-					}
-				}
-				// Allow import in this city.
-				flowCoefficients[2*elements.size() + cities.indexOf(city)] = 1;
-				// Allow export from this city.
-				flowCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] = -1;
-				
-				// Constrain in-flow and production to meet demand.
-				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						city.getTotalFoodDemand()));
-
-				// Set import cost in each city.
-				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getFoodImportPrice();
-				initialValues[2*elements.size() + cities.indexOf(city)] 
-						= agricultureSystem.getFoodImport();
-				// Set export price in each city.
-				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= -city.getGlobals().getFoodExportPrice();
-				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= agricultureSystem.getFoodExport();
-			}
-			
-			try {
-				// Run optimization and get results.
-				
-				// NOTE: reduce epsilon from 1e-6 (default) to 1e-3 to cope with 
-				// large magnitude differences between variables. Keep max ulps
-				// set at the default (10).
-				PointValuePair output = new SimplexSolver(1e-3, 10).optimize(
-						GoalType.MINIMIZE,
-						new MaxIter(1000),
-						new NonNegativeConstraint(true), 
-						new LinearConstraintSet(constraints), 
-						new LinearObjectiveFunction(costCoefficients, 0d),
-						new InitialGuess(initialValues));
-		
-				for(int i = 0; i < elements.size(); i++) {
-					// Add Math.min checks in case error exceeds bounds.
-					elements.get(i).setLandArea(Math.min(output.getPoint()[i],
-							elements.get(i).getMaxLandArea()));
-					elements.get(i).setFoodInput(Math.min(
-							output.getPoint()[elements.size() + i],
-							elements.get(i).getMaxFoodInput()));
-				}
-			} catch(TooManyIterationsException ignore) { 
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			} catch(NoFeasibleSolutionException ignore) {
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-				System.out.print("A = [");
-				for(LinearConstraint constraint : constraints) {
-					if(constraint.getRelationship()==Relationship.LEQ) {
-						System.out.print("[");
-						for(double d : constraint.getCoefficients().toArray()) {
-							System.out.print(d + " ");
-						}
-						System.out.println("];");
-					}
-				}
-				System.out.println("];");
-				
-				System.out.print("b = [");
-				for(LinearConstraint constraint : constraints) {
-					if(constraint.getRelationship()==Relationship.LEQ) {
-						System.out.print(constraint.getValue() + " ");
-					}
-				}
-				System.out.println("]';");
-				System.out.print("Aeq = [");
-				for(LinearConstraint constraint : constraints) {
-					if(constraint.getRelationship()==Relationship.EQ) {
-						System.out.print("[");
-						for(double d : constraint.getCoefficients().toArray()) {
-							System.out.print(d + " ");
-						}
-						System.out.println("];");
-					}
-				}
-				System.out.println("];");
-				
-				System.out.print("beq = [");
-				for(LinearConstraint constraint : constraints) {
-					if(constraint.getRelationship()==Relationship.EQ) {
-						System.out.print(constraint.getValue() + " ");
-					}
-				}
-				System.out.println("]';");
-				
-				System.out.print("f = [");
-				for(double d : new ArrayRealVector(costCoefficients).toArray()) {
-					System.out.print(d + " ");
-				}
-				System.out.println("]';");
-				
-				System.out.print("x0 = [");
-				for(double d : new ArrayRealVector(initialValues).toArray()) {
-					System.out.print(d + " ");
-				}
-				System.out.println("];");
-			}
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
-		 */
-		@Override
-		public double getUnitProductionCost() {
-			if(getFoodProduction() > 0) {
-				return (getLifecycleExpense() + getConsumptionExpense()) 
-						/ getFoodProduction();
-			}
-			return 0;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#geUnitSupplyCost()
-		 */
-		@Override
-		public double getUnitSupplyProfit() {
-			if(getTotalFoodSupply() > 0) {
-				return getCashFlow() / getTotalFoodSupply();
-			}
-			return 0;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
-		public void initialize(long time) {
-			fireAttributeChanges();
+		public void initialize(long time) { }
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
+		 */
+		@Override
+		public synchronized boolean removeElement(AgricultureElement element) {
+			return elements.remove(element);
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#tick()
 		 */
 		@Override
-		public void tick() {
-			
-		}
-
+		public void tick() { }
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#tock()
 		 */
 		@Override
-		public void tock() {
-			fireAttributeChanges();
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
-		 */
-		@Override
-		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(Arrays.asList(
-					WATER_CONSUMPTION_ATTRIBUTE, CASH_FLOW_ATTRIBUTE, 
-					DOMESTIC_PRODUCTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
-		 */
-		@Override
-		public void fireAttributeChanges(InfrastructureElement element) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getOrigin())));
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getDestination())));
-			
-			for(Society society : affectedSocieties) {
-				if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-					((AgricultureSystem.Local)society.getAgricultureSystem()).fireAttributeChanges();
-				}
-			}
-		}
-		
-		/**
-		 * Gets the affected societies recursive.
-		 *
-		 * @param society the society
-		 * @return the affected societies recursive
-		 */
-		private static Set<Society> getAffectedSocietiesRecursive(Society society) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.add(society);
-			if(society.getSociety() != null) {
-				affectedSocieties.addAll(getAffectedSocietiesRecursive(society.getSociety()));
-			}
-			return affectedSocieties;
-		}
+		public void tock() { }
 	}
 	
 	/**

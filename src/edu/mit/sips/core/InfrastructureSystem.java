@@ -117,18 +117,6 @@ public interface InfrastructureSystem {
 		 * @return the total revenue
 		 */
 		public double getTotalRevenue();
-		
-		/**
-		 * Fire attribute changes.
-		 */
-		public void fireAttributeChanges();
-		
-		/**
-		 * Fire attribute changes.
-		 *
-		 * @param element the element
-		 */
-		public void fireAttributeChanges(InfrastructureElement element);
 	}
 	
 	/**
@@ -149,13 +137,6 @@ public interface InfrastructureSystem {
 		 * @param domesticProduction the new domestic production
 		 */
 		public void setDomesticProduction(double domesticProduction);
-
-		/**
-		 * Sets the name.
-		 *
-		 * @param name the new name
-		 */
-		public void setName(String name);
 	}
 	
 	public static final String NAME_ATTRIBUTE = "name", 
@@ -211,6 +192,13 @@ public interface InfrastructureSystem {
 	 * @param listener the listener
 	 */
 	public void removeAttributeChangeListener(AttributeChangeListener listener);
+
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the new name
+	 */
+	public void setName(String name);
 	
 	/**
 	 * Gets the society.

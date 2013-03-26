@@ -32,17 +32,18 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
-import edu.mit.sips.core.agriculture.NationalAgricultureSystem;
 import edu.mit.sips.core.energy.ElectricityElement;
 import edu.mit.sips.core.energy.EnergyElement;
+import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.MutableElectricityElement;
 import edu.mit.sips.core.energy.MutablePetroleumElement;
-import edu.mit.sips.core.energy.NationalEnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
-import edu.mit.sips.core.water.NationalWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
+import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
 
 /**
@@ -224,7 +225,7 @@ public class ElementsPane extends JPanel {
 	 */
 	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementPanel.createElementPanel(city.getCountry(), mutableElement), 
+				ElementPanel.createElementPanel(city, mutableElement), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
@@ -248,24 +249,21 @@ public class ElementsPane extends JPanel {
 		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
 		if(newElement != null) {
 			if(element instanceof AgricultureElement 
-					&& city.getCountry().getAgricultureSystem() 
-					instanceof NationalAgricultureSystem) {
-				NationalAgricultureSystem agricultureSystem = 
-						(NationalAgricultureSystem) city.getCountry().getAgricultureSystem();
+					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				AgricultureSystem.Local agricultureSystem = 
+						(DefaultAgricultureSystem.Local) city.getAgricultureSystem();
 				agricultureSystem.removeElement((AgricultureElement)element);
 				agricultureSystem.addElement((AgricultureElement)newElement);
 			} else if(element instanceof WaterElement
-					&& city.getCountry().getWaterSystem() 
-					instanceof NationalWaterSystem) {
-				NationalWaterSystem waterSystem = 
-						(NationalWaterSystem) city.getCountry().getWaterSystem();
+					&& city.getWaterSystem() instanceof WaterSystem.Local) {
+				WaterSystem.Local waterSystem = 
+						(WaterSystem.Local) city.getWaterSystem();
 				waterSystem.removeElement((WaterElement)element);
 				waterSystem.addElement((WaterElement)newElement);
 			} else if(element instanceof EnergyElement
-					&& city.getCountry().getEnergySystem() 
-					instanceof NationalEnergySystem) {
-				NationalEnergySystem energySystem = 
-						(NationalEnergySystem) city.getCountry().getEnergySystem();
+					&& city.getEnergySystem() instanceof EnergySystem.Local) {
+				EnergySystem.Local energySystem = 
+						(EnergySystem.Local) city.getEnergySystem();
 				energySystem.removeElement((EnergyElement)element);
 				energySystem.addElement((EnergyElement)newElement);
 			} else {
@@ -290,19 +288,16 @@ public class ElementsPane extends JPanel {
 				"Remove " + selection + "?", "Remove Element", 
 				JOptionPane.OK_CANCEL_OPTION)) {
 			if(selection instanceof AgricultureElement
-					&& city.getCountry().getAgricultureSystem() 
-					instanceof NationalAgricultureSystem) {
-				((NationalAgricultureSystem)city.getCountry().getAgricultureSystem())
+					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				((AgricultureSystem.Local)city.getAgricultureSystem())
 				.removeElement((AgricultureElement)selection);
 			} else if(selection instanceof WaterElement
-					&& city.getCountry().getWaterSystem() 
-					instanceof NationalWaterSystem) {
-				((NationalWaterSystem)city.getCountry().getWaterSystem())
+					&& city.getWaterSystem() instanceof WaterSystem.Local) {
+				((WaterSystem.Local)city.getWaterSystem())
 				.removeElement((WaterElement)selection);
 			} else if(selection instanceof EnergyElement
-					&& city.getCountry().getEnergySystem() 
-					instanceof NationalEnergySystem) {
-				((NationalEnergySystem)city.getCountry().getEnergySystem())
+					&& city.getEnergySystem() instanceof EnergySystem.Local) {
+				((EnergySystem.Local)city.getEnergySystem())
 				.removeElement((EnergyElement)selection);
 			} else {
 				throw new IllegalStateException(

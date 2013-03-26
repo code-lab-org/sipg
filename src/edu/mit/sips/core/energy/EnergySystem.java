@@ -1,20 +1,25 @@
 package edu.mit.sips.core.energy;
 
+import java.util.List;
+
 import edu.mit.sips.core.InfrastructureSystem;
 
 /**
  * The Interface EnergySystem.
  */
 public interface EnergySystem extends InfrastructureSystem {
-	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-	PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
-	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
-	
 	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends EnergySystem, InfrastructureSystem.Local {
+		
+		/**
+		 * Adds the element.
+		 *
+		 * @param element the element
+		 * @return true, if successful
+		 */
+		public boolean addElement(EnergyElement element);
 		
 		/**
 		 * Gets the electricity system.
@@ -23,12 +28,20 @@ public interface EnergySystem extends InfrastructureSystem {
 		 */
 		public ElectricitySystem getElectricitySystem();
 		
-		/**
-		 * Gets the national energy system.
-		 *
-		 * @return the national energy system
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
-		public EnergySystem.Local getNationalEnergySystem();
+		public List<? extends EnergyElement> getElements();
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
+		 */
+		public List<? extends EnergyElement> getExternalElements();
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
+		 */
+		public List<? extends EnergyElement> getInternalElements();
 		
 		/**
 		 * Gets the petroleum system.
@@ -38,32 +51,18 @@ public interface EnergySystem extends InfrastructureSystem {
 		public PetroleumSystem getPetroleumSystem();
 		
 		/**
-		 * Optimize energy distribution.
-		 */
-		public void optimizeEnergyDistribution();
-		
-		/**
-		 * Optimize energy production and distribution.
+		 * Removes the element.
 		 *
-		 * @param deltaPetroleumProductionCost the delta petroleum production cost
-		 * @param deltaElectricityProductionCost the delta electricity production cost
+		 * @param element the element
+		 * @return true, if successful
 		 */
-		public void optimizeEnergyProductionAndDistribution(
-				double deltaPetroleumProductionCost, 
-				double deltaElectricityProductionCost);
+		public boolean removeElement(EnergyElement element);
 	}
 	
 	/**
 	 * The Interface Remote.
 	 */
 	public static interface Remote extends EnergySystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Gets the water consumption.
-		 *
-		 * @return the water consumption
-		 */
-		public void setWaterConsumption(double waterConsumption);
 		
 		/**
 		 * Sets the electricity consumption.
@@ -78,7 +77,19 @@ public interface EnergySystem extends InfrastructureSystem {
 		 * @param petroleumConsumption the new petroleum consumption
 		 */
 		public void setPetroleumConsumption(double petroleumConsumption);
+		
+		/**
+		 * Gets the water consumption.
+		 *
+		 * @return the water consumption
+		 */
+		public void setWaterConsumption(double waterConsumption);
 	}
+	
+	public static final String 
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+	PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
+	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
 	
 	/**
 	 * Gets the electricity consumption.

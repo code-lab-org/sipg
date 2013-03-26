@@ -8,7 +8,7 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
+import edu.mit.sips.core.City;
 import edu.mit.sips.core.water.MutableWaterElement;
 
 /**
@@ -32,12 +32,12 @@ public class WaterElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new water element panel.
 	 *
-	 * @param country the country
+	 * @param city the city
 	 * @param element the element
 	 */
-	public WaterElementPanel(Country country, 
+	public WaterElementPanel(City city, 
 			final MutableWaterElement element) {
-		super(country, element);
+		super(city, element);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());

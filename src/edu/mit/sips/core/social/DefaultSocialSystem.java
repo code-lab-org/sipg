@@ -3,13 +3,11 @@ package edu.mit.sips.core.social;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.Society;
+import edu.mit.sips.core.InfrastructureSystem;
 
 /**
  * The Class DefaultSocialSystem.
@@ -19,7 +17,9 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static abstract class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
+	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
+		private final PopulationModel populationModel;
+		private double domesticProduct, nextDomesticProduct;
 		
 		/**
 		 * Instantiates a new local.
@@ -28,6 +28,22 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		public Local() {
 			super("Society");
+			this.populationModel = new DefaultPopulationModel();
+		}
+		
+		/**
+		 * Instantiates a new local.
+		 *
+		 * @param populationModel the population model
+		 */
+		public Local(PopulationModel populationModel) {
+			super("Society");
+			// Validate population model.
+			if(populationModel == null) {
+				throw new IllegalArgumentException(
+						"Population model cannot be null.");
+			}
+			this.populationModel = populationModel;
 		}
 
 		/* (non-Javadoc)
@@ -58,7 +74,15 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public double getDistributionRevenue() {
 			return 0;
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.SocialSystem#getDomesticProduct()
+		 */
+		@Override
+		public double getDomesticProduct() {
+			return domesticProduct;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
 		 */
@@ -108,7 +132,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			return Collections.unmodifiableList(
 					new ArrayList<InfrastructureElement>());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
 		 */
@@ -163,6 +187,27 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 					new ArrayList<InfrastructureElement>());
 		}
 
+		/**
+		 * Gets the next economic production.
+		 *
+		 * @return the next economic production
+		 */
+		private double getNextEconomicProduction() {
+			double economicProduction = 0;
+			for(InfrastructureSystem s : getSociety().getInfrastructureSystems()) {
+				economicProduction += s.getDomesticProduction();
+			}
+			return economicProduction;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.SocialSystem#getPopulation()
+		 */
+		@Override
+		public long getPopulation() {
+			return populationModel.getPopulation();
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -190,73 +235,32 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#initialize(long)
+		 * @see edu.mit.sips.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) {
-			fireAttributeChanges();
+			populationModel.initialize(time);
+			// note: initialize domestic product LAST as 
+			// it depends on other initial values
+			domesticProduct = getNextEconomicProduction();
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tick()
+		 * @see edu.mit.sips.SimEntity#tick()
 		 */
 		@Override
 		public void tick() {
-			
+			nextDomesticProduct = getNextEconomicProduction();
+			populationModel.tick();
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tock()
+		 * @see edu.mit.sips.SimEntity#tock()
 		 */
 		@Override
 		public void tock() {
-			fireAttributeChanges();
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
-		 */
-		@Override
-		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(Arrays.asList(
-					WATER_CONSUMPTION_ATTRIBUTE, 
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
-					FOOD_CONSUMPTION_ATTRIBUTE, POPULATION_ATTRIBUTE, 
-					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCT_ATTRIBUTE, 
-					DOMESTIC_PRODUCTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
-		 */
-		@Override
-		public void fireAttributeChanges(InfrastructureElement element) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getOrigin())));
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getDestination())));
-			
-			for(Society society : affectedSocieties) {
-				if(society.getSocialSystem() instanceof SocialSystem.Local) {
-					((SocialSystem.Local)society.getSocialSystem()).fireAttributeChanges();
-				}
-			}
-		}
-		
-		/**
-		 * Gets the affected societies recursive.
-		 *
-		 * @param society the society
-		 * @return the affected societies recursive
-		 */
-		private static Set<Society> getAffectedSocietiesRecursive(Society society) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.add(society);
-			if(society.getSociety() != null) {
-				affectedSocieties.addAll(getAffectedSocietiesRecursive(society.getSociety()));
-			}
-			return affectedSocieties;
+			domesticProduct = nextDomesticProduct;
+			populationModel.tock();
 		}
 	}
 	

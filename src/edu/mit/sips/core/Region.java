@@ -5,11 +5,12 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.RegionalAgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
+import edu.mit.sips.core.energy.DefaultEnergySoS;
 import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.energy.RegionalEnergySystem;
-import edu.mit.sips.core.social.RegionalSocialSystem;
-import edu.mit.sips.core.water.RegionalWaterSystem;
+import edu.mit.sips.core.social.DefaultSocialSoS;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.DefaultWaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -25,35 +26,35 @@ public class Region extends DefaultSociety implements Society {
 	 * @return the region
 	 */
 	public static Region buildRegion(String name, List<? extends Society> nestedSocieties) {
-		RegionalAgricultureSystem agricultureSystem = null;
-		// agriculture system is regional if there is a nested local system
+		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
+		// agriculture system is local if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				agricultureSystem = new RegionalAgricultureSystem();
+				agricultureSystem = new DefaultAgricultureSoS.Local();
 				break;
 			}
 		}
 		
-		RegionalWaterSystem waterSystem = null;
-		// water system is regional if there is a nested local system
+		WaterSystem waterSystem = null;
+		// water system is local if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
-				waterSystem = new RegionalWaterSystem();
+				waterSystem = new DefaultWaterSoS.Local();
 				break;
 			}
 		}
 		
-		RegionalEnergySystem energySystem = null;
-		// energy system is regional if there is a nested local system
+		EnergySystem energySystem = new DefaultEnergySoS();
+		// energy system is local if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getEnergySystem() instanceof EnergySystem.Local) {
-				energySystem = new RegionalEnergySystem();
+				energySystem = new DefaultEnergySoS.Local();
 				break;
 			}
 		}
 
-		// social system is always regional
-		RegionalSocialSystem socialSystem = new RegionalSocialSystem();
+		// social system is always local
+		SocialSystem socialSystem = new DefaultSocialSoS();
 		
 		return new Region(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
@@ -73,10 +74,8 @@ public class Region extends DefaultSociety implements Society {
 	 * @param nestedSocieties the nested societies
 	 */
 	private Region(String name, List<? extends Society> nestedSocieties,
-			RegionalAgricultureSystem agricultureSystem,
-			RegionalWaterSystem waterSystem,
-			RegionalEnergySystem energySystem,
-			RegionalSocialSystem socialSystem) {
+			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
+			EnergySystem energySystem, SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, energySystem, socialSystem);
 	}

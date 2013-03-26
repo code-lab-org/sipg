@@ -8,13 +8,18 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Interface AgricultureSystem.
  */
 public interface AgricultureSystem extends InfrastructureSystem {
-	public final static String 
-	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
-	
 	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends AgricultureSystem, InfrastructureSystem.Local {
+		/**
+		 * Adds the element.
+		 *
+		 * @param element the element
+		 * @return true, if successful
+		 */
+		public boolean addElement(AgricultureElement element);
+		
 		/**
 		 * Gets the arable land area.
 		 *
@@ -87,6 +92,13 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public double getLandAreaUsed();
 		
 		/**
+		 * Gets the local food fraction.
+		 *
+		 * @return the local food fraction
+		 */
+		public double getLocalFoodFraction();
+		
+		/**
 		 * Gets the local food supply.
 		 *
 		 * @return the local food supply
@@ -101,25 +113,6 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public double getTotalFoodSupply();
 		
 		/**
-		 * Optimize food distribution.
-		 */
-		public void optimizeFoodDistribution();
-		
-		/**
-		 * Optimize food production and distribution.
-		 *
-		 * @param deltaProductionCost the delta production cost
-		 */
-		public void optimizeFoodProductionAndDistribution(double deltaProductionCost);
-		
-		/**
-		 * Gets the local food fraction.
-		 *
-		 * @return the local food fraction
-		 */
-		public double getLocalFoodFraction();
-		
-		/**
 		 * Gets the unit production cost.
 		 *
 		 * @return the unit production cost
@@ -132,6 +125,14 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 * @return the unit supply cost
 		 */
 		public double getUnitSupplyProfit();
+		
+		/**
+		 * Removes the element.
+		 *
+		 * @param element the element
+		 * @return true, if successful
+		 */
+		public boolean removeElement(AgricultureElement element);
 	}
 	
 	/**
@@ -146,6 +147,9 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 */
 		public void setWaterConsumption(double waterConsumption);
 	}
+	
+	public final static String 
+	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
 
 	/**
 	 * Gets the water consumption.

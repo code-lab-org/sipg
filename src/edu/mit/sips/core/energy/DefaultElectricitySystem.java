@@ -4,29 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.math3.exception.TooManyIterationsException;
-import org.apache.commons.math3.optim.InitialGuess;
-import org.apache.commons.math3.optim.MaxIter;
-import org.apache.commons.math3.optim.PointValuePair;
-import org.apache.commons.math3.optim.linear.LinearConstraint;
-import org.apache.commons.math3.optim.linear.LinearConstraintSet;
-import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
-import org.apache.commons.math3.optim.linear.NoFeasibleSolutionException;
-import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
-import org.apache.commons.math3.optim.linear.Relationship;
-import org.apache.commons.math3.optim.linear.SimplexSolver;
-import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
-
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
-import edu.mit.sips.core.InfrastructureElement;
 
 
 /**
  * The Class DefaultElectricitySystem.
  */
-public abstract class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local implements
+public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local implements
 		ElectricitySystem {
+	private final List<ElectricityElement> elements = 
+			Collections.synchronizedList(new ArrayList<ElectricityElement>());
 	
 	/**
 	 * Instantiates a new default electricity system.
@@ -35,20 +23,24 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		super("Electricity");
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
+	/**
+	 * Adds the element.
+	 *
+	 * @param element the element
+	 * @return true, if successful
 	 */
-	@Override
-	public void fireAttributeChanges() {
-		getEnergySystem().fireAttributeChanges();
+	public synchronized boolean addElement(ElectricityElement element) {
+		return elements.add(element);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
+	/**
+	 * Removes the element.
+	 *
+	 * @param element the element
+	 * @return true, if successful
 	 */
-	@Override
-	public void fireAttributeChanges(InfrastructureElement element) {
-		getEnergySystem().fireAttributeChanges(element);
+	public synchronized boolean removeElement(ElectricityElement element) {
+		return elements.remove(element);
 	}
 
 	/* (non-Javadoc)
@@ -197,11 +189,11 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	public List<ElectricityElement> getExternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
 		
-		// see if super-system is also local
-		if(getSociety().getSociety().getEnergySystem()
+		// see if country system is also local
+		if(getSociety().getCountry().getEnergySystem()
 				instanceof EnergySystem.Local) {
 			ElectricitySystem system = ((EnergySystem.Local)
-					getSociety().getSociety().getEnergySystem())
+					getSociety().getCountry().getEnergySystem())
 					.getElectricitySystem();
 			for(ElectricityElement element : system.getElements()) {
 				City origin = getSociety().getCountry().getCity(
@@ -233,24 +225,6 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 	 */
 	@Override
 	public List<ElectricityElement> getInternalElements() {
-		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
-		
-		// see if super-system is also local
-		if(getSociety().getSociety().getEnergySystem() 
-				instanceof EnergySystem.Local) {
-			ElectricitySystem system = ((EnergySystem.Local)
-					getSociety().getSociety().getEnergySystem())
-					.getElectricitySystem();
-			for(ElectricityElement element : system.getInternalElements()) {
-				City origin = getSociety().getCountry().getCity(
-						element.getOrigin());
-				// add element if origin is inside this society
-				if(getSociety().getCities().contains(origin)) {
-					elements.add(element);
-				}
-			}
-		}
-
 		return Collections.unmodifiableList(elements);
 	}
 
@@ -380,218 +354,22 @@ public abstract class DefaultElectricitySystem extends DefaultInfrastructureSyst
 		}
 		return waterConsumption;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#optimizeElectricityDistribution()
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
 	 */
 	@Override
-	public void optimizeElectricityDistribution() {
-		// Make a list of cities and infrastructure elements. The vector
-		// of decision variables includes the throughput of each distribution
-		// element and the petroleum burning amounts in each city.
-		List<City> cities = getSociety().getCities();
-		List<ElectricityElement> elements = getInternalElements();
-		
-		// Count number of variables.
-		int numVariables = elements.size() + cities.size();
-		
-		// Create a list to hold the linear constraints.
-		List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
+	public void initialize(long time) { }
 
-		double[] costCoefficients = new double[numVariables];
-		double[] initialValues = new double[numVariables];
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
+	@Override
+	public void tick() { }
 
-		for(ElectricityElement element : elements) {
-			// Add constraints for distribution throughput, i.e. the
-			// throughput for each distribution element cannot exceed the maximum.
-			double[] distributionConstraint = new double[numVariables];
-			distributionConstraint[elements.indexOf(element)] = 1;
-			constraints.add(new LinearConstraint(distributionConstraint, 
-					Relationship.LEQ, element.getMaxElectricityInput()));
-			
-			// Set distribution cost.
-			costCoefficients[elements.indexOf(element)] 
-					= element.getVariableOperationsCostOfElectricityDistribution();
-			initialValues[elements.indexOf(element)] 
-					= element.getElectricityInput();
-		}
-		
-		for(City city : cities) {
-			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
-				continue;
-			}
-
-			ElectricitySystem electricitySystem = ((EnergySystem.Local)
-					city.getEnergySystem()).getElectricitySystem();
-			
-			// Add constraints for city supply/demand, i.e. the in-flow less
-			// out-flow (corrected for efficiency of distribution) must equal
-			// the total demand less any local production.
-			double[] flowCoefficients = new double[numVariables];
-			for(ElectricityElement element : elements) {
-				if(city.getName().equals(element.getOrigin())) {
-					// Set coefficient for in-flow to the distribution element.
-					// Order origin first to never distribute in self loop.
-					flowCoefficients[elements.indexOf(element)] = -1;
-				} else if(city.getName().equals(element.getDestination())) {
-					// Set coefficient for out-flow from the distribution element.
-					flowCoefficients[elements.indexOf(element)] 
-							= element.getDistributionEfficiency();
-				}
-			}
-			// Allow petroleum burning in this city.
-			flowCoefficients[elements.size() + cities.indexOf(city)] 
-					= city.getGlobals().getElectricalIntensityOfBurningPetroleum();
-			// Constrain in-flow to meet net demand.
-			constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-					city.getTotalElectricityDemand() 
-					- electricitySystem.getElectricityProduction()));
-
-			// Set petroleum burn cost in each city.
-			costCoefficients[elements.size() + cities.indexOf(city)] = 
-					city.getGlobals().getPetroleumDomesticPrice();
-			initialValues[elements.size() + cities.indexOf(city)] = 
-					Math.max(0,electricitySystem.getPetroleumBurned());
-		}
-		
-		try {
-			// Run optimization and get results.
-			PointValuePair output = new SimplexSolver().optimize(
-					GoalType.MINIMIZE,
-					new MaxIter(1000),
-					new NonNegativeConstraint(true), 
-					new LinearConstraintSet(constraints), 
-					new LinearObjectiveFunction(costCoefficients, 0d),
-					new InitialGuess(initialValues));
-			
-			// For each flow variable, set the input in the
-			// corresponding distribution element.
-			for(int i = 0; i < elements.size(); i++) {
-				// Add Math.min checks in case error exceeds bounds.
-				elements.get(i).setElectricityInput(Math.min(
-						output.getPoint()[i], 
-						elements.get(i).getMaxElectricityInput()));
-			}
-		} catch(TooManyIterationsException ignore) { 
-			// Don't overwrite existing values.
-			ignore.printStackTrace();
-		} catch(NoFeasibleSolutionException ignore) {
-			// Don't overwrite existing values.
-			ignore.printStackTrace();
-		}
-	}
-
-	public void optimizeElectricityProductionAndDistribution(double deltaProductionCost) {
-		List<City> cities = getSociety().getCities();
-		List<ElectricityElement> elements = getInternalElements();
-		
-		// Count number of variables.
-		int numVariables = 2*elements.size() + cities.size();
-
-		List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-		
-		double[] costCoefficients = new double[numVariables];
-		double[] initialValues = new double[numVariables];
-		
-		for(ElectricityElement element : elements) {
-			// Constrain maximum production in each fixed element.
-			double[] productionConstraint = new double[numVariables];
-			productionConstraint[elements.indexOf(element)] = 1;
-			constraints.add(new LinearConstraint(productionConstraint, 
-					Relationship.LEQ, element.getMaxElectricityProduction()));
-			
-			// Constrain maximum throughput in each distribution element.
-			double[] throughputConstraint = new double[numVariables];
-			throughputConstraint[elements.size() + elements.indexOf(element)] = 1;
-			constraints.add(new LinearConstraint(throughputConstraint, 
-					Relationship.LEQ, element.getMaxElectricityInput()));
-
-			// Minimize costs - most obvious cost is importing, though also 
-			// minimize transportation even if free.
-			costCoefficients[elements.indexOf(element)] 
-					= element.getVariableOperationsCostOfElectricityProduction()
-	                		 + element.getWaterIntensityOfElectricityProduction()
-	                		 * getSociety().getGlobals().getWaterDomesticPrice()
-	                		 + element.getPetroleumIntensityOfElectricityProduction()
-	                		 * getSociety().getGlobals().getPetroleumDomesticPrice()
-	                		 + deltaProductionCost;
-			initialValues[elements.indexOf(element)] 
-					= element.getElectricityProduction();
-
-			// Set distribution cost.
-			costCoefficients[elements.size() + elements.indexOf(element)] 
-					= element.getVariableOperationsCostOfElectricityDistribution();
-			initialValues[elements.size() + elements.indexOf(element)] 
-					= element.getElectricityInput();
-		}
-		
-		for(City city : cities) {
-			if(!(city.getEnergySystem() instanceof EnergySystem.Local)) {
-				continue;
-			}
-
-			ElectricitySystem electricitySystem = ((EnergySystem.Local)
-					city.getEnergySystem()).getElectricitySystem();
-			
-			// Constrain supply = demand in each city.
-			double[] flowCoefficients = new double[numVariables];
-			for(ElectricityElement element : elements) {
-				if(city.getName().equals(element.getOrigin())) {
-					flowCoefficients[elements.indexOf(element)] = 1;
-				}
-				
-				if(city.getName().equals(element.getOrigin())) {
-					// Set coefficient for in-flow to the distribution element.
-					// Order origin first to never distribute in self loop.
-					flowCoefficients[elements.size() + elements.indexOf(element)] 
-							= -1;
-				} else if(city.getName().equals(element.getDestination())) {
-					// Set coefficient for out-flow from the distribution element.
-					flowCoefficients[elements.size() + elements.indexOf(element)] 
-							= element.getDistributionEfficiency();
-				}
-			}
-			// Allow burning of petroleum in this city.
-			flowCoefficients[2*elements.size() + cities.indexOf(city)] 
-					= city.getGlobals().getElectricalIntensityOfBurningPetroleum();
-			
-			// Constrain in-flow and production to meet demand.
-			constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-					city.getTotalElectricityDemand()));
-
-			// Set petroleum burn cost in each city.
-			costCoefficients[2*elements.size() + cities.indexOf(city)] = 
-					city.getGlobals().getPetroleumDomesticPrice();
-			initialValues[2*elements.size() + cities.indexOf(city)] = 
-					Math.max(0,electricitySystem.getPetroleumBurned());
-		}
-		
-		try {
-			// Run optimization and get results.
-			PointValuePair output = new SimplexSolver().optimize(
-					GoalType.MINIMIZE,
-					new MaxIter(1000),
-					new NonNegativeConstraint(true), 
-					new LinearConstraintSet(constraints), 
-					new LinearObjectiveFunction(costCoefficients, 0d),
-					new InitialGuess(initialValues));
-	
-			for(int i = 0; i < elements.size(); i++) {
-				// Add Math.min checks in case error exceeds bounds.
-				elements.get(i).setElectricityProduction(Math.min(
-						output.getPoint()[i],
-						elements.get(i).getMaxElectricityProduction()));
-				elements.get(i).setElectricityInput(Math.min(
-						output.getPoint()[elements.size() + i],
-						elements.get(i).getMaxElectricityInput()));
-			}
-		} catch(TooManyIterationsException ignore) { 
-			// Don't overwrite existing values.
-			ignore.printStackTrace();
-		} catch(NoFeasibleSolutionException ignore) {
-			// Don't overwrite existing values.
-			ignore.printStackTrace();
-		}
-	}
-	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() { }
 }

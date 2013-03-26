@@ -11,7 +11,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
+import edu.mit.sips.core.City;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 
@@ -30,12 +30,12 @@ public class AgricultureElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new agriculture element panel.
 	 *
-	 * @param country the country
+	 * @param city the city
 	 * @param element the element
 	 */
-	public AgricultureElementPanel(Country country, 
+	public AgricultureElementPanel(City city, 
 			final MutableAgricultureElement element) {
-		super(country, element);
+		super(city, element);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());

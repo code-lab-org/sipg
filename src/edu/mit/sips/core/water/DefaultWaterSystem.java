@@ -3,27 +3,10 @@ package edu.mit.sips.core.water;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import org.apache.commons.math3.exception.TooManyIterationsException;
-import org.apache.commons.math3.optim.InitialGuess;
-import org.apache.commons.math3.optim.MaxIter;
-import org.apache.commons.math3.optim.PointValuePair;
-import org.apache.commons.math3.optim.linear.LinearConstraint;
-import org.apache.commons.math3.optim.linear.LinearConstraintSet;
-import org.apache.commons.math3.optim.linear.LinearObjectiveFunction;
-import org.apache.commons.math3.optim.linear.NoFeasibleSolutionException;
-import org.apache.commons.math3.optim.linear.NonNegativeConstraint;
-import org.apache.commons.math3.optim.linear.Relationship;
-import org.apache.commons.math3.optim.linear.SimplexSolver;
-import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
-import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.Society;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -33,59 +16,81 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	/**
 	 * The Class Local.
 	 */
-	public static abstract class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
+	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
+		private final List<WaterElement> elements = 
+				Collections.synchronizedList(new ArrayList<WaterElement>());
+		private final double maxWaterReservoirVolume;
+		private final double initialWaterReservoirVolume;
+		private final double waterReservoirRechargeRate;
+		private final double initialWaterSupplyPerCapita;
+		private final boolean coastal; // TODO use for desalination elements
 
+		private double waterReservoirVolume, nextWaterReservoirVolume;
+		private double waterSupplyPerCapita;
+		
 		/**
-		 * Gets the affected societies recursive.
-		 *
-		 * @param society the society
-		 * @return the affected societies recursive
+		 * Instantiates a new city agriculture system.
 		 */
-		private static Set<Society> getAffectedSocietiesRecursive(Society society) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.add(society);
-			if(society.getSociety() != null) {
-				affectedSocieties.addAll(getAffectedSocietiesRecursive(society.getSociety()));
-			}
-			return affectedSocieties;
+		protected Local() {
+			super("Water");
+			this.maxWaterReservoirVolume = 0;
+			this.initialWaterReservoirVolume = 0;
+			this.waterReservoirRechargeRate = 0;
+			this.coastal = false;
+			this.initialWaterSupplyPerCapita = 0;
 		}
-
+		
 		/**
 		 * Instantiates a new city water system.
+		 *
+		 * @param coastal the coastal
+		 * @param maxWaterReservoirVolume the max water reservoir volume
+		 * @param initialWaterReservoirVolume the initial water reservoir volume
+		 * @param waterReservoirRechargeRate the water reservoir recharge rate
+		 * @param initialWaterSupplyPerCapita the initial water supply per capita
 		 */
-		public Local() {
+		public Local(boolean coastal, double maxWaterReservoirVolume,
+				double initialWaterReservoirVolume, double waterReservoirRechargeRate,
+				double initialWaterSupplyPerCapita) {
 			super("Water");
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges()
-		 */
-		@Override
-		public void fireAttributeChanges() {
-			fireAttributeChangeEvent(Arrays.asList(
-					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCTION_ATTRIBUTE, 
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
-					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#fireAttributeChanges(edu.mit.sips.core.InfrastructureElement)
-		 */
-		@Override
-		public void fireAttributeChanges(InfrastructureElement element) {
-			Set<Society> affectedSocieties = new HashSet<Society>();
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getOrigin())));
-			affectedSocieties.addAll(getAffectedSocietiesRecursive(
-					getSociety().getCountry().getSociety(element.getDestination())));
-			
-			for(Society society : affectedSocieties) {
-				if(society.getWaterSystem() instanceof WaterSystem.Local) {
-					((WaterSystem.Local)society.getWaterSystem()).fireAttributeChanges();
-				}
+			// Validate max water reservoir volume.
+			if(maxWaterReservoirVolume < 0) {
+				throw new IllegalArgumentException(
+						"Max water reservoir volume cannot be negative.");
 			}
-		}
+			this.maxWaterReservoirVolume = maxWaterReservoirVolume;
 
+			// Validate initial water reservoir volume.
+			if(initialWaterReservoirVolume < 0) {
+				throw new IllegalArgumentException(
+						"Initial water reservoir volume cannot be negative.");
+			} else if(initialWaterReservoirVolume > maxWaterReservoirVolume) {
+				throw new IllegalArgumentException(
+						"Initial water reservoir volume cannot exceed maximum.");
+			}
+			this.initialWaterReservoirVolume = initialWaterReservoirVolume;
+
+			// No need to validate recharge rate.
+			this.waterReservoirRechargeRate = waterReservoirRechargeRate;
+
+			// No need to validate coastal.
+			this.coastal = coastal;
+
+			if(initialWaterSupplyPerCapita < 0) {
+				throw new IllegalArgumentException(
+						"Initial water supply per capita cannot be negative.");
+			}
+			this.initialWaterSupplyPerCapita = 0;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#addElement(edu.mit.sips.core.water.WaterElement)
+		 */
+		@Override
+		public synchronized boolean addElement(WaterElement element) {
+			return elements.add(element);
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 		 */
@@ -94,7 +99,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			return getSociety().getGlobals().getElectricityDomesticPrice()
 					* getElectricityConsumption();
 		}
-
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
@@ -163,11 +167,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public List<WaterElement> getExternalElements() {
 			List<WaterElement> elements = new ArrayList<WaterElement>();
 			
-			// see if super-system is also local
-			if(getSociety().getSociety().getWaterSystem() 
+			// see if country system is also local
+			if(getSociety().getCountry().getWaterSystem() 
 					instanceof WaterSystem.Local) {
 				WaterSystem.Local system = (WaterSystem.Local)
-						getSociety().getSociety().getWaterSystem();
+						getSociety().getCountry().getWaterSystem();
 				for(WaterElement element : system.getElements()) {
 					City origin = getSociety().getCountry().getCity(
 							element.getOrigin());
@@ -198,26 +202,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public List<WaterElement> getInternalElements() {
-			List<WaterElement> elements = new ArrayList<WaterElement>();
-			
-			// see if super-system is also local
-			if(getSociety().getSociety().getWaterSystem() 
-					instanceof WaterSystem.Local) {
-				WaterSystem.Local system = (WaterSystem.Local)
-						getSociety().getSociety().getWaterSystem();
-				for(WaterElement element : system.getInternalElements()) {
-					City origin = getSociety().getCountry().getCity(
-							element.getOrigin());
-					// add element if origin is inside this society
-					if(getSociety().getCities().contains(origin)) {
-						elements.add(element);
-					}
-				}
-			}
-			
 			return Collections.unmodifiableList(elements);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getLocalWaterFraction()
 		 */
@@ -231,6 +218,15 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 						/ getSociety().getTotalWaterDemand();
 			} 
 			return 0;
+		}
+
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.WaterSystem#getMaxWaterReservoirVolume()
+		 */
+		@Override
+		public double getMaxWaterReservoirVolume() {
+			return maxWaterReservoirVolume;
 		}
 
 		/* (non-Javadoc)
@@ -283,7 +279,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			return getSociety().getGlobals().getWaterDomesticPrice()
 					* (getSociety().getTotalWaterDemand() - getWaterFromArtesianWell());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getTotalWaterSupply()
 		 */
@@ -293,7 +289,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterOutDistribution()
 					+ getWaterImport();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
 		 */
@@ -316,7 +312,34 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return 0;
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
+		 */
+		@Override
+		public double getWaterFromArtesianWell() {
+			// Artesian water used to meet shortfall in reaching minimum demand.
+			return Math.min(getWaterReservoirVolume() - getReservoirWaterWithdrawals(), 
+					Math.max(0, getSociety().getTotalWaterDemand()
+							+ getWaterOutDistribution()
+							- getWaterInDistribution()
+							- getWaterProduction()));
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.WaterSystem#getWaterImport()
+		 */
+		@Override
+		public double getWaterImport() {
+			// Water is imported to meet shortfall in reaching minimum demand.
+			// Note that water cannot be exported, and is wasted if excess.
+			return Math.max(0, getSociety().getTotalWaterDemand()
+					+ getWaterOutDistribution()
+					- getWaterInDistribution()
+					- getWaterProduction()
+					- getWaterFromArtesianWell());
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
 		 */
@@ -328,7 +351,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistribution()
 		 */
@@ -343,7 +366,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistributionLosses()
 		 */
@@ -355,7 +378,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterProduction()
 		 */
@@ -368,7 +391,30 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			return waterProduction;
 		}
 
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
+		 */
+		@Override
+		public double getWaterReservoirRechargeRate() {
+			return waterReservoirRechargeRate;
+		}
 
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.WaterSystem#getWaterReservoirVolume()
+		 */
+		@Override
+		public double getWaterReservoirVolume() {
+			return waterReservoirVolume;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.WaterSystem#getWaterSupplyPerCapita()
+		 */
+		@Override
+		public double getWaterSupplyPerCapita() {
+			return waterSupplyPerCapita;
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
@@ -383,253 +429,64 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#initialize(long)
+		 * @see edu.mit.sips.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) {
-			fireAttributeChanges();
+			waterReservoirVolume = initialWaterReservoirVolume;
+			setWaterSupplyPerCapita(initialWaterSupplyPerCapita);
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterDistribution()
+		
+		/**
+		 * Checks if is coastal.
+		 *
+		 * @return true, if is coastal
 		 */
-		@Override
-		public void optimizeWaterDistribution() {
-			// Make a list of cities and infrastructure elements. The vector
-			// of decision variables includes the throughput of each distribution
-			// element and the import and export amounts in each city.
-			List<City> cities = getSociety().getCities();
-			List<WaterElement> elements = getInternalElements();
-
-			// Count number of variables.
-			int numVariables = elements.size() + cities.size();
-
-			// Create a list to hold the linear constraints.
-			List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-
-			double[] costCoefficients = new double[numVariables];
-			double[] initialValues = new double[numVariables];
-
-			for(WaterElement element : elements) {
-				// Add constraints for distribution throughput, i.e. the
-				// throughput for each distribution element cannot exceed the maximum.
-				double[] distributionConstraint = new double[numVariables];
-				distributionConstraint[elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(distributionConstraint, 
-						Relationship.LEQ, element.getMaxWaterInput()));
-
-				// Set the distribution cost.
-				costCoefficients[elements.indexOf(element)] 
-						= element.getVariableOperationsCostOfWaterDistribution()
-						+ element.getElectricalIntensityOfWaterDistribution()
-						* getSociety().getGlobals().getElectricityDomesticPrice();
-				initialValues[elements.indexOf(element)] 
-						= element.getWaterInput();
-			}
-
-			for(City city : cities) {
-				if(!(city.getWaterSystem() instanceof WaterSystem.Local)) {
-					continue;
-				}
-				
-				WaterSystem.Local waterSystem = 
-						(WaterSystem.Local) city.getWaterSystem();
-				
-				// Add constraints for city supply/demand, i.e. the in-flow less
-				// out-flow (corrected for efficiency of distribution) must equal
-				// the total demand less any local production.
-				double[] flowCoefficients = new double[numVariables];
-				for(WaterElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						// Set coefficient for in-flow to the distribution element.
-						// Order origin first to never distribute in self loop.
-						flowCoefficients[elements.indexOf(element)] = -1;
-					} else if(city.getName().equals(element.getDestination())) {
-						// Set coefficient for out-flow from the distribution element.
-						flowCoefficients[elements.indexOf(element)] 
-								= element.getDistributionEfficiency();
-					}
-				}
-				// Allow import in this city.
-				flowCoefficients[elements.size() + cities.indexOf(city)] = 1;
-				// Constrain in-flow to meet net demand.
-				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						city.getTotalWaterDemand() 
-						- waterSystem.getWaterProduction()));
-
-				// Set import cost in each city.
-				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getWaterImportPrice();
-				initialValues[elements.size() + cities.indexOf(city)] = 
-						Math.max(0, waterSystem.getWaterImport());
-			}
-
-			try {
-				// Run optimization and get results.
-				PointValuePair output = new SimplexSolver().optimize(
-						GoalType.MINIMIZE,
-						new MaxIter(1000),
-						new NonNegativeConstraint(true), 
-						new LinearConstraintSet(constraints), 
-						new LinearObjectiveFunction(costCoefficients, 0d),
-						new InitialGuess(initialValues));
-
-				// For each flow variable, set the food input in the
-				// corresponding distribution element.
-				for(int i = 0; i < elements.size(); i++) {
-					// Add Math.min checks in case error exceeds bounds.
-					elements.get(i).setWaterInput(Math.min(output.getPoint()[i],
-							elements.get(i).getMaxWaterInput()));
-				}
-			} catch(TooManyIterationsException ignore) { 
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			} catch(NoFeasibleSolutionException ignore) {
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			}
+		public boolean isCoastal() {
+			return coastal;
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterProductionAndDistribution(double)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#removeElement(edu.mit.sips.core.water.WaterElement)
 		 */
 		@Override
-		public void optimizeWaterProductionAndDistribution(double deltaProductionCost) {
-			List<City> cities = getSociety().getCities();
-			List<WaterElement> elements = getInternalElements();
-
-			// Count number of variables.
-			int numVariables = 2*elements.size() + cities.size();
-
-			List<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-
-			double[] costCoefficients = new double[numVariables];
-			double[] initialValues = new double[numVariables];
-
-			for(WaterElement element : elements) {
-				// Constrain maximum production in each fixed element.
-				double[] productionConstraint = new double[numVariables];
-				productionConstraint[elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(productionConstraint, 
-						Relationship.LEQ, element.getMaxWaterProduction()));
-
-				// Constrain maximum throughput in each distribution element.
-				double[] throughputConstraint = new double[numVariables];
-				throughputConstraint[elements.size() + elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(throughputConstraint, 
-						Relationship.LEQ, element.getMaxWaterInput()));
-
-				// Minimize costs - most obvious cost is importing, though also 
-				// minimize transportation even if free.
-				costCoefficients[elements.indexOf(element)] 
-						= element.getVariableOperationsCostOfWaterProduction() 
-						+ element.getElectricalIntensityOfWaterProduction()
-						* getSociety().getGlobals().getElectricityDomesticPrice()
-						+ deltaProductionCost;
-				initialValues[elements.indexOf(element)] 
-						= element.getWaterProduction();
-
-				// Set a distribution cost using variable operations expense.
-				costCoefficients[elements.size() + elements.indexOf(element)] 
-						= element.getVariableOperationsCostOfWaterDistribution()
-						+ element.getElectricalIntensityOfWaterDistribution()
-						* getSociety().getGlobals().getElectricityDomesticPrice();
-				initialValues[elements.size() + elements.indexOf(element)] 
-						= element.getWaterInput();
-			}
-
-			for(City city : cities) {
-				if(!(city.getWaterSystem() instanceof WaterSystem.Local)) {
-					continue;
-				}
-				
-				WaterSystem.Local waterSystem = 
-						(WaterSystem.Local) city.getWaterSystem();
-				
-				// Constrain maximum resource in each city.
-				double[] resourceConstraint = new double[numVariables];
-				for(WaterElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						resourceConstraint[elements.indexOf(element)] 
-								= element.getReservoirIntensityOfWaterProduction();
-					}
-				}
-				constraints.add(new LinearConstraint(resourceConstraint, 
-						Relationship.LEQ, waterSystem.getWaterReservoirVolume()));
-
-				// Constrain supply = demand in each city.
-				double[] flowCoefficients = new double[numVariables];
-				for(WaterElement element : elements) {
-					if(city.getName().equals(element.getOrigin())) {
-						flowCoefficients[elements.indexOf(element)] = 1;
-					}
-
-					if(city.getName().equals(element.getOrigin())) {
-						// Set coefficient for in-flow to the distribution element.
-						// Order origin first to never distribute in self loop.
-						flowCoefficients[elements.size() + elements.indexOf(element)] 
-								= -1;
-					} else if(city.getName().equals(element.getDestination())) {
-						// Set coefficient for out-flow from the distribution element.
-						flowCoefficients[elements.size() + elements.indexOf(element)] 
-								= element.getDistributionEfficiency();
-					}
-				}
-				// Allow import in this city.
-				flowCoefficients[2*elements.size() + cities.indexOf(city)] = 1;
-
-				// Constrain in-flow and production to meet demand.
-				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						city.getTotalWaterDemand()));
-
-				// Set import cost in each city.
-				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getWaterImportPrice();
-				initialValues[2*elements.size() + cities.indexOf(city)] 
-						= waterSystem.getWaterImport();
-			}
-
-			try {
-				// Run optimization and get results.
-				PointValuePair output = new SimplexSolver().optimize(
-						GoalType.MINIMIZE,
-						new MaxIter(1000),
-						new NonNegativeConstraint(true), 
-						new LinearConstraintSet(constraints), 
-						new LinearObjectiveFunction(costCoefficients, 0d),
-						new InitialGuess(initialValues));
-
-				for(int i = 0; i < elements.size(); i++) {
-					// Add Math.min checks in case error exceeds bounds.
-					elements.get(i).setWaterProduction(Math.min(output.getPoint()[i],
-							elements.get(i).getMaxWaterProduction()));
-					elements.get(i).setWaterInput(Math.min(
-							output.getPoint()[elements.size() + i],
-							elements.get(i).getMaxWaterInput()));
-				}
-			} catch(TooManyIterationsException ignore) { 
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			} catch(NoFeasibleSolutionException ignore) {
-				// Don't overwrite existing values.
-				ignore.printStackTrace();
-			}
+		public synchronized boolean removeElement(WaterElement element) {
+			return elements.remove(element);
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tick()
+		 * @see edu.mit.sips.WaterSystem#setWaterSupplyPerCapita(double)
+		 */
+		@Override
+		public void setWaterSupplyPerCapita(double waterSupplyPerCapita) {
+			this.waterSupplyPerCapita = waterSupplyPerCapita;
+			fireAttributeChangeEvent(Arrays.asList(
+					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCTION_ATTRIBUTE, 
+					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
+					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.SimEntity#tick()
 		 */
 		@Override
 		public void tick() {
-			
+			nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
+					waterReservoirVolume + waterReservoirRechargeRate 
+					- getReservoirWaterWithdrawals() 
+					- getWaterFromArtesianWell());
+			if(nextWaterReservoirVolume < 0) {
+				throw new IllegalStateException(
+						"Water reservoir volume cannot be negative.");
+			}
 		}
-		
+
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tock()
+		 * @see edu.mit.sips.SimEntity#tick()
 		 */
 		@Override
 		public void tock() {
-			fireAttributeChanges();
+			waterReservoirVolume = nextWaterReservoirVolume;
 		}
 	}
 
@@ -675,6 +532,5 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			fireAttributeChangeEvent(Arrays.asList(
 					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
 		}
-
 	}
 }
