@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.agriculture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,12 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
+import edu.mit.sips.gui.LinearIndicatorPanel;
+import edu.mit.sips.gui.SpatialStatePanel;
+import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
-public class AgricultureSystemPanel extends InfrastructureSystemPanel {
+public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	private static final long serialVersionUID = 569560127649283731L;
 
 	private final LinearIndicatorPanel localFoodIndicatorPanel, 
@@ -34,7 +37,7 @@ public class AgricultureSystemPanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
 
-	public AgricultureSystemPanel(AgricultureSystem.Local agricultureSystem) {
+	public LocalAgricultureSystemPanel(AgricultureSystem.Local agricultureSystem) {
 		super(agricultureSystem);
 		
 		JPanel indicatorsPanel = new JPanel();

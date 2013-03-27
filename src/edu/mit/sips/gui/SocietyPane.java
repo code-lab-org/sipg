@@ -14,6 +14,9 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.agriculture.AgricultureSystemPanel;
+import edu.mit.sips.gui.agriculture.BasicAgricultureSystemPanel;
+import edu.mit.sips.gui.agriculture.LocalAgricultureSystemPanel;
 import edu.mit.sips.io.Icons;
 
 /**
@@ -29,6 +32,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	private final AgricultureSystemPanel agricultureTab;
 	private final EnergySystemPanel energyTab;
 	private final SocialSystemPanel socialTab;
+	private final JTabbedPane infraPane;
 	
 	/**
 	 * Instantiates a new social system pane.
@@ -46,8 +50,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		socialTab = new SocialSystemPanel(society.getSocialSystem());
 		addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
 		
-		JTabbedPane infraPane;
-		if(society instanceof City || localSystemCount <= 1) {
+		if(society instanceof City) {
 			// add infrastructure directly to society panel if city
 			// or if there are only 0 or 1 local infrastructure
 			infraPane = this;
@@ -58,13 +61,13 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 		
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-			agricultureTab = new AgricultureSystemPanel(
+			agricultureTab = new LocalAgricultureSystemPanel(
 					(AgricultureSystem.Local)society.getAgricultureSystem());
-			infraPane.addTab(society.getAgricultureSystem().getName(), 
-					Icons.AGRICULTURE, agricultureTab);
 		} else {
-			agricultureTab = null;
+			agricultureTab = new BasicAgricultureSystemPanel(society.getAgricultureSystem());
 		}
+		infraPane.addTab(society.getAgricultureSystem().getName(), 
+				Icons.AGRICULTURE, agricultureTab);
 		
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			waterTab = new WaterSystemPanel(
@@ -122,15 +125,14 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(waterTab != null) {
 			waterTab.initialize();
 		}
-		if(agricultureTab != null) {
-			agricultureTab.initialize();
-		}
+		
+		agricultureTab.initialize();
+		
 		if(energyTab != null) {
 			energyTab.initialize();
 		}
-		if(socialTab != null) {
-			socialTab.initialize();
-		}
+		
+		socialTab.initialize();
 		
 		for(SocietyPane subPane : nestedPaneList) {			
 			subPane.initialize();
@@ -148,17 +150,18 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(waterTab != null) {
 			waterTab.update(year);
 		}
-		if(agricultureTab != null) {
-			agricultureTab.update(year);
-		}
+
+		infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
+				agricultureTab.getInfrastructureSystem().getName());
+		agricultureTab.update(year);
+		
 		if(energyTab != null) {
 			energyTab.update(year);
 		}
-		if(socialTab != null) {
-			setTitleAt(indexOfComponent(socialTab), 
-					socialTab.getSocialSystem().getName());
-			socialTab.update(year);
-		}
+
+		setTitleAt(indexOfComponent(socialTab), 
+				socialTab.getInfrastructureSystem().getName());
+		socialTab.update(year);
 		
 		for(SocietyPane subPane : nestedPaneList) {			
 			subPane.updateDatasets(year);
@@ -173,9 +176,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(waterTab != null) {
 			waterTab.simulationInitialized(event);
 		}
-		if(agricultureTab != null) {
-			agricultureTab.simulationInitialized(event);
-		}
+		
+		agricultureTab.simulationInitialized(event);
+		
 		if(energyTab != null) {
 			energyTab.simulationInitialized(event);
 		}
@@ -196,9 +199,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(waterTab != null) {
 			waterTab.simulationUpdated(event);
 		}
-		if(agricultureTab != null) {
-			agricultureTab.simulationUpdated(event);
-		}
+		
+		agricultureTab.simulationUpdated(event);
+		
 		if(energyTab != null) {
 			energyTab.simulationUpdated(event);
 		}

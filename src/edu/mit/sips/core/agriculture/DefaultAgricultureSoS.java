@@ -603,6 +603,13 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		@Override
 		public void tock() { }
 	}
+	
+	/**
+	 * Instantiates a new default agriculture so s.
+	 */
+	public DefaultAgricultureSoS() {
+		super("Agriculture");
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()

@@ -205,6 +205,17 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 	public DefaultInfrastructureSoS(String name) {
 		super(name);
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
+	 */
+	@Override
+	public String getName() {
+		if(getSociety() != null) {
+			return getSociety().getName() + " " + super.getName();
+		}
+		return super.getName();
+	}
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
