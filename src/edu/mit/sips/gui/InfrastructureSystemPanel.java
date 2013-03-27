@@ -170,7 +170,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 			dataset.addSeries(new XYSeries(key, true, false));
 			index = dataset.indexOf(key);
 		}
-		dataset.getSeries(index).addOrUpdate(new Year(year).getLastMillisecond(), value);
+		dataset.getSeries(index).addOrUpdate(new Year(year).getFirstMillisecond(), value);
 	}
 	
 	/**
