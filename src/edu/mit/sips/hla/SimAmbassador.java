@@ -8,6 +8,7 @@ import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
 import hla.rti1516e.FederateHandle;
+import hla.rti1516e.FederateHandleSet;
 import hla.rti1516e.LogicalTime;
 import hla.rti1516e.MessageRetractionHandle;
 import hla.rti1516e.NullFederateAmbassador;
@@ -18,6 +19,7 @@ import hla.rti1516e.RTIambassador;
 import hla.rti1516e.ResignAction;
 import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
+import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TimeQueryReturn;
 import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
@@ -61,6 +63,7 @@ import hla.rti1516e.exceptions.RequestForTimeConstrainedPending;
 import hla.rti1516e.exceptions.RequestForTimeRegulationPending;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
+import hla.rti1516e.exceptions.SynchronizationPointLabelNotAnnounced;
 import hla.rti1516e.exceptions.TimeConstrainedAlreadyEnabled;
 import hla.rti1516e.exceptions.TimeConstrainedIsNotEnabled;
 import hla.rti1516e.exceptions.TimeRegulationAlreadyEnabled;
@@ -100,6 +103,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
+	private volatile AtomicBoolean syncRegistered = new AtomicBoolean(false);
+	private volatile AtomicBoolean syncAnnounced = new AtomicBoolean(false);
+	private volatile AtomicBoolean syncAchieved = new AtomicBoolean(false);
 	private volatile AtomicBoolean initialized =  new AtomicBoolean(false);
 	
 	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
@@ -199,13 +205,23 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void connect(FederationConnection connection) 
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
 			UnsupportedCallbackModel, CallNotAllowedFromWithinCallback, 
-			RTIinternalError {
+			RTIinternalError, CouldNotCreateLogicalTimeFactory, 
+			InconsistentFDD, ErrorReadingFDD, CouldNotOpenFDD, 
+			NotConnected, MalformedURLException, FederateNameAlreadyInUse, 
+			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
+			FederateNotExecutionMember, InTimeAdvancingState, 
+			RequestForTimeConstrainedPending, InvalidLookahead, 
+			RequestForTimeRegulationPending, NameNotFound, InvalidObjectClassHandle, 
+			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
+			ObjectInstanceNotKnown {
 		this.connection = connection;
 		try {
 			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
 					connection.getLocalSettingsDesignator());
 		} catch(AlreadyConnected ignored) { }
 		connection.setConnected(true);
+		
+		joinFederation();
 	}
 	
 	/**
@@ -319,6 +335,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws InconsistentFDD 
 	 * @throws CouldNotCreateLogicalTimeFactory 
 	 * @throws IllegalTimeArithmetic 
+	 * @throws TimeRegulationIsNotEnabled 
+	 * @throws InvalidLogicalTimeInterval 
+	 * @throws AttributeNotOwned 
+	 * @throws SynchronizationPointLabelNotAnnounced 
 	 */
 	public void initialize(long startTime) 
 			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
@@ -330,93 +350,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			FederationExecutionDoesNotExist, CallNotAllowedFromWithinCallback, 
 			InvalidLookahead, NameNotFound, InvalidObjectClassHandle, 
 			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
-			ObjectInstanceNotKnown, IllegalTimeArithmetic {
-		joinFederation();
-
-		HLAinteger64TimeFactory timeFactory = 
-				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
-		this.startTime = timeFactory.makeTime(startTime);
-		
-		TimeQueryReturn query = rtiAmbassador.queryGALT();
-		if(!query.timeIsValid) {
-			// first federate
-			System.out.println("GALT not valid: requesting ta to " + this.startTime.subtract(lookaheadInterval).getValue());
-			rtiAmbassador.timeAdvanceRequest(this.startTime.subtract(lookaheadInterval));
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-		} else {
-			/* use for non-time regulating federates
-			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
-			rtiAmbassador.timeAdvanceRequest(query.time);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-			*/
-		}
-
-		initialized.set(true);
-	}
-
-	/**
-	 * Checks if is initialized.
-	 *
-	 * @return true, if is initialized
-	 */
-	public boolean isInitialized() {
-		return initialized.get();
-	}
-	
-	/**
-	 * Join federation.
-	 *
-	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
-	 * @throws InconsistentFDD the inconsistent fdd
-	 * @throws ErrorReadingFDD the error reading fdd
-	 * @throws CouldNotOpenFDD the could not open fdd
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws MalformedURLException the malformed url exception
-	 * @throws FederateNameAlreadyInUse the federate name already in use
-	 * @throws FederationExecutionDoesNotExist the federation execution does not exist
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws InTimeAdvancingState the in time advancing state
-	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws InvalidLookahead the invalid lookahead
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
-	 * @throws ObjectClassNotDefined 
-	 * @throws AttributeNotDefined 
-	 * @throws InvalidObjectClassHandle 
-	 * @throws NameNotFound 
-	 * @throws ObjectInstanceNotKnown 
-	 * @throws ObjectClassNotPublished 
-	 */
-	private void joinFederation() 
-			throws CouldNotCreateLogicalTimeFactory, InconsistentFDD, 
-			ErrorReadingFDD, CouldNotOpenFDD, NotConnected, RTIinternalError, 
-			MalformedURLException, FederateNameAlreadyInUse, 
-			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
-			CallNotAllowedFromWithinCallback, FederateNotExecutionMember, 
-			InTimeAdvancingState, RequestForTimeConstrainedPending, 
-			InvalidLookahead, RequestForTimeRegulationPending, NameNotFound, 
-			InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
-			ObjectClassNotPublished, ObjectInstanceNotKnown {
-		try {
-			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
-					new URL[]{new File(connection.getFomPath()).toURI().toURL()},
-					"HLAinteger64Time");
-		} catch(FederationExecutionAlreadyExists ignored) { }
-		
-		try {
-			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
-					connection.getFederateType(), connection.getFederationName());
-		} catch(FederateAlreadyExecutionMember ignored) { }
-		
+			ObjectInstanceNotKnown, IllegalTimeArithmetic, AttributeNotOwned, 
+			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled, 
+			SynchronizationPointLabelNotAnnounced {
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
@@ -513,6 +449,112 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
+		
+		this.startTime = timeFactory.makeTime(startTime);
+		
+		TimeQueryReturn query = rtiAmbassador.queryGALT();
+		if(!query.timeIsValid) {
+			// first federate
+			
+			// announce synchronization point
+			rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
+			
+			while(!syncRegistered.get()) {
+				Thread.yield();
+			}
+			syncRegistered.set(false);
+			
+			System.out.println("GALT not valid: requesting ta to " + this.startTime.subtract(lookaheadInterval).getValue());
+			rtiAmbassador.timeAdvanceRequest(this.startTime.subtract(lookaheadInterval));
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+		} else {
+			/* use for non-time regulating federates
+			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
+			rtiAmbassador.timeAdvanceRequest(query.time);
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+			*/
+		}
+		
+		while(!syncAnnounced.get()) {
+			Thread.yield();
+		}
+		syncAnnounced.set(false);
+		
+		rtiAmbassador.synchronizationPointAchieved("initialized");
+		while(!syncAchieved.get()) {
+			Thread.yield();
+		}
+		syncAchieved.set(false);
+		
+		// once all federates are joined, advance to start time
+		
+		advance();
+
+		initialized.set(true);
+	}
+
+	/**
+	 * Checks if is initialized.
+	 *
+	 * @return true, if is initialized
+	 */
+	public boolean isInitialized() {
+		return initialized.get();
+	}
+	
+	/**
+	 * Join federation.
+	 *
+	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
+	 * @throws InconsistentFDD the inconsistent fdd
+	 * @throws ErrorReadingFDD the error reading fdd
+	 * @throws CouldNotOpenFDD the could not open fdd
+	 * @throws NotConnected the not connected
+	 * @throws RTIinternalError the rT iinternal error
+	 * @throws MalformedURLException the malformed url exception
+	 * @throws FederateNameAlreadyInUse the federate name already in use
+	 * @throws FederationExecutionDoesNotExist the federation execution does not exist
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
+	 * @throws FederateNotExecutionMember the federate not execution member
+	 * @throws InTimeAdvancingState the in time advancing state
+	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
+	 * @throws InvalidLookahead the invalid lookahead
+	 * @throws RequestForTimeRegulationPending the request for time regulation pending
+	 * @throws ObjectClassNotDefined 
+	 * @throws AttributeNotDefined 
+	 * @throws InvalidObjectClassHandle 
+	 * @throws NameNotFound 
+	 * @throws ObjectInstanceNotKnown 
+	 * @throws ObjectClassNotPublished 
+	 */
+	private void joinFederation() 
+			throws CouldNotCreateLogicalTimeFactory, InconsistentFDD, 
+			ErrorReadingFDD, CouldNotOpenFDD, NotConnected, RTIinternalError, 
+			MalformedURLException, FederateNameAlreadyInUse, 
+			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
+			CallNotAllowedFromWithinCallback, FederateNotExecutionMember, 
+			InTimeAdvancingState, RequestForTimeConstrainedPending, 
+			InvalidLookahead, RequestForTimeRegulationPending, NameNotFound, 
+			InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
+			ObjectClassNotPublished, ObjectInstanceNotKnown {
+		try {
+			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
+					new URL[]{new File(connection.getFomPath()).toURI().toURL()},
+					"HLAinteger64Time");
+		} catch(FederationExecutionAlreadyExists ignored) { }
+		
+		try {
+			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
+					connection.getFederateType(), connection.getFederationName());
+		} catch(FederateAlreadyExecutionMember ignored) { }
 	}
 	
 	/* (non-Javadoc)
@@ -733,5 +775,44 @@ public class SimAmbassador extends NullFederateAmbassador {
 		timeRegulating.set(true);
 		logicalTime = (HLAinteger64Time) time;
 		System.out.println("(TRE) Logical time is " + logicalTime.getValue());
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#synchronizationPointRegistrationSucceeded(java.lang.String)
+	 */
+	@Override
+	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
+			throws FederateInternalError {
+		syncRegistered.set(true);
+		System.out.println(synchronizationPointLabel + " registration succeeded");
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#synchronizationPointRegistrationFailed(java.lang.String, hla.rti1516e.SynchronizationPointFailureReason)
+	 */
+	@Override
+	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
+			SynchronizationPointFailureReason reason)
+					throws FederateInternalError {
+		syncRegistered.set(false);
+		System.out.println(synchronizationPointLabel + " registration failed: " + reason);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#announceSynchronizationPoint(java.lang.String, byte[])
+	 */
+	@Override
+	public void announceSynchronizationPoint(String synchronizationPointLabel, byte[] userSuppliedTag)
+			throws FederateInternalError {
+		syncAnnounced.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#federationSynchronized(java.lang.String, hla.rti1516e.FederateHandleSet)
+	 */
+	@Override
+	public void federationSynchronized(String synchronizationPointLabel, FederateHandleSet failedToSyncSet)
+			throws FederateInternalError {
+		syncAchieved.set(true);
 	}
 }

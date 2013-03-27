@@ -263,15 +263,7 @@ public class Simulator implements SimulationControlListener {
 	 *
 	 * @return the long
 	 */
-	private long tickTock() {
-		if(time == startTime) {
-			try {
-				simAmbassador.advance();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
+	private long tickTock() {		
 		country.tick();
 		country.tock();
 		
