@@ -70,7 +70,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private final JPanel contentPane;
 	private final ConnectionPanel connectionPanel;
 	private final ConnectionToolbar connectionToolbar;
-	private FederationConnection connection;
 	private Simulator simulator;
 	private JSplitPane nationalPane;
 	private SimulationControlPane simulationPane;
@@ -275,20 +274,19 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	public void initialize(final Simulator simulator) {
 		if(simulator == null) {
-			if(connection != null) {
-				if(connection.isConnected()) {
-					try {
-						this.simulator.getAmbassador().resignFederation();
-						this.simulator.getAmbassador().disconnect();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				}
-				connection.removeConnectionListener(connectionPanel);
-				connection.removeConnectionListener(connectionToolbar);
-				connection = null;
-			}
 			if(this.simulator != null) {
+				if(this.simulator.getConnection() != null) {
+					if(this.simulator.getConnection().isConnected()) {
+						try {
+							this.simulator.getAmbassador().disconnect();
+						} catch (Exception ex) {
+							ex.printStackTrace();
+						}
+					}
+					this.simulator.getConnection().removeConnectionListener(connectionPanel);
+					this.simulator.getConnection().removeConnectionListener(connectionToolbar);
+					this.simulator.setConnection(null);
+				}
 				this.simulator.removeUpdateListener(this);
 				this.simulator.removeUpdateListener(simulationPane);
 				this.simulator.removeUpdateListener(societyPane);
@@ -307,10 +305,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
-			connection = new FederationConnection();
-			connectionPanel.initialize(connection, simulator.getAmbassador());
-			connection.addConnectionListener(connectionPanel);
-			connection.addConnectionListener(connectionToolbar);
+			simulator.setConnection(new FederationConnection());
+			connectionPanel.initialize(simulator.getConnection(), simulator.getAmbassador());
+			simulator.getConnection().addConnectionListener(connectionPanel);
+			simulator.getConnection().addConnectionListener(connectionToolbar);
 			
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			societyPane = new SocietyPane(this.simulator.getCountry());
@@ -351,7 +349,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		newScenario.setEnabled(simulator == null);
 		saveScenario.setEnabled(simulator != null);
 		closeScenario.setEnabled(simulator != null);
-		editConnection.setEnabled(connection != null);
+		editConnection.setEnabled(simulator != null);
 	}
 
 	/* (non-Javadoc)

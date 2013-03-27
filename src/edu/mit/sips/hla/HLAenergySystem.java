@@ -110,7 +110,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		HLAenergySystem hlaSystem = new HLAenergySystem(
 				rtiAmbassador, encoderFactory, instanceName, 
 				new DefaultEnergySystem.Remote());
-		hlaSystem.requestAttributeValueUpdate();
+		//hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}

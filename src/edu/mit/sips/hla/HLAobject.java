@@ -14,6 +14,9 @@ import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.DeletePrivilegeNotHeld;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.FederateOwnsAttributes;
+import hla.rti1516e.exceptions.IllegalTimeArithmetic;
+import hla.rti1516e.exceptions.InvalidLogicalTime;
+import hla.rti1516e.exceptions.InvalidLogicalTimeInterval;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
 import hla.rti1516e.exceptions.NotConnected;
@@ -24,6 +27,7 @@ import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
 import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
+import hla.rti1516e.exceptions.TimeRegulationIsNotEnabled;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -323,16 +327,25 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
 	 * @throws RTIinternalError the RTI internal error
+	 * @throws TimeRegulationIsNotEnabled 
+	 * @throws InvalidLogicalTimeInterval 
+	 * @throws IllegalTimeArithmetic 
+	 * @throws InvalidLogicalTime 
 	 */
 	public final void updateAllAttributes() throws FederateNotExecutionMember, 
 			NotConnected, AttributeNotOwned, AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
-			RestoreInProgress, RTIinternalError {
-		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(getAttributeValues().keySet().size());
+			RestoreInProgress, RTIinternalError, InvalidLogicalTime, IllegalTimeArithmetic, 
+			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
+		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(
+				getAttributeValues().keySet().size());
 		for(AttributeHandle attributeHandle : getAttributeHandleSet()) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
+		System.out.println("Sending attributes with timestamp " 
+				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
-				getObjectInstanceHandle(), attributes, new byte[0]);
+				getObjectInstanceHandle(), attributes, new byte[0], 
+				rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()));
 	}
 	
 	/**
@@ -347,10 +360,15 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * @throws FederateNotExecutionMember the federate not execution member
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the RTI internal error
+	 * @throws InvalidLogicalTime 
+	 * @throws TimeRegulationIsNotEnabled 
+	 * @throws InvalidLogicalTimeInterval 
+	 * @throws IllegalTimeArithmetic 
 	 */
 	public final void updateAttributes(List<String> attributeNames) 
 			throws AttributeNotOwned, AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
-			RestoreInProgress, FederateNotExecutionMember, NotConnected, RTIinternalError {
+			RestoreInProgress, FederateNotExecutionMember, NotConnected, RTIinternalError, 
+			InvalidLogicalTime, IllegalTimeArithmetic, InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
 		AttributeHandleValueMap attributes = rtiAmbassador.
 				getAttributeHandleValueMapFactory().create(attributeNames.size());
 		for(String attributeName : attributeNames) {
@@ -358,8 +376,11 @@ public abstract class HLAobject implements AttributeChangeListener {
 					getAttributeValues().get(
 							getAttributeHandle(attributeName)).toByteArray());
 		}
+		System.out.println("Sending attributes with timestamp " 
+				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
-				getObjectInstanceHandle(), attributes, new byte[0]);
+				getObjectInstanceHandle(), attributes, new byte[0], 
+				rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()));
 	}
 	
 	/**
@@ -374,16 +395,24 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
 	 * @throws RTIinternalError the RTI internal error
+	 * @throws TimeRegulationIsNotEnabled 
+	 * @throws InvalidLogicalTimeInterval 
+	 * @throws IllegalTimeArithmetic 
+	 * @throws InvalidLogicalTime 
 	 */
 	public final void updateAttributes(AttributeHandleSet attributeHandleSet) 
 			throws FederateNotExecutionMember, NotConnected, AttributeNotOwned, AttributeNotDefined, 
-			ObjectInstanceNotKnown, SaveInProgress, RestoreInProgress, RTIinternalError {
+			ObjectInstanceNotKnown, SaveInProgress, RestoreInProgress, RTIinternalError, 
+			InvalidLogicalTime, IllegalTimeArithmetic, InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
 		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(getAttributeValues().keySet().size());
 		for(AttributeHandle attributeHandle : attributeHandleSet) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
+		System.out.println("Sending attributes with timestamp " 
+				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
-				getObjectInstanceHandle(), attributes, new byte[0]);
+				getObjectInstanceHandle(), attributes, new byte[0], 
+				rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()));
 	}
 	
 	/**

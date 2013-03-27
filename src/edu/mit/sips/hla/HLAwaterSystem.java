@@ -108,7 +108,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
 				rtiAmbassador, encoderFactory, instanceName,
 				new DefaultWaterSystem.Remote());
-		hlaSystem.requestAttributeValueUpdate();
+		//hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}

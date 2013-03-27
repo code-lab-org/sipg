@@ -16,6 +16,7 @@ import edu.mit.sips.gui.SimulationControlEvent.Reset;
 import edu.mit.sips.gui.SimulationControlListener;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.hla.FederationConnection;
 import edu.mit.sips.hla.SimAmbassador;
 
 /**
@@ -33,7 +34,8 @@ public class Simulator implements SimulationControlListener {
 	private long startTime, endTime;
 	
 	private long time;
-	
+
+	private FederationConnection connection;
 	private transient SimAmbassador simAmbassador;
 
 	private transient EventListenerList listenerList = new EventListenerList(); // mutableO
@@ -68,7 +70,7 @@ public class Simulator implements SimulationControlListener {
 		}
 		this.country = country;
 		try {
-			simAmbassador = new SimAmbassador(country);
+			simAmbassador = new SimAmbassador(this);
 		} catch (RTIinternalError ex) {
 			ex.printStackTrace();
 			JOptionPane.showMessageDialog(null, 
@@ -103,7 +105,7 @@ public class Simulator implements SimulationControlListener {
 		
 		if(time == endTime) {
 			try {
-				simAmbassador.resignFederation();
+				simAmbassador.disconnect();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -152,7 +154,7 @@ public class Simulator implements SimulationControlListener {
 	 *
 	 * @param event the event
 	 */
-	private void fireUpdateEvent() {
+	public void fireUpdateEvent() {
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
 			listener.simulationUpdated(new UpdateEvent(this, time, country));
@@ -184,28 +186,51 @@ public class Simulator implements SimulationControlListener {
 					"End year cannot precede start year.");
 		}
 		this.endTime = endTime;
-		
+
 		if(simAmbassador.isInitialized()) {
 			try {
-				simAmbassador.resignFederation();
+				simAmbassador.disconnect();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		if(!simAmbassador.isInitialized()) {
-			try {
-				simAmbassador.initialize(startTime);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+		try {
+			simAmbassador.connect(connection);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		
 		time = startTime;
 		country.initialize(startTime);
 		runAutoOptimization();
+
+		try {
+			simAmbassador.initialize(startTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		fireInitializeEvent();
 		
 		initialized = true;
+	}
+	
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 */
+	public FederationConnection getConnection() {
+		return connection;
+	}
+	
+	/**
+	 * Sets the connection.
+	 *
+	 * @param connection the new connection
+	 */
+	public void setConnection(FederationConnection connection) {
+		this.connection = connection;
 	}
 
 	/* (non-Javadoc)
@@ -239,17 +264,20 @@ public class Simulator implements SimulationControlListener {
 	 * @return the long
 	 */
 	private long tickTock() {
+		if(time == startTime) {
+			try {
+				simAmbassador.advance();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		country.tick();
+		country.tock();
+		
 		try {
 			simAmbassador.advance();
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		country.tock();
-		try {
-			// TODO: patch to allow for updates to take place
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		return ++time;

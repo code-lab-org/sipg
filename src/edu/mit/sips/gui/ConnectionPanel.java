@@ -284,7 +284,6 @@ implements ActionListener, ConnectionListener {
 							connectButton.setText("Connect");
 							statusLabel.setIcon(null);
 							try {
-								ambassador.resignFederation();
 								ambassador.disconnect();
 							} catch (Exception ignored) { }
 							statusLabel.setText("Failed (" + ex.getMessage() + ")");
@@ -301,7 +300,6 @@ implements ActionListener, ConnectionListener {
 					@Override
 					protected Void doInBackground() {
 						try {
-							ambassador.resignFederation();
 							ambassador.disconnect();
 						} catch (Exception ex) {
 							ex.printStackTrace();

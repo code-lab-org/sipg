@@ -1,5 +1,9 @@
+/*
+ * 
+ */
 package edu.mit.sips.hla;
 
+import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
@@ -17,6 +21,7 @@ import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.TimeQueryReturn;
 import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
 import hla.rti1516e.exceptions.AttributeNotDefined;
@@ -66,6 +71,7 @@ import hla.rti1516e.time.HLAinteger64TimeFactory;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,17 +80,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.sim.Simulator;
 
 public class SimAmbassador extends NullFederateAmbassador {
 	
+	private final Simulator simulator;
 	private FederationConnection connection;
-	private final Country country;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
 	private HLAinteger64Time logicalTime, startTime;
@@ -101,21 +107,48 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Instantiates a new sim ambassador.
 	 * @throws RTIinternalError 
 	 */
-	public SimAmbassador(Country country)
+	public SimAmbassador(Simulator simulator)
 			throws RTIinternalError {
-		this.country = country;
+		this.simulator = simulator;
 		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
 		rtiAmbassador = rtiFactory.getRtiAmbassador();
 		encoderFactory = rtiFactory.getEncoderFactory();
 	}
 	
 	/**
-	 * Checks if is initialized.
+	 * Advance.
 	 *
-	 * @return true, if is initialized
+	 * @throws LogicalTimeAlreadyPassed the logical time already passed
+	 * @throws InvalidLogicalTime the invalid logical time
+	 * @throws InTimeAdvancingState the in time advancing state
+	 * @throws RequestForTimeRegulationPending the request for time regulation pending
+	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws FederateNotExecutionMember the federate not execution member
+	 * @throws NotConnected the not connected
+	 * @throws RTIinternalError the rT iinternal error
+	 * @throws IllegalTimeArithmetic the illegal time arithmetic
 	 */
-	public boolean isInitialized() {
-		return initialized.get();
+	public void advance() 
+			throws LogicalTimeAlreadyPassed, InvalidLogicalTime, 
+			InTimeAdvancingState, RequestForTimeRegulationPending, 
+			RequestForTimeConstrainedPending, SaveInProgress, 
+			RestoreInProgress, FederateNotExecutionMember, NotConnected, 
+			RTIinternalError, IllegalTimeArithmetic {
+		for(City city : simulator.getCountry().getCities()) {
+			if(city.getSocialSystem() instanceof SocialSystem.Local) {
+				// TODO incomplete
+				city.getSocialSystem().fireAttributeChangeEvent(
+						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE));
+			}
+		}
+		
+		rtiAmbassador.timeAdvanceRequest(logicalTime.add(tickInterval));
+		while(!timeAdvanceGranted.get()) {
+			Thread.yield();
+		}
+		timeAdvanceGranted.set(false);
 	}
 	
 	/**
@@ -126,6 +159,27 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws UnsupportedCallbackModel the unsupported callback model
 	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
 	 * @throws RTIinternalError the rT iinternal error
+	 * @throws ObjectInstanceNotKnown 
+	 * @throws ObjectClassNotPublished 
+	 * @throws ObjectClassNotDefined 
+	 * @throws AttributeNotDefined 
+	 * @throws InvalidObjectClassHandle 
+	 * @throws NameNotFound 
+	 * @throws RequestForTimeRegulationPending 
+	 * @throws InvalidLookahead 
+	 * @throws RequestForTimeConstrainedPending 
+	 * @throws InTimeAdvancingState 
+	 * @throws FederateNotExecutionMember 
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws FederationExecutionDoesNotExist 
+	 * @throws FederateNameAlreadyInUse 
+	 * @throws MalformedURLException 
+	 * @throws NotConnected 
+	 * @throws CouldNotOpenFDD 
+	 * @throws ErrorReadingFDD 
+	 * @throws InconsistentFDD 
+	 * @throws CouldNotCreateLogicalTimeFactory 
 	 */
 	public void connect(FederationConnection connection) 
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
@@ -144,10 +198,17 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws RTIinternalError 
 	 * @throws CallNotAllowedFromWithinCallback 
 	 * @throws FederateIsExecutionMember 
+	 * @throws RestoreInProgress 
+	 * @throws SaveInProgress 
+	 * @throws FederateOwnsAttributes 
+	 * @throws OwnershipAcquisitionPending 
+	 * @throws InvalidResignAction 
 	 */
 	public void disconnect() 
-			throws FederateIsExecutionMember, 
-			CallNotAllowedFromWithinCallback, RTIinternalError {
+			throws FederateIsExecutionMember, CallNotAllowedFromWithinCallback, 
+			RTIinternalError, InvalidResignAction, OwnershipAcquisitionPending, 
+			FederateOwnsAttributes, SaveInProgress, RestoreInProgress {
+		resignFederation();
 		
 		rtiAmbassador.disconnect();
 		
@@ -212,49 +273,132 @@ public class SimAmbassador extends NullFederateAmbassador {
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	/**
+	 * Initialize.
+	 *
+	 * @param startTime the start time
+	 * @throws FederateNotExecutionMember the federate not execution member
+	 * @throws NotConnected the not connected
+	 * @throws NameNotFound the name not found
+	 * @throws InvalidObjectClassHandle the invalid object class handle
+	 * @throws RTIinternalError the rT iinternal error
+	 * @throws AttributeNotDefined the attribute not defined
+	 * @throws ObjectClassNotDefined the object class not defined
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws ObjectClassNotPublished the object class not published
+	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws LogicalTimeAlreadyPassed the logical time already passed
+	 * @throws InvalidLogicalTime the invalid logical time
+	 * @throws InTimeAdvancingState the in time advancing state
+	 * @throws RequestForTimeRegulationPending the request for time regulation pending
+	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
+	 * @throws InvalidLookahead 
+	 * @throws CallNotAllowedFromWithinCallback 
+	 * @throws FederationExecutionDoesNotExist 
+	 * @throws FederateNameAlreadyInUse 
+	 * @throws MalformedURLException 
+	 * @throws CouldNotOpenFDD 
+	 * @throws ErrorReadingFDD 
+	 * @throws InconsistentFDD 
+	 * @throws CouldNotCreateLogicalTimeFactory 
+	 * @throws IllegalTimeArithmetic 
+	 */
+	public void initialize(long startTime) 
+			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
+			NotConnected, RTIinternalError, LogicalTimeAlreadyPassed, 
+			InvalidLogicalTime, InTimeAdvancingState, 
+			RequestForTimeRegulationPending, RequestForTimeConstrainedPending, 
+			CouldNotCreateLogicalTimeFactory, InconsistentFDD, ErrorReadingFDD,
+			CouldNotOpenFDD, MalformedURLException, FederateNameAlreadyInUse, 
+			FederationExecutionDoesNotExist, CallNotAllowedFromWithinCallback, 
+			InvalidLookahead, NameNotFound, InvalidObjectClassHandle, 
+			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
+			ObjectInstanceNotKnown, IllegalTimeArithmetic {
+		joinFederation();
 
+		HLAinteger64TimeFactory timeFactory = 
+				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
+		this.startTime = timeFactory.makeTime(startTime);
+		
+		TimeQueryReturn query = rtiAmbassador.queryGALT();
+		if(!query.timeIsValid) {
+			// first federate
+			System.out.println("GALT not valid: requesting ta to " + this.startTime.subtract(lookaheadInterval).getValue());
+			rtiAmbassador.timeAdvanceRequest(this.startTime.subtract(lookaheadInterval));
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+		} else {
+			/* use for non-time regulating federates
+			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
+			rtiAmbassador.timeAdvanceRequest(query.time);
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+			*/
+		}
+		
+		for(City city : simulator.getCountry().getCities()) {
+			if(city.getSocialSystem() instanceof SocialSystem.Local) {
+				// TODO incomplete
+				city.getSocialSystem().fireAttributeChangeEvent(
+						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE));
+			}
+		}
+		
+		initialized.set(true);
+	}
+
+	/**
+	 * Checks if is initialized.
+	 *
+	 * @return true, if is initialized
+	 */
+	public boolean isInitialized() {
+		return initialized.get();
+	}
+	
 	/**
 	 * Join federation.
 	 *
-	 * @param startTime the start time
+	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
 	 * @throws InconsistentFDD the inconsistent fdd
 	 * @throws ErrorReadingFDD the error reading fdd
 	 * @throws CouldNotOpenFDD the could not open fdd
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws MalformedURLException the malformed url exception
-	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
 	 * @throws FederateNameAlreadyInUse the federate name already in use
 	 * @throws FederationExecutionDoesNotExist the federation execution does not exist
 	 * @throws SaveInProgress the save in progress
 	 * @throws RestoreInProgress the restore in progress
 	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
 	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NameNotFound the name not found
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws ObjectClassNotPublished the object class not published
-	 * @throws ObjectInstanceNotKnown the object instance not known
 	 * @throws InTimeAdvancingState the in time advancing state
 	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws LogicalTimeAlreadyPassed the logical time already passed
-	 * @throws InvalidLogicalTime the invalid logical time
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
 	 * @throws InvalidLookahead the invalid lookahead
+	 * @throws RequestForTimeRegulationPending the request for time regulation pending
+	 * @throws ObjectClassNotDefined 
+	 * @throws AttributeNotDefined 
+	 * @throws InvalidObjectClassHandle 
+	 * @throws NameNotFound 
+	 * @throws ObjectInstanceNotKnown 
+	 * @throws ObjectClassNotPublished 
 	 */
-	public void initialize(long startTime) 
-			throws InconsistentFDD, ErrorReadingFDD, CouldNotOpenFDD, 
-			NotConnected, RTIinternalError, MalformedURLException, 
-			CouldNotCreateLogicalTimeFactory, FederateNameAlreadyInUse, 
-			FederationExecutionDoesNotExist, SaveInProgress, 
-			RestoreInProgress, CallNotAllowedFromWithinCallback, 
-			FederateNotExecutionMember, NameNotFound, 
-			InvalidObjectClassHandle, AttributeNotDefined, 
-			ObjectClassNotDefined, ObjectClassNotPublished, 
-			ObjectInstanceNotKnown, InTimeAdvancingState, 
-			RequestForTimeConstrainedPending, LogicalTimeAlreadyPassed, 
-			InvalidLogicalTime, RequestForTimeRegulationPending, InvalidLookahead {
+	private void joinFederation() 
+			throws CouldNotCreateLogicalTimeFactory, InconsistentFDD, 
+			ErrorReadingFDD, CouldNotOpenFDD, NotConnected, RTIinternalError, 
+			MalformedURLException, FederateNameAlreadyInUse, 
+			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
+			CallNotAllowedFromWithinCallback, FederateNotExecutionMember, 
+			InTimeAdvancingState, RequestForTimeConstrainedPending, 
+			InvalidLookahead, RequestForTimeRegulationPending, NameNotFound, 
+			InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
+			ObjectClassNotPublished, ObjectInstanceNotKnown {
 		try {
 			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
 					new URL[]{new File(connection.getFomPath()).toURI().toURL()},
@@ -265,79 +409,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
 					connection.getFederateType(), connection.getFederationName());
 		} catch(FederateAlreadyExecutionMember ignored) { }
-		
-		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-			// if country includes a local national agriculture system
-			// publish its attributes
-			HLAagricultureSystem.publishAll(rtiAmbassador);
-			for(City city : country.getCities()) {
-				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-					AgricultureSystem.Local localSystem = 
-							(AgricultureSystem.Local) city.getAgricultureSystem();
-					HLAagricultureSystem hlaObject = HLAagricultureSystem.
-							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
-									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
-				}
-			}
-		}
-		HLAagricultureSystem.subscribeAll(rtiAmbassador);
-		
-		if(country.getWaterSystem() instanceof WaterSystem.Local) {
-			// if country includes a local national water system
-			// publish its attributes
-			HLAwaterSystem.publishAll(rtiAmbassador);
-			for(City city : country.getCities()) {
-				if(city.getWaterSystem() instanceof WaterSystem.Local) {
-					WaterSystem.Local localSystem = 
-							(WaterSystem.Local) city.getWaterSystem();
-					HLAwaterSystem hlaObject = HLAwaterSystem.
-							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
-									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
-				}
-			}
-		}
-		HLAwaterSystem.subscribeAll(rtiAmbassador);
-		
-		if(country.getEnergySystem() instanceof EnergySystem.Local) {
-			// if country includes a local national energy system
-			// publish its attributes
-			HLAenergySystem.publishAll(rtiAmbassador);
-			for(City city : country.getCities()) {
-				if(city.getEnergySystem() instanceof EnergySystem.Local) {
-					EnergySystem.Local localSystem = 
-							(EnergySystem.Local) city.getEnergySystem();
-					HLAenergySystem hlaObject = HLAenergySystem.
-							createLocalEnergySystem(rtiAmbassador, encoderFactory, 
-									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
-				}
-			}
-		}
-		HLAenergySystem.subscribeAll(rtiAmbassador);
-
-		// always publish city social system attributes
-		HLAsocialSystem.publishAll(rtiAmbassador);
-		for(City city : country.getCities()) {
-			if(city.getSocialSystem() instanceof SocialSystem.Local) {
-				SocialSystem.Local localSystem = 
-						(SocialSystem.Local) city.getSocialSystem();
-				HLAsocialSystem hlaObject = HLAsocialSystem.
-						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
-								localSystem);
-				synchronized(hlaObjects) {
-					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-				}	
-			}
-		}
-		HLAsocialSystem.subscribeAll(rtiAmbassador);
 		
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
@@ -363,26 +434,78 @@ public class SimAmbassador extends NullFederateAmbassador {
 			Thread.yield();
 		}
 		
-		TimeQueryReturn query = rtiAmbassador.queryGALT();
-		this.startTime = timeFactory.makeTime(startTime);
-		if(!query.timeIsValid) {
-			// first federate
-			rtiAmbassador.timeAdvanceRequest(this.startTime);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
+		if(simulator.getCountry().getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			// if country includes a local national agriculture system
+			// publish its attributes
+			HLAagricultureSystem.publishAll(rtiAmbassador);
+			for(City city : simulator.getCountry().getCities()) {
+				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+					AgricultureSystem.Local localSystem = 
+							(AgricultureSystem.Local) city.getAgricultureSystem();
+					HLAagricultureSystem hlaObject = HLAagricultureSystem.
+							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
+									localSystem);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					}	
+				}
 			}
-			timeAdvanceGranted.set(false);
-		} else {
-			/* use for non-time regulating federates
-			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
-			rtiAmbassador.timeAdvanceRequest(query.time);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-			*/
 		}
-		initialized.set(true);
+		HLAagricultureSystem.subscribeAll(rtiAmbassador);
+		
+		if(simulator.getCountry().getWaterSystem() instanceof WaterSystem.Local) {
+			// if country includes a local national water system
+			// publish its attributes
+			HLAwaterSystem.publishAll(rtiAmbassador);
+			for(City city : simulator.getCountry().getCities()) {
+				if(city.getWaterSystem() instanceof WaterSystem.Local) {
+					WaterSystem.Local localSystem = 
+							(WaterSystem.Local) city.getWaterSystem();
+					HLAwaterSystem hlaObject = HLAwaterSystem.
+							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
+									localSystem);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					}	
+				}
+			}
+		}
+		HLAwaterSystem.subscribeAll(rtiAmbassador);
+		
+		if(simulator.getCountry().getEnergySystem() instanceof EnergySystem.Local) {
+			// if country includes a local national energy system
+			// publish its attributes
+			HLAenergySystem.publishAll(rtiAmbassador);
+			for(City city : simulator.getCountry().getCities()) {
+				if(city.getEnergySystem() instanceof EnergySystem.Local) {
+					EnergySystem.Local localSystem = 
+							(EnergySystem.Local) city.getEnergySystem();
+					HLAenergySystem hlaObject = HLAenergySystem.
+							createLocalEnergySystem(rtiAmbassador, encoderFactory, 
+									localSystem);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					}	
+				}
+			}
+		}
+		HLAenergySystem.subscribeAll(rtiAmbassador);
+
+		// always publish city social system attributes
+		HLAsocialSystem.publishAll(rtiAmbassador);
+		for(City city : simulator.getCountry().getCities()) {
+			if(city.getSocialSystem() instanceof SocialSystem.Local) {
+				SocialSystem.Local localSystem = 
+						(SocialSystem.Local) city.getSocialSystem();
+				HLAsocialSystem hlaObject = HLAsocialSystem.
+						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
+								localSystem);
+				synchronized(hlaObjects) {
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+				}	
+			}
+		}
+		HLAsocialSystem.subscribeAll(rtiAmbassador);
 	}
 	
 	/* (non-Javadoc)
@@ -428,36 +551,49 @@ public class SimAmbassador extends NullFederateAmbassador {
 						system.setAllAttributes(theAttributes);
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
-							country.getSociety(system.getSocietyName()).setAgricultureSystem(
+							simulator.getCountry().getSociety(system.getSocietyName()).setAgricultureSystem(
 									(AgricultureSystem.Remote) system.getAgricultureSystem());
 							// TODO fire system update event to reset attribute change listeners
+							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
 						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
-							country.getSociety(system.getSocietyName()).setWaterSystem(
+							simulator.getCountry().getSociety(system.getSocietyName()).setWaterSystem(
 									(WaterSystem.Remote) system.getWaterSystem());
 							// TODO fire system update event to reset attribute change listeners
+							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
 						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
 						if(system.getInfrastructureSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
-							country.getSociety(system.getSocietyName()).setEnergySystem(
+							simulator.getCountry().getSociety(system.getSocietyName()).setEnergySystem(
 									(EnergySystem.Remote) system.getEnergySystem());
 							// TODO fire system update event to reset attribute change listeners
+							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
 						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
+						System.out.println("Receiving social system attribute updates...");
+						for(AttributeHandle ah : theAttributes.keySet()) {
+							HLAinteger64BE data = encoderFactory.createHLAinteger64BE();
+							data.decode(theAttributes.get(ah));
+							System.out.println(
+									rtiAmbassador.getAttributeName(system.getObjectClassHandle(), ah) 
+									+ ": " + theAttributes.get(ah) + " (" 
+									+ data.getValue() + ")");
+						}
 						system.setAllAttributes(theAttributes);
 						if(system.getSocialSystem().getSociety() == null 
 								&& !system.getSocietyName().isEmpty()) {
-							country.getSociety(system.getSocietyName()).setSocialSystem(
+							simulator.getCountry().getSociety(system.getSocietyName()).setSocialSystem(
 									(SocialSystem.Remote) system.getSocialSystem());
 							// TODO fire system update event to reset attribute change listeners
+							simulator.fireUpdateEvent();
 						}
 					}
 				} 
@@ -469,7 +605,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.LogicalTime, hla.rti1516e.OrderType, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
 	 */
@@ -483,7 +619,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			SupplementalReflectInfo reflectInfo) {
 		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, theTime, receivedOrdering, null, reflectInfo);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
 	 */
@@ -494,20 +630,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 			TransportationTypeHandle theTransport,
 			SupplementalReflectInfo reflectInfo) {
 		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, null, null, reflectInfo);
-	}
-	
-	public void advance() 
-			throws LogicalTimeAlreadyPassed, InvalidLogicalTime, 
-			InTimeAdvancingState, RequestForTimeRegulationPending, 
-			RequestForTimeConstrainedPending, SaveInProgress, 
-			RestoreInProgress, FederateNotExecutionMember, NotConnected, 
-			RTIinternalError, IllegalTimeArithmetic {
-		
-		rtiAmbassador.timeAdvanceRequest(logicalTime.add(tickInterval));
-		while(!timeAdvanceGranted.get()) {
-			Thread.yield();
-		}
-		timeAdvanceGranted.set(false);
 	}
 
 	/**
@@ -524,7 +646,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws SaveInProgress 
 	 * @throws  
 	 */
-	public void resignFederation() 
+	private void resignFederation() 
 			throws InvalidResignAction, OwnershipAcquisitionPending, 
 			FederateOwnsAttributes, CallNotAllowedFromWithinCallback, 
 			RTIinternalError, SaveInProgress, RestoreInProgress {

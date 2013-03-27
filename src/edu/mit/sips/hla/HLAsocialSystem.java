@@ -114,7 +114,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAsocialSystem hlaSystem = new HLAsocialSystem(rtiAmbassador, 
 				encoderFactory, instanceName, new DefaultSocialSystem.Remote());
-		hlaSystem.requestAttributeValueUpdate();
+		//hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}

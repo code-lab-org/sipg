@@ -105,7 +105,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
 				rtiAmbassador, encoderFactory, instanceName, new DefaultAgricultureSystem.Remote());
-		hlaSystem.requestAttributeValueUpdate();
+		//hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
