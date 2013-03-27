@@ -95,7 +95,6 @@ import edu.mit.sips.sim.Simulator;
 public class SimAmbassador extends NullFederateAmbassador {
 	
 	private final Simulator simulator;
-	private FederationConnection connection;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
 	private HLAinteger64Time logicalTime, startTime;
@@ -202,7 +201,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws InconsistentFDD 
 	 * @throws CouldNotCreateLogicalTimeFactory 
 	 */
-	public void connect(FederationConnection connection) 
+	public void connect() 
 			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
 			UnsupportedCallbackModel, CallNotAllowedFromWithinCallback, 
 			RTIinternalError, CouldNotCreateLogicalTimeFactory, 
@@ -214,12 +213,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 			RequestForTimeRegulationPending, NameNotFound, InvalidObjectClassHandle, 
 			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
 			ObjectInstanceNotKnown {
-		this.connection = connection;
 		try {
 			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
-					connection.getLocalSettingsDesignator());
+					simulator.getConnection().getLocalSettingsDesignator());
 		} catch(AlreadyConnected ignored) { }
-		connection.setConnected(true);
+		simulator.getConnection().setConnected(true);
 		
 		joinFederation();
 	}
@@ -243,7 +241,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		rtiAmbassador.disconnect();
 		
-		connection.setConnected(false);
+		simulator.getConnection().setConnected(false);
 	}
 
 	/* (non-Javadoc)
@@ -546,14 +544,14 @@ public class SimAmbassador extends NullFederateAmbassador {
 			InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
 			ObjectClassNotPublished, ObjectInstanceNotKnown {
 		try {
-			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
-					new URL[]{new File(connection.getFomPath()).toURI().toURL()},
+			rtiAmbassador.createFederationExecution(simulator.getConnection().getFederationName(), 
+					new URL[]{new File(simulator.getConnection().getFomPath()).toURI().toURL()},
 					"HLAinteger64Time");
 		} catch(FederationExecutionAlreadyExists ignored) { }
 		
 		try {
-			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
-					connection.getFederateType(), connection.getFederationName());
+			rtiAmbassador.joinFederationExecution(simulator.getConnection().getFederateName(), 
+					simulator.getConnection().getFederateType(), simulator.getConnection().getFederationName());
 		} catch(FederateAlreadyExecutionMember ignored) { }
 	}
 	
@@ -731,7 +729,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		} catch (NotConnected ignored) { }
 		
 		try {
-			rtiAmbassador.destroyFederationExecution(connection.getFederationName());
+			rtiAmbassador.destroyFederationExecution(simulator.getConnection().getFederationName());
 		} catch (FederatesCurrentlyJoined ignored) {
 		} catch (FederationExecutionDoesNotExist ignored) {
 		} catch (NotConnected ignored) {

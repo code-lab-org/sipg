@@ -10,13 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -47,7 +40,6 @@ implements ActionListener, ConnectionListener {
 	private static final String BROWSE_FOM = "browseFOM", 
 			TOGGLE_REMEMBER = "toggleReminder",
 			CONNECT = "connect";
-	private static final String CONNECTION_DATA = "connection.data";
 	
 	private final JTextField federateName, federateType, federationName, hostAddress, portNumber, fomPath;
 	private final JCheckBox rememberCheck;
@@ -196,17 +188,13 @@ implements ActionListener, ConnectionListener {
 		this.ambassador = ambassador;
 		
 		connectButton.setText(connection.isConnected()?"Disconnect":"Connect");
-		if(connection.isEmpty()) {
-			loadData();
-		} else {
-			federateName.setText(connection.getFederateName());
-			federateType.setText(connection.getFederateType());
-			federationName.setText(connection.getFederationName());
-			fomPath.setText(connection.getFomPath());
-			hostAddress.setText(connection.getHost());
-			portNumber.setText(new Integer(connection.getPort()).toString());
-			rememberCheck.setSelected(true);
-		}
+		federateName.setText(connection.getFederateName());
+		federateType.setText(connection.getFederateType());
+		federationName.setText(connection.getFederationName());
+		fomPath.setText(connection.getFomPath());
+		hostAddress.setText(connection.getHost());
+		portNumber.setText(new Integer(connection.getPort()).toString());
+		rememberCheck.setSelected(connection.isDataSaved());
 		isDataValid();
 	}
 
@@ -226,14 +214,14 @@ implements ActionListener, ConnectionListener {
 			}
 		} else if(e.getActionCommand().equals(CONNECT)) {
 			if(rememberCheck.isSelected()) {
-				saveData();
+				connection.saveData();
 			}
 			connect();
 		} else if(e.getActionCommand().equals(TOGGLE_REMEMBER)) {
 			if(rememberCheck.isSelected()) {
-				saveData();
+				connection.saveData();
 			} else {
-				clearData();
+				connection.clearData();
 			}
 		}
 	}
@@ -269,7 +257,7 @@ implements ActionListener, ConnectionListener {
 					@Override
 					protected Void doInBackground() {
 						try {
-							ambassador.connect(connection);
+							ambassador.connect();
 						} catch (Exception ex) {
 							ex.printStackTrace();
 							federateName.setEnabled(true);
@@ -378,59 +366,6 @@ implements ActionListener, ConnectionListener {
 				&& !federateName.getText().isEmpty() 
 				&& !federationName.getText().isEmpty()
 				&& isFomValid();
-	}
-	
-	/**
-	 * Loads connection data from file.
-	 */
-	private void loadData() {
-		InputStream input;
-		Properties properties = new Properties();
-		try {
-			input = new FileInputStream(new File(CONNECTION_DATA));
-			properties.loadFromXML(input);
-			input.close();
-		} catch (FileNotFoundException e) {
-			rememberCheck.setSelected(false);
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		federateName.setText(properties.getProperty("name"));
-		federateType.setText(properties.getProperty("type"));
-		federationName.setText(properties.getProperty("federation"));
-		fomPath.setText(properties.getProperty("fom"));
-		hostAddress.setText(properties.getProperty("host"));
-		portNumber.setText(properties.getProperty("port"));
-		rememberCheck.setSelected(true);
-	}
-	
-	/**
-	 * Saves the connection data to file.
-	 */
-	private void saveData() {
-		OutputStream output;
-		Properties properties = new Properties();
-		properties.setProperty("name", federateName.getText());
-		properties.setProperty("type", federateType.getText());
-		properties.setProperty("federation", federationName.getText());
-		properties.setProperty("fom", fomPath.getText());
-		properties.setProperty("host", hostAddress.getText());
-		properties.setProperty("port", portNumber.getText());
-		try {
-			output = new FileOutputStream(new File(CONNECTION_DATA));
-			properties.storeToXML(output, null);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Clears the saved connection data file.
-	 */
-	private void clearData() {
-		new File(CONNECTION_DATA).delete();
 	}
 
 	/* (non-Javadoc)

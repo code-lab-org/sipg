@@ -34,7 +34,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.hla.FederationConnection;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.sim.Simulator;
@@ -117,7 +116,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					br.close();
 					fr.close();
 					
-					initialize(new Simulator(
+					initialize(new Simulator(null,
 							Serialization.deserialize(jsonBuilder.toString())));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
@@ -275,18 +274,15 @@ public class DataFrame extends JFrame implements UpdateListener {
 	public void initialize(final Simulator simulator) {
 		if(simulator == null) {
 			if(this.simulator != null) {
-				if(this.simulator.getConnection() != null) {
-					if(this.simulator.getConnection().isConnected()) {
-						try {
-							this.simulator.getAmbassador().disconnect();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-						}
+				if(this.simulator.getConnection().isConnected()) {
+					try {
+						this.simulator.getAmbassador().disconnect();
+					} catch (Exception ex) {
+						ex.printStackTrace();
 					}
-					this.simulator.getConnection().removeConnectionListener(connectionPanel);
-					this.simulator.getConnection().removeConnectionListener(connectionToolbar);
-					this.simulator.setConnection(null);
 				}
+				this.simulator.getConnection().removeConnectionListener(connectionPanel);
+				this.simulator.getConnection().removeConnectionListener(connectionToolbar);
 				this.simulator.removeUpdateListener(this);
 				this.simulator.removeUpdateListener(simulationPane);
 				this.simulator.removeUpdateListener(societyPane);
@@ -305,7 +301,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
-			simulator.setConnection(new FederationConnection());
 			connectionPanel.initialize(simulator.getConnection(), simulator.getAmbassador());
 			simulator.getConnection().addConnectionListener(connectionPanel);
 			simulator.getConnection().addConnectionListener(connectionToolbar);

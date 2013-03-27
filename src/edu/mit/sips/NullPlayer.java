@@ -45,7 +45,7 @@ public class NullPlayer {
 						new DefaultSocialSystem.Remote())
 			));
 
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator("Null Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -55,5 +55,10 @@ public class NullPlayer {
 				frame.setVisible(true);
 			}
 		});
+		try {
+			simulator.getAmbassador().connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -63,7 +63,7 @@ public class Player1 {
 			}
 		}
 
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator("Energy Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -73,5 +73,10 @@ public class Player1 {
 				frame.setVisible(true);
 			}
 		});
+		try {
+			simulator.getAmbassador().connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

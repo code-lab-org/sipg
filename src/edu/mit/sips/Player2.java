@@ -50,7 +50,7 @@ public class Player2 {
 		jws.addElement(ElementFactory.createAquiferWell(riyadh, 1940));
 		jws.addElement(ElementFactory.createAquiferWell(riyadh, 1965));
 
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator("Water Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -60,5 +60,10 @@ public class Player2 {
 				frame.setVisible(true);
 			}
 		});
+		try {
+			simulator.getAmbassador().connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

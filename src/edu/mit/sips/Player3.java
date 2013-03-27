@@ -70,7 +70,7 @@ public class Player3 {
 			}
 		}
 
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator("Agriculture Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -80,5 +80,10 @@ public class Player3 {
 				frame.setVisible(true);
 			}
 		});
+		try {
+			simulator.getAmbassador().connect();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

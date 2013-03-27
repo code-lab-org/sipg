@@ -35,7 +35,7 @@ public class Simulator implements SimulationControlListener {
 	
 	private long time;
 
-	private FederationConnection connection;
+	private final FederationConnection connection = new FederationConnection();
 	private transient SimAmbassador simAmbassador;
 
 	private transient EventListenerList listenerList = new EventListenerList(); // mutableO
@@ -49,26 +49,21 @@ public class Simulator implements SimulationControlListener {
 	}
 	
 	/**
-	 * Gets the ambassador.
-	 *
-	 * @return the ambassador
-	 */
-	public SimAmbassador getAmbassador() {
-		return simAmbassador;
-	}
-	
-	/**
 	 * Instantiates a new simulator.
 	 *
 	 * @param country the country
 	 */
-	public Simulator(Country country) {
-		
+	public Simulator(String federateName, Country country) {
+		if(federateName != null) {
+			this.connection.setFederateName(federateName);
+		}
+				
 		// Validate country.
 		if(country == null) {
 			throw new IllegalArgumentException("Country cannot be null.");
 		}
 		this.country = country;
+		
 		try {
 			simAmbassador = new SimAmbassador(this);
 		} catch (RTIinternalError ex) {
@@ -162,6 +157,24 @@ public class Simulator implements SimulationControlListener {
 	}
 	
 	/**
+	 * Gets the ambassador.
+	 *
+	 * @return the ambassador
+	 */
+	public SimAmbassador getAmbassador() {
+		return simAmbassador;
+	}
+	
+	/**
+	 * Gets the connection.
+	 *
+	 * @return the connection
+	 */
+	public FederationConnection getConnection() {
+		return connection;
+	}
+	
+	/**
 	 * Gets the country.
 	 *
 	 * @return the country
@@ -195,7 +208,7 @@ public class Simulator implements SimulationControlListener {
 			}
 		}
 		try {
-			simAmbassador.connect(connection);
+			simAmbassador.connect();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -215,30 +228,30 @@ public class Simulator implements SimulationControlListener {
 		initialized = true;
 	}
 	
-	/**
-	 * Gets the connection.
-	 *
-	 * @return the connection
-	 */
-	public FederationConnection getConnection() {
-		return connection;
-	}
-	
-	/**
-	 * Sets the connection.
-	 *
-	 * @param connection the new connection
-	 */
-	public void setConnection(FederationConnection connection) {
-		this.connection = connection;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SimulationControlListener#initializeSimulation(edu.mit.sips.gui.SimulationControlEvent)
 	 */
 	@Override
 	public synchronized void initializeSimulation(SimulationControlEvent.Initialize event) {
 		initialize(event.getStartTime(), event.getEndTime());
+	}
+
+	/**
+	 * Checks if is auto optimize distribution.
+	 *
+	 * @return true, if is auto optimize distribution
+	 */
+	public boolean isAutoOptimizeDistribution() {
+		return autoOptimizeDistribution;
+	}
+
+	/**
+	 * Checks if is auto optimize production and distribution.
+	 *
+	 * @return true, if is auto optimize production and distribution
+	 */
+	public boolean isAutoOptimizeProductionAndDistribution() {
+		return autoOptimizeProductionAndDistribution;
 	}
 
 	/**
@@ -256,60 +269,6 @@ public class Simulator implements SimulationControlListener {
 	@Override
 	public synchronized void resetSimulation(Reset event) {
 		initialize(startTime, endTime);
-	}
-
-	/**
-	 * Tick tock.
-	 *
-	 * @return the long
-	 */
-	private long tickTock() {		
-		country.tick();
-		country.tock();
-		
-		try {
-			simAmbassador.advance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ++time;
-	}
-	
-	/**
-	 * Checks if is auto optimize distribution.
-	 *
-	 * @return true, if is auto optimize distribution
-	 */
-	public boolean isAutoOptimizeDistribution() {
-		return autoOptimizeDistribution;
-	}
-
-	/**
-	 * Sets the auto optimize distribution.
-	 *
-	 * @param autoOptimizeDistribution the new auto optimize distribution
-	 */
-	public void setAutoOptimizeDistribution(boolean autoOptimizeDistribution) {
-		this.autoOptimizeDistribution = autoOptimizeDistribution;
-	}
-
-	/**
-	 * Checks if is auto optimize production and distribution.
-	 *
-	 * @return true, if is auto optimize production and distribution
-	 */
-	public boolean isAutoOptimizeProductionAndDistribution() {
-		return autoOptimizeProductionAndDistribution;
-	}
-
-	/**
-	 * Sets the auto optimize production and distribution.
-	 *
-	 * @param autoOptimizeProductionAndDistribution the new auto optimize production and distribution
-	 */
-	public void setAutoOptimizeProductionAndDistribution(
-			boolean autoOptimizeProductionAndDistribution) {
-		this.autoOptimizeProductionAndDistribution = autoOptimizeProductionAndDistribution;
 	}
 	
 	/**
@@ -349,12 +308,48 @@ public class Simulator implements SimulationControlListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * Run optimization.
 	 */
 	public void runOptimization() {
 		runAutoOptimization();
 		fireUpdateEvent();
+	}
+
+	/**
+	 * Sets the auto optimize distribution.
+	 *
+	 * @param autoOptimizeDistribution the new auto optimize distribution
+	 */
+	public void setAutoOptimizeDistribution(boolean autoOptimizeDistribution) {
+		this.autoOptimizeDistribution = autoOptimizeDistribution;
+	}
+
+	/**
+	 * Sets the auto optimize production and distribution.
+	 *
+	 * @param autoOptimizeProductionAndDistribution the new auto optimize production and distribution
+	 */
+	public void setAutoOptimizeProductionAndDistribution(
+			boolean autoOptimizeProductionAndDistribution) {
+		this.autoOptimizeProductionAndDistribution = autoOptimizeProductionAndDistribution;
+	}
+	
+	/**
+	 * Tick tock.
+	 *
+	 * @return the long
+	 */
+	private long tickTock() {		
+		country.tick();
+		country.tock();
+		
+		try {
+			simAmbassador.advance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ++time;
 	}
 }
