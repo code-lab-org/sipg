@@ -123,17 +123,6 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			}
 			return value;
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getName()
-		 */
-		@Override
-		public String getName() {
-			if(getSociety() != null) {
-				return getSociety().getName() + " " + super.getName();
-			}
-			return super.getName();
-		}
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
