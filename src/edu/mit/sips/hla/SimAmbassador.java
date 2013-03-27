@@ -25,6 +25,7 @@ import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
 import hla.rti1516e.exceptions.AttributeNotDefined;
+import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.CallNotAllowedFromWithinCallback;
 import hla.rti1516e.exceptions.ConnectionFailed;
 import hla.rti1516e.exceptions.CouldNotCreateLogicalTimeFactory;
@@ -44,6 +45,7 @@ import hla.rti1516e.exceptions.InTimeAdvancingState;
 import hla.rti1516e.exceptions.InconsistentFDD;
 import hla.rti1516e.exceptions.InvalidLocalSettingsDesignator;
 import hla.rti1516e.exceptions.InvalidLogicalTime;
+import hla.rti1516e.exceptions.InvalidLogicalTimeInterval;
 import hla.rti1516e.exceptions.InvalidLookahead;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.InvalidResignAction;
@@ -129,13 +131,26 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws NotConnected the not connected
 	 * @throws RTIinternalError the rT iinternal error
 	 * @throws IllegalTimeArithmetic the illegal time arithmetic
+	 * @throws TimeRegulationIsNotEnabled 
+	 * @throws InvalidLogicalTimeInterval 
+	 * @throws ObjectInstanceNotKnown 
+	 * @throws AttributeNotDefined 
+	 * @throws AttributeNotOwned 
 	 */
 	public void advance() 
 			throws LogicalTimeAlreadyPassed, InvalidLogicalTime, 
 			InTimeAdvancingState, RequestForTimeRegulationPending, 
 			RequestForTimeConstrainedPending, SaveInProgress, 
 			RestoreInProgress, FederateNotExecutionMember, NotConnected, 
-			RTIinternalError, IllegalTimeArithmetic {
+			RTIinternalError, IllegalTimeArithmetic, AttributeNotOwned, 
+			AttributeNotDefined, ObjectInstanceNotKnown, 
+			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
+		for(HLAinfrastructureSystem system : hlaObjects.values()) {
+			if(system.isLocal()) {
+				system.updateAllAttributes();
+			}
+		}
+		
 		for(City city : simulator.getCountry().getCities()) {
 			if(city.getSocialSystem() instanceof SocialSystem.Local) {
 				// TODO incomplete
@@ -341,15 +356,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			timeAdvanceGranted.set(false);
 			*/
 		}
-		
-		for(City city : simulator.getCountry().getCities()) {
-			if(city.getSocialSystem() instanceof SocialSystem.Local) {
-				// TODO incomplete
-				city.getSocialSystem().fireAttributeChangeEvent(
-						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE));
-			}
-		}
-		
+
 		initialized.set(true);
 	}
 
