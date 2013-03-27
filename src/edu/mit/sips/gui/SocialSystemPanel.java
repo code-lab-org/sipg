@@ -9,7 +9,7 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.social.DefaultSocialSystem;
+import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.io.Icons;
 
@@ -47,7 +47,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Revenue (SAR/year)", infrastructureSystemRevenue, 
 				null, infrastructureSystemNetRevenue));
-		if(!(getSocialSystem() instanceof DefaultSocialSystem.Local)) {
+		if(getSocialSystem() instanceof SocialSoS) {
 			addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 					"Revenue (SAR/year)", societyRevenue, null, societyNetRevenue));
 		}
@@ -111,13 +111,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 		domesticProductIndicatorPanel.setValue(
 				getSocialSystem().getDomesticProductPerCapita());
 		
-		if(getSocialSystem() instanceof DefaultSocialSystem.Local) {
-			updateSeries(populationDataset, getSociety().getName(), year, 
-					getSocialSystem().getPopulation());
-			
-			updateSeries(domesticProduct, getSociety().getName(), year, 
-					getSocialSystem().getDomesticProduct());
-		} else {
+		if(getSocialSystem() instanceof SocialSoS) {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(populationDataset, nestedSociety.getName(), year, 
 						nestedSociety.getSocialSystem().getPopulation());
@@ -134,6 +128,12 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 			}
 			updateSeries(societyNetRevenue, "Net Revenue", year, 
 					getSociety().getCashFlow());
+		} else {
+			updateSeries(populationDataset, getSociety().getName(), year, 
+					getSocialSystem().getPopulation());
+			
+			updateSeries(domesticProduct, getSociety().getName(), year, 
+					getSocialSystem().getDomesticProduct());
 		}
 	}
 
