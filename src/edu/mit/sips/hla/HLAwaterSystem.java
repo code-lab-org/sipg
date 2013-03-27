@@ -46,7 +46,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		WATER_SUPPLY_PER_CAPITA_ATTRIBUTE
 	};
-	
+
 	/**
 	 * Creates the local water system.
 	 *
@@ -112,7 +112,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
-
+	
 	/**
 	 * Publish all.
 	 *
@@ -142,7 +142,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-	
+
 	/**
 	 * Subscribe all.
 	 *
@@ -172,10 +172,10 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-
-	private final HLAfloat64BE electricityConsumption;
-	private final HLAfloat64BE waterSupplyPerCapita;
 	
+	private final HLAfloat64BE electricityConsumption;
+
+	private final HLAfloat64BE waterSupplyPerCapita;
 	/**
 	 * Instantiates a new hL awater system.
 	 *
@@ -211,15 +211,6 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 				waterSupplyPerCapita);
 	}
 	
-	/**
-	 * Gets the water system.
-	 *
-	 * @return the water system
-	 */
-	public WaterSystem getWaterSystem() {
-		return (WaterSystem) getInfrastructureSystem();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
 	 */
@@ -262,7 +253,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 			}
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
@@ -285,5 +276,26 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
+	}
+
+	/**
+	 * Gets the water system.
+	 *
+	 * @return the water system
+	 */
+	public WaterSystem getWaterSystem() {
+		return (WaterSystem) getInfrastructureSystem();
+	}
+
+	/**
+	 * Sets the water system.
+	 *
+	 * @param waterSystem the new water system
+	 */
+	public void setWaterSystem(WaterSystem.Remote waterSystem) {
+		// copy attribute values to new system
+		waterSystem.setElectricityConsumption(getWaterSystem().getElectricityConsumption());
+		waterSystem.setWaterSupplyPerCapita(getWaterSystem().getWaterSupplyPerCapita());
+		super.setInfrastructureSystem(waterSystem);
 	}
 }

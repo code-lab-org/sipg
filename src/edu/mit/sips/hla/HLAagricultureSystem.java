@@ -44,7 +44,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE
 	};
-	
+
 	/**
 	 * Creates the local water system.
 	 *
@@ -109,7 +109,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
-
+	
 	/**
 	 * Publish all.
 	 *
@@ -139,7 +139,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-	
+
 	/**
 	 * Subscribe all.
 	 *
@@ -169,9 +169,9 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-
-	private final HLAfloat64BE waterConsumption;
 	
+	private final HLAfloat64BE waterConsumption;
+
 	/**
 	 * Instantiates a new hL aagriculture system.
 	 *
@@ -202,15 +202,6 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 				waterConsumption);
 	}
 	
-	/**
-	 * Gets the agriculture system.
-	 *
-	 * @return the agriculture system
-	 */
-	public AgricultureSystem getAgricultureSystem() {
-		return (AgricultureSystem) getInfrastructureSystem();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
 	 */
@@ -243,6 +234,15 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 			}
 		}
 	}
+	
+	/**
+	 * Gets the agriculture system.
+	 *
+	 * @return the agriculture system
+	 */
+	public AgricultureSystem getAgricultureSystem() {
+		return (AgricultureSystem) getInfrastructureSystem();
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
@@ -266,5 +266,16 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
+	}
+
+	/**
+	 * Sets the agriculture system.
+	 *
+	 * @param agricultureSystem the new agriculture system
+	 */
+	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
+		// copy attribute values to new system
+		agricultureSystem.setWaterConsumption(getAgricultureSystem().getWaterConsumption());
+		super.setInfrastructureSystem(agricultureSystem);
 	}
 }

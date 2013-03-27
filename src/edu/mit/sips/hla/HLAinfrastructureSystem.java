@@ -106,7 +106,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 				attributeHandleSet);
 	}
 
-	private final InfrastructureSystem infrastructureSystem;
+	private InfrastructureSystem infrastructureSystem;
 	private final HLAunicodeString name;
 	private final HLAunicodeString societyName;
 	private final HLAfloat64BE netCashFlow;
@@ -159,15 +159,6 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 				domesticProduction);
 	}
 	
-	/**
-	 * Gets the infrastructure system.
-	 *
-	 * @return the infrastructure system
-	 */
-	public InfrastructureSystem getInfrastructureSystem() {
-		return infrastructureSystem;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
 	 */
@@ -216,7 +207,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 			}
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
@@ -233,6 +224,15 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
+	/**
+	 * Gets the infrastructure system.
+	 *
+	 * @return the infrastructure system
+	 */
+	public InfrastructureSystem getInfrastructureSystem() {
+		return infrastructureSystem;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
 	 */
@@ -240,7 +240,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	public String getObjectClassName() {
 		return CLASS_NAME;
 	}
-	
+
 	/**
 	 * Gets the society name.
 	 *
@@ -248,5 +248,18 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	 */
 	public String getSocietyName() {
 		return societyName.getValue();
+	}
+	
+	/**
+	 * Sets the infrastructure system.
+	 *
+	 * @param infrastructureSystem the new infrastructure system
+	 */
+	public void setInfrastructureSystem(InfrastructureSystem.Remote infrastructureSystem) {
+		// copy attribute values to new system
+		infrastructureSystem.setName(getInfrastructureSystem().getName());
+		infrastructureSystem.setCashFlow(getInfrastructureSystem().getCashFlow());
+		infrastructureSystem.setDomesticProduction(getInfrastructureSystem().getDomesticProduction());
+		this.infrastructureSystem = infrastructureSystem;
 	}
 }

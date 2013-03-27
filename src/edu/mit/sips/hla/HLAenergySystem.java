@@ -48,7 +48,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		PETROLEUM_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE
 	};
-	
+
 	/**
 	 * Creates the local energy system.
 	 *
@@ -114,7 +114,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
-
+	
 	/**
 	 * Publish all.
 	 *
@@ -144,7 +144,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-	
+
 	/**
 	 * Subscribe all.
 	 *
@@ -174,11 +174,11 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-
+	
 	private final HLAfloat64BE electricityConsumption;
+
 	private final HLAfloat64BE petroleumConsumption;
 	private final HLAfloat64BE waterConsumption;
-	
 	/**
 	 * Instantiates a new hL aenergy system.
 	 *
@@ -218,15 +218,6 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 				waterConsumption);
 	}
 	
-	/**
-	 * Gets the water system.
-	 *
-	 * @return the water system
-	 */
-	public EnergySystem getEnergySystem() {
-		return (EnergySystem) getInfrastructureSystem();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
 	 */
@@ -280,7 +271,7 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 			}
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
@@ -297,11 +288,33 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
+	/**
+	 * Gets the water system.
+	 *
+	 * @return the water system
+	 */
+	public EnergySystem getEnergySystem() {
+		return (EnergySystem) getInfrastructureSystem();
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
 	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
+	}
+
+	/**
+	 * Sets the energy system.
+	 *
+	 * @param energySystem the new energy system
+	 */
+	public void setEnergySystem(EnergySystem.Remote energySystem) {
+		// copy attribute values to new system
+		energySystem.setElectricityConsumption(getEnergySystem().getElectricityConsumption());
+		energySystem.setPetroleumConsumption(getEnergySystem().getPetroleumConsumption());
+		energySystem.setWaterConsumption(getEnergySystem().getWaterConsumption());
+		super.setInfrastructureSystem(energySystem);
 	}
 }

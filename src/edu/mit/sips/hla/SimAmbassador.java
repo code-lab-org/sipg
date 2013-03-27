@@ -596,50 +596,41 @@ public class SimAmbassador extends NullFederateAmbassador {
 					if(hlaObjects.get(theObject) instanceof HLAagricultureSystem) {
 						HLAagricultureSystem system = (HLAagricultureSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null 
+						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
-							simulator.getCountry().getSociety(system.getSocietyName()).setAgricultureSystem(
-									(AgricultureSystem.Remote) system.getAgricultureSystem());
-							// TODO fire system update event to reset attribute change listeners
+							system.setAgricultureSystem((AgricultureSystem.Remote)
+									simulator.getCountry().getSociety(
+											system.getSocietyName()).getAgricultureSystem());
 							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
 						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null 
+						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
-							simulator.getCountry().getSociety(system.getSocietyName()).setWaterSystem(
-									(WaterSystem.Remote) system.getWaterSystem());
-							// TODO fire system update event to reset attribute change listeners
+							system.setWaterSystem((WaterSystem.Remote)
+									simulator.getCountry().getSociety(
+											system.getSocietyName()).getWaterSystem());
 							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
 						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null 
+						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
-							simulator.getCountry().getSociety(system.getSocietyName()).setEnergySystem(
-									(EnergySystem.Remote) system.getEnergySystem());
-							// TODO fire system update event to reset attribute change listeners
+							system.setEnergySystem((EnergySystem.Remote)
+									simulator.getCountry().getSociety(
+											system.getSocietyName()).getEnergySystem());
 							simulator.fireUpdateEvent();
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
 						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
-						System.out.println("Receiving social system attribute updates...");
-						for(AttributeHandle ah : theAttributes.keySet()) {
-							HLAinteger64BE data = encoderFactory.createHLAinteger64BE();
-							data.decode(theAttributes.get(ah));
-							System.out.println(
-									rtiAmbassador.getAttributeName(system.getObjectClassHandle(), ah) 
-									+ ": " + theAttributes.get(ah) + " (" 
-									+ data.getValue() + ")");
-						}
 						system.setAllAttributes(theAttributes);
-						if(system.getSocialSystem().getSociety() == null 
+						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
-							simulator.getCountry().getSociety(system.getSocietyName()).setSocialSystem(
-									(SocialSystem.Remote) system.getSocialSystem());
-							// TODO fire system update event to reset attribute change listeners
+							system.setSocialSystem((SocialSystem.Remote)
+									simulator.getCountry().getSociety(
+											system.getSocietyName()).getSocialSystem());
 							simulator.fireUpdateEvent();
 						}
 					}

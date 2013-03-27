@@ -93,8 +93,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 
 	@Override
 	public void update(int year) {
-
-
 		if(getSociety() instanceof Country) {
 			updateSeriesCollection(fundsData, getSociety().getName(), year, 
 					((Country)getSociety()).getFunds());

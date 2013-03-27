@@ -155,6 +155,8 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			energyTab.update(year);
 		}
 		if(socialTab != null) {
+			setTitleAt(indexOfComponent(socialTab), 
+					socialTab.getSocialSystem().getName());
 			socialTab.update(year);
 		}
 		

@@ -232,15 +232,6 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 				population);
 	}
 	
-	/**
-	 * Gets the water system.
-	 *
-	 * @return the water system
-	 */
-	public SocialSystem getSocialSystem() {
-		return (SocialSystem) getInfrastructureSystem();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
 	 */
@@ -316,7 +307,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 			}
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
@@ -339,5 +330,29 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
+	}
+
+	/**
+	 * Gets the water system.
+	 *
+	 * @return the water system
+	 */
+	public SocialSystem getSocialSystem() {
+		return (SocialSystem) getInfrastructureSystem();
+	}
+
+	/**
+	 * Sets the social system.
+	 *
+	 * @param socialSystem the new social system
+	 */
+	public void setSocialSystem(SocialSystem.Remote socialSystem) {
+		// copy attribute values to new system
+		socialSystem.setDomesticProduct(getSocialSystem().getDomesticProduct());
+		socialSystem.setElectricityConsumption(getSocialSystem().getElectricityConsumption());
+		socialSystem.setFoodConsumption(getSocialSystem().getFoodConsumption());
+		socialSystem.setPopulation(getSocialSystem().getPopulation());
+		socialSystem.setWaterConsumption(getSocialSystem().getWaterConsumption());
+		super.setInfrastructureSystem(socialSystem);
 	}
 }
