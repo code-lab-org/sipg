@@ -76,7 +76,6 @@ import javax.swing.JOptionPane;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
-import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
@@ -266,15 +265,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
 					connection.getFederateType(), connection.getFederationName());
 		} catch(FederateAlreadyExecutionMember ignored) { }
-
+		
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			// if country includes a local national agriculture system
 			// publish its attributes
 			HLAagricultureSystem.publishAll(rtiAmbassador);
-			for(Society society : country.getSocieties()) {
-				if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			for(City city : country.getCities()) {
+				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 					AgricultureSystem.Local localSystem = 
-							(AgricultureSystem.Local) society.getAgricultureSystem();
+							(AgricultureSystem.Local) city.getAgricultureSystem();
 					HLAagricultureSystem hlaObject = HLAagricultureSystem.
 							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
@@ -290,10 +289,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 			// if country includes a local national water system
 			// publish its attributes
 			HLAwaterSystem.publishAll(rtiAmbassador);
-			for(Society society : country.getSocieties()) {
-				if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			for(City city : country.getCities()) {
+				if(city.getWaterSystem() instanceof WaterSystem.Local) {
 					WaterSystem.Local localSystem = 
-							(WaterSystem.Local) society.getWaterSystem();
+							(WaterSystem.Local) city.getWaterSystem();
 					HLAwaterSystem hlaObject = HLAwaterSystem.
 							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
@@ -309,10 +308,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 			// if country includes a local national energy system
 			// publish its attributes
 			HLAenergySystem.publishAll(rtiAmbassador);
-			for(Society society : country.getSocieties()) {
-				if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			for(City city : country.getCities()) {
+				if(city.getEnergySystem() instanceof EnergySystem.Local) {
 					EnergySystem.Local localSystem = 
-							(EnergySystem.Local) society.getEnergySystem();
+							(EnergySystem.Local) city.getEnergySystem();
 					HLAenergySystem hlaObject = HLAenergySystem.
 							createLocalEnergySystem(rtiAmbassador, encoderFactory, 
 									localSystem);

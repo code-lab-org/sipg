@@ -30,14 +30,14 @@ import edu.mit.sips.core.Society;
  */
 public abstract class InfrastructureSystemPanel extends JTabbedPane implements UpdateListener {
 	private static final long serialVersionUID = -5223317851664526305L;
-	private final InfrastructureSystem.Local infrastructureSystem;
+	private final InfrastructureSystem infrastructureSystem;
 
 	/**
 	 * Instantiates a new infrastructure system panel.
 	 *
 	 * @param infrastructureSystem the infrastructure system
 	 */
-	public InfrastructureSystemPanel(InfrastructureSystem.Local infrastructureSystem) {
+	public InfrastructureSystemPanel(InfrastructureSystem infrastructureSystem) {
 		this.infrastructureSystem = infrastructureSystem;
 	}
 	
@@ -46,7 +46,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 *
 	 * @return the infrastructure system
 	 */
-	public InfrastructureSystem.Local getInfrastructureSystem() {
+	public InfrastructureSystem getInfrastructureSystem() {
 		return infrastructureSystem;
 	}
 	

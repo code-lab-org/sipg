@@ -43,7 +43,7 @@ public class SuperPlayer {
 						new DefaultAgricultureSystem.Local(5000),
 						new DefaultWaterSystem.Local(false, 1e9, 1e9, 1e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
-						new DefaultSocialSystem.Remote())
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000)))
 			));
 		
 		DefaultEnergySystem.Local res = (DefaultEnergySystem.Local) ksa.getCity(riyadh).getEnergySystem();

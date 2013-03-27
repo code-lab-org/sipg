@@ -28,7 +28,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset societyRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset societyNetRevenue = new DefaultTableXYDataset();
 
-	public SocialSystemPanel(SocialSystem.Local socialSystem) {
+	public SocialSystemPanel(SocialSystem socialSystem) {
 		super(socialSystem);
 
 		JPanel indicatorsPanel = new JPanel();
@@ -64,8 +64,8 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 	 *
 	 * @return the social system
 	 */
-	public SocialSystem.Local getSocialSystem() {
-		return (SocialSystem.Local) getInfrastructureSystem(); 
+	public SocialSystem getSocialSystem() {
+		return (SocialSystem) getInfrastructureSystem(); 
 	}
 
 	@Override

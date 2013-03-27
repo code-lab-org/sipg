@@ -13,7 +13,6 @@ import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
 
@@ -43,14 +42,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 				localSystemCount++;
 			}
 		}
-		
-		if(society.getSocialSystem() instanceof SocialSystem.Local) {
-			socialTab = new SocialSystemPanel(
-					(SocialSystem.Local)society.getSocialSystem());
-			addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
-		} else {
-			socialTab = null;
-		}
+
+		socialTab = new SocialSystemPanel(society.getSocialSystem());
+		addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
 		
 		JTabbedPane infraPane;
 		if(society instanceof City || localSystemCount <= 1) {
