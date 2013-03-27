@@ -35,7 +35,7 @@ public class Country extends DefaultSociety implements Society {
 			}
 		}
 		
-		WaterSystem waterSystem = null;
+		WaterSystem waterSystem = new DefaultWaterSoS();
 		// water system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
