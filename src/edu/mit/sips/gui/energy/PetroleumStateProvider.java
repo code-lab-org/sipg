@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.energy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +8,7 @@ import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.gui.SpatialStateProvider;
 
 /**
  * The Class PetroleumStateProvider.

@@ -8,7 +8,6 @@ import javax.swing.JTabbedPane;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -17,6 +16,12 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.agriculture.AgricultureSystemPanel;
 import edu.mit.sips.gui.agriculture.BasicAgricultureSystemPanel;
 import edu.mit.sips.gui.agriculture.LocalAgricultureSystemPanel;
+import edu.mit.sips.gui.energy.BasicEnergySystemPanel;
+import edu.mit.sips.gui.energy.EnergySystemPanel;
+import edu.mit.sips.gui.energy.LocalEnergySystemPanel;
+import edu.mit.sips.gui.water.BasicWaterSystemPanel;
+import edu.mit.sips.gui.water.LocalWaterSystemPanel;
+import edu.mit.sips.gui.water.WaterSystemPanel;
 import edu.mit.sips.io.Icons;
 
 /**
@@ -40,17 +45,19 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param society the society
 	 */
 	public SocietyPane(Society society) {
+		/*
 		int localSystemCount = 0;
 		for(InfrastructureSystem system : society.getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				localSystemCount++;
 			}
 		}
+		*/
 
 		socialTab = new SocialSystemPanel(society.getSocialSystem());
 		addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
 		
-		if(society instanceof City) {
+		if(society instanceof City) { // || localSystemCount <= 1) {
 			// add infrastructure directly to society panel if city
 			// or if there are only 0 or 1 local infrastructure
 			infraPane = this;
@@ -70,22 +77,22 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 				Icons.AGRICULTURE, agricultureTab);
 		
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			waterTab = new WaterSystemPanel(
-					(WaterSystem.Local) society.getWaterSystem());
-			infraPane.addTab(society.getWaterSystem().getName(), 
-					Icons.WATER, waterTab);			
+			waterTab = new LocalWaterSystemPanel(
+					(WaterSystem.Local) society.getWaterSystem());	
 		} else {
-			waterTab = null;
+			waterTab = new BasicWaterSystemPanel(society.getWaterSystem());
 		}
+		infraPane.addTab(society.getWaterSystem().getName(), 
+				Icons.WATER, waterTab);		
 		
 		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			energyTab = new EnergySystemPanel(
+			energyTab = new LocalEnergySystemPanel(
 					(EnergySystem.Local) society.getEnergySystem());
-			infraPane.addTab(society.getEnergySystem().getName(), 
-					Icons.ENERGY, energyTab);
 		} else {
-			energyTab = null;
+			energyTab = new BasicEnergySystemPanel(society.getEnergySystem());
 		}
+		infraPane.addTab(society.getEnergySystem().getName(), 
+				Icons.ENERGY, energyTab);
 
 		for(Society nestedSociety : society.getNestedSocieties()) {
 			SocietyPane subPane = new SocietyPane(nestedSociety);
@@ -146,18 +153,17 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param superSystem the system
 	 */
 	public void updateDatasets(int year) {
-
-		if(waterTab != null) {
-			waterTab.update(year);
-		}
+		infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
+				waterTab.getInfrastructureSystem().getName());
+		waterTab.update(year);
 
 		infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
 				agricultureTab.getInfrastructureSystem().getName());
 		agricultureTab.update(year);
 		
-		if(energyTab != null) {
-			energyTab.update(year);
-		}
+		infraPane.setTitleAt(infraPane.indexOfComponent(energyTab), 
+				energyTab.getInfrastructureSystem().getName());
+		energyTab.update(year);
 
 		setTitleAt(indexOfComponent(socialTab), 
 				socialTab.getInfrastructureSystem().getName());
@@ -173,18 +179,10 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		if(waterTab != null) {
-			waterTab.simulationInitialized(event);
-		}
-		
+		waterTab.simulationInitialized(event);
 		agricultureTab.simulationInitialized(event);
-		
-		if(energyTab != null) {
-			energyTab.simulationInitialized(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationInitialized(event);
-		}
+		socialTab.simulationInitialized(event);
+		energyTab.simulationInitialized(event);
 		
 		for(SocietyPane nestedPane : nestedPaneList) {
 			nestedPane.simulationInitialized(event);
@@ -196,18 +194,10 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		if(waterTab != null) {
-			waterTab.simulationUpdated(event);
-		}
-		
+		waterTab.simulationUpdated(event);
 		agricultureTab.simulationUpdated(event);
-		
-		if(energyTab != null) {
-			energyTab.simulationUpdated(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationUpdated(event);
-		}
+		energyTab.simulationUpdated(event);
+		socialTab.simulationUpdated(event);
 		
 		for(SocietyPane nestedPane : nestedPaneList) {
 			nestedPane.simulationUpdated(event);

@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.water;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.gui.DocumentChangeListener;
+import edu.mit.sips.gui.ElementPanel;
 
 /**
  * The Class WaterElementPanel.

@@ -36,6 +36,9 @@ import edu.mit.sips.core.energy.MutableElectricityElement;
 import edu.mit.sips.core.energy.MutablePetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
+import edu.mit.sips.gui.energy.ElectricityElementPanel;
+import edu.mit.sips.gui.energy.PetroleumElementPanel;
+import edu.mit.sips.gui.water.WaterElementPanel;
 
 /**
  * The Class ElementPanel.

@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.water;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +13,15 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.LinearIndicatorPanel;
+import edu.mit.sips.gui.SpatialStatePanel;
+import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**
  * The Class WaterSystemPanel.
  */
-public class WaterSystemPanel extends InfrastructureSystemPanel {	
+public class LocalWaterSystemPanel extends WaterSystemPanel {	
 	private static final long serialVersionUID = -3665986046863585665L;
 	
 	private final LinearIndicatorPanel localWaterIndicatorPanel, 
@@ -44,7 +47,7 @@ public class WaterSystemPanel extends InfrastructureSystemPanel {
 	 *
 	 * @param waterSystem the water system
 	 */
-	public WaterSystemPanel(WaterSystem.Local waterSystem) {
+	public LocalWaterSystemPanel(WaterSystem.Local waterSystem) {
 		super(waterSystem);
 		
 		JPanel indicatorsPanel = new JPanel();

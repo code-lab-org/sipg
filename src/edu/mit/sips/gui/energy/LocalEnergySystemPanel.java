@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.energy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +15,15 @@ import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.energy.ElectricityElement;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.gui.LinearIndicatorPanel;
+import edu.mit.sips.gui.SpatialStatePanel;
+import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**
  * The Class EnergySystemPanel.
  */
-public class EnergySystemPanel extends InfrastructureSystemPanel {
+public class LocalEnergySystemPanel extends EnergySystemPanel {
 	private static final long serialVersionUID = 2218175276232419659L;
 	
 	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel, 
@@ -51,7 +54,7 @@ public class EnergySystemPanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset electricityRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityNetRevenue = new DefaultTableXYDataset();
 
-	public EnergySystemPanel(EnergySystem.Local energySystem) {
+	public LocalEnergySystemPanel(EnergySystem.Local energySystem) {
 		super(energySystem);
 
 		JPanel indicatorsPanel = new JPanel();

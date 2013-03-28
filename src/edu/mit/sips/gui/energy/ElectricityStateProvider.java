@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.energy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,20 +6,21 @@ import java.util.List;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.water.WaterElement;
-import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.core.energy.ElectricityElement;
+import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.gui.SpatialStateProvider;
 
 /**
- * The Class WaterStateProvider.
+ * The Class ElectricityStateProvider.
  */
-public class WaterStateProvider implements SpatialStateProvider {
+public class ElectricityStateProvider implements SpatialStateProvider {
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getConsumption(Society society) {
-		return society.getTotalWaterDemand();
+		return society.getTotalElectricityDemand();
 	}
 
 	/* (non-Javadoc)
@@ -28,13 +29,13 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			for(WaterElement e : waterSystem.getExternalElements()) {
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			for(ElectricityElement e : energySystem.getElectricitySystem().getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(origin.getCities().contains(origCity)) {
-					distribution += e.getWaterOutput();
+					distribution += e.getElectricityOutput();
 				}
 			}
 		}
@@ -47,17 +48,17 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			for(WaterElement e : waterSystem.getInternalElements()) {
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			for(ElectricityElement e : energySystem.getElectricitySystem().getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(destination.getCities().contains(destCity)) {
 					if(society.getCities().contains(destCity)) {
 						// if a self-loop, only add distribution losses
-						distribution += e.getWaterInput() - e.getWaterOutput();
+						distribution += e.getElectricityInput() - e.getElectricityOutput();
 					} else {
-						distribution += e.getWaterInput();
+						distribution += e.getElectricityInput();
 					}
 				}
 			}
@@ -69,12 +70,12 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getElements(edu.mit.sips.Society)
 	 */
 	@Override
-	public List<WaterElement> getElements(Society society) {
-		List<WaterElement> elements = new ArrayList<WaterElement>();
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			for(WaterElement element : waterSystem.getElements()) {
+	public List<ElectricityElement> getElements(Society society) {
+		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			for(ElectricityElement element : energySystem.getElectricitySystem().getElements()) {
 				if(element.isExists()) elements.add(element);
 			}
 		}
@@ -94,11 +95,6 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getImport(Society society) {
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			return waterSystem.getWaterImport();
-		} 
 		return 0;
 	}
 
@@ -107,8 +103,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getInput(InfrastructureElement element) {
-		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterInput();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityInput();
 		} else {
 			return 0;
 		}
@@ -119,12 +115,11 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getNetFlow(Society society) {
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			return - waterSystem.getWaterImport()
-					+ waterSystem.getWaterOutDistribution()
-					- waterSystem.getWaterInDistribution();
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			return energySystem.getElectricitySystem().getElectricityOutDistribution()
+					- energySystem.getElectricitySystem().getElectricityInDistribution();
 		} 
 		return 0;
 	}
@@ -135,13 +130,13 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			for(WaterElement e : waterSystem.getExternalElements()) {
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			for(ElectricityElement e : energySystem.getElectricitySystem().getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(!society.getCities().contains(origCity)) {
-					distribution += e.getWaterOutput();
+					distribution += e.getElectricityOutput();
 				}
 			}
 		}
@@ -154,13 +149,13 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			for(WaterElement e : waterSystem.getInternalElements()) {
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			for(ElectricityElement e : energySystem.getElectricitySystem().getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(!society.getCities().contains(destCity)) {
-					distribution += e.getWaterInput();
+					distribution += e.getElectricityInput();
 				}
 			}
 		}
@@ -172,10 +167,10 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getOtherProduction(Society society) {
-		if(society.getWaterSystem() instanceof WaterSystem.Local) {
-			WaterSystem.Local waterSystem = (WaterSystem.Local) 
-					society.getWaterSystem(); 
-			return waterSystem.getWaterFromArtesianWell();
+		if(society.getEnergySystem() instanceof EnergySystem.Local) {
+			EnergySystem.Local energySystem = (EnergySystem.Local) 
+					society.getEnergySystem(); 
+			return energySystem.getElectricitySystem().getElectricityFromBurningPetroleum();
 		} 
 		return 0;
 	}
@@ -185,7 +180,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getOtherProductionLabel() {
-		return "Artesian Well";
+		return "Petroleum Burn";
 	}
 
 	/* (non-Javadoc)
@@ -193,8 +188,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getOutput(InfrastructureElement element) {
-		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterOutput();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityOutput();
 		} else {
 			return 0;
 		}
@@ -205,8 +200,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getProduction(InfrastructureElement element) {
-		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterProduction();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityProduction();
 		} else {
 			return 0;
 		}
@@ -217,7 +212,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "m^3";
+		return "MWh";
 	}
 
 	/* (non-Javadoc)
@@ -225,8 +220,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isDistribution(InfrastructureElement element) {
-		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getMaxWaterInput() > 0;
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityInput() > 0;
 		} else {
 			return false;
 		}
@@ -245,7 +240,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isImportAllowed() {
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -261,8 +256,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isProduction(InfrastructureElement element) {
-		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getMaxWaterProduction() > 0;
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityProduction() > 0;
 		} else {
 			return false;
 		}
