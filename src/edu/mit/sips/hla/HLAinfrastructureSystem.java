@@ -166,29 +166,29 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	public void attributeChanged(AttributeChangeEvent evt) {
 		if(evt.getSource().equals(infrastructureSystem)) {
 			// object model changed values -- send updates to federation
-			try {
-				List<String> attributesToUpdate = new ArrayList<String>();
+			//try {
+				//List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(InfrastructureSystem.NAME_ATTRIBUTE)) {
 					name.setValue(infrastructureSystem.getName());
-					attributesToUpdate.add(NAME_ATTRIBUTE);
+					//attributesToUpdate.add(NAME_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(InfrastructureSystem.SOCIETY_ATTRIBUTE)) {
 					societyName.setValue(infrastructureSystem.getSociety().getName());
-					attributesToUpdate.add(SOCIETY_NAME_ATTRIBUTE);
+					//attributesToUpdate.add(SOCIETY_NAME_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(InfrastructureSystem.CASH_FLOW_ATTRIBUTE)) {
 					netCashFlow.setValue(infrastructureSystem.getCashFlow());
-					attributesToUpdate.add(NET_CASH_FLOW_ATTRIBUTE);
+					//attributesToUpdate.add(NET_CASH_FLOW_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(InfrastructureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE)) {
 					domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
-					attributesToUpdate.add(DOMESTIC_PRODUCTION_ATTRIBUTE);
+					//attributesToUpdate.add(DOMESTIC_PRODUCTION_ATTRIBUTE);
 				} 
-				updateAttributes(attributesToUpdate);
-			} catch(AttributeNotOwned ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
+				//updateAttributes(attributesToUpdate);
+			//} catch(AttributeNotOwned ignored) {
+			//} catch(Exception ex) {
+			//	ex.printStackTrace();
+			//}
 		} else if(infrastructureSystem instanceof InfrastructureSystem.Remote) {
 			InfrastructureSystem.Remote remote = (InfrastructureSystem.Remote) infrastructureSystem;
 			// federation changed values -- send updates to object model

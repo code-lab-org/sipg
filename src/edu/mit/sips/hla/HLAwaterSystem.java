@@ -7,7 +7,6 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
@@ -19,9 +18,7 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -219,25 +216,25 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		super.attributeChanged(evt);
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
-			try {
-				List<String> attributesToUpdate = new ArrayList<String>();
+			//try {
+				//List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(
 						WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getWaterSystem().getElectricityConsumption());
-					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
 					waterSupplyPerCapita.setValue(
 							getWaterSystem().getWaterSupplyPerCapita());
-					attributesToUpdate.add(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
+					//attributesToUpdate.add(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
 				}
-				updateAttributes(attributesToUpdate);
-			} catch(AttributeNotOwned ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
+				//updateAttributes(attributesToUpdate);
+			//} catch(AttributeNotOwned ignored) {
+			//} catch(Exception ex) {
+			//	ex.printStackTrace();
+			//}
 		} else if(getWaterSystem() instanceof WaterSystem.Remote) {
 			WaterSystem.Remote remote = (WaterSystem.Remote) getWaterSystem();
 			// federation changed values -- send updates to object model

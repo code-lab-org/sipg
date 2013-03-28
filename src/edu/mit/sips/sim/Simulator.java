@@ -93,6 +93,7 @@ public class Simulator implements SimulationControlListener {
 		long stopTime = Math.min(endTime, time + duration);
 		
 		while(time < stopTime) {
+			// TODO change ordering
 			tickTock();
 			runAutoOptimization();
 			fireUpdateEvent();

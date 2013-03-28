@@ -7,7 +7,6 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
@@ -19,9 +18,7 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -210,19 +207,19 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 		super.attributeChanged(evt);
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
-			try {
-				List<String> attributesToUpdate = new ArrayList<String>();
+			//try {
+			//	List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(
 						AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
 							getAgricultureSystem().getWaterConsumption());
-					attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
-				updateAttributes(attributesToUpdate);
-			} catch(AttributeNotOwned ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
+			//	updateAttributes(attributesToUpdate);
+			//} catch(AttributeNotOwned ignored) {
+			//} catch(Exception ex) {
+			//	ex.printStackTrace();
+			//}
 		} else if(getAgricultureSystem() instanceof AgricultureSystem.Remote) {
 			AgricultureSystem.Remote remote = 
 					(AgricultureSystem.Remote) getAgricultureSystem();

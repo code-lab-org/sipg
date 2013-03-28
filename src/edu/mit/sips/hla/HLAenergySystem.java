@@ -7,7 +7,6 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
@@ -19,9 +18,7 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.energy.DefaultEnergySystem;
@@ -226,31 +223,31 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		super.attributeChanged(evt);
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
-			try {
-				List<String> attributesToUpdate = new ArrayList<String>();
+			//try {
+				//List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(
 						EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getEnergySystem().getElectricityConsumption());
-					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
 					petroleumConsumption.setValue(
 							getEnergySystem().getPetroleumConsumption());
-					attributesToUpdate.add(PETROLEUM_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(PETROLEUM_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						EnergySystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
 							getEnergySystem().getWaterConsumption());
-					attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
-				updateAttributes(attributesToUpdate);
-			} catch(AttributeNotOwned ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
+				//updateAttributes(attributesToUpdate);
+			//} catch(AttributeNotOwned ignored) {
+			//} catch(Exception ex) {
+			//	ex.printStackTrace();
+			//}
 		} else if(getEnergySystem() instanceof EnergySystem.Remote) {
 			EnergySystem.Remote remote = (EnergySystem.Remote) getEnergySystem();
 			// federation changed values -- send updates to object model

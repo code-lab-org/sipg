@@ -1,9 +1,5 @@
-/*
- * 
- */
 package edu.mit.sips.hla;
 
-import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
@@ -23,7 +19,6 @@ import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TimeQueryReturn;
 import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
-import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
 import hla.rti1516e.exceptions.AttributeNotDefined;
@@ -97,7 +92,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private final Simulator simulator;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
-	private HLAinteger64Time logicalTime, startTime;
+	private HLAinteger64Time logicalTime;
 	private HLAinteger64Interval lookaheadInterval, tickInterval;
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
@@ -150,17 +145,42 @@ public class SimAmbassador extends NullFederateAmbassador {
 			RTIinternalError, IllegalTimeArithmetic, AttributeNotOwned, 
 			AttributeNotDefined, ObjectInstanceNotKnown, 
 			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
+		for(City city : simulator.getCountry().getCities()) {
+			if(city.getSocialSystem() instanceof SocialSystem.Local) {
+				city.getSocialSystem().fireAttributeChangeEvent(
+						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE, 
+								SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE, 
+								SocialSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+								SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+								SocialSystem.WATER_CONSUMPTION_ATTRIBUTE,
+								SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE,
+								SocialSystem.CASH_FLOW_ATTRIBUTE));
+			}
+			if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				city.getAgricultureSystem().fireAttributeChangeEvent(
+						Arrays.asList(AgricultureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+								AgricultureSystem.CASH_FLOW_ATTRIBUTE,
+								AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE));
+			}
+			if(city.getWaterSystem() instanceof WaterSystem.Local) {
+				city.getWaterSystem().fireAttributeChangeEvent(
+						Arrays.asList(WaterSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+							WaterSystem.CASH_FLOW_ATTRIBUTE,
+							WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+							WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
+			}
+			if(city.getEnergySystem() instanceof EnergySystem.Local) {
+				city.getEnergySystem().fireAttributeChangeEvent(
+						Arrays.asList(EnergySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+								EnergySystem.CASH_FLOW_ATTRIBUTE,
+								EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+								EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
+								EnergySystem.WATER_CONSUMPTION_ATTRIBUTE));
+			}
+		}
 		for(HLAinfrastructureSystem system : hlaObjects.values()) {
 			if(system.isLocal()) {
 				system.updateAllAttributes();
-			}
-		}
-		
-		for(City city : simulator.getCountry().getCities()) {
-			if(city.getSocialSystem() instanceof SocialSystem.Local) {
-				// TODO incomplete
-				city.getSocialSystem().fireAttributeChangeEvent(
-						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE));
 			}
 		}
 		
@@ -448,8 +468,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
 		
-		this.startTime = timeFactory.makeTime(startTime);
-		
 		TimeQueryReturn query = rtiAmbassador.queryGALT();
 		if(!query.timeIsValid) {
 			// first federate
@@ -462,8 +480,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 			syncRegistered.set(false);
 			
-			System.out.println("GALT not valid: requesting ta to " + this.startTime.subtract(lookaheadInterval).getValue());
-			rtiAmbassador.timeAdvanceRequest(this.startTime.subtract(lookaheadInterval));
+			System.out.println("GALT not valid: requesting ta to " 
+					+ timeFactory.makeTime(startTime).subtract(lookaheadInterval).getValue());
+			rtiAmbassador.timeAdvanceRequest(
+					timeFactory.makeTime(startTime).subtract(lookaheadInterval));
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
 			}

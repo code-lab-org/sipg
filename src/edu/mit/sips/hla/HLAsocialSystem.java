@@ -8,7 +8,6 @@ import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.InvalidObjectClassHandle;
 import hla.rti1516e.exceptions.NameNotFound;
@@ -20,9 +19,7 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.SaveInProgress;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.social.DefaultSocialSystem;
@@ -240,43 +237,43 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		super.attributeChanged(evt);
 		if(evt.getSource().equals(getInfrastructureSystem())) {
 			// object model changed values -- send updates to federation
-			try {
-				List<String> attributesToUpdate = new ArrayList<String>();
+			//try {
+				//List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(
 						SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 					electricityConsumption.setValue(
 							getSocialSystem().getElectricityConsumption());
-					attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				} 
 				if(evt.getAttributeNames().contains(
 						SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE)) {
 					foodConsumption.setValue(
 							getSocialSystem().getFoodConsumption());
-					attributesToUpdate.add(FOOD_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(FOOD_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						SocialSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
 							getSocialSystem().getWaterConsumption());
-					attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE)) {
 					domesticProduct.setValue(
 							getSocialSystem().getDomesticProduct());
-					attributesToUpdate.add(DOMESTIC_PRODUCT_ATTRIBUTE);
+					//attributesToUpdate.add(DOMESTIC_PRODUCT_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
 						SocialSystem.POPULATION_ATTRIBUTE)) {
 					population.setValue(
 							getSocialSystem().getPopulation());
-					attributesToUpdate.add(POPULATION_ATTRIBUTE);
+					//attributesToUpdate.add(POPULATION_ATTRIBUTE);
 				}
-				updateAttributes(attributesToUpdate);
-			} catch(AttributeNotOwned ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
-			}
+				//updateAttributes(attributesToUpdate);
+			//} catch(AttributeNotOwned ignored) {
+			//} catch(Exception ex) {
+			//	ex.printStackTrace();
+			//}
 		} else if(getSocialSystem() instanceof SocialSystem.Remote) {
 			SocialSystem.Remote remote = (SocialSystem.Remote) getSocialSystem();
 			// federation changed values -- send updates to object model
