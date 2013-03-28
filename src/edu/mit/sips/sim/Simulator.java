@@ -93,10 +93,9 @@ public class Simulator implements SimulationControlListener {
 		long stopTime = Math.min(endTime, time + duration);
 		
 		while(time < stopTime) {
-			// TODO change ordering
-			tickTock();
 			runAutoOptimization();
-			fireUpdateEvent();
+			tickTock();
+			fireUpdateEvent(time);
 		}
 		
 		if(time == endTime) {
@@ -150,7 +149,7 @@ public class Simulator implements SimulationControlListener {
 	 *
 	 * @param event the event
 	 */
-	public void fireUpdateEvent() {
+	public void fireUpdateEvent(long time) {
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
 			listener.simulationUpdated(new UpdateEvent(this, time, country));
@@ -315,7 +314,7 @@ public class Simulator implements SimulationControlListener {
 	 */
 	public void runOptimization() {
 		runAutoOptimization();
-		fireUpdateEvent();
+		fireUpdateEvent(time);
 	}
 
 	/**

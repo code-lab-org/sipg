@@ -610,6 +610,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 			OrderType receivedOrdering,
 			MessageRetractionHandle retractionHandle,
 			SupplementalReflectInfo reflectInfo) {
+		long time = ((HLAinteger64Time)theTime).getValue();
+		
 		try {
 			synchronized(hlaObjects) {
 				if(hlaObjects.containsKey(theObject)) {
@@ -621,7 +623,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setAgricultureSystem((AgricultureSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getAgricultureSystem());
-							simulator.fireUpdateEvent();
+							simulator.fireUpdateEvent(time);
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
 						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
@@ -631,7 +633,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setWaterSystem((WaterSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getWaterSystem());
-							simulator.fireUpdateEvent();
+							simulator.fireUpdateEvent(time);
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
 						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
@@ -641,7 +643,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setEnergySystem((EnergySystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getEnergySystem());
-							simulator.fireUpdateEvent();
+							simulator.fireUpdateEvent(time);
 						}
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
 						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
@@ -651,7 +653,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setSocialSystem((SocialSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getSocialSystem());
-							simulator.fireUpdateEvent();
+							simulator.fireUpdateEvent(time);
 						}
 					}
 				} 
