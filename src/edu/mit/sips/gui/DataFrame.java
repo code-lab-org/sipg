@@ -284,6 +284,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 				this.simulator.getConnection().removeConnectionListener(connectionPanel);
 				this.simulator.getConnection().removeConnectionListener(connectionToolbar);
 				this.simulator.removeUpdateListener(this);
+				this.simulator.getConnection().removeConnectionListener(simulationPane);
 				this.simulator.removeUpdateListener(simulationPane);
 				this.simulator.removeUpdateListener(societyPane);
 				this.simulator = null;
@@ -323,7 +324,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 					}
 				}
 			});
-			simulationPane = new SimulationControlPane(this.simulator);
+			this.simulationPane = new SimulationControlPane(this.simulator);
+			this.simulator.getConnection().addConnectionListener(simulationPane);
 			this.simulator.addUpdateListener(simulationPane);
 			nationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			JPanel leftPanel = new JPanel();

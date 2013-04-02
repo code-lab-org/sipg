@@ -58,12 +58,14 @@ public abstract class Icons {
 
 	public static final Icon RECALC = loadIcon("resources/fugue/arrow-circle.png");
 	
-	public static final Icon CONNECTED = loadIcon("resources/silk/bullet_green.png");
-	public static final Icon NOT_CONNECTED = loadIcon("resources/silk/bullet_red.png");
+	public static final Icon CONNECTED_BULLET = loadIcon("resources/silk/bullet_green.png");
+	public static final Icon NOT_CONNECTED_BULLET = loadIcon("resources/silk/bullet_red.png");
+	public static final Icon CONNECTED = loadIcon("resources/silk/connect.png");
+	public static final Icon DISCONNECTED = loadIcon("resources/silk/disconnect.png");
 	
 	public static final Icon LOADING = loadIcon("resources/loading.gif");
 	public static final Icon LOADING_COMPLETE = loadIcon("resources/loading_complete.png");
-	
+
 	
 	public static final Image SYSTEM_MONITOR = loadIcon(
 			"resources/fugue/system-monitor.png").getImage();

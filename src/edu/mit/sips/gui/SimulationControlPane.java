@@ -14,65 +14,97 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import edu.mit.sips.gui.event.ConnectionEvent;
+import edu.mit.sips.gui.event.ConnectionListener;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
 
 /**
  * The Class SimulationControlPanel.
  */
-public class SimulationControlPane extends JPanel implements UpdateListener {
+public class SimulationControlPane extends JPanel implements ConnectionListener, UpdateListener {
 	private static final long serialVersionUID = -7014074954503228524L;
-	
+
 	private final Simulator simulator;
-	
+
+	private final Action toggleConnection = 
+			new AbstractAction(null, Icons.DISCONNECTED) {
+		private static final long serialVersionUID = 8065337353804878751L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(simulator.getConnection().isConnected()) {
+				try {
+					setEnabled(false);
+					simulator.getAmbassador().disconnect();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(getParent(), 
+							ex.getMessage(), "Error", 
+							JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				try {
+					setEnabled(false);
+					simulator.getAmbassador().connect();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+					JOptionPane.showMessageDialog(getParent(), 
+							ex.getMessage(), "Error", 
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		}
+	};
+
 	private final Action autoOptimizeDistribution = 
 			new AbstractAction("Distribution") {
-				private static final long serialVersionUID = 4589751151727368209L;
-		
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(e.getSource() instanceof JCheckBox) {
-						boolean selected = ((JCheckBox)e.getSource()).isSelected();
-						simulator.setAutoOptimizeDistribution(selected);
-						autoOptimizeProductionAndDistribution.setEnabled(selected);
-					}
-				}
-			};
-	
+		private static final long serialVersionUID = 4589751151727368209L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() instanceof JCheckBox) {
+				boolean selected = ((JCheckBox)e.getSource()).isSelected();
+				simulator.setAutoOptimizeDistribution(selected);
+				autoOptimizeProductionAndDistribution.setEnabled(selected);
+			}
+		}
+	};
+
 	private final Action autoOptimizeProductionAndDistribution = 
 			new AbstractAction("Production") {
-				private static final long serialVersionUID = 4589751151727368209L;
-		
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					if(e.getSource() instanceof JCheckBox) {
-						boolean selected = ((JCheckBox)e.getSource()).isSelected();
-						simulator.setAutoOptimizeProductionAndDistribution(selected);
-						autoOptimizeDistribution.setEnabled(!selected);
-					}
-				}
-			};
-			
+		private static final long serialVersionUID = 4589751151727368209L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() instanceof JCheckBox) {
+				boolean selected = ((JCheckBox)e.getSource()).isSelected();
+				simulator.setAutoOptimizeProductionAndDistribution(selected);
+				autoOptimizeDistribution.setEnabled(!selected);
+			}
+		}
+	};
+
 	private final Action runOptimization = 
 			new AbstractAction(null, Icons.RECALC) {
-				private static final long serialVersionUID = 4589751151727368209L;
-		
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					new Thread(new Runnable() {
-						public void run() {
-							try {
-								simulator.runOptimization();
-							} catch(Exception ex) {
-								JOptionPane.showMessageDialog(getTopLevelAncestor(), 
-										ex.getMessage(), "Error", 
-										JOptionPane.ERROR_MESSAGE);
-								ex.printStackTrace();
-							}
-						}
-					}).start();
+		private static final long serialVersionUID = 4589751151727368209L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new Thread(new Runnable() {
+				public void run() {
+					try {
+						simulator.runOptimization();
+					} catch(Exception ex) {
+						JOptionPane.showMessageDialog(getTopLevelAncestor(), 
+								ex.getMessage(), "Error", 
+								JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
+					}
 				}
-			};
+			}).start();
+		}
+	};
 
 	private final Action initializeSim = new AbstractAction(null, Icons.INITIALIZE) {
 		private static final long serialVersionUID = 4589751151727368209L;
@@ -82,7 +114,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			fireSimulationInitialize();
 		}
 	};
-	
+
 	private final Action stepSim = new AbstractAction(null, Icons.STEP) {
 		private static final long serialVersionUID = 4589751151727368209L;
 
@@ -91,7 +123,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			fireSimulationAdvance(1);
 		}
 	};
-	
+
 	private final Action advanceSim = new AbstractAction(null, Icons.ADVANCE) {
 		private static final long serialVersionUID = 4589751151727368209L;
 
@@ -100,16 +132,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			fireSimulationAdvance(5);
 		}
 	};
-	
-	private final Action resetSim = new AbstractAction(null, Icons.RESET) {
-		private static final long serialVersionUID = 4589751151727368209L;
 
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			fireSimulationReset();
-		}
-	};
-	
 	private final Action endSim = new AbstractAction(null, Icons.ADVANCE_TO_END) {
 		private static final long serialVersionUID = 4589751151727368209L;
 
@@ -118,7 +141,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			fireSimulationAdvanceToEnd();
 		}
 	};
-	
+
 	/**
 	 * Instantiates a new simulation control panel.
 	 *
@@ -131,18 +154,18 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		}
 		this.simulator = simulator;
 		setLayout(new BorderLayout());
-		
+
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-		
+
+		buttonPanel.add(new JButton(toggleConnection));
 		buttonPanel.add(new JButton(initializeSim));
-		buttonPanel.add(new JButton(resetSim));
 		buttonPanel.add(new JButton(stepSim));
 		buttonPanel.add(new JButton(advanceSim));
 		buttonPanel.add(new JButton(endSim));
-		
+
 		add(buttonPanel, BorderLayout.NORTH);
-		
+
 		JPanel optimizationPanel = new JPanel();
 		optimizationPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -165,7 +188,6 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		optimizationPanel.add(new JButton(runOptimization), c);
 		add(optimizationPanel, BorderLayout.SOUTH);
 
-
 		autoOptimizeDistribution.setEnabled(
 				!simulator.isAutoOptimizeProductionAndDistribution());
 		autoOptimizeProductionAndDistribution.setEnabled(
@@ -173,10 +195,9 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		runOptimization.setEnabled(false);
 		stepSim.setEnabled(false);
 		advanceSim.setEnabled(false);
-		resetSim.setEnabled(false);
 		endSim.setEnabled(false);
 	}
-	
+
 	/**
 	 * Fire simulation advance.
 	 *
@@ -188,8 +209,8 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			public void run() {
 				try {
 					simulator.advanceSimulation(
-						new SimulationControlEvent.Advance(
-								panel, duration));
+							new SimulationControlEvent.Advance(
+									panel, duration));
 				} catch(Exception ex) {
 					JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 							ex.getMessage(), "Error", 
@@ -200,7 +221,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		}).start();
 	}
 
-	
+
 	/**
 	 * Fire simulation advance to end.
 	 */
@@ -210,7 +231,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			public void run() {
 				try {
 					simulator.advanceSimulationToEnd(
-						new SimulationControlEvent.AdvanceToEnd(panel));
+							new SimulationControlEvent.AdvanceToEnd(panel));
 				} catch(Exception ex) {
 					JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 							ex.getMessage(), "Error", 
@@ -220,7 +241,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			}
 		}).start();
 	}
-	
+
 	/**
 	 * Fire simulation initialize.
 	 *
@@ -250,26 +271,6 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 			}).start();
 		}
 	}
-	
-	/**
-	 * Fire simulation reset.
-	 */
-	private void fireSimulationReset() {
-		final JPanel panel = this;
-		new Thread(new Runnable() {
-			public void run() {
-				try {
-					simulator.resetSimulation(
-						new SimulationControlEvent.Reset(panel));
-				} catch(Exception ex) {
-					JOptionPane.showMessageDialog(panel, 
-							ex.getMessage(), "Error", 
-							JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();
-				}
-			}
-		}).start();
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
@@ -279,7 +280,6 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		runOptimization.setEnabled(true);
 		stepSim.setEnabled(true);
 		advanceSim.setEnabled(true);
-		resetSim.setEnabled(true);
 		endSim.setEnabled(true);
 	}
 
@@ -289,5 +289,20 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 	@Override
 	public void simulationUpdated(UpdateEvent event) { 
 		// ignore
+	}
+
+	@Override
+	public void connectionEventOccurred(ConnectionEvent e) {
+		if(e.getConnection().isConnected()) {
+			toggleConnection.setEnabled(true);
+			toggleConnection.putValue(
+					Action.SMALL_ICON, Icons.CONNECTED);
+			initializeSim.setEnabled(true);
+		} else {
+			toggleConnection.setEnabled(true);
+			toggleConnection.putValue(
+					Action.SMALL_ICON, Icons.DISCONNECTED);
+			initializeSim.setEnabled(false);
+		}
 	}
 }

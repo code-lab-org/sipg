@@ -29,7 +29,7 @@ public final class ConnectionToolbar extends JPanel implements ConnectionListene
 		setLayout(new BorderLayout());
 		iconLabel = new JLabel("Not connected");
 		iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 5));
-		iconLabel.setIcon(Icons.NOT_CONNECTED);
+		iconLabel.setIcon(Icons.NOT_CONNECTED_BULLET);
 		iconLabel.setFont(iconLabel.getFont().deriveFont(Font.PLAIN).deriveFont(9f));
 		add(iconLabel, BorderLayout.EAST);
 	}
@@ -39,7 +39,7 @@ public final class ConnectionToolbar extends JPanel implements ConnectionListene
 	 */
 	public void connectionEventOccurred(ConnectionEvent e) {
 		iconLabel.setIcon(e.getConnection().isConnected()?
-				Icons.CONNECTED:Icons.NOT_CONNECTED);
+				Icons.CONNECTED_BULLET:Icons.NOT_CONNECTED_BULLET);
 		iconLabel.setText(e.getConnection().isConnected()?
 				e.getConnection().getFederationName():"Offline");
 	}

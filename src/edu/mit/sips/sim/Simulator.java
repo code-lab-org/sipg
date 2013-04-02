@@ -38,7 +38,7 @@ public class Simulator implements SimulationControlListener {
 	private final FederationConnection connection = new FederationConnection();
 	private transient SimAmbassador simAmbassador;
 
-	private transient EventListenerList listenerList = new EventListenerList(); // mutableO
+	private transient EventListenerList listenerList = new EventListenerList(); // mutable
 	
 	/**
 	 * Instantiates a new simulator.
@@ -82,6 +82,11 @@ public class Simulator implements SimulationControlListener {
 		listenerList.add(UpdateListener.class, listener);
 	}
 	
+	/**
+	 * Advance.
+	 *
+	 * @param duration the duration
+	 */
 	private void advance(long duration) {
 		if(time + duration > endTime) {
 			throw new IllegalArgumentException("Duration cannot exceed end time.");
