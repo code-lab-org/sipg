@@ -65,14 +65,19 @@ public class Player1 {
 
 		final Simulator simulator = new Simulator("Energy Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				DataFrame frame = new DataFrame();
-				frame.initialize(simulator);
-				frame.pack();
-				frame.setVisible(true);
-			}
-		});
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					DataFrame frame = new DataFrame();
+					frame.initialize(simulator);
+					frame.pack();
+					frame.setVisible(true);
+				}
+			});
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
 		try {
 			simulator.getAmbassador().connect();
 		} catch (Exception e) {

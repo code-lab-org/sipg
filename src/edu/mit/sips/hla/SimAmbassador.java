@@ -88,12 +88,14 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.sim.Simulator;
 
 public class SimAmbassador extends NullFederateAmbassador {
+	private final int unitsPerYear = 1000;
+	private final int numberIterations = 4; // must be a factor of unitsPerYear
 	
 	private final Simulator simulator;
 	private final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
 	private HLAinteger64Time logicalTime;
-	private HLAinteger64Interval lookaheadInterval, tickInterval;
+	private HLAinteger64Interval lookaheadInterval;
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
@@ -145,50 +147,56 @@ public class SimAmbassador extends NullFederateAmbassador {
 			RTIinternalError, IllegalTimeArithmetic, AttributeNotOwned, 
 			AttributeNotDefined, ObjectInstanceNotKnown, 
 			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
-		for(City city : simulator.getCountry().getCities()) {
-			if(city.getSocialSystem() instanceof SocialSystem.Local) {
-				city.getSocialSystem().fireAttributeChangeEvent(
-						Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE, 
-								SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE, 
-								SocialSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-								SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-								SocialSystem.WATER_CONSUMPTION_ATTRIBUTE,
-								SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE,
-								SocialSystem.CASH_FLOW_ATTRIBUTE));
+		for(int i = 0; i < numberIterations; i++) {
+			for(City city : simulator.getCountry().getCities()) {
+				// fire attribute change events to manually update hla data objects
+				if(city.getSocialSystem() instanceof SocialSystem.Local) {
+					city.getSocialSystem().fireAttributeChangeEvent(
+							Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE, 
+									SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE, 
+									SocialSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+									SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+									SocialSystem.WATER_CONSUMPTION_ATTRIBUTE,
+									SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE,
+									SocialSystem.CASH_FLOW_ATTRIBUTE));
+				}
+				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+					city.getAgricultureSystem().fireAttributeChangeEvent(
+							Arrays.asList(AgricultureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+									AgricultureSystem.CASH_FLOW_ATTRIBUTE,
+									AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE));
+				}
+				if(city.getWaterSystem() instanceof WaterSystem.Local) {
+					city.getWaterSystem().fireAttributeChangeEvent(
+							Arrays.asList(WaterSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+								WaterSystem.CASH_FLOW_ATTRIBUTE,
+								WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+								WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
+				}
+				if(city.getEnergySystem() instanceof EnergySystem.Local) {
+					city.getEnergySystem().fireAttributeChangeEvent(
+							Arrays.asList(EnergySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+									EnergySystem.CASH_FLOW_ATTRIBUTE,
+									EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+									EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
+									EnergySystem.WATER_CONSUMPTION_ATTRIBUTE));
+				}
 			}
-			if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				city.getAgricultureSystem().fireAttributeChangeEvent(
-						Arrays.asList(AgricultureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-								AgricultureSystem.CASH_FLOW_ATTRIBUTE,
-								AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE));
+			synchronized(hlaObjects) {
+				for(HLAinfrastructureSystem system : hlaObjects.values()) {
+					if(system.isLocal()) {
+						// initiate attribute update service
+						system.updateAllAttributes();
+					}
+				}
 			}
-			if(city.getWaterSystem() instanceof WaterSystem.Local) {
-				city.getWaterSystem().fireAttributeChangeEvent(
-						Arrays.asList(WaterSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-							WaterSystem.CASH_FLOW_ATTRIBUTE,
-							WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-							WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
+			
+			rtiAmbassador.timeAdvanceRequest(logicalTime.add(lookaheadInterval));
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
 			}
-			if(city.getEnergySystem() instanceof EnergySystem.Local) {
-				city.getEnergySystem().fireAttributeChangeEvent(
-						Arrays.asList(EnergySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-								EnergySystem.CASH_FLOW_ATTRIBUTE,
-								EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-								EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
-								EnergySystem.WATER_CONSUMPTION_ATTRIBUTE));
-			}
+			timeAdvanceGranted.set(false);
 		}
-		for(HLAinfrastructureSystem system : hlaObjects.values()) {
-			if(system.isLocal()) {
-				system.updateAllAttributes();
-			}
-		}
-		
-		rtiAmbassador.timeAdvanceRequest(logicalTime.add(tickInterval));
-		while(!timeAdvanceGranted.get()) {
-			Thread.yield();
-		}
-		timeAdvanceGranted.set(false);
 	}
 	
 	/**
@@ -374,8 +382,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
-		lookaheadInterval = timeFactory.makeInterval(1);
-		tickInterval = timeFactory.makeInterval(1);
+		lookaheadInterval = timeFactory.makeInterval(unitsPerYear/numberIterations);
 
 		try {
 			rtiAmbassador.enableAsynchronousDelivery();
@@ -394,6 +401,48 @@ public class SimAmbassador extends NullFederateAmbassador {
 		while(!timeRegulating.get()) {
 			Thread.yield();
 		}
+		
+		TimeQueryReturn query = rtiAmbassador.queryGALT();
+		if(!query.timeIsValid) {
+			// first federate
+			
+			// announce synchronization point
+			rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
+			
+			while(!syncRegistered.get()) {
+				Thread.yield();
+			}
+			syncRegistered.set(false);
+			
+			System.out.println("GALT not valid: requesting ta to " 
+					+ timeFactory.makeTime((startTime-1)*unitsPerYear));
+			rtiAmbassador.timeAdvanceRequest(
+					timeFactory.makeTime((startTime-1)*unitsPerYear));
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+		} else {
+			/* use for non-time regulating federates
+			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
+			rtiAmbassador.timeAdvanceRequest(query.time);
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+			*/
+			rtiAmbassador.timeAdvanceRequest(
+					timeFactory.makeTime((startTime-1)*unitsPerYear));
+			while(!timeAdvanceGranted.get()) {
+				Thread.yield();
+			}
+			timeAdvanceGranted.set(false);
+		}
+		
+		while(!syncAnnounced.get()) {
+			Thread.yield();
+		}
+		syncAnnounced.set(false);
 		
 		if(simulator.getCountry().getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			// if country includes a local national agriculture system
@@ -467,42 +516,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
-		
-		TimeQueryReturn query = rtiAmbassador.queryGALT();
-		if(!query.timeIsValid) {
-			// first federate
-			
-			// announce synchronization point
-			rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
-			
-			while(!syncRegistered.get()) {
-				Thread.yield();
-			}
-			syncRegistered.set(false);
-			
-			System.out.println("GALT not valid: requesting ta to " 
-					+ timeFactory.makeTime(startTime).subtract(lookaheadInterval).getValue());
-			rtiAmbassador.timeAdvanceRequest(
-					timeFactory.makeTime(startTime).subtract(lookaheadInterval));
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-		} else {
-			/* use for non-time regulating federates
-			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
-			rtiAmbassador.timeAdvanceRequest(query.time);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-			*/
-		}
-		
-		while(!syncAnnounced.get()) {
-			Thread.yield();
-		}
-		syncAnnounced.set(false);
 		
 		rtiAmbassador.synchronizationPointAchieved("initialized");
 		while(!syncAchieved.get()) {
@@ -610,7 +623,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			OrderType receivedOrdering,
 			MessageRetractionHandle retractionHandle,
 			SupplementalReflectInfo reflectInfo) {
-		long time = ((HLAinteger64Time)theTime).getValue();
+		// long time = (long) Math.ceil(((HLAinteger64Time)theTime).getValue()/(double)unitsPerYear) - 1;
+		
+		System.out.println("Reflecting attributes with timestamp " + theTime);
 		
 		try {
 			synchronized(hlaObjects) {
@@ -623,8 +638,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setAgricultureSystem((AgricultureSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getAgricultureSystem());
-							simulator.fireUpdateEvent(time);
 						}
+						// simulator.fireUpdateEvent(time);
 					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
 						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
@@ -633,8 +648,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setWaterSystem((WaterSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getWaterSystem());
-							simulator.fireUpdateEvent(time);
 						}
+						// simulator.fireUpdateEvent(time);
 					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
 						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
@@ -643,8 +658,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setEnergySystem((EnergySystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getEnergySystem());
-							simulator.fireUpdateEvent(time);
 						}
+						// simulator.fireUpdateEvent(time);
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
 						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
@@ -653,8 +668,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 							system.setSocialSystem((SocialSystem.Remote)
 									simulator.getCountry().getSociety(
 											system.getSocietyName()).getSocialSystem());
-							simulator.fireUpdateEvent(time);
 						}
+						// simulator.fireUpdateEvent(time);
 					}
 				} 
 			}

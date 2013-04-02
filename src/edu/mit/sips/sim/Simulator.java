@@ -97,13 +97,23 @@ public class Simulator implements SimulationControlListener {
 		
 		long stopTime = Math.min(endTime, time + duration);
 		
-		while(time < stopTime) {
+		while(time <= stopTime) {
 			runAutoOptimization();
-			tickTock();
-			fireUpdateEvent(time);
+			try {
+				simAmbassador.advance();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			country.tick();
+			fireUpdateEvent(time); // final update of current year
+			time = time + 1;
+			country.tock();
+			if(time <= endTime) {
+				fireUpdateEvent(time); // first update of next year
+			}
 		}
 		
-		if(time == endTime) {
+		if(time >= endTime) {
 			try {
 				simAmbassador.disconnect();
 			} catch (Exception e) {
@@ -155,6 +165,7 @@ public class Simulator implements SimulationControlListener {
 	 * @param event the event
 	 */
 	public void fireUpdateEvent(long time) {
+		System.out.println("Firing update event with time " + time);
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
 			listener.simulationUpdated(new UpdateEvent(this, time, country));
@@ -339,22 +350,5 @@ public class Simulator implements SimulationControlListener {
 	public void setAutoOptimizeProductionAndDistribution(
 			boolean autoOptimizeProductionAndDistribution) {
 		this.autoOptimizeProductionAndDistribution = autoOptimizeProductionAndDistribution;
-	}
-	
-	/**
-	 * Tick tock.
-	 *
-	 * @return the long
-	 */
-	private long tickTock() {		
-		country.tick();
-		country.tock();
-		
-		try {
-			simAmbassador.advance();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return ++time;
 	}
 }
