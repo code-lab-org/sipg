@@ -15,6 +15,7 @@ import hla.rti1516e.RTIambassador;
 import hla.rti1516e.ResignAction;
 import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
+import hla.rti1516e.SaveFailureReason;
 import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TimeQueryReturn;
 import hla.rti1516e.TransportationTypeHandle;
@@ -29,11 +30,13 @@ import hla.rti1516e.exceptions.CouldNotCreateLogicalTimeFactory;
 import hla.rti1516e.exceptions.CouldNotOpenFDD;
 import hla.rti1516e.exceptions.ErrorReadingFDD;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
+import hla.rti1516e.exceptions.FederateHasNotBegunSave;
 import hla.rti1516e.exceptions.FederateInternalError;
 import hla.rti1516e.exceptions.FederateIsExecutionMember;
 import hla.rti1516e.exceptions.FederateNameAlreadyInUse;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
 import hla.rti1516e.exceptions.FederateOwnsAttributes;
+import hla.rti1516e.exceptions.FederateUnableToUseTime;
 import hla.rti1516e.exceptions.FederatesCurrentlyJoined;
 import hla.rti1516e.exceptions.FederationExecutionAlreadyExists;
 import hla.rti1516e.exceptions.FederationExecutionDoesNotExist;
@@ -57,7 +60,9 @@ import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RequestForTimeConstrainedPending;
 import hla.rti1516e.exceptions.RequestForTimeRegulationPending;
 import hla.rti1516e.exceptions.RestoreInProgress;
+import hla.rti1516e.exceptions.RestoreNotRequested;
 import hla.rti1516e.exceptions.SaveInProgress;
+import hla.rti1516e.exceptions.SaveNotInitiated;
 import hla.rti1516e.exceptions.SynchronizationPointLabelNotAnnounced;
 import hla.rti1516e.exceptions.TimeConstrainedAlreadyEnabled;
 import hla.rti1516e.exceptions.TimeConstrainedIsNotEnabled;
@@ -102,6 +107,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private volatile AtomicBoolean syncRegistered = new AtomicBoolean(false);
 	private volatile AtomicBoolean syncAnnounced = new AtomicBoolean(false);
 	private volatile AtomicBoolean syncAchieved = new AtomicBoolean(false);
+	private volatile AtomicBoolean saveInitiated = new AtomicBoolean(false);
+	private volatile AtomicBoolean saveCompleted = new AtomicBoolean(false);
+	private volatile AtomicBoolean restorationConfirmed = new AtomicBoolean(false);
+	private volatile AtomicBoolean restorationBegun = new AtomicBoolean(false);
+	private volatile AtomicBoolean restorationInitiated = new AtomicBoolean(false);
+	private volatile AtomicBoolean restorationCompleted = new AtomicBoolean(false);
 	private volatile AtomicBoolean initialized =  new AtomicBoolean(false);
 	
 	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
@@ -365,6 +376,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws InvalidLogicalTimeInterval 
 	 * @throws AttributeNotOwned 
 	 * @throws SynchronizationPointLabelNotAnnounced 
+	 * @throws FederateUnableToUseTime 
+	 * @throws SaveNotInitiated 
+	 * @throws FederateHasNotBegunSave 
 	 */
 	public void initialize(long startTime) 
 			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
@@ -378,7 +392,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
 			ObjectInstanceNotKnown, IllegalTimeArithmetic, AttributeNotOwned, 
 			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled, 
-			SynchronizationPointLabelNotAnnounced {
+			SynchronizationPointLabelNotAnnounced, FederateUnableToUseTime, SaveNotInitiated, FederateHasNotBegunSave {
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
@@ -403,9 +417,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		
 		TimeQueryReturn query = rtiAmbassador.queryGALT();
-		if(!query.timeIsValid) {
-			// first federate
-			
+		boolean firstFederate = !query.timeIsValid;
+		if(firstFederate) {
 			// announce synchronization point
 			rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
 			
@@ -524,10 +537,76 @@ public class SimAmbassador extends NullFederateAmbassador {
 		syncAchieved.set(false);
 		
 		// once all federates are joined, advance to start time
+		if(firstFederate) {
+			rtiAmbassador.requestFederationSave("initialState");
+		}
+		
+		while(!saveInitiated.get()) {
+			Thread.yield();
+		}
+		saveInitiated.set(false);
+
+		rtiAmbassador.federateSaveBegun();
+		
+		rtiAmbassador.federateSaveComplete();
+		
+		while(!saveCompleted.get()) {
+			Thread.yield();
+		}
+		saveCompleted.set(false);
 		
 		advance();
 
 		initialized.set(true);
+	}
+	
+	public void restoreInitialConditions() 
+			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
+			NotConnected, RTIinternalError, RestoreNotRequested, SynchronizationPointLabelNotAnnounced {
+
+		rtiAmbassador.registerFederationSynchronizationPoint("reset", new byte[0]);
+		
+		while(!syncRegistered.get()) {
+			Thread.yield();
+		}
+		syncRegistered.set(false);
+		
+		while(!syncAnnounced.get()) {
+			Thread.yield();
+		}
+		syncAnnounced.set(false);
+
+		rtiAmbassador.synchronizationPointAchieved("reset");
+		while(!syncAchieved.get()) {
+			Thread.yield();
+		}
+		syncAchieved.set(false);
+		
+		try {
+			rtiAmbassador.requestFederationRestore("initialState");
+			
+			while(!restorationConfirmed.get()) {
+				Thread.yield();
+			}
+			restorationConfirmed.set(false);
+		} catch(RestoreInProgress ignored) {}
+		
+		while(!restorationBegun.get()) {
+			Thread.yield();
+		}
+		restorationBegun.set(false);
+
+		while(!restorationInitiated.get()) {
+			Thread.yield();
+		}
+		restorationInitiated.set(false);
+
+		rtiAmbassador.federateRestoreComplete();
+		
+		while(!restorationCompleted.get()) {
+			Thread.yield();
+		}
+		restorationCompleted.set(false);
 	}
 
 	/**
@@ -820,7 +899,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
 			SynchronizationPointFailureReason reason)
 					throws FederateInternalError {
-		syncRegistered.set(false);
+		syncRegistered.set(true);
 		System.out.println(synchronizationPointLabel + " registration failed: " + reason);
 	}
 
@@ -830,6 +909,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void announceSynchronizationPoint(String synchronizationPointLabel, byte[] userSuppliedTag)
 			throws FederateInternalError {
+		System.out.println("Synchronization Point Announced");
 		syncAnnounced.set(true);
 	}
 
@@ -839,6 +919,93 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void federationSynchronized(String synchronizationPointLabel, FederateHandleSet failedToSyncSet)
 			throws FederateInternalError {
+		System.out.println("Federation Synchronized");
 		syncAchieved.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateSave(java.lang.String)
+	 */
+	@Override
+	public void initiateFederateSave(String label)
+			throws FederateInternalError {
+		initiateFederateSave(label, null);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateSave(java.lang.String, hla.rti1516e.LogicalTime)
+	 */
+	@Override
+	public void initiateFederateSave(String label, LogicalTime time)
+			throws FederateInternalError  {
+		System.out.println("Initiate Federate Save");
+		saveInitiated.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#federationSaved()
+	 */
+	@Override
+	public void federationSaved() throws FederateInternalError {
+		System.out.println("Federation Saved");
+		saveCompleted.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#federationNotSaved(hla.rti1516e.SaveFailureReason)
+	 */
+	@Override
+	public void federationNotSaved(SaveFailureReason reason)
+			throws FederateInternalError {
+		System.out.println("Federation Not Saved");
+		saveCompleted.set(false);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#requestFederationRestoreSucceeded(java.lang.String)
+	 */
+	@Override
+	public void requestFederationRestoreSucceeded(String label)
+			throws FederateInternalError {
+		System.out.println("Request Federation Restore Succeeded");
+		restorationConfirmed.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#requestFederationRestoreFailed(java.lang.String)
+	 */
+	@Override
+	public void requestFederationRestoreFailed(String label)
+			throws FederateInternalError {
+		System.out.println("Request Federation Restore Failed");
+		restorationConfirmed.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#federationRestoreBegun()
+	 */
+	@Override
+	public void federationRestoreBegun() throws FederateInternalError {
+		System.out.println("Federate Restore Begun");
+		restorationBegun.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateRestore(java.lang.String, java.lang.String, hla.rti1516e.FederateHandle)
+	 */
+	@Override
+	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
+			throws FederateInternalError {
+		System.out.println("Federate Restore Initiated");
+		restorationInitiated.set(true);
+	}
+
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#federationRestored()
+	 */
+	@Override
+	public void federationRestored() throws FederateInternalError {
+		System.out.println("Federation Restored");
+		restorationCompleted.set(true);
 	}
 }

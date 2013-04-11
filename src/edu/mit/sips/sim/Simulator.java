@@ -95,9 +95,9 @@ public class Simulator implements SimulationControlListener {
 			throw new IllegalStateException("Simulation must be initialized.");
 		}
 		
-		long stopTime = Math.min(endTime, time + duration);
+		long stopTime = Math.min(endTime + 1, time + duration);
 		
-		while(time <= stopTime) {
+		while(time < stopTime) {
 			runAutoOptimization();
 			try {
 				simAmbassador.advance();
@@ -115,7 +115,7 @@ public class Simulator implements SimulationControlListener {
 		
 		if(time >= endTime) {
 			try {
-				simAmbassador.disconnect();
+				// TODO simAmbassador.disconnect();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -216,6 +216,7 @@ public class Simulator implements SimulationControlListener {
 		}
 		this.endTime = endTime;
 
+		/* TODO
 		if(simAmbassador.isInitialized()) {
 			try {
 				simAmbassador.disconnect();
@@ -228,15 +229,29 @@ public class Simulator implements SimulationControlListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		time = startTime;
 		country.initialize(startTime);
 		runAutoOptimization();
 
-		try {
-			simAmbassador.initialize(startTime);
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(simAmbassador.isInitialized()) {
+			try {
+				simAmbassador.restoreInitialConditions();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			try {
+				simAmbassador.connect();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				simAmbassador.initialize(startTime);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		fireInitializeEvent();
