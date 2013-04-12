@@ -562,7 +562,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 	
 	public void restoreInitialConditions() 
 			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
-			NotConnected, RTIinternalError, RestoreNotRequested, SynchronizationPointLabelNotAnnounced {
+			NotConnected, RTIinternalError, RestoreNotRequested, 
+			SynchronizationPointLabelNotAnnounced, LogicalTimeAlreadyPassed, 
+			InvalidLogicalTime, InTimeAdvancingState, RequestForTimeRegulationPending, 
+			RequestForTimeConstrainedPending, IllegalTimeArithmetic, AttributeNotOwned, 
+			AttributeNotDefined, ObjectInstanceNotKnown, InvalidLogicalTimeInterval, 
+			TimeRegulationIsNotEnabled {
 
 		rtiAmbassador.registerFederationSynchronizationPoint("reset", new byte[0]);
 		
@@ -600,13 +605,17 @@ public class SimAmbassador extends NullFederateAmbassador {
 			Thread.yield();
 		}
 		restorationInitiated.set(false);
-
+		
 		rtiAmbassador.federateRestoreComplete();
 		
 		while(!restorationCompleted.get()) {
 			Thread.yield();
 		}
 		restorationCompleted.set(false);
+		
+		logicalTime = (HLAinteger64Time) rtiAmbassador.queryLogicalTime();
+		
+		advance();
 	}
 
 	/**
