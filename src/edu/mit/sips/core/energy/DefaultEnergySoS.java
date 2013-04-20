@@ -302,6 +302,14 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 						        		  = element.getDistributionEfficiency();
 					}
 				}
+				for(ElectricityElement element : electElements) {
+					// Set coefficient for normal electricity production.
+					if(city.getName().equals(element.getOrigin())) {
+						petroFlow[2*petroElements.size() 
+						          + electElements.indexOf(element)] 
+						        		  = -element.getPetroleumIntensityOfElectricityProduction();
+					}
+				}
 				// Allow petroleum import in this city.
 				petroFlow[2*petroElements.size() + 2*electElements.size() 
 				          + cities.indexOf(city)] = 1;
@@ -314,7 +322,8 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				
 				// Constrain in-flow and production to meet demand.
 				constraints.add(new LinearConstraint(petroFlow, Relationship.EQ, 
-						energySystem.getElectricitySystem().getPetroleumConsumption()));
+						0));
+				// TODO		energySystem.getElectricitySystem().getPetroleumConsumption()));
 				
 				// Constrain electricity supply = demand in each city.
 				double[] electFlow = new double[numVariables];
@@ -327,12 +336,14 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 					if(city.getName().equals(element.getOrigin())) {
 						// Set coefficient for in-flow to the distribution element.
 						// Order origin first to never distribute in self loop.
-						electFlow[electElements.size() 
-						          + electElements.indexOf(element)] = -1;
+						electFlow[2*petroElements.size() 
+					                 + electElements.size() 
+					                 + electElements.indexOf(element)] = -1;
 					} else if(city.getName().equals(element.getDestination())) {
 						// Set coefficient for out-flow from the distribution element.
-						electFlow[electElements.size() 
-						          + electElements.indexOf(element)] 
+						electFlow[2*petroElements.size() 
+					                 + electElements.size() 
+					                 + electElements.indexOf(element)] 
 						        		  = element.getDistributionEfficiency();
 					}
 				}
