@@ -101,6 +101,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private final EncoderFactory encoderFactory;
 	private HLAinteger64Time logicalTime;
 	private HLAinteger64Interval lookaheadInterval;
+	private volatile AtomicBoolean connected = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
@@ -201,6 +202,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 					}
 				}
 			}
+
+			if(!connected.get()) {
+				return;
+			}
 			
 			rtiAmbassador.timeAdvanceRequest(logicalTime.add(lookaheadInterval));
 			while(!timeAdvanceGranted.get()) {
@@ -259,6 +264,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 		simulator.getConnection().setConnected(true);
 		
 		joinFederation();
+		
+		connected.set(true);
 	}
 	
 	/**
@@ -279,6 +286,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 		resignFederation();
 		
 		rtiAmbassador.disconnect();
+		
+		connected.set(false);
 		
 		simulator.getConnection().setConnected(false);
 	}
@@ -1016,5 +1025,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void federationRestored() throws FederateInternalError {
 		System.out.println("Federation Restored");
 		restorationCompleted.set(true);
+	}
+	
+	/* (non-Javadoc)
+	 * @see hla.rti1516e.NullFederateAmbassador#connectionLost(java.lang.String)
+	 */
+	@Override
+	public void connectionLost(String faultDescription) throws FederateInternalError  {
+		connected.set(false);
+		
+		simulator.getConnection().setConnected(false);
 	}
 }
