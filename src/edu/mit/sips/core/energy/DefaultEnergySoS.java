@@ -218,9 +218,10 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 
 				// Set distribution cost.
 				costCoefficients[petroElements.size() + petroElements.indexOf(element)] 
-						= element.getVariableOperationsCostOfPetroleumDistribution()
-						+ element.getElectricalIntensityOfPetroleumDistribution()
-						* getSociety().getGlobals().getElectricityDomesticPrice();
+						= element.getVariableOperationsCostOfPetroleumDistribution();
+		                // TODO removed because internalized as export capability
+						//+ element.getElectricalIntensityOfPetroleumDistribution()
+						//* getSociety().getGlobals().getElectricityDomesticPrice();
 				initialValues[petroElements.size() + petroElements.indexOf(element)] 
 						= element.getPetroleumInput();
 			}
@@ -248,8 +249,9 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				                		 = element.getVariableOperationsCostOfElectricityProduction() 
 				                		 + element.getWaterIntensityOfElectricityProduction()
 				                		 * getSociety().getGlobals().getWaterDomesticPrice()
-				                		 + element.getPetroleumIntensityOfElectricityProduction()
-				                		 * getSociety().getGlobals().getPetroleumDomesticPrice()
+				                		 // TODO removed because internalized as export capability
+				                		 //+ element.getPetroleumIntensityOfElectricityProduction()
+				                		 //* getSociety().getGlobals().getPetroleumDomesticPrice()
 				                		 + deltaElectricityProductionCost;
 				initialValues[2*petroElements.size() 
 				              + electElements.indexOf(element)] 
@@ -372,9 +374,11 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				                 + cities.size() + cities.indexOf(city)] 
 				                		 = energySystem.getPetroleumSystem().getPetroleumExport();
 				// Set petroleum burn cost in each city.
+				/*TODO removed because internalized in export capability
 				costCoefficients[2*petroElements.size() + 2*electElements.size() 
 						          + 2*cities.size() + cities.indexOf(city)] 
 						        		  = city.getGlobals().getPetroleumDomesticPrice();
+				 */
 				initialValues[2*petroElements.size() + 2*electElements.size() 
 					          + 2*cities.size() + cities.indexOf(city)] = Math.max(0,
 					        		  energySystem.getElectricitySystem().getPetroleumBurned());
