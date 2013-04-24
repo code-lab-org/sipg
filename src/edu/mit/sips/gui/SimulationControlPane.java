@@ -297,12 +297,10 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 			toggleConnection.setEnabled(true);
 			toggleConnection.putValue(
 					Action.SMALL_ICON, Icons.CONNECTED);
-			initializeSim.setEnabled(true);
 		} else {
 			toggleConnection.setEnabled(true);
 			toggleConnection.putValue(
 					Action.SMALL_ICON, Icons.DISCONNECTED);
-			initializeSim.setEnabled(false);
 			runOptimization.setEnabled(false);
 			stepSim.setEnabled(false);
 			advanceSim.setEnabled(false);

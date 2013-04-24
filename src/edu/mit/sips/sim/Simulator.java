@@ -1,5 +1,6 @@
 package edu.mit.sips.sim;
 
+import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIinternalError;
 
 import javax.swing.JOptionPane;
@@ -99,10 +100,12 @@ public class Simulator implements SimulationControlListener {
 		
 		while(time < stopTime) {
 			runAutoOptimization();
+			
 			try {
 				simAmbassador.advance();
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (NotConnected ignored) {
+			} catch(Exception ex) {
+				ex.printStackTrace();
 			}
 			country.tick();
 			fireUpdateEvent(time); // final update of current year
@@ -238,17 +241,14 @@ public class Simulator implements SimulationControlListener {
 		if(simAmbassador.isInitialized()) {
 			try {
 				simAmbassador.restoreInitialConditions();
+			} catch (NotConnected ignored) {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		} else {
 			try {
-				simAmbassador.connect();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			try {
 				simAmbassador.initialize(startTime);
+			} catch (NotConnected ignored) {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
