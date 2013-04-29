@@ -301,17 +301,17 @@ public class GlobalsPane extends JTabbedPane {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		addField(foodPanel, "Food Domestic Price (SAR/Mj)", 
+		addField(foodPanel, "Food Domestic Price (SAR/GJ)", 
 				foodDomesticPrice, c);
-		addField(foodPanel, "Food Import Price (SAR/Mj)", 
+		addField(foodPanel, "Food Import Price (SAR/GJ)", 
 				foodImportPrice, c);
-		addField(foodPanel, "Food Export Price (SAR/Mj)",
+		addField(foodPanel, "Food Export Price (SAR/GJ)",
 				foodExportPrice, c);
-		addField(foodPanel, "Min Food Use per Capita (Mj)",
+		addField(foodPanel, "Min Food Use per Capita (GJ)",
 				minFoodDemandPerCapita, c);
 		addField(foodPanel, "Economic Product for Min Food Use (SAR)",
 				econProductMinFoodDemand, c);
-		addField(foodPanel, "Max Food Use per Capita (Mj)",
+		addField(foodPanel, "Max Food Use per Capita (GJ)",
 				maxFoodDemandPerCapita, c);
 		addField(foodPanel, "Economic Product for Max Food Use (SAR)",
 				econProductMaxFoodDemand, c);
