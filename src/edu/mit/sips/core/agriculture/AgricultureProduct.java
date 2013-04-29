@@ -5,13 +5,13 @@ package edu.mit.sips.core.agriculture;
  */
 public enum AgricultureProduct {
 	NONE,
-	GRAZING("Lifestock Grazing", 		6000., 		150, 	100, 	0.5),
-	INDIGINOUS_CROP("Indiginous Crop", 	200000., 	10000, 	2500, 	20);
-	//GRAINS("Grains", 240/239., 0.2, 70),
-	//MODIFIED_GRAINS("Modified Grains", 300/239., 0.2, 60);
+	GRAZING("Lifestock Grazing", 		15, 	50, 	300, 	0.5),
+	INDIGINOUS_CROP("Indiginous Crop", 	400, 	15000, 	5000, 	20),
+	GRAINS("Grains", 					2000, 	30000, 	35000,	10),
+	MODIFIED_GRAINS("Modified Grains", 	2000, 	52500, 	30000,	10);
 	
 	private final String name;
-	private final double foodIntensityOfLandUsed; 		// Mj/km^2
+	private final double foodIntensityOfLandUsed; 		// GJ/km^2
 	private final double costIntensityOfLandUsed;		// SAR/km^2
 	private final double waterIntensityOfLandUsed;		// m^3/km^2
 	private final double laborIntensityOfLandUsed;		// person/km^2

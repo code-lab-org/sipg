@@ -116,7 +116,7 @@ public class AgricultureElementPanel extends ElementPanel {
 					}
 				});
 		addInput(elementPanel, c, 
-				"Max Food Input (Mj/year)", maxFoodInput);
+				"Max Food Input (GJ/year)", maxFoodInput);
 		initialFoodInput = new JTextField(10);
 		initialFoodInput.setText(
 				new Double(element.getInitialFoodInput()).toString());
@@ -133,7 +133,7 @@ public class AgricultureElementPanel extends ElementPanel {
 					}
 				});
 		addInput(elementPanel, c, 
-				"Initial Food Input (Mj/year)", initialFoodInput);
+				"Initial Food Input (GJ/year)", initialFoodInput);
 		distributionEfficiency = new JTextField(10);
 		distributionEfficiency.setText(
 				new Double(element.getDistributionEfficiency()).toString());
@@ -150,7 +150,7 @@ public class AgricultureElementPanel extends ElementPanel {
 					}
 				});
 		addInput(elementPanel, c, 
-				"Distribution Efficiency (Mj out/Mj in)", 
+				"Distribution Efficiency (GJ out/GJ in)", 
 				distributionEfficiency);
 		variableOperationsCostOfFoodDistribution = new JTextField(10);
 		variableOperationsCostOfFoodDistribution.setText(
@@ -168,7 +168,7 @@ public class AgricultureElementPanel extends ElementPanel {
 					}
 				});
 		addInput(elementPanel, c, 
-				"Operations Cost of Distribution (SAR/Mj)", 
+				"Operations Cost of Distribution (SAR/GJ)", 
 				variableOperationsCostOfFoodDistribution);
 	}
 	

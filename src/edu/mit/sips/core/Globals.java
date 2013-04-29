@@ -5,34 +5,34 @@ package edu.mit.sips.core;
  */
 public class Globals {
 	private double initialFunds = 10000;								// SAR
+
+	private double agricultureLaborParticipationRate = 0.50;			// -
+	private double foodDomesticPrice = 200;								// SAR/GJ
+	private double foodImportPrice = 250;								// SAR/GJ
+	private double foodExportPrice = 225;								// SAR/GJ
+	private double minFoodDemandPerCapita = 2;							// GJ/person
+	private double maxFoodDemandPerCapita = 4.5;						// GJ/person
+	private double econProductMinFoodDemand = 0;						// SAR/SAR
+	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
 	
 	private double waterImportPrice = 40;								// SAR/m^3
 	private double waterDomesticPrice = 6.;								// SAR/m^3
 	private double economicIntensityOfWaterProduction = 0;				// SAR/m^3
 	private double minWaterDemandPerCapita = 10;						// m^3
 	private double maxWaterDemandPerCapita = 100;						// m^3
-	private double agricultureLaborParticipationRate = 0.50;			// -
-	private double electricityDomesticPrice = 375.;						// SAR/MWh
 	
 	private double petroleumDomesticPrice = 50.;						// SAR/bbl
-	private double economicIntensityOfElectricityProduction = 0;		// SAR/MWh
-	private double economicIntensityOfElectricityConsumption = 0.5;		// SAR/MWh
-	private double economicIntensityOfPetroleumProduction = 0;			// SAR/bbl
-	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
 	private double petroleumExportPrice = 300;							// SAR/bbl
 	private double petroleumImportPrice = 375;							// SAR/bbl
+	private double economicIntensityOfPetroleumProduction = 0;			// SAR/bbl
+	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
+	private double electricityDomesticPrice = 375.;						// SAR/MWh
 	private double minElectricityDemandPerCapita = 1;					// MWh/person
 	private double maxElectricityDemandPerCapita = 10;					// MWh/person
 	private double econProductMinElectricityDemand = 0;					// SAR/person
 	private double econProductMaxElectricityDemand = 100000;			// SAR/person
-
-	private double foodDomesticPrice = 0.25;							// SAR/Mj
-	private double foodImportPrice = 0.25;								// SAR/Mj
-	private double foodExportPrice = 0.20;								// SAR/Mj
-	private double minFoodDemandPerCapita = 2000;						// Mj/person
-	private double maxFoodDemandPerCapita = 4500;						// Mj/person
-	private double econProductMinFoodDemand = 0;						// SAR/SAR
-	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
+	private double economicIntensityOfElectricityProduction = 0;		// SAR/MWh
+	private double economicIntensityOfElectricityConsumption = 0.5;		// SAR/MWh
 	
 	/**
 	 * Instantiates a new globals.

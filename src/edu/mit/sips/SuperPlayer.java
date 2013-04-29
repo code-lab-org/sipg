@@ -36,12 +36,12 @@ public class SuperPlayer {
 						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000))),
 				new City(jeddah, 
 						new DefaultAgricultureSystem.Local(4000),
-						new DefaultWaterSystem.Local(true, 2e9, 2e9, 2e6, 0),
+						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
 						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000))),
 				new City(sakakah, 
-						new DefaultAgricultureSystem.Local(5000),
-						new DefaultWaterSystem.Local(false, 1e9, 1e9, 1e6, 0),
+						new DefaultAgricultureSystem.Local(10000),
+						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
 						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000)))
 			));
