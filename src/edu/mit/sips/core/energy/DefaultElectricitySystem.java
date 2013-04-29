@@ -276,9 +276,9 @@ public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local 
 	 */
 	@Override
 	public double getRenewableElectricityFraction() {
-		if(getElectricityProduction() + getElectricityFromBurningPetroleum() > 0) {
-			return getRenewableElectricityProduction() / (getElectricityProduction() 
-					+ getElectricityFromBurningPetroleum());
+		if(getSociety().getTotalElectricityDemand() > 0) {
+			return getRenewableElectricityProduction() / 
+					getSociety().getTotalElectricityDemand();
 		}
 		return 0;
 	}

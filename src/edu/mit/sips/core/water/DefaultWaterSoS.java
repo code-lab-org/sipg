@@ -148,9 +148,9 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 */
 		@Override
 		public double getRenewableWaterFraction() {
-			if(getWaterProduction() + getWaterFromArtesianWell() > 0) {
+			if(getSociety().getTotalWaterDemand() > 0) {
 				return getRenewableWaterProduction() 
-						/ (getWaterProduction() + getWaterFromArtesianWell());
+						/ getSociety().getTotalWaterDemand();
 			}
 			return 0;
 		}
