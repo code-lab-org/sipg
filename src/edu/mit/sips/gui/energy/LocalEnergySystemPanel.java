@@ -127,7 +127,7 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 				"Local Electricity Use Fraction (-)", 
 				localElectricityData));
 		electricityPane.addTab("Renewable", Icons.RENEWABLE, createTimeSeriesChart(
-				"Renewable Electricity Production Fraction (-)", 
+				"Renewable Electricity Fraction (-)", 
 				renewableElectricityData));
 		electricityPane.addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
 				"Electricity Consumption per Capita (MWh/person)", 

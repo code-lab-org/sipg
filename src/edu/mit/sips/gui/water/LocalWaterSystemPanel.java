@@ -85,7 +85,7 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Water Use Fraction (-)", localWaterData));
 		addTab("Renewable", Icons.RENEWABLE, createTimeSeriesChart(
-				"Renewable Water Production Fraction (-)", 
+				"Renewable Water Fraction (-)", 
 				renewableWaterData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
 				"Water Consumption per Capita (m^3/person)", 
