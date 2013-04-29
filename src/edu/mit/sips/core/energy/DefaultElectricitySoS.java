@@ -168,15 +168,11 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS.Local implem
 			if(getPetroleumBurned() > 0) {
 				electricityFromBurningLocalPetroleum = getElectricityFromBurningPetroleum()
 						* Math.min(getPetroleumBurned(), 
-								getEnergySystem().getPetroleumSystem().getPetroleumProduction()
-								- getEnergySystem().getPetroleumSystem().getPetroleumOutDistribution()
-								- getEnergySystem().getPetroleumSystem().getPetroleumExport())
+								getEnergySystem().getPetroleumSystem().getPetroleumProduction())
 						/ getPetroleumBurned();
 			}
 			
-			return Math.max(0, getElectricityProduction()
-					- getElectricityOutDistribution()
-					- getElectricityWasted()
+			return Math.min(1, getElectricityProduction()
 					+ electricityFromBurningLocalPetroleum)
 					/ getSociety().getTotalElectricityDemand();
 		}

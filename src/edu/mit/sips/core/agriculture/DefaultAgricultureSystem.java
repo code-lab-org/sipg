@@ -253,10 +253,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public double getLocalFoodFraction() {
 			if(getSociety().getTotalFoodDemand() > 0) {
-				return Math.max(0, (getFoodProduction()
-						- getFoodOutDistribution()
-						- getFoodExport()))
-						/ getSociety().getTotalFoodDemand();
+				return Math.min(1, getFoodProduction() 
+						/ getSociety().getTotalFoodDemand());
 			} 
 			return 0;
 		}

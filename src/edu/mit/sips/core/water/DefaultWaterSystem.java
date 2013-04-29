@@ -211,11 +211,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getLocalWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
-				return Math.max(0, getWaterProduction()
-						+ getWaterFromArtesianWell()
-						- getWaterOutDistribution()
-						- getWaterWasted())
-						/ getSociety().getTotalWaterDemand();
+				return Math.min(1, (getWaterProduction() + getWaterFromArtesianWell())
+						/ getSociety().getTotalWaterDemand());
 			} 
 			return 0;
 		}
