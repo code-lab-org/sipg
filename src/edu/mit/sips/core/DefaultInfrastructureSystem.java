@@ -66,6 +66,24 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+		 */
+		@Override
+		public double getDomesticProduction() {
+			// expense method:
+			// GDP = C + I + G + (X - M)
+			// C: private consumption (not included here)
+			// I: gross investment (capital and decommission expense)
+			// G: government spending (operational expense)
+			// X: exports (distribution and export revenue)
+			// M: imports (distribution and import expense)
+			return getCapitalExpense() + getDecommissionExpense()
+				+ getOperationsExpense() + getConsumptionExpense()
+				+ getDistributionRevenue() + getExportRevenue()
+				- getDistributionExpense() - getImportExpense();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getLifecycleExpense()
 		 */
 		@Override
@@ -85,7 +103,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			}
 			return super.getName();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
 		 */
@@ -97,7 +115,8 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			}
 			return value;
 		}
-		
+
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalExpense()
 		 */
@@ -109,7 +128,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getImportExpense();
 		}
 
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalRevenue()
 		 */
@@ -119,7 +137,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getDistributionRevenue()
 					+ getExportRevenue();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
 		 */

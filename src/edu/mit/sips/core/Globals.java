@@ -1,3 +1,6 @@
+/*
+ * 
+ */
 package edu.mit.sips.core;
 
 /**
@@ -14,32 +17,36 @@ public class Globals {
 	private double maxFoodDemandPerCapita = 4.5;						// GJ/person
 	private double econProductMinFoodDemand = 0;						// SAR/SAR
 	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
+	private double privateConsumptionFromFoodProduction = 0;			// SAR/GJ
+	private double privateConsumptionFromFoodConsumption = 0;			// SAR/GJ
 	
 	private double waterImportPrice = 40;								// SAR/m^3
 	private double waterDomesticPrice = 6.;								// SAR/m^3
-	private double economicIntensityOfWaterProduction = 0;				// SAR/m^3
+	private double privateConsumptionFromWaterProduction = 0;			// SAR/m^3
+	private double privateConsumptionFromWaterConsumption = 0;			// SAR/m^3
 	private double minWaterDemandPerCapita = 10;						// m^3
 	private double maxWaterDemandPerCapita = 100;						// m^3
 	
 	private double petroleumDomesticPrice = 50.;						// SAR/bbl
 	private double petroleumExportPrice = 300;							// SAR/bbl
 	private double petroleumImportPrice = 375;							// SAR/bbl
-	private double economicIntensityOfPetroleumProduction = 0;			// SAR/bbl
+	private double privateConsumptionFromPetroleumProduction = 0;		// SAR/bbl
 	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
+	
 	private double electricityDomesticPrice = 375.;						// SAR/MWh
 	private double minElectricityDemandPerCapita = 1;					// MWh/person
 	private double maxElectricityDemandPerCapita = 10;					// MWh/person
 	private double econProductMinElectricityDemand = 0;					// SAR/person
 	private double econProductMaxElectricityDemand = 100000;			// SAR/person
-	private double economicIntensityOfElectricityProduction = 0;		// SAR/MWh
-	private double economicIntensityOfElectricityConsumption = 0.5;		// SAR/MWh
-	
+	private double privateConsumptionFromElectricityProduction = 0;		// SAR/MWh
+	private double privateConsumptionFromElectricityConsumption = 0.5;	// SAR/MWh
 	/**
 	 * Instantiates a new globals.
 	 */
 	public Globals() {
 		
 	}
+	
 	/**
 	 * Gets the agriculture labor participation rate.
 	 *
@@ -48,41 +55,70 @@ public class Globals {
 	public double getAgricultureLaborParticipationRate() {
 		return agricultureLaborParticipationRate;
 	}
+
 	/**
-	 * Gets the economic intensity of electricity consumption.
+	 * Gets the private consumption from electricity consumption.
 	 *
-	 * @return the economic intensity of electricity consumption
+	 * @return the private consumption from electricity consumption
 	 */
-	public double getEconomicIntensityOfElectricityConsumption() {
-		return economicIntensityOfElectricityConsumption;
-	}
-	/**
-	 * Gets the economic intensity of electricity production.
-	 *
-	 * @return the economic intensity of electricity production
-	 */
-	public double getEconomicIntensityOfElectricityProduction() {
-		return economicIntensityOfElectricityProduction;
+	public double getPrivateConsumptionFromElectricityConsumption() {
+		return privateConsumptionFromElectricityConsumption;
 	}
 
 	/**
-	 * Gets the economic intensity of petroleum production.
+	 * Gets the private consumption from electricity production.
 	 *
-	 * @return the economic intensity of petroleum production
+	 * @return the private consumption from electricity production
 	 */
-	public double getEconomicIntensityOfPetroleumProduction() {
-		return economicIntensityOfPetroleumProduction;
+	public double getPrivateConsumptionFromElectricityProduction() {
+		return privateConsumptionFromElectricityProduction;
+	}
+	
+	/**
+	 * Gets the private consumption from food consumption.
+	 *
+	 * @return the private consumption from food consumption
+	 */
+	public double getPrivateConsumptionFromFoodConsumption() {
+		return privateConsumptionFromFoodConsumption;
+	}
+	
+	/**
+	 * Gets the private consumption from food production.
+	 *
+	 * @return the private consumption from food production
+	 */
+	public double getPrivateConsumptionFromFoodProduction() {
+		return privateConsumptionFromFoodProduction;
+	}
+	
+	/**
+	 * Gets the private consumption from petroleum production.
+	 *
+	 * @return the private consumption from petroleum production
+	 */
+	public double getPrivateConsumptionFromPetroleumProduction() {
+		return privateConsumptionFromPetroleumProduction;
 	}
 
 	/**
-	 * Gets the economic intensity of water production.
+	 * Gets the private consumption from water consumption.
 	 *
-	 * @return the economic intensity of water production
+	 * @return the private consumption from water consumption
 	 */
-	public double getEconomicIntensityOfWaterProduction() {
-		return economicIntensityOfWaterProduction;
+	public double getPrivateConsumptionFromWaterConsumption() {
+		return privateConsumptionFromWaterConsumption;
 	}
 
+	/**
+	 * Gets the private consumption from water production.
+	 *
+	 * @return the private consumption from water production
+	 */
+	public double getPrivateConsumptionFromWaterProduction() {
+		return privateConsumptionFromWaterProduction;
+	}
+	
 	/**
 	 * Gets the econ product max electricity demand.
 	 *
@@ -169,7 +205,7 @@ public class Globals {
 	public double getFoodDomesticPrice() {
 		return foodDomesticPrice;
 	}
-	
+
 	/**
 	 * Gets the food export price.
 	 *
@@ -196,7 +232,7 @@ public class Globals {
 	public double getInitialFunds() {
 		return initialFunds;
 	}
-
+	
 	/**
 	 * Gets the max electricity demand per capita.
 	 *
@@ -313,7 +349,7 @@ public class Globals {
 	 */
 	public void setEconomicIntensityOfElectricityConsumption(
 			double economicIntensityOfElectricityConsumption) {
-		this.economicIntensityOfElectricityConsumption = economicIntensityOfElectricityConsumption;
+		this.privateConsumptionFromElectricityConsumption = economicIntensityOfElectricityConsumption;
 	}
 
 	/**
@@ -323,7 +359,27 @@ public class Globals {
 	 */
 	public void setEconomicIntensityOfElectricityProduction(
 			double economicIntensityOfElectricityProduction) {
-		this.economicIntensityOfElectricityProduction = economicIntensityOfElectricityProduction;
+		this.privateConsumptionFromElectricityProduction = economicIntensityOfElectricityProduction;
+	}
+
+	/**
+	 * Sets the economic intensity of food consumption.
+	 *
+	 * @param economicIntensityOfFoodConsumption the new economic intensity of food consumption
+	 */
+	public void setEconomicIntensityOfFoodConsumption(
+			double economicIntensityOfFoodConsumption) {
+		this.privateConsumptionFromFoodConsumption = economicIntensityOfFoodConsumption;
+	}
+
+	/**
+	 * Sets the economic intensity of food production.
+	 *
+	 * @param economicIntensityOfFoodProduction the new economic intensity of food production
+	 */
+	public void setEconomicIntensityOfFoodProduction(
+			double economicIntensityOfFoodProduction) {
+		this.privateConsumptionFromFoodProduction = economicIntensityOfFoodProduction;
 	}
 
 	/**
@@ -333,7 +389,17 @@ public class Globals {
 	 */
 	public void setEconomicIntensityOfPetroleumProduction(
 			double economicIntensityOfPetroleumProduction) {
-		this.economicIntensityOfPetroleumProduction = economicIntensityOfPetroleumProduction;
+		this.privateConsumptionFromPetroleumProduction = economicIntensityOfPetroleumProduction;
+	}
+
+	/**
+	 * Sets the economic intensity of water consumption.
+	 *
+	 * @param economicIntensityOfWaterConsumption the new economic intensity of water consumption
+	 */
+	public void setEconomicIntensityOfWaterConsumption(
+			double economicIntensityOfWaterConsumption) {
+		this.privateConsumptionFromWaterConsumption = economicIntensityOfWaterConsumption;
 	}
 
 	/**
@@ -343,7 +409,7 @@ public class Globals {
 	 */
 	public void setEconomicIntensityOfWaterProduction(
 			double economicIntensityOfWaterProduction) {
-		this.economicIntensityOfWaterProduction = economicIntensityOfWaterProduction;
+		this.privateConsumptionFromWaterProduction = economicIntensityOfWaterProduction;
 	}
 
 	/**

@@ -75,9 +75,10 @@ public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local 
 	 */
 	@Override
 	public double getDomesticProduction() {
-		return (getSociety().getGlobals().getElectricityDomesticPrice()
-				+ getSociety().getGlobals().getEconomicIntensityOfElectricityProduction())
-				* getElectricityProduction();
+		// add private consumption to base domestic production
+		return super.getDomesticProduction() 
+				+ getSociety().getGlobals().getPrivateConsumptionFromElectricityProduction()
+				* (getElectricityProduction() + getElectricityFromBurningPetroleum());
 	}
 	
 	/* (non-Javadoc)

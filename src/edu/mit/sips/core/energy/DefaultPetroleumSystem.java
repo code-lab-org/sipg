@@ -98,10 +98,10 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local im
 	 */
 	@Override
 	public double getDomesticProduction() {
-		return (getSociety().getGlobals().getPetroleumDomesticPrice()
-				+ getSociety().getGlobals().getEconomicIntensityOfPetroleumProduction())
-				* getPetroleumProduction()
-				+ getExportRevenue() - getImportExpense();
+		// add private consumption to base domestic production
+		return super.getDomesticProduction() 
+				+ getSociety().getGlobals().getPrivateConsumptionFromPetroleumProduction()
+				* getPetroleumProduction();
 	}
 
 	/* (non-Javadoc)

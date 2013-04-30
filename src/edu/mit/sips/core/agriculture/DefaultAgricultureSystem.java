@@ -92,9 +92,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return getSociety().getGlobals().getFoodDomesticPrice() 
-					* getFoodProduction()
-					+ getExportRevenue() - getImportExpense();
+			// add private consumption to base domestic production
+			return super.getDomesticProduction() 
+					+ getSociety().getGlobals().getPrivateConsumptionFromFoodProduction()
+					* getFoodProduction();
 		}
 
 		/* (non-Javadoc)

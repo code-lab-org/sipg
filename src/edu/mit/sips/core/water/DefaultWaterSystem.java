@@ -123,10 +123,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return (getSociety().getGlobals().getWaterDomesticPrice()
-					+ getSociety().getGlobals().getEconomicIntensityOfWaterProduction())
-					* (getWaterProduction() + getWaterFromArtesianWell())
-					+ getExportRevenue()  - getImportExpense();
+			// add private consumption to base domestic production
+			return super.getDomesticProduction() 
+					+ getSociety().getGlobals().getPrivateConsumptionFromWaterProduction()
+					* (getWaterProduction() + getWaterFromArtesianWell());
 		}
 
 		/* (non-Javadoc)
