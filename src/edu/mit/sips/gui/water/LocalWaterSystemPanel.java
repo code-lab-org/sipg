@@ -226,8 +226,11 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 							element.getWaterOutput());
 				}
 			}
-			updateSeries(waterReservoirDataset, getSociety().getName(), 
+			updateSeries(waterReservoirDataset, "Available", 
 					year, getWaterSystem().getWaterReservoirVolume());
+			updateSeries(waterReservoirDataset, "Depleted", 
+					year, getWaterSystem().getMaxWaterReservoirVolume() 
+					- getWaterSystem().getWaterReservoirVolume());
 		} else {
 			updateSeries(waterSourceData, "Production", year, 
 					getWaterSystem().getWaterProduction());
@@ -236,8 +239,13 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 			updateSeries(waterUseData, "Distribution", year,
 					getWaterSystem().getWaterOutDistribution());
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName(), 
+				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName() + " (Available)", 
 						year, nestedSystem.getWaterReservoirVolume());
+			}
+			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
+				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName() + " (Depleted)", 
+						year, nestedSystem.getMaxWaterReservoirVolume() 
+						- nestedSystem.getWaterReservoirVolume());
 			}
 		}
 		updateSeries(waterSourceData, "Artesian Well", year, 

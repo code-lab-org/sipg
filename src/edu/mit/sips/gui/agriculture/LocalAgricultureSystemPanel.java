@@ -70,7 +70,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 				"Food Consumption Per Capita (GJ/person)", 
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
-				"Arable Land Available (km^2)", landAvailableDataset));
+				"Arable Land (km^2)", landAvailableDataset));
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/GJ)", 
 						foodProductCostData));
@@ -162,13 +162,19 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		}
 		
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
-			updateSeries(landAvailableDataset, getSociety().getName(), year, 
+			updateSeries(landAvailableDataset, "Available", year, 
 					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
+			updateSeries(landAvailableDataset, "Used", year, 
+					getAgricultureSystem().getLandAreaUsed());
 
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName(), 
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
+			}
+			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", 
+						year, nestedSystem.getLandAreaUsed());
 			}
 		}
 	
