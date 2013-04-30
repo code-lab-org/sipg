@@ -11,6 +11,7 @@ import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
+import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.sim.Simulator;
 
@@ -33,17 +34,17 @@ public class SuperPlayer {
 						new DefaultAgricultureSystem.Local(3000),
 						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0),
 						new DefaultEnergySystem.Local(1e10, 1e10),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000))),
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000), 1000)),
 				new City(jeddah, 
 						new DefaultAgricultureSystem.Local(4000),
 						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000))),
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000), 1000)),
 				new City(sakakah, 
 						new DefaultAgricultureSystem.Local(10000),
 						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0),
 						new DefaultEnergySystem.Local(0, 0),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000)))
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000), 1000))
 			));
 		
 		DefaultEnergySystem.Local res = (DefaultEnergySystem.Local) ksa.getCity(riyadh).getEnergySystem();
@@ -93,7 +94,7 @@ public class SuperPlayer {
 		}
 
 		final Simulator simulator = new Simulator("Super Player", ksa);
-		//simulator.addUpdateListener(new ConsoleLogger());
+		simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {

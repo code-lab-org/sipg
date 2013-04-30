@@ -19,6 +19,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
 		private final PopulationModel populationModel;
+		private final double initialDomesticProductPerCapita;
 		private double domesticProduct, nextDomesticProduct;
 		
 		/**
@@ -29,14 +30,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public Local() {
 			super("Society");
 			this.populationModel = new DefaultPopulationModel();
+			this.initialDomesticProductPerCapita = 0;
 		}
 		
 		/**
 		 * Instantiates a new local.
 		 *
 		 * @param populationModel the population model
+		 * @param initialDomesticProductPerCapita the initial domestic product per capita
 		 */
-		public Local(PopulationModel populationModel) {
+		public Local(PopulationModel populationModel, double initialDomesticProductPerCapita) {
 			super("Society");
 			// Validate population model.
 			if(populationModel == null) {
@@ -44,6 +47,9 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Population model cannot be null.");
 			}
 			this.populationModel = populationModel;
+
+			// No need to validate initial domestic product
+			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
 		}
 
 		/* (non-Javadoc)
@@ -187,6 +193,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem.Local#getInitialDomesticProductPerCapita()
+		 */
+		@Override
+		public double getInitialDomesticProductPerCapita() {
+			return initialDomesticProductPerCapita;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
 		@Override
@@ -248,9 +262,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void initialize(long time) {
 			populationModel.initialize(time);
-			// note: initialize domestic product LAST as 
-			// it depends on other initial values
-			domesticProduct = getNextEconomicProduction();
+			domesticProduct = initialDomesticProductPerCapita*populationModel.getPopulation();
 		}
 
 		/* (non-Javadoc)

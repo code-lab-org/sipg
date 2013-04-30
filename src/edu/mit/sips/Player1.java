@@ -33,7 +33,7 @@ public class Player1 {
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Remote(),
 						new DefaultEnergySystem.Local(1e10, 1e10),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000))),
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 50000, 0.08, 20000000), 1000)),
 				new City(jeddah, 
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Remote(),

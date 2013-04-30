@@ -38,7 +38,7 @@ public class Player2 {
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Local(true, 2e9, 2e9, 2e6, 0),
 						new DefaultEnergySystem.Remote(),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000))),
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 100000, 0.07, 10000000), 1000)),
 				new City(sakakah, 
 						new DefaultAgricultureSystem.Remote(),
 						new DefaultWaterSystem.Local(false, 1e9, 1e9, 1e6, 0),

@@ -206,7 +206,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			if(!connected.get()) {
 				return;
 			}
-			
+
+			System.out.println("Requesting time advance to " 
+					+ logicalTime.add(lookaheadInterval));
 			rtiAmbassador.timeAdvanceRequest(logicalTime.add(lookaheadInterval));
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
@@ -307,6 +309,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			ObjectClassHandle theObjectClass,
 			String objectName,
 			FederateHandle producingFederate) {
+		
+		System.out.println("Discovering object instance " + objectName + ".");
+		
 		try {
 			if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLAagricultureSystem.CLASS_NAME))) {
@@ -437,9 +442,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			syncRegistered.set(false);
 			
 			System.out.println("GALT not valid: requesting ta to " 
-					+ timeFactory.makeTime((startTime-1)*unitsPerYear));
+					+ timeFactory.makeTime((startTime-2)*unitsPerYear));
 			rtiAmbassador.timeAdvanceRequest(
-					timeFactory.makeTime((startTime-1)*unitsPerYear));
+					timeFactory.makeTime((startTime-2)*unitsPerYear));
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
 			}
@@ -454,7 +459,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			timeAdvanceGranted.set(false);
 			*/
 			rtiAmbassador.timeAdvanceRequest(
-					timeFactory.makeTime((startTime-1)*unitsPerYear));
+					timeFactory.makeTime((startTime-2)*unitsPerYear));
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
 			}
@@ -545,7 +550,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		syncAchieved.set(false);
 		
-		// once all federates are joined, advance to start time
+		// once all federates are joined, advance to start time - 1
+		
+		advance(); // advance to start time - 1
+		
 		if(firstFederate) {
 			rtiAmbassador.requestFederationSave("initialState");
 		}
@@ -564,11 +572,33 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		saveCompleted.set(false);
 		
-		advance();
+		advance(); // advance to start time
 
 		initialized.set(true);
 	}
 	
+	/**
+	 * Restore initial conditions.
+	 *
+	 * @throws SaveInProgress the save in progress
+	 * @throws RestoreInProgress the restore in progress
+	 * @throws FederateNotExecutionMember the federate not execution member
+	 * @throws NotConnected the not connected
+	 * @throws RTIinternalError the rT iinternal error
+	 * @throws RestoreNotRequested the restore not requested
+	 * @throws SynchronizationPointLabelNotAnnounced the synchronization point label not announced
+	 * @throws LogicalTimeAlreadyPassed the logical time already passed
+	 * @throws InvalidLogicalTime the invalid logical time
+	 * @throws InTimeAdvancingState the in time advancing state
+	 * @throws RequestForTimeRegulationPending the request for time regulation pending
+	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
+	 * @throws IllegalTimeArithmetic the illegal time arithmetic
+	 * @throws AttributeNotOwned the attribute not owned
+	 * @throws AttributeNotDefined the attribute not defined
+	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws InvalidLogicalTimeInterval the invalid logical time interval
+	 * @throws TimeRegulationIsNotEnabled the time regulation is not enabled
+	 */
 	public void restoreInitialConditions() 
 			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
 			NotConnected, RTIinternalError, RestoreNotRequested, 
@@ -622,9 +652,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		restorationCompleted.set(false);
 		
-		logicalTime = (HLAinteger64Time) rtiAmbassador.queryLogicalTime();
+		logicalTime = (HLAinteger64Time) rtiAmbassador.queryLogicalTime(); // should be start time - 1
 		
-		advance();
+		advance(); // advance to start time
 	}
 
 	/**
@@ -690,6 +720,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject,
 			AttributeHandleSet theAttributes, byte[] userSuppliedTag) {
+		
+		System.out.println("Providing attribute updates for " 
+				+ hlaObjects.get(theObject));
+		
 		HLAinfrastructureSystem localSystem;
 		synchronized(hlaObjects) {
 			localSystem = hlaObjects.get(theObject);
@@ -722,7 +756,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 			SupplementalReflectInfo reflectInfo) {
 		// long time = (long) Math.ceil(((HLAinteger64Time)theTime).getValue()/(double)unitsPerYear) - 1;
 		
-		System.out.println("Reflecting attributes with timestamp " + theTime);
+		System.out.println("Reflecting attributes with timestamp " 
+				+ theTime + " for " + hlaObjects.get(theObject));
 		
 		try {
 			synchronized(hlaObjects) {

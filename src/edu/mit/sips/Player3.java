@@ -43,7 +43,7 @@ public class Player3 {
 						new DefaultAgricultureSystem.Local(5000),
 						new DefaultWaterSystem.Remote(),
 						new DefaultEnergySystem.Remote(),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000)))
+						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000), 1000))
 			));
 		
 		DefaultAgricultureSystem.Local ras = (DefaultAgricultureSystem.Local) ksa.getCity(riyadh).getAgricultureSystem();

@@ -235,8 +235,8 @@ public class Simulator implements SimulationControlListener {
 		*/
 		
 		time = startTime;
+
 		country.initialize(startTime);
-		runAutoOptimization();
 
 		if(simAmbassador.isInitialized()) {
 			try {
@@ -253,9 +253,11 @@ public class Simulator implements SimulationControlListener {
 				e.printStackTrace();
 			}
 		}
+
+		runAutoOptimization();
 		
 		fireInitializeEvent();
-		
+
 		initialized = true;
 	}
 	
