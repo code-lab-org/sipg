@@ -334,9 +334,9 @@ public class GlobalsPane extends JTabbedPane {
 				foodImportPrice, c);
 		addField(foodPanel, "Food Export Price (SAR/GJ)",
 				foodExportPrice, c);
-		addField(foodPanel, "<html>Private Consumption from Food Production (SAR/GJ)</html>",
+		addField(foodPanel, "<html>Secondary Private Consumption from Food Production (SAR/GJ)</html>",
 				privateConsumptionFromFoodProduction, c);
-		addField(foodPanel, "<html>Private Consumption from Food Consumption (SAR/GJ)</html>",
+		addField(foodPanel, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
 				privateConsumptionFromFoodConsumption, c);
 		addField(foodPanel, "Min Food Use per Capita (GJ)",
 				minFoodDemandPerCapita, c);
@@ -370,9 +370,9 @@ public class GlobalsPane extends JTabbedPane {
 				waterImportPrice, c);
 		addField(waterPanel, "<html>Water Domestic Price (SAR/m<sup>3</sup>)</html>", 
 				waterDomesticPrice, c);
-		addField(waterPanel, "<html>Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
+		addField(waterPanel, "<html>Secondary Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
 				privateConsumptionFromWaterProduction, c);
-		addField(waterPanel, "<html>Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
+		addField(waterPanel, "<html>Secondary Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
 				privateConsumptionFromWaterConsumption, c);
 		addField(waterPanel, "<html>Min Water Use per Capita (m<sup>3</sup>)</html>",
 				minWaterDemandPerCapita, c);
@@ -398,7 +398,7 @@ public class GlobalsPane extends JTabbedPane {
 		c.gridy = 0;
 		addField(energyPanel, "Petroleum Domestic Price (SAR/bbl)", 
 				petroleumDomesticPrice, c);
-		addField(energyPanel, "Private Consumption from Petroleum Production (SAR/bbl)", 
+		addField(energyPanel, "Secondary Private Consumption from Petroleum Production (SAR/bbl)", 
 				privateConsumptionFromPetroleumProduction, c);
 		addField(energyPanel, "Petroleum Export Price (SAR/bbl)",
 				petroleumExportPrice, c);
@@ -406,9 +406,9 @@ public class GlobalsPane extends JTabbedPane {
 				petroleumImportPrice, c);
 		addField(energyPanel, "Electricity Domestic Price (SAR/MWh)", 
 				electricityDomesticPrice, c);
-		addField(energyPanel, "Private Consumption from Electricity Production (SAR/MWh)", 
+		addField(energyPanel, "Secondary Private Consumption from Electricity Production (SAR/MWh)", 
 				privateConsumptionFromElectricityProduction, c);
-		addField(energyPanel, "Private Consumption from Electricity Consumption (SAR/MWh)", 
+		addField(energyPanel, "Secondary Private Consumption from Electricity Consumption (SAR/MWh)", 
 				privateConsumptionFromElectricityConsumption, c);
 		addField(energyPanel, "Electrical Intensity of Burning Petroleum (MWh/bbl)", 
 				electricalIntensityOfBurningPetroleum, c);
