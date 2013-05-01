@@ -239,9 +239,11 @@ public class ElementsPane extends JPanel {
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, templateCombo, 
 				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
 			ElementTemplate template = (ElementTemplate)templateCombo.getSelectedItem();
+			City selectedCity = (City)elementsTreeModel.getSociety(
+					elementsTree.getSelectionPath());
 			MutableInfrastructureElement element = template.createElement(
-					template.getTimeAvailable(), ((City)elementsTreeModel.getSociety(
-							elementsTree.getSelectionPath())).getName()).getMutableElement();
+					template.getTimeAvailable(), selectedCity.getName(), 
+					selectedCity.getName()).getMutableElement();
 			openElementDialog(element.createElement());
 		}
 	}
