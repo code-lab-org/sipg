@@ -195,6 +195,8 @@ public class AgricultureElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Operations Cost of Distribution (SAR/GJ)", 
 				variableOperationsCostOfFoodDistribution);
+		
+		setTemplateMode(element.getTemplate() != null);
 	}
 	
 	public void setTemplateMode(boolean template) {

@@ -29,7 +29,7 @@ public abstract class ElementFactory {
 	 */
 	public static AgricultureElement createGrazingLand(String city) {
 		return DefaultAgricultureElement.createProductionElement(
-					"Grazing Land " + ++grazingLandId, city, city,
+					null, "Grazing Land " + ++grazingLandId, city, city,
 					new DefaultLifecycleModel(), 5000, 0, 
 					AgricultureProduct.LIVESTOCK);
 	}
@@ -42,7 +42,7 @@ public abstract class ElementFactory {
 	 */
 	public static AgricultureElement createDateFarm(String city) {
 		return DefaultAgricultureElement.createProductionElement(
-				"Date Farm " + ++dateFarmId, city, city,
+				null, "Date Farm " + ++dateFarmId, city, city,
 				new DefaultLifecycleModel(), 1000, 0, 
 				AgricultureProduct.DATES);
 	}
@@ -57,7 +57,7 @@ public abstract class ElementFactory {
 	public static AgricultureElement createDefaultFoodDistribution(
 			String origin, String destination) {
 		return DefaultAgricultureElement.createDistributionElement(
-				"Food Route " + ++foodRouteId, origin, destination,
+				null, "Food Route " + ++foodRouteId, origin, destination,
 				new DefaultLifecycleModel(), 0.95, 1e20, 0, 0);
 	}
 	
@@ -69,7 +69,7 @@ public abstract class ElementFactory {
 	 */
 	public static WaterElement createAquiferWell(String city, long yearInitialized) {
 		return DefaultWaterElement.createProductionElement(
-				"Aquifer Well " + ++aquiferWellId, city, city, 
+				null, "Aquifer Well " + ++aquiferWellId, city, city, 
 				new SimpleLifecycleModel(yearInitialized, 5, 60, 10, 
 						10000, 1000, 5000, true), 
 				1.0, 10e6, 0, 0, 0);
@@ -85,7 +85,7 @@ public abstract class ElementFactory {
 	public static PetroleumElement createDefaultPetroleumDistribution(
 			String origin, String destination) {
 		return DefaultPetroleumElement.createDistributionElement(
-				"Petroleum Route " + ++petroleumRouteId, origin, destination,
+				null, "Petroleum Route " + ++petroleumRouteId, origin, destination,
 				new DefaultLifecycleModel(), 0.95, 1e20, 0, 0, 10);
 	}
 	
@@ -98,7 +98,7 @@ public abstract class ElementFactory {
 	 */
 	public static PetroleumElement createPetroleumWell(String city, long yearInitialized) {
 		return DefaultPetroleumElement.createProductionElement(
-				"Petroleum Well " + ++petroleumWellId, city, city, 
+				null, "Petroleum Well " + ++petroleumWellId, city, city, 
 				new SimpleLifecycleModel(yearInitialized, 5, 60, 10, 
 						10000, 1000, 5000, true), 
 				1.0, 1e6, 0, 0);

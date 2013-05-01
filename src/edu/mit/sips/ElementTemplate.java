@@ -9,14 +9,15 @@ import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
  * The Enum ElementTemplate.
  */
 public enum ElementTemplate {
-	SMALL_LIVESTOCK(Sector.AGRICULTURE, "Small Livestock Field", 1900),
-	LARGE_LIVESTOCK(Sector.AGRICULTURE, "Large Livestock Field", 1900),
-	SMALL_DATES(Sector.AGRICULTURE, "Small Dates Field", 1900),
-	LARGE_DATES(Sector.AGRICULTURE, "Large Dates Field", 1900),
-	SMALL_GRAINS(Sector.AGRICULTURE, "Small Grains Field", 1970),
-	LARGE_GRAINS(Sector.AGRICULTURE, "Large Grains Field", 1970);
+	SMALL_LIVESTOCK(Sector.AGRICULTURE, false, "Small Livestock Field", 1900),
+	LARGE_LIVESTOCK(Sector.AGRICULTURE, false, "Large Livestock Field", 1900),
+	SMALL_DATES(Sector.AGRICULTURE, false, "Small Dates Field", 1900),
+	LARGE_DATES(Sector.AGRICULTURE, false, "Large Dates Field", 1900),
+	SMALL_GRAINS(Sector.AGRICULTURE, false, "Small Grains Field", 1970),
+	LARGE_GRAINS(Sector.AGRICULTURE, false, "Large Grains Field", 1970);
 	
 	private final Sector sector;
+	private final boolean transport;
 	private final String name;
 	private final long yearAvailable;
 	private static int instanceId = 0;
@@ -25,10 +26,14 @@ public enum ElementTemplate {
 	 * Instantiates a new element template.
 	 *
 	 * @param sector the sector
+	 * @param transport the transport
 	 * @param name the name
+	 * @param yearAvailable the year available
 	 */
-	private ElementTemplate(Sector sector, String name, long yearAvailable) {
+	private ElementTemplate(Sector sector, boolean transport, 
+			String name, long yearAvailable) {
 		this.sector = sector;
+		this.transport = transport;
 		this.name = name;
 		this.yearAvailable = yearAvailable;
 	}
@@ -46,37 +51,37 @@ public enum ElementTemplate {
 		switch(this) {
 		case SMALL_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							62.5e3, 6.25e3, 12.5e3, true), 
 					250, 0, AgricultureProduct.LIVESTOCK);
 		case LARGE_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							220.0e3, 22.0e3, 44.0e3, true), 
 					1000, 0, AgricultureProduct.LIVESTOCK);
 		case SMALL_DATES:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							12.5e6, 1.25e6, 2.5e6, true), 
 					250, 0, AgricultureProduct.DATES);
 		case LARGE_DATES:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							49.0e6, 4.9e6, 9.8e6, true), 
 					1000, 0, AgricultureProduct.DATES);
 		case SMALL_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							50e6, 5e6, 10e6, true), 
 					500, 0, AgricultureProduct.GRAINS);
 		case LARGE_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
-					name + " " + ++instanceId, city, city, 
+					this, name + " " + ++instanceId, city, city, 
 					new SimpleLifecycleModel(year, 1, 100, 1, 
 							237.5e6, 2.375e6, 47.5e6, true), 
 					2500, 0, AgricultureProduct.GRAINS);
@@ -111,6 +116,15 @@ public enum ElementTemplate {
 	 */
 	public long getYearAvailable() {
 		return yearAvailable;
+	}
+	
+	/**
+	 * Checks if is transport.
+	 *
+	 * @return true, if is transport
+	 */
+	public boolean isTransport() {
+		return transport;
 	}
 	
 	/* (non-Javadoc)

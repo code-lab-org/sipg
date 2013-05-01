@@ -1,5 +1,6 @@
 package edu.mit.sips.core.energy;
 
+import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -12,6 +13,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	/**
 	 * Creates the distribution element.
 	 *
+	 * @param template the template
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -23,14 +25,16 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @param variableOperationsCostOfPetroleumDistribution the variable operations cost of petroleum distribution
 	 * @return the petroleum element
 	 */
-	public static PetroleumElement createDistributionElement(String name, 
+	public static PetroleumElement createDistributionElement(
+			ElementTemplate template, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,
 			double maxPetroleumInput, double initialPetroleumInput, 
 			double electricalIntensityOfPetroleumDistribution,
 			double variableOperationsCostOfPetroleumDistribution) {
 		// TODO distance-based operational expense?
-		return new DefaultPetroleumElement(name, origin, destination, lifecycleModel, 0, 0, 0, 0, 
+		return new DefaultPetroleumElement(template, name, origin, 
+				destination, lifecycleModel, 0, 0, 0, 0, 
 				distributionEfficiency, maxPetroleumInput, initialPetroleumInput,
 				electricalIntensityOfPetroleumDistribution,
 				variableOperationsCostOfPetroleumDistribution);
@@ -49,12 +53,14 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @param variableOperationsCostOfPetroleumProduction the variable operations cost of petroleum production
 	 * @return the petroleum element
 	 */
-	public static PetroleumElement createProductionElement(String name, 
+	public static PetroleumElement createProductionElement(
+			ElementTemplate template, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfPetroleumProduction,
 			double maxPetroleumProduction, double initialPetroleumProduction,
 			double variableOperationsCostOfPetroleumProduction) {
-		return new DefaultPetroleumElement(name, origin, destination, lifecycleModel, reservoirIntensityOfPetroleumProduction,
+		return new DefaultPetroleumElement(template, name, origin, 
+				destination, lifecycleModel, reservoirIntensityOfPetroleumProduction,
 				maxPetroleumProduction, initialPetroleumProduction,
 				variableOperationsCostOfPetroleumProduction, 0, 0, 0, 0, 0);
 	}
@@ -90,6 +96,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	/**
 	 * Instantiates a new default petroleum element.
 	 *
+	 * @param template the template
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -104,7 +111,8 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @param electricalIntensityOfPetroleumDistribution the electrical intensity of petroleum distribution
 	 * @param variableOperationsCostOfPetroleumDistribution the variable operations cost of petroleum distribution
 	 */
-	protected DefaultPetroleumElement(String name, String origin, String destination,
+	protected DefaultPetroleumElement(ElementTemplate template, String name, 
+			String origin, String destination,
 			LifecycleModel lifecycleModel, double reservoirIntensityOfPetroleumProduction,
 			double maxPetroleumProduction, double initialPetroleumProduction, 
 			double variableOperationsCostOfPetroleumProduction,
@@ -112,7 +120,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			double initialPetroleumInput, 
 			double electricalIntensityOfPetroleumDistribution,
 			double variableOperationsCostOfPetroleumDistribution) {
-		super(name, origin, destination, lifecycleModel);
+		super(template, name, origin, destination, lifecycleModel);
 		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfPetroleumProduction < 0) {

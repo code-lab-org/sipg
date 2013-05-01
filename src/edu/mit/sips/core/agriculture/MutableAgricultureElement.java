@@ -22,7 +22,7 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	 * @return the agriculture element
 	 */
 	public AgricultureElement createElement() {
-		return new DefaultAgricultureElement(getName(), getOrigin(), 
+		return new DefaultAgricultureElement(getTemplate(), getName(), getOrigin(), 
 				getDestination(), getLifecycleModel().createLifecycleModel(), 
 				getMaxLandArea(),  getInitialLandArea(), 
 				getProduct(), getDistributionEfficiency(), 

@@ -1,5 +1,7 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.ElementTemplate;
+
 
 /**
  * The Interface InfrastructureElement.
@@ -66,6 +68,13 @@ public interface InfrastructureElement extends SimEntity {
 	 * @return the origin
 	 */
 	public String getOrigin();
+	
+	/**
+	 * Gets the template.
+	 *
+	 * @return the template
+	 */
+	public ElementTemplate getTemplate();
 	
 	/**
 	 * Gets the total expense.

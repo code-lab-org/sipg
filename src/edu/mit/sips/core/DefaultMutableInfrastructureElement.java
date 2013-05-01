@@ -1,9 +1,12 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.ElementTemplate;
+
 /**
  * The Class DefaultMutableElement.
  */
 public abstract class DefaultMutableInfrastructureElement implements MutableInfrastructureElement {
+	private ElementTemplate template;
 	private String name = "";
 	private String origin = "", destination = "";
 	private MutableLifecycleModel lifecycleModel = new DefaultLifecycleModel();
@@ -41,6 +44,14 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.MutableInfrastructureElement#getTemplate()
+	 */
+	@Override
+	public final ElementTemplate getTemplate() {
+		return template;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.MutableInfrastructureElement#setDestination(String)
 	 */
 	@Override
@@ -70,5 +81,13 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	@Override
 	public final void setOrigin(String origin) {
 		this.origin = origin;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.MutableInfrastructureElement#setTemplate(edu.mit.sips.ElementTemplate)
+	 */
+	@Override
+	public final void setTemplate(ElementTemplate template) {
+		this.template = template;
 	}
 }

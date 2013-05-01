@@ -1,5 +1,6 @@
 package edu.mit.sips.core.water;
 
+import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -7,9 +8,11 @@ import edu.mit.sips.core.LifecycleModel;
  * The Class DefaultWaterElement.
  */
 public final class DefaultWaterElement extends DefaultInfrastructureElement implements WaterElement {
+	
 	/**
 	 * Instantiates a new distribution water element.
 	 *
+	 * @param template the template
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -21,13 +24,15 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @param variableOperationsCostOfWaterDistribution the variable operations cost of water distribution
 	 * @return the water element
 	 */
-	public static DefaultWaterElement createDistributionElement(String name, 
+	public static DefaultWaterElement createDistributionElement(
+			ElementTemplate template, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,
 			double maxWaterInput, double initialWaterInput, 
 			double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
-		return new DefaultWaterElement(name, origin, destination, lifecycleModel, 0, 0, 0, 0, 0,
+		return new DefaultWaterElement(template, name, origin, destination, 
+				lifecycleModel, 0, 0, 0, 0, 0,
 				distributionEfficiency, maxWaterInput, initialWaterInput,
 				electricalIntensityOfWaterDistribution,
 				variableOperationsCostOfWaterDistribution);
@@ -46,13 +51,15 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @param variableOperationsCostOfWaterProduction the variable operations cost of water production
 	 * @return the water element
 	 */
-	public static DefaultWaterElement createProductionElement(String name, 
+	public static DefaultWaterElement createProductionElement(
+			ElementTemplate template, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfWaterProduction,
 			double maxWaterProduction, double initialWaterProduction, 
 			double electricalIntensityOfWaterProduction,
 			double variableOperationsCostOfWaterProduction) {
-		return new DefaultWaterElement(name, origin, destination, lifecycleModel, 
+		return new DefaultWaterElement(template, name, origin, 
+				destination, lifecycleModel, 
 				reservoirIntensityOfWaterProduction, maxWaterProduction, initialWaterProduction, 
 				electricalIntensityOfWaterProduction,
 				variableOperationsCostOfWaterProduction, 0, 0, 0, 0, 0);
@@ -95,6 +102,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	/**
 	 * Instantiates a new water element.
 	 *
+	 * @param template the template
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -110,7 +118,8 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @param electricalIntensityOfWaterDistribution the electrical intensity of water distribution
 	 * @param variableOperationsCostOfWaterDistribution the variable operations cost of water distribution
 	 */
-	protected DefaultWaterElement(String name, String origin, String destination, 
+	protected DefaultWaterElement(ElementTemplate template, String name, 
+			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfWaterProduction,
 			double maxWaterProduction, double initialWaterProduction, 
 			double electricalIntensityOfWaterProduction, 
@@ -118,7 +127,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double distributionEfficiency, double maxWaterInput, 
 			double initialWaterInput, double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
-		super(name, origin, destination, lifecycleModel);
+		super(template, name, origin, destination, lifecycleModel);
 		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfWaterProduction < 0) {

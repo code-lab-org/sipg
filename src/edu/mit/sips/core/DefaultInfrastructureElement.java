@@ -2,12 +2,15 @@ package edu.mit.sips.core;
 
 import javax.swing.event.EventListenerList;
 
+import edu.mit.sips.ElementTemplate;
+
 /**
  * The Class InfrastructureElement.
  * 
  * @author Paul T. Grogan, ptgrogan@mit.edu
  */
 public abstract class DefaultInfrastructureElement implements InfrastructureElement {
+	private final ElementTemplate template;
 	private final String name;
 	private final String origin, destination;
 	private final LifecycleModel lifecycleModel;
@@ -16,13 +19,17 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	/**
 	 * Instantiates a new infrastructure element.
 	 *
+	 * @param template the template
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public DefaultInfrastructureElement(String name, String origin, 
+	public DefaultInfrastructureElement(ElementTemplate template, 
+			String name, String origin, 
 			String destination, LifecycleModel lifecycleModel) {
+		this.template = template;
+		
 		// Validate the name.
 		if(name == null) {
 			throw new IllegalArgumentException("Name cannot be null.");
@@ -52,10 +59,16 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 * Instantiates a new default infrastructure element.
 	 */
 	protected DefaultInfrastructureElement() {
+		this.template = null;
 		this.name = "";
 		this.origin = "";
 		this.destination = "";
 		this.lifecycleModel = new DefaultLifecycleModel();
+	}
+	
+	@Override
+	public ElementTemplate getTemplate() {
+		return template;
 	}
 
 	/* (non-Javadoc)
@@ -199,6 +212,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 * @param element the new mutable fields
 	 */
 	protected final void setMutableFields(DefaultMutableInfrastructureElement element) {
+		element.setTemplate(template);
 		element.setName(name);
 		element.setOrigin(origin);
 		element.setDestination(destination);

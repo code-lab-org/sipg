@@ -118,7 +118,7 @@ public class ElementsPane extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			Object selection = elementsList.getSelectedValue();
 			if(selection instanceof InfrastructureElement) {
-				openElementDialog((InfrastructureElement)selection, false);
+				openElementDialog((InfrastructureElement)selection);
 			}
 			elementsList.setSelectedValue(selection, true);
 		}
@@ -195,7 +195,7 @@ public class ElementsPane extends JPanel {
 			MutableInfrastructureElement element = 
 					((ElementTemplate)elementTypeCombo.getSelectedItem())
 					.createElement(1950, city.getName()).getMutableElement();
-			openElementDialog(element.createElement(), true);
+			openElementDialog(element.createElement());
 		}
 	}
 	
@@ -219,7 +219,7 @@ public class ElementsPane extends JPanel {
 			}
 			element.setOrigin(city.getName());
 			element.setDestination(city.getName());
-			openElementDialog(element.createElement(), false);
+			openElementDialog(element.createElement());
 		}
 	}
 	
@@ -246,19 +246,17 @@ public class ElementsPane extends JPanel {
 	 * @param mutableElement the mutable element
 	 * @return the infrastructure element
 	 */
-	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement, boolean template) {
-		ElementPanel elementPanel = ElementPanel.createElementPanel(city, mutableElement);
-		elementPanel.setTemplateMode(template);
-		
+	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				elementPanel, "Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
+				ElementPanel.createElementPanel(city, mutableElement), 
+				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
 			} catch (IllegalArgumentException ex) {
 				JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 						ex.getMessage(), "Error", 
 						JOptionPane.ERROR_MESSAGE);
-				return editElementDialog(mutableElement, template);
+				return editElementDialog(mutableElement);
 			}
 		} else {
 			return null;
@@ -270,8 +268,8 @@ public class ElementsPane extends JPanel {
 	 *
 	 * @param element the element
 	 */
-	private void openElementDialog(InfrastructureElement element, boolean template) {
-		InfrastructureElement newElement = editElementDialog(element.getMutableElement(), template);
+	private void openElementDialog(InfrastructureElement element) {
+		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
 		if(newElement != null) {
 			if(element instanceof AgricultureElement 
 					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
