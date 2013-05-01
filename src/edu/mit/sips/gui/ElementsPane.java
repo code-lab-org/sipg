@@ -64,6 +64,30 @@ public class ElementsPane extends JPanel {
 			return o1.getName().compareTo(o2.getName());
 		}
 	};
+	private final ListCellRenderer templateRenderer = new DefaultListCellRenderer() {
+		private static final long serialVersionUID = 3761951866857845749L;
+
+		@Override
+		public Component getListCellRendererComponent(JList list,
+				Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			if(value instanceof ElementTemplate) {
+				setText(((ElementTemplate)value).getName());
+				switch(((ElementTemplate)value).getSector()) {
+				case AGRICULTURE:
+					setIcon(Icons.AGRICULTURE);
+					break;
+				case ENERGY:
+					setIcon(Icons.ENERGY);
+					break;
+				case WATER:
+					setIcon(Icons.WATER);
+					break;
+				}
+			}
+			return this;
+		}
+	};
 	private final ListCellRenderer elementCellRenderer = 
 			new DefaultListCellRenderer() {
 				private static final long serialVersionUID = -923629724878442949L;
@@ -187,14 +211,17 @@ public class ElementsPane extends JPanel {
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * Adds the element template dialog.
+	 */
 	private void addElementTemplateDialog() {
-		JComboBox elementTypeCombo = new JComboBox(ElementTemplate.values());
-		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, elementTypeCombo, 
+		JComboBox templateCombo = new JComboBox(ElementTemplate.values());
+		templateCombo.setRenderer(templateRenderer);
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, templateCombo, 
 				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
-			// TODO get year
-			MutableInfrastructureElement element = 
-					((ElementTemplate)elementTypeCombo.getSelectedItem())
-					.createElement(1950, city.getName()).getMutableElement();
+			ElementTemplate template = (ElementTemplate)templateCombo.getSelectedItem();
+			MutableInfrastructureElement element = template.createElement(
+					template.getTimeAvailable(), city.getName()).getMutableElement();
 			openElementDialog(element.createElement());
 		}
 	}

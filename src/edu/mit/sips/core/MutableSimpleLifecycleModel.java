@@ -4,7 +4,7 @@ package edu.mit.sips.core;
  * The Class MutableSimpleLifecycleModel.
  */
 public final class MutableSimpleLifecycleModel implements MutableLifecycleModel {
-	private long timeInitialized, initializationDuration;
+	private long timeAvailable, timeInitialized, initializationDuration;
 	private long operationsDuration, decommissionDuration;
 	private double capitalCost, fixedOperationsCost, decommissionCost;
 	private boolean levelizeCosts;
@@ -14,7 +14,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	@Override
 	public SimpleLifecycleModel createLifecycleModel() {
-		return new SimpleLifecycleModel(timeInitialized, 
+		return new SimpleLifecycleModel(timeAvailable, timeInitialized, 
 				initializationDuration, 
 				operationsDuration, decommissionDuration,
 				capitalCost, fixedOperationsCost, 
@@ -73,6 +73,15 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public long getOperationsDuration() {
 		return operationsDuration;
+	}
+	
+	/**
+	 * Gets the time available.
+	 *
+	 * @return the time available
+	 */
+	public long getTimeAvailable() {
+		return timeAvailable;
 	}
 	
 	/**
@@ -154,6 +163,15 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public void setOperationsDuration(long operationsDuration) {
 		this.operationsDuration = operationsDuration;
+	}
+	
+	/**
+	 * Sets the time available.
+	 *
+	 * @param timeAvailable the new time available
+	 */
+	public void setTimeAvailable(long timeAvailable) {
+		this.timeAvailable = timeAvailable;
 	}
 
 	/**

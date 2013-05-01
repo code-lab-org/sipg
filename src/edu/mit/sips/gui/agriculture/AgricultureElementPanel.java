@@ -42,16 +42,6 @@ public class AgricultureElementPanel extends ElementPanel {
 			final MutableAgricultureElement element) {
 		super(city, element);
 		
-		JPanel elementPanel = new JPanel();
-		elementPanel.setLayout(new GridBagLayout());
-		add(elementPanel);
-		
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 0;
-		c.insets = new Insets(2,2,2,2);
-
-		c.gridx = 0;
 		maxLandAreaText = new JTextField(10);
 		maxLandAreaText.setText(
 				new Double(element.getMaxLandArea()).toString());
@@ -67,9 +57,6 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Max Land Area (km<sup>2</sup>)</html>", 
-				maxLandAreaText);
 		initialLandAreaText = new JTextField(10);
 		initialLandAreaText.setText(
 				new Double(element.getInitialLandArea()).toString());
@@ -85,9 +72,6 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Initial Land Area (km<sup>2</sup>)</html>",
-				initialLandAreaText);
 		productCombo = new JComboBox(AgricultureProduct.values());
 		productCombo.setSelectedItem(element.getProduct());
 		productCombo.addActionListener(new ActionListener() {
@@ -106,25 +90,15 @@ public class AgricultureElementPanel extends ElementPanel {
 						element.getProduct().getLaborIntensityOfLandUsed()).toString());
 			}
 		});
-		addInput(elementPanel, c, "Product", productCombo);
-		JPanel productPanel = new JPanel();
-		productPanel.setLayout(new GridLayout(4,2));
-		productPanel.add(new JLabel("<html>Food Output (GJ/km<sup>2</sup>)</html>"));
-		productOutput = new JLabel(new Double(element.getProduct().getFoodIntensityOfLandUsed()).toString());
-		productPanel.add(productOutput);
-		productPanel.add(new JLabel("<html>Variable Cost (SAR/km<sup>2</sup>)</html>"));
-		productVariableCost = new JLabel(new Double(element.getProduct().getCostIntensityOfLandUsed()).toString());
-		productPanel.add(productVariableCost);
-		productPanel.add(new JLabel("<html>Water Use (m<sup>3</sup>/km<sup>2</sup>)</html>"));
-		productWaterUse = new JLabel(new Double(element.getProduct().getWaterIntensityOfLandUsed()).toString());
-		productPanel.add(productWaterUse);
-		productPanel.add(new JLabel("<html>Labor Use (person/km<sup>2</sup>)</html>"));
-		productLaborUse = new JLabel(new Double(element.getProduct().getLaborIntensityOfLandUsed()).toString());
-		productPanel.add(productLaborUse);
-		addInput(elementPanel, c, "", productPanel);
-		
-		c.gridx = 2;
-		c.gridy = 0;
+		productOutput = new JLabel(new Double(
+				element.getProduct().getFoodIntensityOfLandUsed()).toString());
+		productVariableCost = new JLabel(new Double(
+				element.getProduct().getCostIntensityOfLandUsed()).toString());
+		productWaterUse = new JLabel(new Double(
+				element.getProduct().getWaterIntensityOfLandUsed()).toString());
+		productLaborUse = new JLabel(new Double(
+				element.getProduct().getLaborIntensityOfLandUsed()).toString());
+
 		maxFoodInput = new JTextField(10);
 		maxFoodInput.setText(
 				new Double(element.getMaxFoodInput()).toString());
@@ -140,8 +114,6 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Max Food Input (GJ/year)", maxFoodInput);
 		initialFoodInput = new JTextField(10);
 		initialFoodInput.setText(
 				new Double(element.getInitialFoodInput()).toString());
@@ -157,8 +129,6 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Initial Food Input (GJ/year)", initialFoodInput);
 		distributionEfficiency = new JTextField(10);
 		distributionEfficiency.setText(
 				new Double(element.getDistributionEfficiency()).toString());
@@ -174,12 +144,9 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Distribution Efficiency (GJ out/GJ in)", 
-				distributionEfficiency);
 		variableOperationsCostOfFoodDistribution = new JTextField(10);
-		variableOperationsCostOfFoodDistribution.setText(
-				new Double(element.getVariableOperationsCostOfFoodDistribution()).toString());
+		variableOperationsCostOfFoodDistribution.setText(new Double(
+				element.getVariableOperationsCostOfFoodDistribution()).toString());
 		variableOperationsCostOfFoodDistribution.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -192,9 +159,53 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Operations Cost of Distribution (SAR/GJ)", 
-				variableOperationsCostOfFoodDistribution);
+
+		JPanel elementPanel = new JPanel();
+		elementPanel.setLayout(new GridBagLayout());
+		add(elementPanel);
+
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
+		c.insets = new Insets(2,2,2,2);
+
+
+		if(element.getTemplate() == null 
+				|| !element.getTemplate().isTransport()) {
+			c.gridx = 0;
+			addInput(elementPanel, c, 
+					"<html>Max Land Area (km<sup>2</sup>)</html>", 
+					maxLandAreaText);
+			addInput(elementPanel, c, 
+					"<html>Initial Land Area (km<sup>2</sup>)</html>",
+					initialLandAreaText);
+			addInput(elementPanel, c, "Product", productCombo);
+			JPanel productPanel = new JPanel();
+			productPanel.setLayout(new GridLayout(4,2));
+			productPanel.add(new JLabel("<html>Food Output (GJ/km<sup>2</sup>)</html>"));
+			productPanel.add(productOutput);
+			productPanel.add(new JLabel("<html>Variable Cost (SAR/km<sup>2</sup>)</html>"));
+			productPanel.add(productVariableCost);
+			productPanel.add(new JLabel("<html>Water Use (m<sup>3</sup>/km<sup>2</sup>)</html>"));
+			productPanel.add(productWaterUse);
+			productPanel.add(new JLabel("<html>Labor Use (person/km<sup>2</sup>)</html>"));
+			productPanel.add(productLaborUse);
+			addInput(elementPanel, c, "", productPanel);
+		}
+		if(element.getTemplate() == null 
+				|| element.getTemplate().isTransport()) {
+			c.gridx = 2;
+			c.gridy = 0;
+			addInput(elementPanel, c, 
+					"Max Food Input (GJ/year)", maxFoodInput);
+			addInput(elementPanel, c, 
+					"Initial Food Input (GJ/year)", initialFoodInput);
+			addInput(elementPanel, c, 
+					"Distribution Efficiency (GJ out/GJ in)", 
+					distributionEfficiency);
+			addInput(elementPanel, c, 
+					"Operations Cost of Distribution (SAR/GJ)", 
+					variableOperationsCostOfFoodDistribution);
+		}
 		
 		setTemplateMode(element.getTemplate() != null);
 	}

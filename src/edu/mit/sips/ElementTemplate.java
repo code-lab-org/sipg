@@ -19,7 +19,7 @@ public enum ElementTemplate {
 	private final Sector sector;
 	private final boolean transport;
 	private final String name;
-	private final long yearAvailable;
+	private final long timeAvailable;
 	private static int instanceId = 0;
 	
 	/**
@@ -35,7 +35,7 @@ public enum ElementTemplate {
 		this.sector = sector;
 		this.transport = transport;
 		this.name = name;
-		this.yearAvailable = yearAvailable;
+		this.timeAvailable = yearAvailable;
 	}
 	
 	/**
@@ -44,45 +44,45 @@ public enum ElementTemplate {
 	 * @return the infrastructure element
 	 */
 	public InfrastructureElement createElement(long year, String city) {
-		if(year < yearAvailable) {
+		if(year < timeAvailable) {
 			throw new IllegalArgumentException(
-					"Element not available before " + yearAvailable + ".");
+					"Element not available before " + timeAvailable + ".");
 		}
 		switch(this) {
 		case SMALL_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							62.5e3, 6.25e3, 12.5e3, true), 
 					250, 0, AgricultureProduct.LIVESTOCK);
 		case LARGE_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							220.0e3, 22.0e3, 44.0e3, true), 
 					1000, 0, AgricultureProduct.LIVESTOCK);
 		case SMALL_DATES:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							12.5e6, 1.25e6, 2.5e6, true), 
 					250, 0, AgricultureProduct.DATES);
 		case LARGE_DATES:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							49.0e6, 4.9e6, 9.8e6, true), 
 					1000, 0, AgricultureProduct.DATES);
 		case SMALL_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							50e6, 5e6, 10e6, true), 
 					500, 0, AgricultureProduct.GRAINS);
 		case LARGE_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, city, city, 
-					new SimpleLifecycleModel(year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
 							237.5e6, 2.375e6, 47.5e6, true), 
 					2500, 0, AgricultureProduct.GRAINS);
 		default:
@@ -110,12 +110,12 @@ public enum ElementTemplate {
 	}
 	
 	/**
-	 * Gets the year available.
+	 * Gets the time available.
 	 *
-	 * @return the year available
+	 * @return the time available
 	 */
-	public long getYearAvailable() {
-		return yearAvailable;
+	public long getTimeAvailable() {
+		return timeAvailable;
 	}
 	
 	/**

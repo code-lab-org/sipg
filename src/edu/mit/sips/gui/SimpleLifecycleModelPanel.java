@@ -20,9 +20,11 @@ import edu.mit.sips.core.MutableSimpleLifecycleModel;
 public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 	private static final long serialVersionUID = 4823361209584020543L;
 	
-	private final JTextField timeInitializedText, initializationDurationText, capitalCostText;
+	private final JTextField timeAvailableText, timeInitializedText, 
+			initializationDurationText, capitalCostText;
 	private final JTextField fixedOperationsCostText;
-	private final JTextField operationsDurationText, decommissionDurationText, decommissionCostText;
+	private final JTextField operationsDurationText, decommissionDurationText, 
+			decommissionCostText;
 	private final JCheckBox levelizeCostsCheck;
 	
 	/**
@@ -39,6 +41,22 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		c.insets = new Insets(2,2,2,2);
 		
 		c.gridx = 0;
+		timeAvailableText = new JTextField(10);
+		timeAvailableText.setText(
+				new Long(lifecycleModel.getTimeAvailable()).toString());
+		timeAvailableText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							lifecycleModel.setTimeAvailable(
+									Long.parseLong(timeAvailableText.getText()));
+							timeAvailableText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							timeAvailableText.setForeground(Color.red);
+						}
+					}
+				});
+		addInput(c, "Time Available (year)", timeAvailableText);
 		timeInitializedText = new JTextField(10);
 		timeInitializedText.setText(
 				new Long(lifecycleModel.getTimeInitialized()).toString());
@@ -169,6 +187,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 	 */
 	@Override
 	public void setTemplateMode(boolean template) {
+		timeAvailableText.setEnabled(!template);
 		initializationDurationText.setEnabled(!template);
 		capitalCostText.setEnabled(!template);
 		fixedOperationsCostText.setEnabled(!template);

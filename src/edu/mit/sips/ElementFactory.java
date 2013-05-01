@@ -70,7 +70,7 @@ public abstract class ElementFactory {
 	public static WaterElement createAquiferWell(String city, long yearInitialized) {
 		return DefaultWaterElement.createProductionElement(
 				null, "Aquifer Well " + ++aquiferWellId, city, city, 
-				new SimpleLifecycleModel(yearInitialized, 5, 60, 10, 
+				new SimpleLifecycleModel(0, yearInitialized, 5, 60, 10, 
 						10000, 1000, 5000, true), 
 				1.0, 10e6, 0, 0, 0);
 	}
@@ -99,7 +99,7 @@ public abstract class ElementFactory {
 	public static PetroleumElement createPetroleumWell(String city, long yearInitialized) {
 		return DefaultPetroleumElement.createProductionElement(
 				null, "Petroleum Well " + ++petroleumWellId, city, city, 
-				new SimpleLifecycleModel(yearInitialized, 5, 60, 10, 
+				new SimpleLifecycleModel(0, yearInitialized, 5, 60, 10, 
 						10000, 1000, 5000, true), 
 				1.0, 1e6, 0, 0);
 	}
