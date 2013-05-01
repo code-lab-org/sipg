@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.NumberFormat;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.water.MutableWaterElement;
@@ -19,17 +20,17 @@ import edu.mit.sips.gui.ElementPanel;
 public class WaterElementPanel extends ElementPanel {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
-	private final JTextField maxWaterProductionText;
-	private final JTextField initialWaterProductionText;
-	private final JTextField reservoirIntensityOfWaterProductionText;
-	private final JTextField electricalIntensityOfWaterProductionText;
-	private final JTextField variableOperationsCostOfWaterProductionText;
+	private final JFormattedTextField maxWaterProductionText;
+	private final JFormattedTextField initialWaterProductionText;
+	private final JFormattedTextField reservoirIntensityOfWaterProductionText;
+	private final JFormattedTextField electricalIntensityOfWaterProductionText;
+	private final JFormattedTextField variableOperationsCostOfWaterProductionText;
 
-	private final JTextField maxWaterInputText;
-	private final JTextField initialWaterInputText;
-	private final JTextField distributionEfficiencyText;
-	private final JTextField electricalIntensityOfWaterDistributionText;
-	private final JTextField variableOperationsCostOfWaterDistributionText;
+	private final JFormattedTextField maxWaterInputText;
+	private final JFormattedTextField initialWaterInputText;
+	private final JFormattedTextField distributionEfficiencyText;
+	private final JFormattedTextField electricalIntensityOfWaterDistributionText;
+	private final JFormattedTextField variableOperationsCostOfWaterDistributionText;
 	
 	/**
 	 * Instantiates a new water element panel.
@@ -51,15 +52,15 @@ public class WaterElementPanel extends ElementPanel {
 		c.insets = new Insets(2,2,2,2);
 
 		c.gridx = 0;
-		maxWaterProductionText = new JTextField(10);
-		maxWaterProductionText.setText(
-				new Double(element.getMaxWaterProduction()).toString());
+		maxWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		maxWaterProductionText.setColumns(10);
+		maxWaterProductionText.setValue(element.getMaxWaterProduction());
 		maxWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxWaterProduction(Double.parseDouble(
-									maxWaterProductionText.getText()));
+							element.setMaxWaterProduction(
+									((Number) maxWaterProductionText.getValue()).doubleValue());
 							maxWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterProductionText.setForeground(Color.red);
@@ -69,15 +70,15 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Max Water Production (m<sup>3</sup>/year)</html>", 
 				maxWaterProductionText);
-		initialWaterProductionText = new JTextField(10);
-		initialWaterProductionText.setText(
-				new Double(element.getInitialWaterProduction()).toString());
+		initialWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		initialWaterProductionText.setColumns(10);
+		initialWaterProductionText.setValue(element.getInitialWaterProduction());
 		initialWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialWaterProduction(Double.parseDouble(
-									initialWaterProductionText.getText()));
+							element.setInitialWaterProduction(
+									((Number) initialWaterProductionText.getValue()).doubleValue());
 							initialWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialWaterProductionText.setForeground(Color.red);
@@ -87,15 +88,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Initial Water Production (m<sup>3</sup>/year)</html>",
 				initialWaterProductionText);
-		reservoirIntensityOfWaterProductionText = new JTextField(10);
-		reservoirIntensityOfWaterProductionText.setText(
-				new Double(element.getReservoirIntensityOfWaterProduction()).toString());
+		reservoirIntensityOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		reservoirIntensityOfWaterProductionText.setColumns(10);
+		reservoirIntensityOfWaterProductionText.setValue(
+				element.getReservoirIntensityOfWaterProduction());
 		reservoirIntensityOfWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setReservoirIntensityOfWaterProduction(Double.parseDouble(
-									reservoirIntensityOfWaterProductionText.getText()));
+							element.setReservoirIntensityOfWaterProduction(
+									((Number) reservoirIntensityOfWaterProductionText.getValue()).doubleValue());
 							reservoirIntensityOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							reservoirIntensityOfWaterProductionText.setForeground(Color.red);
@@ -105,15 +107,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Reservoir Intensity of Production (m<sup>3</sup>/m<sup>3</sup>)</html>",
 				reservoirIntensityOfWaterProductionText);
-		electricalIntensityOfWaterProductionText = new JTextField(10);
-		electricalIntensityOfWaterProductionText.setText(
-				new Double(element.getElectricalIntensityOfWaterProduction()).toString());
+		electricalIntensityOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		electricalIntensityOfWaterProductionText.setColumns(10);
+		electricalIntensityOfWaterProductionText.setValue(
+				element.getElectricalIntensityOfWaterProduction());
 		electricalIntensityOfWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setElectricalIntensityOfWaterProduction(Double.parseDouble(
-									electricalIntensityOfWaterProductionText.getText()));
+							element.setElectricalIntensityOfWaterProduction(
+									((Number) electricalIntensityOfWaterProductionText.getValue()).doubleValue());
 							electricalIntensityOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterProductionText.setForeground(Color.red);
@@ -123,15 +126,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Electrical Intensity of Production (MWh/m<sup>3</sup>)</html>",
 				electricalIntensityOfWaterProductionText);
-		variableOperationsCostOfWaterProductionText = new JTextField(10);
-		variableOperationsCostOfWaterProductionText.setText(
-				new Double(element.getVariableOperationsCostOfWaterProduction()).toString());
+		variableOperationsCostOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		variableOperationsCostOfWaterProductionText.setColumns(10);
+		variableOperationsCostOfWaterProductionText.setValue(
+				element.getVariableOperationsCostOfWaterProduction());
 		variableOperationsCostOfWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfWaterProduction(Double.parseDouble(
-									variableOperationsCostOfWaterProductionText.getText()));
+							element.setVariableOperationsCostOfWaterProduction(
+									((Number) variableOperationsCostOfWaterProductionText.getValue()).doubleValue());
 							variableOperationsCostOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterProductionText.setForeground(Color.red);
@@ -144,15 +148,15 @@ public class WaterElementPanel extends ElementPanel {
 		
 		c.gridx = 2;
 		c.gridy = 0;
-		maxWaterInputText = new JTextField(10);
-		maxWaterInputText.setText(
-				new Double(element.getMaxWaterInput()).toString());
+		maxWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		maxWaterInputText.setColumns(10);
+		maxWaterInputText.setValue(element.getMaxWaterInput());
 		maxWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxWaterInput(Double.parseDouble(
-									maxWaterInputText.getText()));
+							element.setMaxWaterInput(
+									((Number) maxWaterInputText.getValue()).doubleValue());
 							maxWaterInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterInputText.setForeground(Color.red);
@@ -162,15 +166,15 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Max Water Input (m<sup>3</sup>/year)</html>", 
 				maxWaterInputText);
-		initialWaterInputText = new JTextField(10);
-		initialWaterInputText.setText(
-				new Double(element.getInitialWaterInput()).toString());
+		initialWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		initialWaterInputText.setColumns(10);
+		initialWaterInputText.setValue(element.getInitialWaterInput());
 		initialWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialWaterInput(Double.parseDouble(
-									initialWaterInputText.getText()));
+							element.setInitialWaterInput(
+									((Number) initialWaterInputText.getValue()).doubleValue());
 							initialWaterInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialWaterInputText.setForeground(Color.red);
@@ -180,15 +184,15 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Initial Water Input (m<sup>3</sup>/year)</html>",
 				initialWaterInputText);
-		distributionEfficiencyText = new JTextField(10);
-		distributionEfficiencyText.setText(
-				new Double(element.getDistributionEfficiency()).toString());
+		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		distributionEfficiencyText.setColumns(10);
+		distributionEfficiencyText.setValue(element.getDistributionEfficiency());
 		distributionEfficiencyText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setDistributionEfficiency(Double.parseDouble(
-									distributionEfficiencyText.getText()));
+							element.setDistributionEfficiency(
+									((Number) distributionEfficiencyText.getValue()).doubleValue());
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -198,15 +202,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Distribution Efficiency (m<sup>3</sup> out/m<sup>3</sup> in)</html>",
 				distributionEfficiencyText);
-		electricalIntensityOfWaterDistributionText = new JTextField(10);
-		electricalIntensityOfWaterDistributionText.setText(
-				new Double(element.getElectricalIntensityOfWaterDistribution()).toString());
+		electricalIntensityOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		electricalIntensityOfWaterDistributionText.setColumns(10);
+		electricalIntensityOfWaterDistributionText.setValue(
+				element.getElectricalIntensityOfWaterDistribution());
 		electricalIntensityOfWaterDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setElectricalIntensityOfWaterDistribution(Double.parseDouble(
-									electricalIntensityOfWaterDistributionText.getText()));
+							element.setElectricalIntensityOfWaterDistribution(
+									((Number) electricalIntensityOfWaterDistributionText.getValue()).doubleValue());
 							electricalIntensityOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterDistributionText.setForeground(Color.red);
@@ -216,15 +221,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Electrical Intensity of Distribution (MWh/m<sup>3</sup>)</html>",
 				electricalIntensityOfWaterDistributionText);
-		variableOperationsCostOfWaterDistributionText = new JTextField(10);
-		variableOperationsCostOfWaterDistributionText.setText(
-				new Double(element.getVariableOperationsCostOfWaterDistribution()).toString());
+		variableOperationsCostOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		variableOperationsCostOfWaterDistributionText.setColumns(10);
+		variableOperationsCostOfWaterDistributionText.setValue(
+				element.getVariableOperationsCostOfWaterDistribution());
 		variableOperationsCostOfWaterDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfWaterDistribution(Double.parseDouble(
-									variableOperationsCostOfWaterDistributionText.getText()));
+							element.setVariableOperationsCostOfWaterDistribution(
+									((Number) variableOperationsCostOfWaterDistributionText.getValue()).doubleValue());
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.red);
@@ -234,6 +240,16 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Variable Cost of Distribution (SAR/m<sup>3</sup>)</html>",
 				variableOperationsCostOfWaterDistributionText);
+		
+		// set input enabled state
+		maxWaterProductionText.setEnabled(element.getTemplate() == null);
+		reservoirIntensityOfWaterProductionText.setEnabled(element.getTemplate() == null);
+		electricalIntensityOfWaterProductionText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfWaterProductionText.setEnabled(element.getTemplate() == null);
+		maxWaterInputText.setEnabled(element.getTemplate() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
+		electricalIntensityOfWaterDistributionText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfWaterDistributionText.setEnabled(element.getTemplate() == null);
 	}
 	
 }

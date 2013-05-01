@@ -7,11 +7,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
@@ -25,12 +26,15 @@ import edu.mit.sips.gui.ElementPanel;
 public class AgricultureElementPanel extends ElementPanel {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
-	private final JTextField maxLandAreaText, initialLandAreaText;
-	private final JTextField maxFoodInput, initialFoodInput;
+	private final JFormattedTextField maxLandAreaText;
+	private final JFormattedTextField initialLandAreaText;
 	private final JComboBox productCombo;
 	private final JLabel productOutput, productVariableCost, productWaterUse, productLaborUse;
-	private final JTextField distributionEfficiency;
-	private final JTextField variableOperationsCostOfFoodDistribution;
+
+	private final JFormattedTextField maxFoodInput;
+	private final JFormattedTextField initialFoodInput;
+	private final JFormattedTextField distributionEfficiency;
+	private final JFormattedTextField variableOperationsCostOfFoodDistribution;
 	
 	/**
 	 * Instantiates a new agriculture element panel.
@@ -42,30 +46,30 @@ public class AgricultureElementPanel extends ElementPanel {
 			final MutableAgricultureElement element) {
 		super(country, element);
 		
-		maxLandAreaText = new JTextField(10);
-		maxLandAreaText.setText(
-				new Double(element.getMaxLandArea()).toString());
+		maxLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		maxLandAreaText.setColumns(10);
+		maxLandAreaText.setValue(element.getMaxLandArea());
 		maxLandAreaText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxLandArea(Double.parseDouble(
-									maxLandAreaText.getText()));
+							element.setMaxLandArea(
+									((Number) maxLandAreaText.getValue()).doubleValue());
 							maxLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxLandAreaText.setForeground(Color.red);
 						}
 					}
 				});
-		initialLandAreaText = new JTextField(10);
-		initialLandAreaText.setText(
-				new Double(element.getInitialLandArea()).toString());
+		initialLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		initialLandAreaText.setColumns(10);
+		initialLandAreaText.setValue(element.getInitialLandArea());
 		initialLandAreaText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialLandArea(Double.parseDouble(
-									initialLandAreaText.getText()));
+							element.setInitialLandArea(
+									((Number) initialLandAreaText.getValue()).doubleValue());
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -80,79 +84,81 @@ public class AgricultureElementPanel extends ElementPanel {
 				if(productCombo.getSelectedItem() instanceof AgricultureProduct) {
 					element.setProduct((AgricultureProduct)productCombo.getSelectedItem());
 				}
-				productOutput.setText(new Double(
-						element.getProduct().getFoodIntensityOfLandUsed()).toString());
-				productVariableCost.setText(new Double(
-						element.getProduct().getCostIntensityOfLandUsed()).toString());
-				productWaterUse.setText(new Double(
-						element.getProduct().getWaterIntensityOfLandUsed()).toString());
-				productLaborUse.setText(new Double(
-						element.getProduct().getLaborIntensityOfLandUsed()).toString());
+				productOutput.setText(NumberFormat.getNumberInstance().format(
+						element.getProduct().getFoodIntensityOfLandUsed()));
+				productVariableCost.setText(NumberFormat.getNumberInstance().format(
+						element.getProduct().getCostIntensityOfLandUsed()));
+				productWaterUse.setText(NumberFormat.getNumberInstance().format(
+						element.getProduct().getWaterIntensityOfLandUsed()));
+				productLaborUse.setText(NumberFormat.getNumberInstance().format(
+						element.getProduct().getLaborIntensityOfLandUsed()));
 			}
 		});
-		productOutput = new JLabel(new Double(
-				element.getProduct().getFoodIntensityOfLandUsed()).toString());
-		productVariableCost = new JLabel(new Double(
-				element.getProduct().getCostIntensityOfLandUsed()).toString());
-		productWaterUse = new JLabel(new Double(
-				element.getProduct().getWaterIntensityOfLandUsed()).toString());
-		productLaborUse = new JLabel(new Double(
-				element.getProduct().getLaborIntensityOfLandUsed()).toString());
+		productOutput = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getFoodIntensityOfLandUsed()));
+		productVariableCost = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getCostIntensityOfLandUsed()));
+		productWaterUse = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getWaterIntensityOfLandUsed()));
+		productLaborUse = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getLaborIntensityOfLandUsed()));
 
-		maxFoodInput = new JTextField(10);
-		maxFoodInput.setText(
-				new Double(element.getMaxFoodInput()).toString());
+		maxFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
+		maxFoodInput.setColumns(10);
+		maxFoodInput.setValue(element.getMaxFoodInput());
 		maxFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxFoodInput(Double.parseDouble(
-									maxFoodInput.getText()));
+							element.setMaxFoodInput(
+									((Number) maxFoodInput.getValue()).doubleValue());
 							maxFoodInput.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxFoodInput.setForeground(Color.red);
 						}
 					}
 				});
-		initialFoodInput = new JTextField(10);
-		initialFoodInput.setText(
-				new Double(element.getInitialFoodInput()).toString());
+		initialFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
+		initialFoodInput.setColumns(10);
+		initialFoodInput.setValue(element.getInitialFoodInput());
 		initialFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialFoodInput(Double.parseDouble(
-									initialFoodInput.getText()));
+							element.setInitialFoodInput(
+									((Number) initialFoodInput.getValue()).doubleValue());
 							initialFoodInput.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialFoodInput.setForeground(Color.red);
 						}
 					}
 				});
-		distributionEfficiency = new JTextField(10);
-		distributionEfficiency.setText(
-				new Double(element.getDistributionEfficiency()).toString());
+		distributionEfficiency = new JFormattedTextField(NumberFormat.getNumberInstance());
+		distributionEfficiency.setColumns(10);
+		distributionEfficiency.setValue(element.getDistributionEfficiency());
 		distributionEfficiency.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setDistributionEfficiency(Double.parseDouble(
-									distributionEfficiency.getText()));
+							element.setDistributionEfficiency(
+									((Number) distributionEfficiency.getValue()).doubleValue());
 							distributionEfficiency.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiency.setForeground(Color.red);
 						}
 					}
 				});
-		variableOperationsCostOfFoodDistribution = new JTextField(10);
-		variableOperationsCostOfFoodDistribution.setText(new Double(
-				element.getVariableOperationsCostOfFoodDistribution()).toString());
+		variableOperationsCostOfFoodDistribution = new JFormattedTextField(
+				NumberFormat.getNumberInstance());
+		variableOperationsCostOfFoodDistribution.setColumns(10);
+		variableOperationsCostOfFoodDistribution.setValue(
+				element.getVariableOperationsCostOfFoodDistribution());
 		variableOperationsCostOfFoodDistribution.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfFoodDistribution(Double.parseDouble(
-									variableOperationsCostOfFoodDistribution.getText()));
+							element.setVariableOperationsCostOfFoodDistribution(
+									((Number) variableOperationsCostOfFoodDistribution.getValue()).doubleValue());
 							variableOperationsCostOfFoodDistribution.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfFoodDistribution.setForeground(Color.red);
@@ -210,7 +216,6 @@ public class AgricultureElementPanel extends ElementPanel {
 		// set input enabled state
 		maxLandAreaText.setEnabled(element.getTemplate() == null);
 		maxFoodInput.setEnabled(element.getTemplate() == null);
-		initialFoodInput.setEnabled(element.getTemplate() == null);
 		productCombo.setEnabled(element.getTemplate() == null);
 		productOutput.setEnabled(element.getTemplate() == null);
 		productVariableCost.setEnabled(element.getTemplate() == null);

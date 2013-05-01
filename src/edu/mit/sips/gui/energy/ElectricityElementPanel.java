@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.NumberFormat;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.energy.MutableElectricityElement;
@@ -19,16 +20,16 @@ import edu.mit.sips.gui.ElementPanel;
 public class ElectricityElementPanel extends ElementPanel {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
-	private final JTextField maxElectricityProductionText;
-	private final JTextField initialElectricityProductionText;
-	private final JTextField petroleumIntensityOfElectricityProductionText;
-	private final JTextField waterIntensityOfElectricityProductionText;
-	private final JTextField variableOperationsCostOfElectricityProductionText;
+	private final JFormattedTextField maxElectricityProductionText;
+	private final JFormattedTextField initialElectricityProductionText;
+	private final JFormattedTextField petroleumIntensityOfElectricityProductionText;
+	private final JFormattedTextField waterIntensityOfElectricityProductionText;
+	private final JFormattedTextField variableOperationsCostOfElectricityProductionText;
 	
-	private final JTextField maxElectricityInputText;
-	private final JTextField initialElectricityInputText;
-	private final JTextField distributionEfficiencyText;
-	private final JTextField variableOperationsCostOfElectricityDistributionText;
+	private final JFormattedTextField maxElectricityInputText;
+	private final JFormattedTextField initialElectricityInputText;
+	private final JFormattedTextField distributionEfficiencyText;
+	private final JFormattedTextField variableOperationsCostOfElectricityDistributionText;
 	
 	/**
 	 * Instantiates a new electricity element panel.
@@ -50,15 +51,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		c.insets = new Insets(2,2,2,2);
 
 		c.gridx = 0;
-		maxElectricityProductionText = new JTextField(10);
-		maxElectricityProductionText.setText(
-				new Double(element.getMaxElectricityProduction()).toString());
+		maxElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		maxElectricityProductionText.setColumns(10);
+		maxElectricityProductionText.setValue(
+				element.getMaxElectricityProduction());
 		maxElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxElectricityProduction(Double.parseDouble(
-									maxElectricityProductionText.getText()));
+							element.setMaxElectricityProduction(
+									((Number) maxElectricityProductionText.getValue()).doubleValue());
 							maxElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityProductionText.setForeground(Color.red);
@@ -68,15 +70,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Max Electricity Production (MWh/year)", 
 				maxElectricityProductionText);
-		initialElectricityProductionText = new JTextField(10);
-		initialElectricityProductionText.setText(
-				new Double(element.getInitialElectricityProduction()).toString());
+		initialElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		initialElectricityProductionText.setColumns(10);
+		initialElectricityProductionText.setValue(
+				element.getInitialElectricityProduction());
 		initialElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialElectricityProduction(Double.parseDouble(
-									initialElectricityProductionText.getText()));
+							element.setInitialElectricityProduction(
+									((Number) initialElectricityProductionText.getValue()).doubleValue());
 							initialElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialElectricityProductionText.setForeground(Color.red);
@@ -86,15 +89,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Initial Electricity Production (MWh/year)",
 				initialElectricityProductionText);
-		petroleumIntensityOfElectricityProductionText = new JTextField(10);
-		petroleumIntensityOfElectricityProductionText.setText(
-				new Double(element.getPetroleumIntensityOfElectricityProduction()).toString());
+		petroleumIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		petroleumIntensityOfElectricityProductionText.setColumns(10);
+		petroleumIntensityOfElectricityProductionText.setValue(
+				element.getPetroleumIntensityOfElectricityProduction());
 		petroleumIntensityOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setPetroleumIntensityOfElectricityProduction(Double.parseDouble(
-									petroleumIntensityOfElectricityProductionText.getText()));
+							element.setPetroleumIntensityOfElectricityProduction(
+									((Number) petroleumIntensityOfElectricityProductionText.getValue()).doubleValue());
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -104,15 +108,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Petroleum Intensity of Production (bbl/MWh)",
 				petroleumIntensityOfElectricityProductionText);
-		waterIntensityOfElectricityProductionText = new JTextField(10);
-		waterIntensityOfElectricityProductionText.setText(
-				new Double(element.getPetroleumIntensityOfElectricityProduction()).toString());
+		waterIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		waterIntensityOfElectricityProductionText.setColumns(10);
+		waterIntensityOfElectricityProductionText.setValue(
+				element.getPetroleumIntensityOfElectricityProduction());
 		waterIntensityOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setPetroleumIntensityOfElectricityProduction(Double.parseDouble(
-									waterIntensityOfElectricityProductionText.getText()));
+							element.setPetroleumIntensityOfElectricityProduction(
+									((Number) waterIntensityOfElectricityProductionText.getValue()).doubleValue());
 							waterIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							waterIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -122,15 +127,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Water Intensity of Production (m<sup>3</sup>/MWh)</html>",
 				waterIntensityOfElectricityProductionText);
-		variableOperationsCostOfElectricityProductionText = new JTextField(10);
-		variableOperationsCostOfElectricityProductionText.setText(
-				new Double(element.getVariableOperationsCostOfElectricityProduction()).toString());
+		variableOperationsCostOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		variableOperationsCostOfElectricityProductionText.setColumns(10);
+		variableOperationsCostOfElectricityProductionText.setValue(
+				element.getVariableOperationsCostOfElectricityProduction());
 		variableOperationsCostOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfElectricityProduction(Double.parseDouble(
-									variableOperationsCostOfElectricityProductionText.getText()));
+							element.setVariableOperationsCostOfElectricityProduction(
+									((Number) variableOperationsCostOfElectricityProductionText.getValue()).doubleValue());
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.red);
@@ -143,15 +149,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		
 		c.gridx = 2;
 		c.gridy = 0;
-		maxElectricityInputText = new JTextField(10);
-		maxElectricityInputText.setText(
-				new Double(element.getMaxElectricityInput()).toString());
+		maxElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		maxElectricityInputText.setColumns(10);
+		maxElectricityInputText.setValue(
+				element.getMaxElectricityInput());
 		maxElectricityInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxElectricityInput(Double.parseDouble(
-									maxElectricityInputText.getText()));
+							element.setMaxElectricityInput(
+									((Number) maxElectricityInputText.getValue()).doubleValue());
 							maxElectricityInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityInputText.setForeground(Color.red);
@@ -161,15 +168,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Max Electricity Input (MWh/year)", 
 				maxElectricityInputText);
-		initialElectricityInputText = new JTextField(10);
-		initialElectricityInputText.setText(
-				new Double(element.getInitialElectricityInput()).toString());
+		initialElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		initialElectricityInputText.setColumns(10);
+		initialElectricityInputText.setValue(
+				element.getInitialElectricityInput());
 		initialElectricityInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialElectricityInput(Double.parseDouble(
-									initialElectricityInputText.getText()));
+							element.setInitialElectricityInput(
+									((Number) initialElectricityInputText.getValue()).doubleValue());
 							initialElectricityInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialElectricityInputText.setForeground(Color.red);
@@ -179,15 +187,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Initial Electricity Input (MWh/year)",
 				initialElectricityInputText);
-		distributionEfficiencyText = new JTextField(10);
-		distributionEfficiencyText.setText(
-				new Double(element.getDistributionEfficiency()).toString());
+		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		distributionEfficiencyText.setColumns(10);
+		distributionEfficiencyText.setValue(
+				element.getDistributionEfficiency());
 		distributionEfficiencyText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setDistributionEfficiency(Double.parseDouble(
-									distributionEfficiencyText.getText()));
+							element.setDistributionEfficiency(
+									((Number) distributionEfficiencyText.getValue()).doubleValue());
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -197,15 +206,16 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Distribution Efficiency (MWh out/MWh in)",
 				distributionEfficiencyText);
-		variableOperationsCostOfElectricityDistributionText = new JTextField(10);
-		variableOperationsCostOfElectricityDistributionText.setText(
-				new Double(element.getVariableOperationsCostOfElectricityDistribution()).toString());
+		variableOperationsCostOfElectricityDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		variableOperationsCostOfElectricityDistributionText.setColumns(10);
+		variableOperationsCostOfElectricityDistributionText.setValue(
+				element.getVariableOperationsCostOfElectricityDistribution());
 		variableOperationsCostOfElectricityDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfElectricityDistribution(Double.parseDouble(
-									variableOperationsCostOfElectricityDistributionText.getText()));
+							element.setVariableOperationsCostOfElectricityDistribution(
+									((Number) variableOperationsCostOfElectricityDistributionText.getValue()).doubleValue());
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.red);
@@ -215,6 +225,15 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Variable Cost of Distribution (SAR/MWh)",
 				variableOperationsCostOfElectricityDistributionText);
+
+		// set input enabled state
+		maxElectricityProductionText.setEnabled(element.getTemplate() == null);
+		petroleumIntensityOfElectricityProductionText.setEnabled(element.getTemplate() == null);
+		waterIntensityOfElectricityProductionText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfElectricityProductionText.setEnabled(element.getTemplate() == null);
+		maxElectricityInputText.setEnabled(element.getTemplate() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfElectricityDistributionText.setEnabled(element.getTemplate() == null);
 	}
 	
 }

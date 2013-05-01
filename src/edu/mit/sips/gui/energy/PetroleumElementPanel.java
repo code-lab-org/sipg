@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.NumberFormat;
 
+import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.energy.MutablePetroleumElement;
@@ -19,16 +20,16 @@ import edu.mit.sips.gui.ElementPanel;
 public class PetroleumElementPanel extends ElementPanel {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
-	private final JTextField maxPetroleumProductionText;
-	private final JTextField initialPetroleumProductionText;
-	private final JTextField reservoirIntensityOfPetroleumProductionText;
-	private final JTextField variableOperationsCostOfPetroleumProductionText;
+	private final JFormattedTextField maxPetroleumProductionText;
+	private final JFormattedTextField initialPetroleumProductionText;
+	private final JFormattedTextField reservoirIntensityOfPetroleumProductionText;
+	private final JFormattedTextField variableOperationsCostOfPetroleumProductionText;
 	
-	private final JTextField maxPetroleumInputText;
-	private final JTextField initialPetroleumInputText;
-	private final JTextField distributionEfficiencyText;
-	private final JTextField electricalIntensityOfPetroleumDistributionText;
-	private final JTextField variableOperationsCostOfPetroleumDistributionText;
+	private final JFormattedTextField maxPetroleumInputText;
+	private final JFormattedTextField initialPetroleumInputText;
+	private final JFormattedTextField distributionEfficiencyText;
+	private final JFormattedTextField electricalIntensityOfPetroleumDistributionText;
+	private final JFormattedTextField variableOperationsCostOfPetroleumDistributionText;
 	
 	/**
 	 * Instantiates a new petroleum element panel.
@@ -50,15 +51,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		c.insets = new Insets(2,2,2,2);
 
 		c.gridx = 0;
-		maxPetroleumProductionText = new JTextField(10);
-		maxPetroleumProductionText.setText(
-				new Double(element.getMaxPetroleumProduction()).toString());
+		maxPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		maxPetroleumProductionText.setColumns(10);
+		maxPetroleumProductionText.setValue(
+				element.getMaxPetroleumProduction());
 		maxPetroleumProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxPetroleumProduction(Double.parseDouble(
-									maxPetroleumProductionText.getText()));
+							element.setMaxPetroleumProduction(
+									((Number) maxPetroleumProductionText.getValue()).doubleValue());
 							maxPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxPetroleumProductionText.setForeground(Color.red);
@@ -68,15 +70,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Max Petroleum Production (bbl/year)", 
 				maxPetroleumProductionText);
-		initialPetroleumProductionText = new JTextField(10);
-		initialPetroleumProductionText.setText(
-				new Double(element.getInitialPetroleumProduction()).toString());
+		initialPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		initialPetroleumProductionText.setColumns(10);
+		initialPetroleumProductionText.setValue(
+				element.getInitialPetroleumProduction());
 		initialPetroleumProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialPetroleumProduction(Double.parseDouble(
-									initialPetroleumProductionText.getText()));
+							element.setInitialPetroleumProduction(
+									((Number) initialPetroleumProductionText.getValue()).doubleValue());
 							initialPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialPetroleumProductionText.setForeground(Color.red);
@@ -86,15 +89,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Initial Petroleum Production (bbl/year)",
 				initialPetroleumProductionText);
-		reservoirIntensityOfPetroleumProductionText = new JTextField(10);
-		reservoirIntensityOfPetroleumProductionText.setText(
-				new Double(element.getReservoirIntensityOfPetroleumProduction()).toString());
+		reservoirIntensityOfPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		reservoirIntensityOfPetroleumProductionText.setColumns(10);
+		reservoirIntensityOfPetroleumProductionText.setValue(
+				element.getReservoirIntensityOfPetroleumProduction());
 		reservoirIntensityOfPetroleumProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setReservoirIntensityOfPetroleumProduction(Double.parseDouble(
-									reservoirIntensityOfPetroleumProductionText.getText()));
+							element.setReservoirIntensityOfPetroleumProduction(
+									((Number) reservoirIntensityOfPetroleumProductionText.getValue()).doubleValue());
 							reservoirIntensityOfPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							reservoirIntensityOfPetroleumProductionText.setForeground(Color.red);
@@ -104,15 +108,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Reservoir Intensity of Production (bbl/bbl)",
 				reservoirIntensityOfPetroleumProductionText);
-		variableOperationsCostOfPetroleumProductionText = new JTextField(10);
-		variableOperationsCostOfPetroleumProductionText.setText(
-				new Double(element.getVariableOperationsCostOfPetroleumProduction()).toString());
+		variableOperationsCostOfPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		variableOperationsCostOfPetroleumProductionText.setColumns(10);
+		variableOperationsCostOfPetroleumProductionText.setValue(
+				element.getVariableOperationsCostOfPetroleumProduction());
 		variableOperationsCostOfPetroleumProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfPetroleumProduction(Double.parseDouble(
-									variableOperationsCostOfPetroleumProductionText.getText()));
+							element.setVariableOperationsCostOfPetroleumProduction(
+									((Number) variableOperationsCostOfPetroleumProductionText.getValue()).doubleValue());
 							variableOperationsCostOfPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfPetroleumProductionText.setForeground(Color.red);
@@ -125,15 +130,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		
 		c.gridx = 2;
 		c.gridy = 0;
-		maxPetroleumInputText = new JTextField(10);
-		maxPetroleumInputText.setText(
-				new Double(element.getMaxPetroleumInput()).toString());
+		maxPetroleumInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		maxPetroleumInputText.setColumns(10);
+		maxPetroleumInputText.setValue(
+				element.getMaxPetroleumInput());
 		maxPetroleumInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxPetroleumInput(Double.parseDouble(
-									maxPetroleumInputText.getText()));
+							element.setMaxPetroleumInput(
+									((Number) maxPetroleumInputText.getValue()).doubleValue());
 							maxPetroleumInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxPetroleumInputText.setForeground(Color.red);
@@ -143,15 +149,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Max Petroleum Input (bbl/year)", 
 				maxPetroleumInputText);
-		initialPetroleumInputText = new JTextField(10);
-		initialPetroleumInputText.setText(
-				new Double(element.getInitialPetroleumInput()).toString());
+		initialPetroleumInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		initialPetroleumInputText.setColumns(10);
+		initialPetroleumInputText.setValue(
+				element.getInitialPetroleumInput());
 		initialPetroleumInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialPetroleumInput(Double.parseDouble(
-									initialPetroleumInputText.getText()));
+							element.setInitialPetroleumInput(
+									((Number) initialPetroleumInputText.getValue()).doubleValue());
 							initialPetroleumInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialPetroleumInputText.setForeground(Color.red);
@@ -161,15 +168,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Initial Petroleum Input (bbl/year)",
 				initialPetroleumInputText);
-		distributionEfficiencyText = new JTextField(10);
-		distributionEfficiencyText.setText(
-				new Double(element.getDistributionEfficiency()).toString());
+		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		distributionEfficiencyText.setColumns(10);
+		distributionEfficiencyText.setValue(
+				element.getDistributionEfficiency());
 		distributionEfficiencyText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setDistributionEfficiency(Double.parseDouble(
-									distributionEfficiencyText.getText()));
+							element.setDistributionEfficiency(
+									((Number) distributionEfficiencyText.getValue()).doubleValue());
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -179,15 +187,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Distribution Efficiency (bbl out/bbl in)",
 				distributionEfficiencyText);
-		electricalIntensityOfPetroleumDistributionText = new JTextField(10);
-		electricalIntensityOfPetroleumDistributionText.setText(
-				new Double(element.getElectricalIntensityOfPetroleumDistribution()).toString());
+		electricalIntensityOfPetroleumDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		electricalIntensityOfPetroleumDistributionText.setColumns(10);
+		electricalIntensityOfPetroleumDistributionText.setValue(
+				element.getElectricalIntensityOfPetroleumDistribution());
 		electricalIntensityOfPetroleumDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setElectricalIntensityOfPetroleumDistribution(Double.parseDouble(
-									electricalIntensityOfPetroleumDistributionText.getText()));
+							element.setElectricalIntensityOfPetroleumDistribution(
+									((Number) electricalIntensityOfPetroleumDistributionText.getValue()).doubleValue());
 							electricalIntensityOfPetroleumDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfPetroleumDistributionText.setForeground(Color.red);
@@ -197,15 +206,16 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Electrical Intensity of Distribution (MWh/bbl)",
 				electricalIntensityOfPetroleumDistributionText);
-		variableOperationsCostOfPetroleumDistributionText = new JTextField(10);
-		variableOperationsCostOfPetroleumDistributionText.setText(
-				new Double(element.getVariableOperationsCostOfPetroleumDistribution()).toString());
+		variableOperationsCostOfPetroleumDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
+		variableOperationsCostOfPetroleumDistributionText.setColumns(10);
+		variableOperationsCostOfPetroleumDistributionText.setValue(
+				element.getVariableOperationsCostOfPetroleumDistribution());
 		variableOperationsCostOfPetroleumDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfPetroleumDistribution(Double.parseDouble(
-									variableOperationsCostOfPetroleumDistributionText.getText()));
+							element.setVariableOperationsCostOfPetroleumDistribution(
+									((Number) variableOperationsCostOfPetroleumDistributionText.getValue()).doubleValue());
 							variableOperationsCostOfPetroleumDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfPetroleumDistributionText.setForeground(Color.red);
@@ -215,6 +225,15 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Variable Cost of Distribution (SAR/bbl)",
 				variableOperationsCostOfPetroleumDistributionText);
+		
+		// set input enabled state
+		maxPetroleumProductionText.setEnabled(element.getTemplate() == null);
+		reservoirIntensityOfPetroleumProductionText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfPetroleumProductionText.setEnabled(element.getTemplate() == null);
+		maxPetroleumInputText.setEnabled(element.getTemplate() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
+		electricalIntensityOfPetroleumDistributionText.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfPetroleumDistributionText.setEnabled(element.getTemplate() == null);
 	}
 	
 }

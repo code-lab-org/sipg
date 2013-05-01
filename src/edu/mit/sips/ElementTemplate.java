@@ -95,7 +95,7 @@ public enum ElementTemplate {
 					this, name + " " + ++instanceId, location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 100, 2, 
 							100e6, 10e6, 20e6, true), 
-					0.95, Double.MAX_VALUE, 0, 25);
+					0.95, 1e9, 0, 25);
 		default:
 			throw new IllegalArgumentException(
 					"Unknown element template.");
