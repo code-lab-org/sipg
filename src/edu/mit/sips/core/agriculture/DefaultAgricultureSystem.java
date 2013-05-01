@@ -1,6 +1,7 @@
 package edu.mit.sips.core.agriculture;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,8 +33,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 * Instantiates a new local.
 		 *
 		 * @param arableLandArea the arable land area
+		 * @param elements the elements
 		 */
-		public Local(double arableLandArea) {
+		public Local(double arableLandArea, 
+				Collection<? extends AgricultureElement> elements) {
 			super("Agriculture");
 			
 			// Validate arable land area.
@@ -42,6 +45,10 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 						"Arable land area cannot be negative.");
 			}
 			this.arableLandArea = arableLandArea;
+			
+			if(elements != null) {
+				this.elements.addAll(elements);
+			}
 		}
 
 		/* (non-Javadoc)

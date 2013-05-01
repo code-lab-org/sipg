@@ -1,6 +1,7 @@
 package edu.mit.sips.core.energy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,6 +22,20 @@ public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local 
 	 */
 	public DefaultElectricitySystem() {
 		super("Electricity");
+	}
+	
+	/**
+	 * Instantiates a new default electricity system.
+	 *
+	 * @param elements the elements
+	 */
+	public DefaultElectricitySystem(
+			Collection<? extends ElectricityElement> elements) {
+		super("Electricity");
+		
+		if(elements != null) {
+			this.elements.addAll(elements);
+		}
 	}
 	
 	/**

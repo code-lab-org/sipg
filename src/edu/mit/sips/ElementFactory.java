@@ -89,6 +89,13 @@ public abstract class ElementFactory {
 				new DefaultLifecycleModel(), 0.95, 1e20, 0, 0, 10);
 	}
 	
+	/**
+	 * Creates a new Element object.
+	 *
+	 * @param city the city
+	 * @param yearInitialized the year initialized
+	 * @return the petroleum element
+	 */
 	public static PetroleumElement createPetroleumWell(String city, long yearInitialized) {
 		return DefaultPetroleumElement.createProductionElement(
 				"Petroleum Well " + ++petroleumWellId, city, city, 

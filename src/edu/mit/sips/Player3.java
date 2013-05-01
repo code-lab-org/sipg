@@ -4,13 +4,11 @@ import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
+import edu.mit.sips.SocietyFactory.CityAssignment;
+import edu.mit.sips.SocietyFactory.SectorAssignment;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
-import edu.mit.sips.core.energy.DefaultEnergySystem;
-import edu.mit.sips.core.social.DefaultSocialSystem;
-import edu.mit.sips.core.social.LogisticGrowthModel;
-import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.sim.Simulator;
 
@@ -24,41 +22,9 @@ public class Player3 {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		String riyadh = "Riyadh";
-		String jeddah = "Jeddah";
-		String sakakah = "Sakakah";
-		
-		final Country ksa = Country.buildCountry("KSA", Arrays.asList(
-				new City(riyadh, 
-						new DefaultAgricultureSystem.Local(3000),
-						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Remote(),
-						new DefaultSocialSystem.Remote()),
-				new City(jeddah, 
-						new DefaultAgricultureSystem.Local(4000),
-						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Remote(),
-						new DefaultSocialSystem.Remote()),
-				new City(sakakah, 
-						new DefaultAgricultureSystem.Local(5000),
-						new DefaultWaterSystem.Remote(),
-						new DefaultEnergySystem.Remote(),
-						new DefaultSocialSystem.Local(new LogisticGrowthModel(1950, 10000, 0.05, 750000), 1000))
-			));
-		
-		DefaultAgricultureSystem.Local ras = (DefaultAgricultureSystem.Local) ksa.getCity(riyadh).getAgricultureSystem();
-		DefaultAgricultureSystem.Local sas = (DefaultAgricultureSystem.Local) ksa.getCity(sakakah).getAgricultureSystem();
-		DefaultAgricultureSystem.Local jas = (DefaultAgricultureSystem.Local) ksa.getCity(jeddah).getAgricultureSystem();
-		sas.addElement(ElementFactory.createGrazingLand(sakakah));
-		sas.addElement(ElementFactory.createDateFarm(sakakah));
-		sas.addElement(ElementFactory.createDateFarm(sakakah));
-		ras.addElement(ElementFactory.createDateFarm(riyadh));
-		ras.addElement(ElementFactory.createDateFarm(riyadh));
-		ras.addElement(ElementFactory.createDateFarm(riyadh));
-		jas.addElement(ElementFactory.createDateFarm(jeddah));
-		jas.addElement(ElementFactory.createDateFarm(jeddah));
-		jas.addElement(ElementFactory.createDateFarm(jeddah));
-		jas.addElement(ElementFactory.createDateFarm(jeddah));
+		final Country ksa = SocietyFactory.createSaudiCountry(
+				Arrays.asList(CityAssignment.RURAL),
+				Arrays.asList(SectorAssignment.AGRICULTURE));
 		
 		for(City origin : ksa.getCities()) {
 			for(City destination : ksa.getCities()) {

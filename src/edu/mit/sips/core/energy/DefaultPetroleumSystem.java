@@ -1,6 +1,7 @@
 package edu.mit.sips.core.energy;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,9 +34,11 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local im
 	 *
 	 * @param maxPetroleumReservoirVolume the max petroleum reservoir volume
 	 * @param initialPetroleumReservoirVolume the initial petroleum reservoir volume
+	 * @param elements the elements
 	 */
 	public DefaultPetroleumSystem(double maxPetroleumReservoirVolume,
-			double initialPetroleumReservoirVolume) {
+			double initialPetroleumReservoirVolume,
+			Collection<? extends PetroleumElement> elements) {
 		super("Petroleum");
 		
 		// Validate max petroleum reservoir.
@@ -54,6 +57,10 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local im
 					"Initial petroleum reservoir volume cannot exceed maximum.");
 		}
 		this.initialPetroleumReservoirVolume = initialPetroleumReservoirVolume;
+		
+		if(elements != null) {
+			this.elements.addAll(elements);
+		}
 	}
 	
 	/**

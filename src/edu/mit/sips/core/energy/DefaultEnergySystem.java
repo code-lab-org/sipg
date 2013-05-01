@@ -2,6 +2,7 @@ package edu.mit.sips.core.energy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,13 +36,29 @@ public abstract class DefaultEnergySystem implements EnergySystem {
 		 *
 		 * @param maxPetroleumReservoir the max petroleum reservoir
 		 * @param initialPetroleumReservoir the initial petroleum reservoir
+		 * @param elements the elements
 		 */
 		public Local(double maxPetroleumReservoir, 
-				double initialPetroleumReservoir) {
+				double initialPetroleumReservoir, 
+				Collection<? extends EnergyElement> elements) {
 			super("Energy");
+			List<PetroleumElement> petroleumElements = 
+					new ArrayList<PetroleumElement>();
+			List<ElectricityElement> electricityElements = 
+					new ArrayList<ElectricityElement>();
+			for(EnergyElement element : elements) {
+				if(element instanceof PetroleumElement) {
+					petroleumElements.add((PetroleumElement)element);
+				} else if(element instanceof ElectricityElement) {
+					electricityElements.add((ElectricityElement)element);
+				}
+			}
+			
 			this.petroleumSystem = new DefaultPetroleumSystem(
-					maxPetroleumReservoir, initialPetroleumReservoir);
-			this.electricitySystem = new DefaultElectricitySystem();
+					maxPetroleumReservoir, initialPetroleumReservoir, 
+					petroleumElements);
+			this.electricitySystem = new DefaultElectricitySystem(
+					electricityElements);
 		}
 
 

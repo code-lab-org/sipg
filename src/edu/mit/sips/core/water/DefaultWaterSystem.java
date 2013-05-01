@@ -2,6 +2,7 @@ package edu.mit.sips.core.water;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,10 +49,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
 		 * @param initialWaterSupplyPerCapita the initial water supply per capita
+		 * @param elements the elements
 		 */
 		public Local(boolean coastal, double maxWaterReservoirVolume,
-				double initialWaterReservoirVolume, double waterReservoirRechargeRate,
-				double initialWaterSupplyPerCapita) {
+				double initialWaterReservoirVolume, 
+				double waterReservoirRechargeRate,
+				double initialWaterSupplyPerCapita, 
+				Collection<? extends WaterElement> elements) {
 			super("Water");
 			// Validate max water reservoir volume.
 			if(maxWaterReservoirVolume < 0) {
@@ -81,6 +85,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 						"Initial water supply per capita cannot be negative.");
 			}
 			this.initialWaterSupplyPerCapita = 0;
+			
+			if(elements != null) {
+				this.elements.addAll(elements);
+			}
 		}
 		
 		/* (non-Javadoc)
