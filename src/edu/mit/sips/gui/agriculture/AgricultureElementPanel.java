@@ -3,11 +3,13 @@ package edu.mit.sips.gui.agriculture;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -26,6 +28,7 @@ public class AgricultureElementPanel extends ElementPanel {
 	private final JTextField maxLandAreaText, initialLandAreaText;
 	private final JTextField maxFoodInput, initialFoodInput;
 	private final JComboBox productCombo;
+	private final JLabel productOutput, productVariableCost, productWaterUse, productLaborUse;
 	private final JTextField distributionEfficiency;
 	private final JTextField variableOperationsCostOfFoodDistribution;
 	
@@ -93,10 +96,32 @@ public class AgricultureElementPanel extends ElementPanel {
 				if(productCombo.getSelectedItem() instanceof AgricultureProduct) {
 					element.setProduct((AgricultureProduct)productCombo.getSelectedItem());
 				}
+				productOutput.setText(new Double(
+						element.getProduct().getFoodIntensityOfLandUsed()).toString());
+				productVariableCost.setText(new Double(
+						element.getProduct().getCostIntensityOfLandUsed()).toString());
+				productWaterUse.setText(new Double(
+						element.getProduct().getWaterIntensityOfLandUsed()).toString());
+				productLaborUse.setText(new Double(
+						element.getProduct().getLaborIntensityOfLandUsed()).toString());
 			}
 		});
-		addInput(elementPanel, c, 
-				"Product", productCombo);
+		addInput(elementPanel, c, "Product", productCombo);
+		JPanel productPanel = new JPanel();
+		productPanel.setLayout(new GridLayout(4,2));
+		productPanel.add(new JLabel("<html>Food Output (GJ/km<sup>2</sup>)</html>"));
+		productOutput = new JLabel(new Double(element.getProduct().getFoodIntensityOfLandUsed()).toString());
+		productPanel.add(productOutput);
+		productPanel.add(new JLabel("<html>Variable Cost (SAR/km<sup>2</sup>)</html>"));
+		productVariableCost = new JLabel(new Double(element.getProduct().getCostIntensityOfLandUsed()).toString());
+		productPanel.add(productVariableCost);
+		productPanel.add(new JLabel("<html>Water Use (m<sup>3</sup>/km<sup>2</sup>)</html>"));
+		productWaterUse = new JLabel(new Double(element.getProduct().getWaterIntensityOfLandUsed()).toString());
+		productPanel.add(productWaterUse);
+		productPanel.add(new JLabel("<html>Labor Use (person/km<sup>2</sup>)</html>"));
+		productLaborUse = new JLabel(new Double(element.getProduct().getLaborIntensityOfLandUsed()).toString());
+		productPanel.add(productLaborUse);
+		addInput(elementPanel, c, "", productPanel);
 		
 		c.gridx = 2;
 		c.gridy = 0;
@@ -172,4 +197,18 @@ public class AgricultureElementPanel extends ElementPanel {
 				variableOperationsCostOfFoodDistribution);
 	}
 	
+	public void setTemplateMode(boolean template) {
+		super.setTemplateMode(template);
+		maxLandAreaText.setEnabled(!template);
+		initialLandAreaText.setEnabled(!template);
+		maxFoodInput.setEnabled(!template);
+		initialFoodInput.setEnabled(!template);
+		productCombo.setEnabled(!template);
+		productOutput.setEnabled(!template);
+		productVariableCost.setEnabled(!template);
+		productWaterUse.setEnabled(!template);
+		productLaborUse.setEnabled(!template);
+		distributionEfficiency.setEnabled(!template);
+		variableOperationsCostOfFoodDistribution.setEnabled(!template);
+	}
 }

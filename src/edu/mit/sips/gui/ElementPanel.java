@@ -162,6 +162,16 @@ public class ElementPanel extends JPanel {
 		lifecycleModelContainer.add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
+	/**
+	 * Sets the template mode.
+	 *
+	 * @param template the new template mode
+	 */
+	public void setTemplateMode(boolean template) {
+		selectLifecycleModel.setEnabled(!template);
+		lifecycleModelPanel.setTemplateMode(template);
+	}
+	
 	private final Action selectLifecycleModel = 
 			new AbstractAction("Change") {
 		private static final long serialVersionUID = 5851360899423844664L;
@@ -194,14 +204,22 @@ public class ElementPanel extends JPanel {
 		}
 	}
 	
+	/**
+	 * Adds the input.
+	 *
+	 * @param panel the panel
+	 * @param c the c
+	 * @param labelText the label text
+	 * @param component the component
+	 */
 	protected void addInput(JPanel panel, GridBagConstraints c, String labelText, 
 			JComponent component) {
 		c.weightx = 0;
-		c.anchor = GridBagConstraints.LINE_END;
+		c.anchor = GridBagConstraints.FIRST_LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		panel.add(new JLabel(labelText), c);
 		c.gridx++;
-		c.anchor = GridBagConstraints.LINE_START;
+		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		panel.add(component, c);

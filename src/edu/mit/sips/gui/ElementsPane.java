@@ -28,6 +28,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
@@ -88,6 +89,16 @@ public class ElementsPane extends JPanel {
 					return this;
 				}
 			};
+			
+	private final Action addElementTemplate = new AbstractAction("Add*", 
+			Icons.ADD) {
+		private static final long serialVersionUID = -6723630338741885195L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			addElementTemplateDialog();
+		}
+	};
 	
 	private final Action addElement = new AbstractAction("Add", 
 			Icons.ADD) {
@@ -107,7 +118,7 @@ public class ElementsPane extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			Object selection = elementsList.getSelectedValue();
 			if(selection instanceof InfrastructureElement) {
-				openElementDialog((InfrastructureElement)selection);
+				openElementDialog((InfrastructureElement)selection, false);
 			}
 			elementsList.setSelectedValue(selection, true);
 		}
@@ -169,11 +180,23 @@ public class ElementsPane extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+		buttonPanel.add(new JButton(addElementTemplate));
 		buttonPanel.add(new JButton(addElement));
 		buttonPanel.add(new JButton(editElement));
 		buttonPanel.add(new JButton(removeElement));
 		add(buttonPanel, BorderLayout.SOUTH);
-		
+	}
+	
+	private void addElementTemplateDialog() {
+		JComboBox elementTypeCombo = new JComboBox(ElementTemplate.values());
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, elementTypeCombo, 
+				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
+			// TODO get year
+			MutableInfrastructureElement element = 
+					((ElementTemplate)elementTypeCombo.getSelectedItem())
+					.createElement(1950, city.getName()).getMutableElement();
+			openElementDialog(element.createElement(), true);
+		}
 	}
 	
 	private void addElementDialog() {
@@ -196,7 +219,7 @@ public class ElementsPane extends JPanel {
 			}
 			element.setOrigin(city.getName());
 			element.setDestination(city.getName());
-			openElementDialog(element.createElement());
+			openElementDialog(element.createElement(), false);
 		}
 	}
 	
@@ -223,17 +246,19 @@ public class ElementsPane extends JPanel {
 	 * @param mutableElement the mutable element
 	 * @return the infrastructure element
 	 */
-	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {
+	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement, boolean template) {
+		ElementPanel elementPanel = ElementPanel.createElementPanel(city, mutableElement);
+		elementPanel.setTemplateMode(template);
+		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementPanel.createElementPanel(city, mutableElement), 
-				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
+				elementPanel, "Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
 			} catch (IllegalArgumentException ex) {
 				JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 						ex.getMessage(), "Error", 
 						JOptionPane.ERROR_MESSAGE);
-				return editElementDialog(mutableElement);
+				return editElementDialog(mutableElement, template);
 			}
 		} else {
 			return null;
@@ -245,8 +270,8 @@ public class ElementsPane extends JPanel {
 	 *
 	 * @param element the element
 	 */
-	private void openElementDialog(InfrastructureElement element) {
-		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
+	private void openElementDialog(InfrastructureElement element, boolean template) {
+		InfrastructureElement newElement = editElementDialog(element.getMutableElement(), template);
 		if(newElement != null) {
 			if(element instanceof AgricultureElement 
 					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {

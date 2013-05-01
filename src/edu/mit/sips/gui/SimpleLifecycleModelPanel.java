@@ -164,6 +164,26 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		addInput(c, "Levelize Costs", levelizeCostsCheck);
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.LifecycleModelPanel#setTemplateMode(boolean)
+	 */
+	@Override
+	public void setTemplateMode(boolean template) {
+		initializationDurationText.setEnabled(!template);
+		capitalCostText.setEnabled(!template);
+		fixedOperationsCostText.setEnabled(!template);
+		decommissionDurationText.setEnabled(!template);
+		decommissionCostText.setEnabled(!template);
+		levelizeCostsCheck.setEnabled(!template);
+	}
+	
+	/**
+	 * Adds the input.
+	 *
+	 * @param c the c
+	 * @param labelText the label text
+	 * @param component the component
+	 */
 	private void addInput(GridBagConstraints c, String labelText, 
 			JComponent component) {
 		c.weightx = 0;

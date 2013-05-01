@@ -19,6 +19,15 @@ public class LifecycleModelPanel extends JPanel {
 	}
 	
 	/**
+	 * Sets the template mode.
+	 *
+	 * @param template the new template mode
+	 */
+	public void setTemplateMode(boolean template) {
+		
+	}
+	
+	/**
 	 * Creates a new LifecycleModelPanel object.
 	 *
 	 * @param lifecycleModel the lifecycle model
