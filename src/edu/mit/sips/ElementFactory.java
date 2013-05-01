@@ -31,7 +31,7 @@ public abstract class ElementFactory {
 		return DefaultAgricultureElement.createProductionElement(
 					"Grazing Land " + ++grazingLandId, city, city,
 					new DefaultLifecycleModel(), 5000, 0, 
-					AgricultureProduct.GRAZING);
+					AgricultureProduct.LIVESTOCK);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class ElementFactory {
 		return DefaultAgricultureElement.createProductionElement(
 				"Date Farm " + ++dateFarmId, city, city,
 				new DefaultLifecycleModel(), 1000, 0, 
-				AgricultureProduct.INDIGINOUS_CROP);
+				AgricultureProduct.DATES);
 	}
 	
 	/**

@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
-import edu.mit.sips.SocietyFactory.CityAssignment;
-import edu.mit.sips.SocietyFactory.SectorAssignment;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
@@ -22,9 +20,9 @@ public class Player3 {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = SocietyFactory.createSaudiCountry(
-				Arrays.asList(CityAssignment.RURAL),
-				Arrays.asList(SectorAssignment.AGRICULTURE));
+		final Country ksa = CountryFactory.createSaudiCountry(
+				Arrays.asList(CityTemplate.RURAL),
+				Arrays.asList(Sector.AGRICULTURE));
 		
 		for(City origin : ksa.getCities()) {
 			for(City destination : ksa.getCities()) {

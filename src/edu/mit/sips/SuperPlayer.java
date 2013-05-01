@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
-import edu.mit.sips.SocietyFactory.CityAssignment;
-import edu.mit.sips.SocietyFactory.SectorAssignment;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
@@ -21,15 +19,15 @@ public class SuperPlayer {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = SocietyFactory.createSaudiCountry(
+		final Country ksa = CountryFactory.createSaudiCountry(
 				Arrays.asList(
-						CityAssignment.INDUSTRIAL, 
-						CityAssignment.URBAN, 
-						CityAssignment.RURAL),
+						CityTemplate.INDUSTRIAL, 
+						CityTemplate.URBAN, 
+						CityTemplate.RURAL),
 				Arrays.asList(
-						SectorAssignment.AGRICULTURE,
-						SectorAssignment.WATER,
-						SectorAssignment.ENERGY));
+						Sector.AGRICULTURE,
+						Sector.WATER,
+						Sector.ENERGY));
 
 		final Simulator simulator = new Simulator("Super Player", ksa);
 		simulator.addUpdateListener(new ConsoleLogger());

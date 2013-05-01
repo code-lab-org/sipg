@@ -4,8 +4,6 @@ import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
-import edu.mit.sips.SocietyFactory.CityAssignment;
-import edu.mit.sips.SocietyFactory.SectorAssignment;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.sim.Simulator;
@@ -20,9 +18,9 @@ public class Player1 {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = SocietyFactory.createSaudiCountry(
-				Arrays.asList(CityAssignment.INDUSTRIAL),
-				Arrays.asList(SectorAssignment.ENERGY));
+		final Country ksa = CountryFactory.createSaudiCountry(
+				Arrays.asList(CityTemplate.INDUSTRIAL),
+				Arrays.asList(Sector.ENERGY));
 
 		final Simulator simulator = new Simulator("Energy Player", ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());

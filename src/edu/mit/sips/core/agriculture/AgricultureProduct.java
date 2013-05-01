@@ -5,8 +5,8 @@ package edu.mit.sips.core.agriculture;
  */
 public enum AgricultureProduct {
 	NONE,
-	GRAZING("Lifestock Grazing", 		15, 	50, 	300, 	0.5),
-	INDIGINOUS_CROP("Indiginous Crop", 	400, 	15000, 	5000, 	20),
+	LIVESTOCK("Lifestock", 				15, 	50, 	300, 	0.5),
+	DATES("Dates", 						400, 	15000, 	5000, 	20),
 	GRAINS("Grains", 					2000, 	30000, 	35000,	10),
 	MODIFIED_GRAINS("Modified Grains", 	2000, 	52500, 	30000,	10);
 	
