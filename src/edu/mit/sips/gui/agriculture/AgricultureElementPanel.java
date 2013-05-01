@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
@@ -48,6 +49,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		
 		maxLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxLandAreaText.setColumns(10);
+		maxLandAreaText.setHorizontalAlignment(JTextField.RIGHT);
 		maxLandAreaText.setValue(element.getMaxLandArea());
 		maxLandAreaText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -63,6 +65,7 @@ public class AgricultureElementPanel extends ElementPanel {
 				});
 		initialLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialLandAreaText.setColumns(10);
+		initialLandAreaText.setHorizontalAlignment(JTextField.RIGHT);
 		initialLandAreaText.setValue(element.getInitialLandArea());
 		initialLandAreaText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -95,16 +98,17 @@ public class AgricultureElementPanel extends ElementPanel {
 			}
 		});
 		productOutput = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getFoodIntensityOfLandUsed()));
+				element.getProduct().getFoodIntensityOfLandUsed()), JLabel.RIGHT);
 		productVariableCost = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getCostIntensityOfLandUsed()));
+				element.getProduct().getCostIntensityOfLandUsed()), JLabel.RIGHT);
 		productWaterUse = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getWaterIntensityOfLandUsed()));
+				element.getProduct().getWaterIntensityOfLandUsed()), JLabel.RIGHT);
 		productLaborUse = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getLaborIntensityOfLandUsed()));
+				element.getProduct().getLaborIntensityOfLandUsed()), JLabel.RIGHT);
 
 		maxFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxFoodInput.setColumns(10);
+		maxFoodInput.setHorizontalAlignment(JTextField.RIGHT);
 		maxFoodInput.setValue(element.getMaxFoodInput());
 		maxFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -120,6 +124,7 @@ public class AgricultureElementPanel extends ElementPanel {
 				});
 		initialFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialFoodInput.setColumns(10);
+		initialFoodInput.setHorizontalAlignment(JTextField.RIGHT);
 		initialFoodInput.setValue(element.getInitialFoodInput());
 		initialFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -135,6 +140,7 @@ public class AgricultureElementPanel extends ElementPanel {
 				});
 		distributionEfficiency = new JFormattedTextField(NumberFormat.getNumberInstance());
 		distributionEfficiency.setColumns(10);
+		distributionEfficiency.setHorizontalAlignment(JTextField.RIGHT);
 		distributionEfficiency.setValue(element.getDistributionEfficiency());
 		distributionEfficiency.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -151,6 +157,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		variableOperationsCostOfFoodDistribution = new JFormattedTextField(
 				NumberFormat.getNumberInstance());
 		variableOperationsCostOfFoodDistribution.setColumns(10);
+		variableOperationsCostOfFoodDistribution.setHorizontalAlignment(JTextField.RIGHT);
 		variableOperationsCostOfFoodDistribution.setValue(
 				element.getVariableOperationsCostOfFoodDistribution());
 		variableOperationsCostOfFoodDistribution.getDocument().addDocumentListener(
@@ -174,53 +181,48 @@ public class AgricultureElementPanel extends ElementPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-
 		if(element.getTemplate() == null 
 				|| !element.getTemplate().isTransport()) {
 			c.gridx = 0;
-			addInput(elementPanel, c, 
-					"<html>Max Land Area (km<sup>2</sup>)</html>", 
-					maxLandAreaText);
-			addInput(elementPanel, c, 
-					"<html>Initial Land Area (km<sup>2</sup>)</html>",
-					initialLandAreaText);
-			addInput(elementPanel, c, "Product", productCombo);
+			addInput(elementPanel, c, "Max Land Area", 
+					maxLandAreaText, "<html>km<sup>2</sup></html>");
+			addInput(elementPanel, c, "Initial Land Area",
+					initialLandAreaText, "<html>km<sup>2</sup></html>");
+			addInput(elementPanel, c, "Product", productCombo, "");
 			JPanel productPanel = new JPanel();
-			productPanel.setLayout(new GridLayout(4,2));
-			productPanel.add(new JLabel("<html>Food Output (GJ/km<sup>2</sup>)</html>"));
+			productPanel.setLayout(new GridLayout(4, 3, 2, 2));
+			productPanel.add(new JLabel("Food Output"));
 			productPanel.add(productOutput);
-			productPanel.add(new JLabel("<html>Variable Cost (SAR/km<sup>2</sup>)</html>"));
+			productPanel.add(new JLabel("<html>GJ/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("Variable Cost"));
 			productPanel.add(productVariableCost);
-			productPanel.add(new JLabel("<html>Water Use (m<sup>3</sup>/km<sup>2</sup>)</html>"));
+			productPanel.add(new JLabel("<html>SAR/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("Water Use"));
 			productPanel.add(productWaterUse);
-			productPanel.add(new JLabel("<html>Labor Use (person/km<sup>2</sup>)</html>"));
+			productPanel.add(new JLabel("<html>m<sup>3</sup>/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("Labor Use"));
 			productPanel.add(productLaborUse);
-			addInput(elementPanel, c, "", productPanel);
+			productPanel.add(new JLabel("<html>people/km<sup>2</sup></html>"));
+			addInput(elementPanel, c, "", productPanel, "");
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {
-			c.gridx = 2;
+			c.gridx = 3;
 			c.gridy = 0;
-			addInput(elementPanel, c, 
-					"Max Food Input (GJ/year)", maxFoodInput);
-			addInput(elementPanel, c, 
-					"Initial Food Input (GJ/year)", initialFoodInput);
-			addInput(elementPanel, c, 
-					"Distribution Efficiency (GJ out/GJ in)", 
-					distributionEfficiency);
-			addInput(elementPanel, c, 
-					"Operations Cost of Distribution (SAR/GJ)", 
-					variableOperationsCostOfFoodDistribution);
+			addInput(elementPanel, c, "Max Food Input", 
+					maxFoodInput, "GJ/year");
+			addInput(elementPanel, c, "Initial Food Input", 
+					initialFoodInput, "GJ/year");
+			addInput(elementPanel, c, "Distribution Efficiency", 
+					distributionEfficiency, "GJ out/GJ in");
+			addInput(elementPanel, c, "Operations Cost of Distribution", 
+					variableOperationsCostOfFoodDistribution, "SAR/GJ");
 		}
 
 		// set input enabled state
 		maxLandAreaText.setEnabled(element.getTemplate() == null);
 		maxFoodInput.setEnabled(element.getTemplate() == null);
 		productCombo.setEnabled(element.getTemplate() == null);
-		productOutput.setEnabled(element.getTemplate() == null);
-		productVariableCost.setEnabled(element.getTemplate() == null);
-		productWaterUse.setEnabled(element.getTemplate() == null);
-		productLaborUse.setEnabled(element.getTemplate() == null);
 		distributionEfficiency.setEnabled(element.getTemplate() == null);
 		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplate() == null);
 	}

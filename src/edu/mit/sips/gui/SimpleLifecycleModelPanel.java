@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
@@ -50,6 +51,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		c.gridx = 0;
 		timeAvailableText = new JFormattedTextField(timeFormat);
 		timeAvailableText.setColumns(10);
+		timeAvailableText.setHorizontalAlignment(JTextField.RIGHT);
 		timeAvailableText.setValue(lifecycleModel.getTimeAvailable());
 		timeAvailableText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -63,9 +65,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Time Available (year)", timeAvailableText);
+		addInput(c, "Time Available", timeAvailableText, "(year)");
 		timeInitializedText = new JFormattedTextField(timeFormat);
 		timeInitializedText.setColumns(10);
+		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
 		timeInitializedText.setValue(lifecycleModel.getTimeInitialized());
 		timeInitializedText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -79,9 +82,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Time Initialized (year)", timeInitializedText);
+		addInput(c, "Time Initialized", timeInitializedText, "(year)");
 		initializationDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		initializationDurationText.setColumns(10);
+		initializationDurationText.setHorizontalAlignment(JTextField.RIGHT);
 		initializationDurationText.setValue(lifecycleModel.getInitializationDuration());
 		initializationDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -95,9 +99,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Initialization Duration (year)", initializationDurationText);
+		addInput(c, "Initialization Duration", initializationDurationText, "years");
 		capitalCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		capitalCostText.setColumns(10);
+		capitalCostText.setHorizontalAlignment(JTextField.RIGHT);
 		capitalCostText.setValue(lifecycleModel.getCapitalCost());
 		capitalCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -111,9 +116,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Capital Cost (SAR)", capitalCostText);
+		addInput(c, "Capital Cost", capitalCostText, "SAR");
 		fixedOperationsCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		fixedOperationsCostText.setColumns(10);
+		fixedOperationsCostText.setHorizontalAlignment(JTextField.RIGHT);
 		fixedOperationsCostText.setValue(lifecycleModel.getFixedOperationsCost());
 		fixedOperationsCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -127,9 +133,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Fixed Operations Cost (SAR/year)", fixedOperationsCostText);
+		addInput(c, "Fixed Operations Cost", fixedOperationsCostText, "SAR/year");
 		operationsDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		operationsDurationText.setColumns(10);
+		operationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
 		operationsDurationText.setValue(lifecycleModel.getOperationsDuration());
 		operationsDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -143,11 +150,13 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		c.gridx = 2;
+		
+		c.gridx = 3;
 		c.gridy = 0;
-		addInput(c, "Operations Duration (year)", operationsDurationText);
+		addInput(c, "Operations Duration", operationsDurationText, "years");
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
+		decommissionDurationText.setHorizontalAlignment(JTextField.RIGHT);
 		decommissionDurationText.setValue(lifecycleModel.getDecommissionDuration());
 		decommissionDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -161,9 +170,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Decommission Duration (year)", decommissionDurationText);
+		addInput(c, "Decommission Duration", decommissionDurationText, "years");
 		decommissionCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		decommissionCostText.setColumns(10);
+		decommissionCostText.setHorizontalAlignment(JTextField.RIGHT);
 		decommissionCostText.setValue(lifecycleModel.getDecommissionCost());
 		decommissionCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -177,7 +187,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		addInput(c, "Decommission Cost (SAR)", decommissionCostText);
+		addInput(c, "Decommission Cost", decommissionCostText, "SAR");
 		levelizeCostsCheck = new JCheckBox();
 		levelizeCostsCheck.setSelected(lifecycleModel.isLevelizeCosts());
 		levelizeCostsCheck.addItemListener(new ItemListener() {
@@ -186,7 +196,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 				lifecycleModel.setLevelizeCosts(levelizeCostsCheck.isSelected());
 			}
 		});
-		addInput(c, "Levelize Costs", levelizeCostsCheck);
+		addInput(c, "Levelize Costs", levelizeCostsCheck, "");
 	}
 	
 	/* (non-Javadoc)
@@ -209,9 +219,10 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 	 * @param c the c
 	 * @param labelText the label text
 	 * @param component the component
+	 * @param units the units
 	 */
 	private void addInput(GridBagConstraints c, String labelText, 
-			JComponent component) {
+			JComponent component, String units) {
 		c.weightx = 0;
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
@@ -221,7 +232,12 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		add(component, c);
+		c.gridx++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.NONE;
+		add(new JLabel(units), c);
 		c.gridy++;
-		c.gridx--;
+		c.gridx-=2;
 	}
 }

@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.water.MutableWaterElement;
@@ -54,6 +55,7 @@ public class WaterElementPanel extends ElementPanel {
 		c.gridx = 0;
 		maxWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterProductionText.setColumns(10);
+		maxWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		maxWaterProductionText.setValue(element.getMaxWaterProduction());
 		maxWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -67,11 +69,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Max Water Production (m<sup>3</sup>/year)</html>", 
-				maxWaterProductionText);
+		addInput(elementPanel, c, "Max Water Production", 
+				maxWaterProductionText, "m<sup>3</sup>/year</html>");
 		initialWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialWaterProductionText.setColumns(10);
+		initialWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		initialWaterProductionText.setValue(element.getInitialWaterProduction());
 		initialWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -85,11 +87,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Initial Water Production (m<sup>3</sup>/year)</html>",
-				initialWaterProductionText);
+		addInput(elementPanel, c, "Initial Water Production",
+				initialWaterProductionText, "<html>m<sup>3</sup>/year</html>");
 		reservoirIntensityOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		reservoirIntensityOfWaterProductionText.setColumns(10);
+		reservoirIntensityOfWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		reservoirIntensityOfWaterProductionText.setValue(
 				element.getReservoirIntensityOfWaterProduction());
 		reservoirIntensityOfWaterProductionText.getDocument().addDocumentListener(
@@ -104,11 +106,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Reservoir Intensity of Production (m<sup>3</sup>/m<sup>3</sup>)</html>",
-				reservoirIntensityOfWaterProductionText);
+		addInput(elementPanel, c, "Reservoir Intensity of Production",
+				reservoirIntensityOfWaterProductionText, "<html>m<sup>3</sup>/m<sup>3</sup></html>");
 		electricalIntensityOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		electricalIntensityOfWaterProductionText.setColumns(10);
+		electricalIntensityOfWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		electricalIntensityOfWaterProductionText.setValue(
 				element.getElectricalIntensityOfWaterProduction());
 		electricalIntensityOfWaterProductionText.getDocument().addDocumentListener(
@@ -123,11 +125,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Electrical Intensity of Production (MWh/m<sup>3</sup>)</html>",
-				electricalIntensityOfWaterProductionText);
+		addInput(elementPanel, c, "Electrical Intensity of Production",
+				electricalIntensityOfWaterProductionText, "<html>MWh/m<sup>3</sup></html>");
 		variableOperationsCostOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		variableOperationsCostOfWaterProductionText.setColumns(10);
+		variableOperationsCostOfWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		variableOperationsCostOfWaterProductionText.setValue(
 				element.getVariableOperationsCostOfWaterProduction());
 		variableOperationsCostOfWaterProductionText.getDocument().addDocumentListener(
@@ -142,14 +144,14 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Variable Cost of Production (SAR/m<sup>3</sup>)</html>",
-				variableOperationsCostOfWaterProductionText);
+		addInput(elementPanel, c, "Variable Cost of Production",
+				variableOperationsCostOfWaterProductionText, "<html>SAR/m<sup>3</sup></html>");
 		
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 0;
 		maxWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterInputText.setColumns(10);
+		maxWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
 		maxWaterInputText.setValue(element.getMaxWaterInput());
 		maxWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -163,11 +165,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Max Water Input (m<sup>3</sup>/year)</html>", 
-				maxWaterInputText);
+		addInput(elementPanel, c, "Max Water Input", 
+				maxWaterInputText, "<html>m<sup>3</sup>/year</html>");
 		initialWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialWaterInputText.setColumns(10);
+		initialWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
 		initialWaterInputText.setValue(element.getInitialWaterInput());
 		initialWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -181,11 +183,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Initial Water Input (m<sup>3</sup>/year)</html>",
-				initialWaterInputText);
+		addInput(elementPanel, c, "Initial Water Input",
+				initialWaterInputText, "<html>m<sup>3</sup>/year</html>");
 		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		distributionEfficiencyText.setColumns(10);
+		distributionEfficiencyText.setHorizontalAlignment(JTextField.RIGHT);
 		distributionEfficiencyText.setValue(element.getDistributionEfficiency());
 		distributionEfficiencyText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
@@ -199,11 +201,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Distribution Efficiency (m<sup>3</sup> out/m<sup>3</sup> in)</html>",
-				distributionEfficiencyText);
+		addInput(elementPanel, c, "Distribution Efficiency",
+				distributionEfficiencyText, "<html>m<sup>3</sup> out/m<sup>3</sup> in</html>");
 		electricalIntensityOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		electricalIntensityOfWaterDistributionText.setColumns(10);
+		electricalIntensityOfWaterDistributionText.setHorizontalAlignment(JTextField.RIGHT);
 		electricalIntensityOfWaterDistributionText.setValue(
 				element.getElectricalIntensityOfWaterDistribution());
 		electricalIntensityOfWaterDistributionText.getDocument().addDocumentListener(
@@ -218,11 +220,11 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Electrical Intensity of Distribution (MWh/m<sup>3</sup>)</html>",
-				electricalIntensityOfWaterDistributionText);
+		addInput(elementPanel, c, "Electrical Intensity of Distribution",
+				electricalIntensityOfWaterDistributionText, "<html>MWh/m<sup>3</sup></html>");
 		variableOperationsCostOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		variableOperationsCostOfWaterDistributionText.setColumns(10);
+		variableOperationsCostOfWaterDistributionText.setHorizontalAlignment(JTextField.RIGHT);
 		variableOperationsCostOfWaterDistributionText.setValue(
 				element.getVariableOperationsCostOfWaterDistribution());
 		variableOperationsCostOfWaterDistributionText.getDocument().addDocumentListener(
@@ -237,9 +239,8 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Variable Cost of Distribution (SAR/m<sup>3</sup>)</html>",
-				variableOperationsCostOfWaterDistributionText);
+		addInput(elementPanel, c, "Variable Cost of Distribution",
+				variableOperationsCostOfWaterDistributionText, "<html>SAR/m<sup>3</sup></html>");
 		
 		// set input enabled state
 		maxWaterProductionText.setEnabled(element.getTemplate() == null);

@@ -113,7 +113,7 @@ public class ElementPanel extends JPanel {
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
-		c.gridwidth = 3;
+		c.gridwidth = 5;
 		defaultElementPanel.add(nameText, c);
 		c.gridy++;
 		c.gridx--;
@@ -134,10 +134,10 @@ public class ElementPanel extends JPanel {
 				}
 			}
 		});
-		addInput(defaultElementPanel, c, "Location", originCombo);
+		addInput(defaultElementPanel, c, "Location", originCombo, "");
 		
 		c.gridy--;
-		c.gridx+=2;
+		c.gridx = 3;
 		destinationCombo = new JComboBox(country.getCities().toArray());
 		destinationCombo.setRenderer(cityRenderer);
 		destinationCombo.setSelectedItem(country.getCity(element.getDestination()));
@@ -149,9 +149,11 @@ public class ElementPanel extends JPanel {
 				}
 			}
 		});
-		addInput(defaultElementPanel, c, "Destination", destinationCombo);
-		c.gridx-=2;
+		addInput(defaultElementPanel, c, "Destination", destinationCombo, "");
 		
+		c.gridx = 0;
+		c.gridwidth = 6;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		lifecycleModelContainer = new JPanel();
 		lifecycleModelContainer.setBorder(
 				BorderFactory.createTitledBorder("Lifecycle Model"));
@@ -159,11 +161,10 @@ public class ElementPanel extends JPanel {
 		lifecycleModelPanel = LifecycleModelPanel.
 				createLifecycleModelPanel(element.getLifecycleModel());
 		lifecycleModelContainer.add(lifecycleModelPanel, BorderLayout.CENTER);
-		c.gridwidth = 4;
-		defaultElementPanel.add(lifecycleModelContainer, c);
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 		buttonPanel.add(new JButton(selectLifecycleModel));
 		lifecycleModelContainer.add(buttonPanel, BorderLayout.SOUTH);
+		defaultElementPanel.add(lifecycleModelContainer, c);
 		
 		// set input enabled state
 		destinationCombo.setEnabled(element.getTemplate() == null 
@@ -213,7 +214,7 @@ public class ElementPanel extends JPanel {
 	 * @param component the component
 	 */
 	protected void addInput(JPanel panel, GridBagConstraints c, String labelText, 
-			JComponent component) {
+			JComponent component, String units) {
 		c.weightx = 0;
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
@@ -223,8 +224,13 @@ public class ElementPanel extends JPanel {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		panel.add(component, c);
+		c.gridx++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.NONE;
+		panel.add(new JLabel(units), c);
 		c.gridy++;
-		c.gridx--;
+		c.gridx-=2;
 	}
 	
 	/**

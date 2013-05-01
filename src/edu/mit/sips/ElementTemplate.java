@@ -57,43 +57,43 @@ public enum ElementTemplate {
 		case SMALL_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							62.5e3, 6.25e3, 12.5e3, true), 
 					250, 0, AgricultureProduct.LIVESTOCK);
 		case LARGE_LIVESTOCK:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							220.0e3, 22.0e3, 44.0e3, true), 
 					1000, 0, AgricultureProduct.LIVESTOCK);
 		case SMALL_DATES:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							12.5e6, 1.25e6, 2.5e6, true), 
 					250, 0, AgricultureProduct.DATES);
 		case LARGE_DATES:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							49.0e6, 4.9e6, 9.8e6, true), 
 					1000, 0, AgricultureProduct.DATES);
 		case SMALL_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							50e6, 5e6, 10e6, true), 
 					500, 0, AgricultureProduct.GRAINS);
 		case LARGE_GRAINS:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1, 100, 1, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 200, 1, 
 							237.5e6, 2.375e6, 47.5e6, true), 
 					2500, 0, AgricultureProduct.GRAINS);
 		case DEFAULT_FOOD_TRANSPORT:
 			return DefaultAgricultureElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 5, 100, 2, 
+					new SimpleLifecycleModel(timeAvailable, year, 5, 200, 2, 
 							100e6, 10e6, 20e6, true), 
 					0.95, 1e9, 0, 25);
 		default:

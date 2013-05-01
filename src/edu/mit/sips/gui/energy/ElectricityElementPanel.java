@@ -8,6 +8,7 @@ import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.energy.MutableElectricityElement;
@@ -53,6 +54,7 @@ public class ElectricityElementPanel extends ElementPanel {
 		c.gridx = 0;
 		maxElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityProductionText.setColumns(10);
+		maxElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		maxElectricityProductionText.setValue(
 				element.getMaxElectricityProduction());
 		maxElectricityProductionText.getDocument().addDocumentListener(
@@ -67,11 +69,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Max Electricity Production (MWh/year)", 
-				maxElectricityProductionText);
+		addInput(elementPanel, c, "Max Electricity Production", 
+				maxElectricityProductionText, "MWh/year");
 		initialElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialElectricityProductionText.setColumns(10);
+		initialElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		initialElectricityProductionText.setValue(
 				element.getInitialElectricityProduction());
 		initialElectricityProductionText.getDocument().addDocumentListener(
@@ -86,11 +88,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Initial Electricity Production (MWh/year)",
-				initialElectricityProductionText);
+		addInput(elementPanel, c, "Initial Electricity Production",
+				initialElectricityProductionText, "MWh/year");
 		petroleumIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		petroleumIntensityOfElectricityProductionText.setColumns(10);
+		petroleumIntensityOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		petroleumIntensityOfElectricityProductionText.setValue(
 				element.getPetroleumIntensityOfElectricityProduction());
 		petroleumIntensityOfElectricityProductionText.getDocument().addDocumentListener(
@@ -105,11 +107,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Petroleum Intensity of Production (bbl/MWh)",
-				petroleumIntensityOfElectricityProductionText);
+		addInput(elementPanel, c, "Petroleum Intensity of Production",
+				petroleumIntensityOfElectricityProductionText, "bbl/MWh");
 		waterIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		waterIntensityOfElectricityProductionText.setColumns(10);
+		waterIntensityOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		waterIntensityOfElectricityProductionText.setValue(
 				element.getPetroleumIntensityOfElectricityProduction());
 		waterIntensityOfElectricityProductionText.getDocument().addDocumentListener(
@@ -124,11 +126,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"<html>Water Intensity of Production (m<sup>3</sup>/MWh)</html>",
-				waterIntensityOfElectricityProductionText);
+		addInput(elementPanel, c, "Water Intensity of Production",
+				waterIntensityOfElectricityProductionText, "<html>m<sup>3</sup>/MWh</html>");
 		variableOperationsCostOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfElectricityProductionText.setColumns(10);
+		variableOperationsCostOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
 		variableOperationsCostOfElectricityProductionText.setValue(
 				element.getVariableOperationsCostOfElectricityProduction());
 		variableOperationsCostOfElectricityProductionText.getDocument().addDocumentListener(
@@ -143,14 +145,14 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Variable Cost of Production (SAR/MWh)",
-				variableOperationsCostOfElectricityProductionText);
+		addInput(elementPanel, c, "Variable Cost of Production",
+				variableOperationsCostOfElectricityProductionText, "SAR/MWh");
 		
-		c.gridx = 2;
+		c.gridx = 3;
 		c.gridy = 0;
 		maxElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityInputText.setColumns(10);
+		maxElectricityInputText.setHorizontalAlignment(JTextField.RIGHT);
 		maxElectricityInputText.setValue(
 				element.getMaxElectricityInput());
 		maxElectricityInputText.getDocument().addDocumentListener(
@@ -165,11 +167,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Max Electricity Input (MWh/year)", 
-				maxElectricityInputText);
+		addInput(elementPanel, c, "Max Electricity Input", 
+				maxElectricityInputText, "MWh/year");
 		initialElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialElectricityInputText.setColumns(10);
+		initialElectricityInputText.setHorizontalAlignment(JTextField.RIGHT);
 		initialElectricityInputText.setValue(
 				element.getInitialElectricityInput());
 		initialElectricityInputText.getDocument().addDocumentListener(
@@ -184,11 +186,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Initial Electricity Input (MWh/year)",
-				initialElectricityInputText);
+		addInput(elementPanel, c, "Initial Electricity Input",
+				initialElectricityInputText, "MWh/year");
 		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		distributionEfficiencyText.setColumns(10);
+		distributionEfficiencyText.setHorizontalAlignment(JTextField.RIGHT);
 		distributionEfficiencyText.setValue(
 				element.getDistributionEfficiency());
 		distributionEfficiencyText.getDocument().addDocumentListener(
@@ -203,11 +205,11 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Distribution Efficiency (MWh out/MWh in)",
-				distributionEfficiencyText);
+		addInput(elementPanel, c, "Distribution Efficiency",
+				distributionEfficiencyText, "MWh out/MWh in");
 		variableOperationsCostOfElectricityDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfElectricityDistributionText.setColumns(10);
+		variableOperationsCostOfElectricityDistributionText.setHorizontalAlignment(JTextField.RIGHT);
 		variableOperationsCostOfElectricityDistributionText.setValue(
 				element.getVariableOperationsCostOfElectricityDistribution());
 		variableOperationsCostOfElectricityDistributionText.getDocument().addDocumentListener(
@@ -222,9 +224,8 @@ public class ElectricityElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, 
-				"Variable Cost of Distribution (SAR/MWh)",
-				variableOperationsCostOfElectricityDistributionText);
+		addInput(elementPanel, c, "Variable Cost of Distribution",
+				variableOperationsCostOfElectricityDistributionText, " SAR/MWh");
 
 		// set input enabled state
 		maxElectricityProductionText.setEnabled(element.getTemplate() == null);
