@@ -215,8 +215,6 @@ public class ElectricityElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Variable Cost of Distribution (SAR/MWh)",
 				variableOperationsCostOfElectricityDistributionText);
-		
-		setTemplateMode(element.getTemplate() != null);
 	}
 	
 }

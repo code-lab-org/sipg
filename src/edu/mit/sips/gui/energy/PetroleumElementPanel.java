@@ -215,8 +215,6 @@ public class PetroleumElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"Variable Cost of Distribution (SAR/bbl)",
 				variableOperationsCostOfPetroleumDistributionText);
-		
-		setTemplateMode(element.getTemplate() != null);
 	}
 	
 }

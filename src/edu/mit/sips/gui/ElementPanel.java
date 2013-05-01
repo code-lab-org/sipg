@@ -128,9 +128,13 @@ public class ElementPanel extends JPanel {
 				if(originCombo.getSelectedItem() instanceof City) {
 					element.setOrigin(((City)originCombo.getSelectedItem()).getName());
 				}
+				if(element.getTemplate() != null 
+						&& !element.getTemplate().isTransport()) {
+					destinationCombo.setSelectedItem(originCombo.getSelectedItem());
+				}
 			}
 		});
-		addInput(defaultElementPanel, c, "Origin", originCombo);
+		addInput(defaultElementPanel, c, "Location", originCombo);
 		
 		c.gridy--;
 		c.gridx+=2;
@@ -160,16 +164,12 @@ public class ElementPanel extends JPanel {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
 		buttonPanel.add(new JButton(selectLifecycleModel));
 		lifecycleModelContainer.add(buttonPanel, BorderLayout.SOUTH);
-	}
-	
-	/**
-	 * Sets the template mode.
-	 *
-	 * @param template the new template mode
-	 */
-	public void setTemplateMode(boolean template) {
-		selectLifecycleModel.setEnabled(!template);
-		lifecycleModelPanel.setTemplateMode(template);
+		
+		// set input enabled state
+		destinationCombo.setEnabled(element.getTemplate() == null 
+				|| element.getTemplate().isTransport());
+		selectLifecycleModel.setEnabled(element.getTemplate()  == null);
+		lifecycleModelPanel.setTemplateMode(element.getTemplate());
 	}
 	
 	private final Action selectLifecycleModel = 
@@ -215,11 +215,11 @@ public class ElementPanel extends JPanel {
 	protected void addInput(JPanel panel, GridBagConstraints c, String labelText, 
 			JComponent component) {
 		c.weightx = 0;
-		c.anchor = GridBagConstraints.FIRST_LINE_END;
+		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		panel.add(new JLabel(labelText), c);
 		c.gridx++;
-		c.anchor = GridBagConstraints.FIRST_LINE_START;
+		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
 		panel.add(component, c);

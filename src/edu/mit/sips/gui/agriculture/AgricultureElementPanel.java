@@ -206,22 +206,17 @@ public class AgricultureElementPanel extends ElementPanel {
 					"Operations Cost of Distribution (SAR/GJ)", 
 					variableOperationsCostOfFoodDistribution);
 		}
-		
-		setTemplateMode(element.getTemplate() != null);
-	}
-	
-	public void setTemplateMode(boolean template) {
-		super.setTemplateMode(template);
-		maxLandAreaText.setEnabled(!template);
-		initialLandAreaText.setEnabled(!template);
-		maxFoodInput.setEnabled(!template);
-		initialFoodInput.setEnabled(!template);
-		productCombo.setEnabled(!template);
-		productOutput.setEnabled(!template);
-		productVariableCost.setEnabled(!template);
-		productWaterUse.setEnabled(!template);
-		productLaborUse.setEnabled(!template);
-		distributionEfficiency.setEnabled(!template);
-		variableOperationsCostOfFoodDistribution.setEnabled(!template);
+
+		// set input enabled state
+		maxLandAreaText.setEnabled(element.getTemplate() == null);
+		maxFoodInput.setEnabled(element.getTemplate() == null);
+		initialFoodInput.setEnabled(element.getTemplate() == null);
+		productCombo.setEnabled(element.getTemplate() == null);
+		productOutput.setEnabled(element.getTemplate() == null);
+		productVariableCost.setEnabled(element.getTemplate() == null);
+		productWaterUse.setEnabled(element.getTemplate() == null);
+		productLaborUse.setEnabled(element.getTemplate() == null);
+		distributionEfficiency.setEnabled(element.getTemplate() == null);
+		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplate() == null);
 	}
 }

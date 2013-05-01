@@ -71,6 +71,8 @@ public class ElementsPane extends JPanel {
 		public Component getListCellRendererComponent(JList list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, 
+					isSelected, cellHasFocus);
 			if(value instanceof ElementTemplate) {
 				setText(((ElementTemplate)value).getName());
 				switch(((ElementTemplate)value).getSector()) {
@@ -88,32 +90,31 @@ public class ElementsPane extends JPanel {
 			return this;
 		}
 	};
-	private final ListCellRenderer elementCellRenderer = 
-			new DefaultListCellRenderer() {
-				private static final long serialVersionUID = -923629724878442949L;
-		
-				@Override
-				public Component getListCellRendererComponent(JList list,
-						Object value, int index, boolean isSelected,
-						boolean cellHasFocus) {
-					super.getListCellRendererComponent(list, value, index, 
-							isSelected, cellHasFocus);
-					if(value instanceof InfrastructureElement) {
-						setText(((InfrastructureElement)value).getName());
-						if(value instanceof AgricultureElement) {
-							setIcon(Icons.AGRICULTURE);
-						} else if(value instanceof WaterElement) {
-							setIcon(Icons.WATER);
-						} else if(value instanceof ElectricityElement) {
-							setIcon(Icons.ELECTRICITY);
-						} else if(value instanceof PetroleumElement) {
-							setIcon(Icons.PETROLEUM);
-						}
-					}
-					return this;
+	private final ListCellRenderer elementCellRenderer = new DefaultListCellRenderer() {
+		private static final long serialVersionUID = -923629724878442949L;
+
+		@Override
+		public Component getListCellRendererComponent(JList list,
+				Object value, int index, boolean isSelected,
+				boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, 
+					isSelected, cellHasFocus);
+			if(value instanceof InfrastructureElement) {
+				setText(((InfrastructureElement)value).getName());
+				if(value instanceof AgricultureElement) {
+					setIcon(Icons.AGRICULTURE);
+				} else if(value instanceof WaterElement) {
+					setIcon(Icons.WATER);
+				} else if(value instanceof ElectricityElement) {
+					setIcon(Icons.ELECTRICITY);
+				} else if(value instanceof PetroleumElement) {
+					setIcon(Icons.PETROLEUM);
 				}
-			};
-			
+			}
+			return this;
+		}
+	};
+
 	private final Action addElementTemplate = new AbstractAction("Add*", 
 			Icons.ADD) {
 		private static final long serialVersionUID = -6723630338741885195L;

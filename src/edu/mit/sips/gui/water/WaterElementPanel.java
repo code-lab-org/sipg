@@ -234,8 +234,6 @@ public class WaterElementPanel extends ElementPanel {
 		addInput(elementPanel, c, 
 				"<html>Variable Cost of Distribution (SAR/m<sup>3</sup>)</html>",
 				variableOperationsCostOfWaterDistributionText);
-		
-		setTemplateMode(element.getTemplate() != null);
 	}
 	
 }
