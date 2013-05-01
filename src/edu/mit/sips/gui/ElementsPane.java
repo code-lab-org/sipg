@@ -8,30 +8,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.TreeCellRenderer;
+import javax.swing.tree.TreeSelectionModel;
 
 import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
+import edu.mit.sips.core.Region;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
@@ -45,6 +46,9 @@ import edu.mit.sips.core.energy.PetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.comp.ElementTreeNode;
+import edu.mit.sips.gui.comp.NetworkTreeModel;
+import edu.mit.sips.gui.comp.SocietyTreeNode;
 import edu.mit.sips.io.Icons;
 
 /**
@@ -53,17 +57,10 @@ import edu.mit.sips.io.Icons;
 public class ElementsPane extends JPanel {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
-	private DefaultListModel elementsListModel;
-	private JList elementsList;
-	private final City city;
-	private final Comparator<InfrastructureElement> elementsComparator = 
-			new Comparator<InfrastructureElement>() {
-		@Override
-		public int compare(InfrastructureElement o1,
-				InfrastructureElement o2) {
-			return o1.getName().compareTo(o2.getName());
-		}
-	};
+	private NetworkTreeModel elementsTreeModel;
+	private JTree elementsTree;
+	private final Country country;
+
 	private final ListCellRenderer templateRenderer = new DefaultListCellRenderer() {
 		private static final long serialVersionUID = 3761951866857845749L;
 
@@ -90,24 +87,34 @@ public class ElementsPane extends JPanel {
 			return this;
 		}
 	};
-	private final ListCellRenderer elementCellRenderer = new DefaultListCellRenderer() {
+	private final TreeCellRenderer elementCellRenderer = new DefaultTreeCellRenderer() {
 		private static final long serialVersionUID = -923629724878442949L;
 
 		@Override
-		public Component getListCellRendererComponent(JList list,
-				Object value, int index, boolean isSelected,
-				boolean cellHasFocus) {
-			super.getListCellRendererComponent(list, value, index, 
-					isSelected, cellHasFocus);
-			if(value instanceof InfrastructureElement) {
-				setText(((InfrastructureElement)value).getName());
-				if(value instanceof AgricultureElement) {
+		public Component getTreeCellRendererComponent(JTree tree,
+				Object value, boolean sel, boolean expanded, boolean leaf,
+				int row, boolean hasFocus) {
+			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+			if(value instanceof SocietyTreeNode) {
+				SocietyTreeNode node = (SocietyTreeNode) value;
+				setText(node.getUserObject().getName());
+				if(node.getUserObject() instanceof Country) {
+					setIcon(Icons.COUNTRY);
+				} else if(node.getUserObject() instanceof Region) {
+					setIcon(Icons.REGION);
+				} else if(node.getUserObject() instanceof City) {
+					setIcon(Icons.CITY);
+				}
+			} else if(value instanceof ElementTreeNode) {
+				ElementTreeNode node = (ElementTreeNode) value;
+				setText(node.getUserObject().getName());
+				if(node.getUserObject() instanceof AgricultureElement) {
 					setIcon(Icons.AGRICULTURE);
-				} else if(value instanceof WaterElement) {
+				} else if(node.getUserObject() instanceof WaterElement) {
 					setIcon(Icons.WATER);
-				} else if(value instanceof ElectricityElement) {
+				} else if(node.getUserObject() instanceof ElectricityElement) {
 					setIcon(Icons.ELECTRICITY);
-				} else if(value instanceof PetroleumElement) {
+				} else if(node.getUserObject() instanceof PetroleumElement) {
 					setIcon(Icons.PETROLEUM);
 				}
 			}
@@ -141,11 +148,12 @@ public class ElementsPane extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Object selection = elementsList.getSelectedValue();
-			if(selection instanceof InfrastructureElement) {
+			InfrastructureElement selection = elementsTreeModel.getElement(
+					elementsTree.getSelectionPath());
+			if(selection != null) {
 				openElementDialog((InfrastructureElement)selection);
+				elementsTree.setSelectionPath(elementsTreeModel.getPath(selection));
 			}
-			elementsList.setSelectedValue(selection, true);
 		}
 	};
 	
@@ -164,44 +172,54 @@ public class ElementsPane extends JPanel {
 	 *
 	 * @param country the country
 	 */
-	public ElementsPane(City city) {
-		this.city = city;
+	public ElementsPane(Country country) {
+		this.country = country;
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(150,100));
-		elementsListModel = new DefaultListModel();
-		elementsList = new JList(elementsListModel);
-		elementsList.setCellRenderer(elementCellRenderer);
+		elementsTreeModel = new NetworkTreeModel();
+		elementsTree = new JTree(elementsTreeModel);
+		elementsTree.setRootVisible(false);
+		elementsTree.setShowsRootHandles(true);
+		elementsTree.getSelectionModel().setSelectionMode(
+				TreeSelectionModel.SINGLE_TREE_SELECTION);
+		elementsTree.setCellRenderer(elementCellRenderer);
 		
-		elementsList.getInputMap().put(KeyStroke.getKeyStroke(
+		elementsTree.getInputMap().put(KeyStroke.getKeyStroke(
 				KeyEvent.VK_DELETE, 0), "removeElement");
-		elementsList.getInputMap().put(KeyStroke.getKeyStroke(
+		elementsTree.getInputMap().put(KeyStroke.getKeyStroke(
 				KeyEvent.VK_BACK_SPACE, 0), "removeElement");
-		elementsList.getActionMap().put("removeElement", removeElement);
-		elementsList.getInputMap().put(KeyStroke.getKeyStroke(
+		elementsTree.getActionMap().put("removeElement", removeElement);
+		elementsTree.getInputMap().put(KeyStroke.getKeyStroke(
 				KeyEvent.VK_ENTER, 0), "editElement");
-		elementsList.getActionMap().put("editElement", editElement);
+		elementsTree.getActionMap().put("editElement", editElement);
 		
-		elementsList.addMouseListener(new MouseAdapter() {
+		elementsTree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 
 						&& e.getClickCount() == 2) {
 					editElement.actionPerformed(
-							new ActionEvent(elementsList, 
+							new ActionEvent(elementsTree, 
 									(int) System.currentTimeMillis(), 
 									"addElement"));
 				}
 			}
 		});
-		elementsList.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
+		elementsTree.getSelectionModel().addTreeSelectionListener(
+				new TreeSelectionListener() {
 					@Override
-					public void valueChanged(ListSelectionEvent e) {
-						editElement.setEnabled(elementsList.getSelectedIndex() >= 0);
-						removeElement.setEnabled(elementsList.getSelectedIndex() >= 0);
+					public void valueChanged(TreeSelectionEvent e) {
+						boolean isCitySelected = elementsTreeModel.getSociety(
+								elementsTree.getSelectionPath()) instanceof City;
+						addElement.setEnabled(isCitySelected);
+						addElementTemplate.setEnabled(isCitySelected);
+						boolean isElementSelected = elementsTreeModel.getElement(
+								elementsTree.getSelectionPath()) != null;
+						editElement.setEnabled(isElementSelected);
+						removeElement.setEnabled(isElementSelected);
 					}
 		});
-		add(new JScrollPane(elementsList), BorderLayout.CENTER);
+		add(new JScrollPane(elementsTree), BorderLayout.CENTER);
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -222,7 +240,8 @@ public class ElementsPane extends JPanel {
 				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
 			ElementTemplate template = (ElementTemplate)templateCombo.getSelectedItem();
 			MutableInfrastructureElement element = template.createElement(
-					template.getTimeAvailable(), city.getName()).getMutableElement();
+					template.getTimeAvailable(), ((City)elementsTreeModel.getSociety(
+							elementsTree.getSelectionPath())).getName()).getMutableElement();
 			openElementDialog(element.createElement());
 		}
 	}
@@ -245,8 +264,10 @@ public class ElementsPane extends JPanel {
 				throw new IllegalStateException(
 						"Selection was not a known element type.");
 			}
-			element.setOrigin(city.getName());
-			element.setDestination(city.getName());
+			element.setOrigin(((City)elementsTreeModel.getSociety(
+					elementsTree.getSelectionPath())).getName());
+			element.setDestination(((City)elementsTreeModel.getSociety(
+					elementsTree.getSelectionPath())).getName());
 			openElementDialog(element.createElement());
 		}
 	}
@@ -255,15 +276,9 @@ public class ElementsPane extends JPanel {
 	 * Initialize.
 	 */
 	public void initialize() {
-		elementsListModel.clear();
-		List<InfrastructureElement> elements = 
-				new ArrayList<InfrastructureElement>(city.getInternalElements());
-		Collections.sort(elements, elementsComparator);
-		
-		for(InfrastructureElement element : elements) {
-			elementsListModel.addElement(element);
-		}
-		
+		elementsTreeModel.setState(country);
+		addElement.setEnabled(false);
+		addElementTemplate.setEnabled(false);
 		editElement.setEnabled(false);
 		removeElement.setEnabled(false);
 	}
@@ -276,7 +291,7 @@ public class ElementsPane extends JPanel {
 	 */
 	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementPanel.createElementPanel(city, mutableElement), 
+				ElementPanel.createElementPanel(country, mutableElement), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
@@ -299,6 +314,7 @@ public class ElementsPane extends JPanel {
 	private void openElementDialog(InfrastructureElement element) {
 		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
 		if(newElement != null) {
+			City city = ((City)elementsTreeModel.getSociety(elementsTree.getSelectionPath()));
 			if(element instanceof AgricultureElement 
 					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 				AgricultureSystem.Local agricultureSystem = 
@@ -321,20 +337,19 @@ public class ElementsPane extends JPanel {
 				throw new IllegalStateException(
 						"Element was not a known element type.");
 			}
-			elementsListModel.removeElement(element);
-			List<InfrastructureElement> elements = 
-					new ArrayList<InfrastructureElement>(city.getInternalElements());
-			Collections.sort(elements, elementsComparator);
-			if(elements.contains(newElement)) {
-				elementsListModel.add(elements.indexOf(newElement), newElement);
-				elementsList.setSelectedValue(newElement, true);
+			elementsTreeModel.elementRemoved(element);
+			if(country.getInternalElements().contains(newElement)) {
+				elementsTreeModel.elementAdded(newElement);
+				elementsTree.setSelectionPath(elementsTreeModel.getPath(newElement));
 			}
 		}
 	}
 	
 	private void removeElementDialog() {
-		Object selection = elementsList.getSelectedValue();
-		int selectionIndex = elementsList.getSelectedIndex();
+		InfrastructureElement selection = elementsTreeModel.getElement(
+				elementsTree.getSelectionPath());
+		int selectionIndex = elementsTree.getSelectionRows()[0];
+		City city = ((City)elementsTreeModel.getSociety(elementsTree.getSelectionPath()));
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, 
 				"Remove " + selection + "?", "Remove Element", 
 				JOptionPane.OK_CANCEL_OPTION)) {
@@ -354,9 +369,9 @@ public class ElementsPane extends JPanel {
 				throw new IllegalStateException(
 						"Selection was not a known element type.");
 			}
-			elementsListModel.removeElement(selection);
-			elementsList.setSelectedIndex(Math.min(selectionIndex, 
-					elementsListModel.getSize() - 1));
+			elementsTreeModel.elementRemoved(selection);
+			elementsTree.setSelectionRow(Math.min(selectionIndex, 
+					elementsTree.getRowCount() - 1));
 		}
 	}
 }

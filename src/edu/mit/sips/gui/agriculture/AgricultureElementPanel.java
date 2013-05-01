@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.City;
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
@@ -35,12 +35,12 @@ public class AgricultureElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new agriculture element panel.
 	 *
-	 * @param city the city
+	 * @param country the country
 	 * @param element the element
 	 */
-	public AgricultureElementPanel(City city, 
+	public AgricultureElementPanel(Country country, 
 			final MutableAgricultureElement element) {
-		super(city, element);
+		super(country, element);
 		
 		maxLandAreaText = new JTextField(10);
 		maxLandAreaText.setText(

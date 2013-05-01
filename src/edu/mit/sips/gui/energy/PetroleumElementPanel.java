@@ -8,7 +8,7 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.City;
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.energy.MutablePetroleumElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
@@ -33,12 +33,12 @@ public class PetroleumElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new petroleum element panel.
 	 *
-	 * @param city the city
+	 * @param country the country
 	 * @param element the element
 	 */
-	public PetroleumElementPanel(City city, 
+	public PetroleumElementPanel(Country country, 
 			final MutablePetroleumElement element) {
-		super(city, element);
+		super(country, element);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());

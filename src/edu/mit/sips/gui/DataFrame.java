@@ -26,14 +26,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import edu.mit.sips.core.City;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.sim.Simulator;
@@ -72,7 +68,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private Simulator simulator;
 	private JSplitPane nationalPane;
 	private SimulationControlPane simulationPane;
-	private JTabbedPane elementsListPane;
+	private ElementsPane elementsPane;
 	private SocietyPane societyPane;
 	
 	private final Action newScenario = new AbstractAction("New") {
@@ -293,7 +289,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 				contentPane.removeAll();
 			}
 			societyPane = null;
-			elementsListPane = null;
+			elementsPane = null;
 			nationalPane = null;
 			simulationPane = null;
 			validate();
@@ -310,20 +306,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 			societyPane = new SocietyPane(this.simulator.getCountry());
 			societyPane.initialize();
 			this.simulator.addUpdateListener(societyPane);
-			elementsListPane = new JTabbedPane();
-			for(City city : this.simulator.getCountry().getCities()) {
-				ElementsPane elementsPane = new ElementsPane(city);
-				elementsPane.initialize();
-				elementsListPane.addTab(city.getName(), elementsPane);
-			}
-			elementsListPane.addChangeListener(new ChangeListener() {
-				@Override
-				public void stateChanged(ChangeEvent e) {
-					if(elementsListPane.getSelectedComponent() instanceof ElementsPane) {
-						((ElementsPane)elementsListPane.getSelectedComponent()).initialize();
-					}
-				}
-			});
+			elementsPane = new ElementsPane(simulator.getCountry());
+			elementsPane.initialize();
 			this.simulationPane = new SimulationControlPane(this.simulator);
 			this.simulator.getConnection().addConnectionListener(simulationPane);
 			this.simulator.addUpdateListener(simulationPane);
@@ -331,7 +315,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			JPanel leftPanel = new JPanel();
 			leftPanel.setLayout(new BorderLayout());
 			leftPanel.add(simulationPane, BorderLayout.NORTH);
-			leftPanel.add(elementsListPane, BorderLayout.CENTER);
+			leftPanel.add(elementsPane, BorderLayout.CENTER);
 			nationalPane.setLeftComponent(leftPanel);
 			nationalPane.setRightComponent(societyPane);
 			nationalPane.setResizeWeight(0);

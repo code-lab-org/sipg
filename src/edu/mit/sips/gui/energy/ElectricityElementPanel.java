@@ -8,7 +8,7 @@ import java.awt.Insets;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.City;
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.energy.MutableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
@@ -33,12 +33,12 @@ public class ElectricityElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new electricity element panel.
 	 *
-	 * @param city the city
+	 * @param country the country
 	 * @param element the element
 	 */
-	public ElectricityElementPanel(City city, 
+	public ElectricityElementPanel(Country country, 
 			final MutableElectricityElement element) {
-		super(city, element);
+		super(country, element);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());
