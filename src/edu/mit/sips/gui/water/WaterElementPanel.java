@@ -70,7 +70,7 @@ public class WaterElementPanel extends ElementPanel {
 					}
 				});
 		addInput(elementPanel, c, "Max Water Production", 
-				maxWaterProductionText, "m<sup>3</sup>/year</html>");
+				maxWaterProductionText, "<html>m<sup>3</sup>/year</html>");
 		initialWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialWaterProductionText.setColumns(10);
 		initialWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);

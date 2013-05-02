@@ -129,6 +129,8 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double variableOperationsCostOfWaterDistribution) {
 		super(template, name, origin, destination, lifecycleModel);
 		
+		// TODO validate origin for coastal desalination
+		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfWaterProduction < 0) {
 			throw new IllegalArgumentException(

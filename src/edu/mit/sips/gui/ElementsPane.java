@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -234,20 +235,26 @@ public class ElementsPane extends JPanel {
 	 * Adds the element template dialog.
 	 */
 	private void addElementTemplateDialog() {
-		JComboBox templateCombo = new JComboBox(ElementTemplate.values());
-		templateCombo.setRenderer(templateRenderer);
-		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, templateCombo, 
+		JList templateList = new JList(ElementTemplate.values());
+		templateList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		templateList.setCellRenderer(templateRenderer);
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, new JScrollPane(templateList), 
 				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
-			ElementTemplate template = (ElementTemplate)templateCombo.getSelectedItem();
-			City selectedCity = (City)elementsTreeModel.getSociety(
-					elementsTree.getSelectionPath());
-			MutableInfrastructureElement element = template.createElement(
-					template.getTimeAvailable(), selectedCity.getName(), 
-					selectedCity.getName()).getMutableElement();
-			openElementDialog(element.createElement());
+			if(templateList.getSelectedValue() instanceof ElementTemplate) {
+				ElementTemplate template = (ElementTemplate)templateList.getSelectedValue();
+				City selectedCity = (City)elementsTreeModel.getSociety(
+						elementsTree.getSelectionPath());
+				MutableInfrastructureElement element = template.createElement(
+						template.getTimeAvailable(), selectedCity.getName(), 
+						selectedCity.getName()).getMutableElement();
+				openElementDialog(element.createElement());
+			}
 		}
 	}
 	
+	/**
+	 * Adds the element dialog.
+	 */
 	private void addElementDialog() {
 		JComboBox elementTypeCombo = new JComboBox(new String[]{
 				"Agriculture", "Water", "Petroleum", "Electricity"});
