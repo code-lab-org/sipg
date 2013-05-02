@@ -1,5 +1,7 @@
 package edu.mit.sips.sim;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIinternalError;
 
@@ -31,16 +33,17 @@ public class Simulator implements SimulationControlListener {
 	private double deltaAgricultureCost = 0, deltaWaterCost = 0, 
 			deltaPetroleumCost = 0, deltaElectricityCost = 0;
 
-	private boolean initialized = false;
+	private final AtomicBoolean initialized = new AtomicBoolean(false);
+	private final AtomicBoolean completed = new AtomicBoolean(false);
 	private long startTime, endTime;
-	
 	private long time;
 
 	private final FederationConnection connection = new FederationConnection();
+
 	private transient SimAmbassador simAmbassador;
 
 	private transient EventListenerList listenerList = new EventListenerList(); // mutable
-	
+
 	/**
 	 * Instantiates a new simulator.
 	 */
@@ -48,10 +51,10 @@ public class Simulator implements SimulationControlListener {
 		country = null;
 		listenerList = new EventListenerList();
 	}
-	
 	/**
 	 * Instantiates a new simulator.
 	 *
+	 * @param federateName the federate name
 	 * @param country the country
 	 */
 	public Simulator(String federateName, Country country) {
@@ -73,7 +76,7 @@ public class Simulator implements SimulationControlListener {
 					ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	/**
 	 * Adds the update listener.
 	 *
@@ -92,7 +95,7 @@ public class Simulator implements SimulationControlListener {
 		if(time + duration > endTime) {
 			throw new IllegalArgumentException("Duration cannot exceed end time.");
 		}
-		if(!initialized) {
+		if(!initialized.get()) {
 			throw new IllegalStateException("Simulation must be initialized.");
 		}
 		
@@ -117,6 +120,7 @@ public class Simulator implements SimulationControlListener {
 		}
 		
 		if(time >= endTime) {
+			completed.set(true);
 			fireCompleteEvent(time);
 			try {
 				// TODO simAmbassador.disconnect();
@@ -154,7 +158,7 @@ public class Simulator implements SimulationControlListener {
 	/**
 	 * Fire complete event.
 	 *
-	 * @param event the event
+	 * @param time the time
 	 */
 	public void fireCompleteEvent(long time) {
 		System.out.println("Firing complete event with time " + time);
@@ -167,7 +171,6 @@ public class Simulator implements SimulationControlListener {
 	/**
 	 * Fire initialize event.
 	 *
-	 * @param event the event
 	 */
 	private void fireInitializeEvent() {
 		for(UpdateListener listener 
@@ -179,7 +182,7 @@ public class Simulator implements SimulationControlListener {
 	/**
 	 * Fire update event.
 	 *
-	 * @param event the event
+	 * @param time the time
 	 */
 	public void fireUpdateEvent(long time) {
 		System.out.println("Firing update event with time " + time);
@@ -214,6 +217,33 @@ public class Simulator implements SimulationControlListener {
 	 */
 	public Country getCountry() {
 		return country;
+	}
+	
+	/**
+	 * Gets the end time.
+	 *
+	 * @return the end time
+	 */
+	public long getEndTime() {
+		return endTime;
+	}
+	
+	/**
+	 * Gets the start time.
+	 *
+	 * @return the start time
+	 */
+	public long getStartTime() {
+		return startTime;
+	}
+	
+	/**
+	 * Gets the time.
+	 *
+	 * @return the time
+	 */
+	public long getTime() {
+		return time;
 	}
 	
 	/**
@@ -272,7 +302,8 @@ public class Simulator implements SimulationControlListener {
 		
 		fireInitializeEvent();
 
-		initialized = true;
+		initialized.set(true);
+		completed.set(false);
 	}
 	
 	/* (non-Javadoc)
@@ -302,6 +333,24 @@ public class Simulator implements SimulationControlListener {
 	}
 
 	/**
+	 * Checks if is completed.
+	 *
+	 * @return true, if is completed
+	 */
+	public boolean isCompleted() {
+		return completed.get();
+	}
+
+	/**
+	 * Checks if is initialized.
+	 *
+	 * @return true, if is initialized
+	 */
+	public boolean isInitialized() {
+		return initialized.get();
+	}
+	
+	/**
 	 * Removes the update listener.
 	 *
 	 * @param listener the listener
@@ -317,7 +366,7 @@ public class Simulator implements SimulationControlListener {
 	public synchronized void resetSimulation(Reset event) {
 		initialize(startTime, endTime);
 	}
-	
+
 	/**
 	 * Run auto optimization.
 	 */
@@ -363,7 +412,7 @@ public class Simulator implements SimulationControlListener {
 		runAutoOptimization();
 		fireUpdateEvent(time);
 	}
-
+	
 	/**
 	 * Sets the auto optimize distribution.
 	 *
@@ -372,7 +421,7 @@ public class Simulator implements SimulationControlListener {
 	public void setAutoOptimizeDistribution(boolean autoOptimizeDistribution) {
 		this.autoOptimizeDistribution = autoOptimizeDistribution;
 	}
-
+	
 	/**
 	 * Sets the auto optimize production and distribution.
 	 *

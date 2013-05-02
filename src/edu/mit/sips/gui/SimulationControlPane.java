@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -13,6 +14,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.SwingWorker;
 
 import edu.mit.sips.gui.event.ConnectionEvent;
@@ -27,6 +29,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	private static final long serialVersionUID = -7014074954503228524L;
 
 	private final Simulator simulator;
+	private final JSlider timeSlider;
+	private final AtomicBoolean working = new AtomicBoolean(false);
 
 	private final Action toggleConnection = 
 			new AbstractAction(null, Icons.DISCONNECTED) {
@@ -34,27 +38,33 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(simulator.getConnection().isConnected()) {
-				try {
-					setEnabled(false);
-					simulator.getAmbassador().disconnect();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(getParent(), 
-							ex.getMessage(), "Error", 
-							JOptionPane.ERROR_MESSAGE);
+			working.set(true);
+			updateActions();
+			
+			new SwingWorker<Void,Void>() {
+				@Override
+				protected Void doInBackground() {
+					try {
+						if(simulator.getConnection().isConnected()) {
+							simulator.getAmbassador().disconnect();
+						} else {
+							simulator.getAmbassador().connect();
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						JOptionPane.showMessageDialog(getParent(), 
+								ex.getMessage(), "Error", 
+								JOptionPane.ERROR_MESSAGE);
+					}
+					return null;
 				}
-			} else {
-				try {
-					setEnabled(false);
-					simulator.getAmbassador().connect();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					JOptionPane.showMessageDialog(getParent(), 
-							ex.getMessage(), "Error", 
-							JOptionPane.ERROR_MESSAGE);
+				
+				@Override
+				protected void done() {
+					working.set(false);
+					updateActions();
 				}
-			}
+			}.execute();
 		}
 	};
 
@@ -92,8 +102,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			// disable actions
+			working.set(true);
+			updateActions();
 			
 			new SwingWorker<Void,Void>() {
 				@Override
@@ -111,7 +121,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				
 				@Override
 				protected void done() {
-					// enable actions
+					working.set(false);
+					updateActions();
 				}
 			}.execute();
 		}
@@ -165,6 +176,16 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		}
 		this.simulator = simulator;
 		setLayout(new BorderLayout());
+		
+		timeSlider = new JSlider();
+		timeSlider.setMinorTickSpacing(1);
+		timeSlider.setMajorTickSpacing(10);
+		timeSlider.setPaintTicks(true);
+		timeSlider.setPaintTrack(false);
+		timeSlider.setPaintLabels(true);
+		timeSlider.setEnabled(false);
+		
+		add(timeSlider, BorderLayout.NORTH);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
@@ -175,7 +196,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		buttonPanel.add(new JButton(advanceSim));
 		buttonPanel.add(new JButton(endSim));
 
-		add(buttonPanel, BorderLayout.NORTH);
+		add(buttonPanel, BorderLayout.CENTER);
 
 		JPanel optimizationPanel = new JPanel();
 		optimizationPanel.setLayout(new GridBagLayout());
@@ -198,15 +219,22 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		c.fill = GridBagConstraints.BOTH;
 		optimizationPanel.add(new JButton(runOptimization), c);
 		add(optimizationPanel, BorderLayout.SOUTH);
-
-		autoOptimizeDistribution.setEnabled(
-				!simulator.isAutoOptimizeProductionAndDistribution());
-		autoOptimizeProductionAndDistribution.setEnabled(
-				simulator.isAutoOptimizeDistribution());
-		runOptimization.setEnabled(false);
-		stepSim.setEnabled(false);
-		advanceSim.setEnabled(false);
-		endSim.setEnabled(false);
+		
+		updateActions();
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.event.ConnectionListener#connectionEventOccurred(edu.mit.sips.gui.event.ConnectionEvent)
+	 */
+	@Override
+	public void connectionEventOccurred(ConnectionEvent e) {
+		if(e.getConnection().isConnected()) {
+			toggleConnection.putValue(
+					Action.SMALL_ICON, Icons.CONNECTED);
+		} else {
+			toggleConnection.putValue(
+					Action.SMALL_ICON, Icons.DISCONNECTED);
+		}
 	}
 
 	/**
@@ -216,8 +244,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	private void fireSimulationAdvance(final long duration) {
 		final JPanel panel = this;
-		
-		// disable actions
+		working.set(true);
+		updateActions();
 		
 		new SwingWorker<Void,Void>() {
 			@Override
@@ -237,7 +265,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 			
 			@Override
 			protected void done() {
-				// enable actions
+				working.set(false);
+				updateActions();
 			}
 		}.execute();
 	}
@@ -248,8 +277,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	private void fireSimulationAdvanceToEnd() {
 		final JPanel panel = this;
-		
-		// disable actions
+		working.set(true);
+		updateActions();
 		
 		new SwingWorker<Void,Void>() {
 			@Override
@@ -268,7 +297,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 			
 			@Override
 			protected void done() {
-				// enable actions
+				working.set(false);
+				updateActions();
 			}
 		}.execute();
 	}
@@ -276,8 +306,6 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	/**
 	 * Fire simulation initialize.
 	 *
-	 * @param startTime the start time
-	 * @param endTime the end time
 	 */
 	private void fireSimulationInitialize() {
 		final InitializationInputPanel input = new InitializationInputPanel();
@@ -285,8 +313,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				getTopLevelAncestor(), input, 
 				"Initialize Simulation", JOptionPane.OK_CANCEL_OPTION)) {
 			final JPanel panel = this;
-			
-			// disable actions
+			working.set(true);
+			updateActions();
 			
 			new SwingWorker<Void,Void>() {
 				@Override
@@ -307,10 +335,35 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				
 				@Override
 				protected void done() {
-					// enable actions
+					working.set(false);
+					updateActions();
 				}
 			}.execute();
 		}
+	}
+
+	/**
+	 * Update actions.
+	 */
+	private void updateActions() {
+		toggleConnection.setEnabled(!working.get());
+		autoOptimizeDistribution.setEnabled(!working.get()
+				&& !simulator.isAutoOptimizeProductionAndDistribution());
+		autoOptimizeProductionAndDistribution.setEnabled(!working.get()
+				&& simulator.isAutoOptimizeDistribution());
+		runOptimization.setEnabled(!working.get()
+				&& simulator.isInitialized() 
+				&& !simulator.isCompleted());
+		initializeSim.setEnabled(!working.get());
+		stepSim.setEnabled(!working.get()
+				&& simulator.isInitialized() 
+				&& !simulator.isCompleted());
+		advanceSim.setEnabled(!working.get()
+				&& simulator.isInitialized() 
+				&& !simulator.isCompleted());
+		endSim.setEnabled(!working.get()
+				&& simulator.isInitialized() 
+				&& !simulator.isCompleted());
 	}
 
 	/* (non-Javadoc)
@@ -318,10 +371,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		runOptimization.setEnabled(false);
-		stepSim.setEnabled(false);
-		advanceSim.setEnabled(false);
-		endSim.setEnabled(false);
+		updateActions();
 	}
 
 	/* (non-Javadoc)
@@ -329,10 +379,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		runOptimization.setEnabled(true);
-		stepSim.setEnabled(true);
-		advanceSim.setEnabled(true);
-		endSim.setEnabled(true);
+		timeSlider.setMinimum((int) simulator.getStartTime());
+		timeSlider.setMaximum((int) simulator.getEndTime());
+		timeSlider.setLabelTable(timeSlider.createStandardLabels(
+				10, timeSlider.getMinimum()));
+		timeSlider.setValue((int) simulator.getTime());
+		updateActions();
 	}
 
 	/* (non-Javadoc)
@@ -340,23 +392,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) { 
-		// nothing to do here
-	}
-
-	@Override
-	public void connectionEventOccurred(ConnectionEvent e) {
-		if(e.getConnection().isConnected()) {
-			toggleConnection.setEnabled(true);
-			toggleConnection.putValue(
-					Action.SMALL_ICON, Icons.CONNECTED);
-		} else {
-			toggleConnection.setEnabled(true);
-			toggleConnection.putValue(
-					Action.SMALL_ICON, Icons.DISCONNECTED);
-			runOptimization.setEnabled(false);
-			stepSim.setEnabled(false);
-			advanceSim.setEnabled(false);
-			endSim.setEnabled(false);
-		}
+		timeSlider.setValue((int) simulator.getTime());
+		updateActions();
 	}
 }
