@@ -298,7 +298,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} else {
 			this.simulator = simulator;
 			this.simulator.addUpdateListener(this);
-			connectionPanel.initialize(simulator.getConnection(), simulator.getAmbassador());
+			connectionPanel.initialize(simulator);
 			simulator.getConnection().addConnectionListener(connectionPanel);
 			simulator.getConnection().addConnectionListener(connectionToolbar);
 			

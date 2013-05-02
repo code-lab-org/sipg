@@ -33,9 +33,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.mit.sips.gui.event.ConnectionEvent;
 import edu.mit.sips.gui.event.ConnectionListener;
-import edu.mit.sips.hla.FederationConnection;
-import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.sim.Simulator;
 
 /**
  * The Class ConnectionPanel. A panel allowing connections to be specified.
@@ -56,9 +55,8 @@ implements ActionListener, ConnectionListener {
 	private final JCheckBox rememberCheck;
 	private final JButton connectButton, browseButton;
 	private final JLabel statusLabel;
-	
-	private FederationConnection connection;
-	private SimAmbassador ambassador;
+
+	private Simulator simulator;
 	
 	/**
 	 * Instantiates a new connection panel.
@@ -72,10 +70,10 @@ implements ActionListener, ConnectionListener {
 			}
 
 			@Override
-			public void ancestorRemoved(AncestorEvent event) { }
+			public void ancestorMoved(AncestorEvent event) { }
 
 			@Override
-			public void ancestorMoved(AncestorEvent event) { }
+			public void ancestorRemoved(AncestorEvent event) { }
 		});
 		federateName.setToolTipText("Your user name.");
 		federateType = new JTextField(12);
@@ -145,17 +143,17 @@ implements ActionListener, ConnectionListener {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		fomPath.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
+			public void changedUpdate(DocumentEvent e) {
+				isFomValid();
+			}
+
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				isFomValid();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				isFomValid();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
 				isFomValid();
 			}
 		});
@@ -172,17 +170,17 @@ implements ActionListener, ConnectionListener {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		hostAddress.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
+			public void changedUpdate(DocumentEvent e) {
+				isCrcAddressValid();
+			}
+
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				isCrcAddressValid();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				isCrcAddressValid();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
 				isCrcAddressValid();
 			}
 		});
@@ -194,17 +192,17 @@ implements ActionListener, ConnectionListener {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		portNumber.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
+			public void changedUpdate(DocumentEvent e) {
+				isCrcPortValid();
+			}
+
+			@Override
 			public void insertUpdate(DocumentEvent e) {
 				isCrcPortValid();
 			}
 
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				isCrcPortValid();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
 				isCrcPortValid();
 			}
 		});
@@ -225,91 +223,6 @@ implements ActionListener, ConnectionListener {
 		add(statusLabel, c);
 	}
 	
-	/**
-	 * Sets the state.
-	 *
-	 * @param federateAmbassador the new state
-	 */
-	public void initialize(FederationConnection connection, SimAmbassador ambassador) {
-		this.connection = connection;
-		this.ambassador = ambassador;
-		
-		loadData();
-		connectButton.setText(connection.isConnected()?"Disconnect":"Connect");
-		federateName.setText(connection.getFederateName());
-		federateType.setText(connection.getFederateType());
-		federationName.setText(connection.getFederationName());
-		fomPath.setText(connection.getFomPath());
-		hostAddress.setText(connection.getHost());
-		portNumber.setValue(connection.getPort());
-		rememberCheck.setSelected(isDataSaved());
-		isDataValid();
-	}
-	
-	private boolean isDataSaved() {
-		InputStream input;
-		try {
-			input = new FileInputStream(new File(CONNECTION_DATA));
-			input.close();
-		} catch (FileNotFoundException e) {
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-	
-	/**
-	 * Loads connection data from file.
-	 */
-	private void loadData() {
-		InputStream input;
-		Properties properties = new Properties();
-		try {
-			input = new FileInputStream(new File(CONNECTION_DATA));
-			properties.loadFromXML(input);
-			input.close();
-		} catch (FileNotFoundException e) {
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		connection.setFederateName(properties.getProperty("name"));
-		connection.setFederateType(properties.getProperty("type"));
-		connection.setFederationName(properties.getProperty("federation"));
-		connection.setFomPath(properties.getProperty("fom"));
-		connection.setHost(properties.getProperty("host"));
-		connection.setPort(Integer.parseInt(properties.getProperty("port")));
-	}
-	
-	/**
-	 * Saves the connection data to file.
-	 */
-	public void saveData() {
-		OutputStream output;
-		Properties properties = new Properties();
-		properties.setProperty("name", connection.getFederateName());
-		properties.setProperty("type", connection.getFederateType());
-		properties.setProperty("federation", connection.getFederationName());
-		properties.setProperty("fom", connection.getFomPath());
-		properties.setProperty("host", connection.getHost());
-		properties.setProperty("port", new Integer(connection.getPort()).toString());
-		try {
-			output = new FileOutputStream(new File(CONNECTION_DATA));
-			properties.storeToXML(output, null);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	/**
-	 * Clears the saved connection data file.
-	 */
-	private void clearData() {
-		new File(CONNECTION_DATA).delete();
-	}
-
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -337,7 +250,14 @@ implements ActionListener, ConnectionListener {
 			}
 		}
 	}
-		
+	
+	/**
+	 * Clears the saved connection data file.
+	 */
+	private void clearData() {
+		new File(CONNECTION_DATA).delete();
+	}
+	
 	/**
 	 * Connects to the RTI.
 	 */
@@ -351,7 +271,7 @@ implements ActionListener, ConnectionListener {
 		portNumber.setEnabled(false);
 		rememberCheck.setEnabled(false);
 		connectButton.setEnabled(false);
-		if(!connection.isConnected()) {
+		if(!simulator.getConnection().isConnected()) {
 			statusLabel.setText("Connecting to " + hostAddress.getText() + "...");
 			statusLabel.setIcon(Icons.LOADING);
 			if(!isCrcAddressValid()) {
@@ -359,17 +279,17 @@ implements ActionListener, ConnectionListener {
 			} else if(!isCrcPortValid()) {
 				statusLabel.setText("Port is not valid (expected an integer).");
 			} else {
-				connection.setHost(hostAddress.getText());
-				connection.setPort(((Number) portNumber.getValue()).intValue());
-				connection.setFederationName(federationName.getText());
-				connection.setFomPath(fomPath.getText());
-				connection.setFederateName(federateName.getText());
-				connection.setFederateType(federateType.getText());
+				simulator.getConnection().setHost(hostAddress.getText());
+				simulator.getConnection().setPort(((Number) portNumber.getValue()).intValue());
+				simulator.getConnection().setFederationName(federationName.getText());
+				simulator.getConnection().setFomPath(fomPath.getText());
+				simulator.getConnection().setFederateName(federateName.getText());
+				simulator.getConnection().setFederateType(federateType.getText());
 				new SwingWorker<Void,Void>() {
 					@Override
 					protected Void doInBackground() {
 						try {
-							ambassador.connect();
+							simulator.getAmbassador().connect();
 						} catch (Exception ex) {
 							ex.printStackTrace();
 							federateName.setEnabled(true);
@@ -384,7 +304,7 @@ implements ActionListener, ConnectionListener {
 							connectButton.setText("Connect");
 							statusLabel.setIcon(null);
 							try {
-								ambassador.disconnect();
+								simulator.getAmbassador().disconnect();
 							} catch (Exception ignored) { }
 							statusLabel.setText("Failed (" + ex.getMessage() + ")");
 						}
@@ -400,7 +320,7 @@ implements ActionListener, ConnectionListener {
 					@Override
 					protected Void doInBackground() {
 						try {
-							ambassador.disconnect();
+							simulator.getAmbassador().disconnect();
 						} catch (Exception ex) {
 							ex.printStackTrace();
 							statusLabel.setText("Failed (" + ex.getMessage() + ")");
@@ -412,6 +332,51 @@ implements ActionListener, ConnectionListener {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.event.ConnectionListener#connectionEventOccurred(edu.mit.sips.gui.event.ConnectionEvent)
+	 */
+	@Override
+	public void connectionEventOccurred(ConnectionEvent e) {
+		boolean isConnected = e.getConnection().isConnected();
+		federateName.setEnabled(!isConnected);
+		federateType.setEnabled(!isConnected);
+		federationName.setEnabled(!isConnected);
+		fomPath.setEnabled(!isConnected);
+		browseButton.setEnabled(!isConnected);
+		hostAddress.setEnabled(!isConnected);
+		portNumber.setEnabled(!isConnected);
+		rememberCheck.setEnabled(!isConnected);
+		connectButton.setEnabled(true);
+		connectButton.setText(isConnected?"Disconnect":"Connect");
+		statusLabel.setIcon(isConnected?Icons.LOADING_COMPLETE:null);
+		
+		if(isConnected) {
+			statusLabel.setText("Connected to " + e.getConnection().getHost());
+		} else {
+			statusLabel.setText("");
+		}
+	}
+	
+	/**
+	 * Sets the state.
+	 *
+	 * @param federateAmbassador the new state
+	 */
+	public void initialize(Simulator simulator) {
+		this.simulator = simulator;
+		
+		loadData();
+		connectButton.setText(simulator.getConnection().isConnected()?"Disconnect":"Connect");
+		federateName.setText(simulator.getConnection().getFederateName());
+		federateType.setText(simulator.getConnection().getFederateType());
+		federationName.setText(simulator.getConnection().getFederationName());
+		fomPath.setText(simulator.getConnection().getFomPath());
+		hostAddress.setText(simulator.getConnection().getHost());
+		portNumber.setValue(simulator.getConnection().getPort());
+		rememberCheck.setSelected(isDataSaved());
+		isDataValid();
 	}
 
 	/**
@@ -436,7 +401,7 @@ implements ActionListener, ConnectionListener {
 			return false;
 		}
 	}
-	
+		
 	/**
 	 * Checks if the CRC port is valid.
 	 *
@@ -450,6 +415,37 @@ implements ActionListener, ConnectionListener {
 			portNumber.setForeground(Color.red);
 			return false;
 		}
+	}
+
+	/**
+	 * Checks if is data saved.
+	 *
+	 * @return true, if is data saved
+	 */
+	private boolean isDataSaved() {
+		InputStream input;
+		try {
+			input = new FileInputStream(new File(CONNECTION_DATA));
+			input.close();
+		} catch (FileNotFoundException e) {
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	/**
+	 * Checks if the data is valid.
+	 *
+	 * @return true, if the data is valid
+	 */
+	private boolean isDataValid() {
+		return isCrcAddressValid() 
+				&& isCrcPortValid() 
+				&& !federateName.getText().isEmpty() 
+				&& !federationName.getText().isEmpty()
+				&& isFomValid();
 	}
 	
 	/**
@@ -468,40 +464,46 @@ implements ActionListener, ConnectionListener {
 	}
 	
 	/**
-	 * Checks if the data is valid.
-	 *
-	 * @return true, if the data is valid
+	 * Loads connection data from file.
 	 */
-	private boolean isDataValid() {
-		return isCrcAddressValid() 
-				&& isCrcPortValid() 
-				&& !federateName.getText().isEmpty() 
-				&& !federationName.getText().isEmpty()
-				&& isFomValid();
+	private void loadData() {
+		InputStream input;
+		Properties properties = new Properties();
+		try {
+			input = new FileInputStream(new File(CONNECTION_DATA));
+			properties.loadFromXML(input);
+			input.close();
+		} catch (FileNotFoundException e) {
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		simulator.getConnection().setFederateName(properties.getProperty("name"));
+		simulator.getConnection().setFederateType(properties.getProperty("type"));
+		simulator.getConnection().setFederationName(properties.getProperty("federation"));
+		simulator.getConnection().setFomPath(properties.getProperty("fom"));
+		simulator.getConnection().setHost(properties.getProperty("host"));
+		simulator.getConnection().setPort(Integer.parseInt(properties.getProperty("port")));
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.event.ConnectionListener#connectionEventOccurred(edu.mit.sips.gui.event.ConnectionEvent)
+	/**
+	 * Saves the connection data to file.
 	 */
-	@Override
-	public void connectionEventOccurred(ConnectionEvent e) {
-		boolean isConnected = e.getConnection().isConnected();
-		federateName.setEnabled(!isConnected);
-		federateType.setEnabled(!isConnected);
-		federationName.setEnabled(!isConnected);
-		fomPath.setEnabled(!isConnected);
-		browseButton.setEnabled(!isConnected);
-		hostAddress.setEnabled(!isConnected);
-		portNumber.setEnabled(!isConnected);
-		rememberCheck.setEnabled(!isConnected);
-		connectButton.setEnabled(true);
-		connectButton.setText(isConnected?"Disconnect":"Connect");
-		statusLabel.setIcon(isConnected?Icons.LOADING_COMPLETE:null);
-		
-		if(isConnected) {
-			statusLabel.setText("Connected to " + e.getConnection().getHost());
-		} else {
-			statusLabel.setText("");
+	private void saveData() {
+		OutputStream output;
+		Properties properties = new Properties();
+		properties.setProperty("name", federateName.getText());
+		properties.setProperty("type", federateType.getText());
+		properties.setProperty("federation", federationName.getText());
+		properties.setProperty("fom", fomPath.getText());
+		properties.setProperty("host", hostAddress.getText());
+		properties.setProperty("port", portNumber.getText());
+		try {
+			output = new FileOutputStream(new File(CONNECTION_DATA));
+			properties.storeToXML(output, null);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }
