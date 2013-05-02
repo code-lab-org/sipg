@@ -13,6 +13,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 
 import edu.mit.sips.gui.event.ConnectionEvent;
 import edu.mit.sips.gui.event.ConnectionListener;
@@ -91,8 +92,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new Thread(new Runnable() {
-				public void run() {
+			
+			// disable actions
+			
+			new SwingWorker<Void,Void>() {
+				@Override
+				protected Void doInBackground() {
 					try {
 						simulator.runOptimization();
 					} catch(Exception ex) {
@@ -101,8 +106,14 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 								JOptionPane.ERROR_MESSAGE);
 						ex.printStackTrace();
 					}
+					return null;
 				}
-			}).start();
+				
+				@Override
+				protected void done() {
+					// enable actions
+				}
+			}.execute();
 		}
 	};
 
@@ -205,8 +216,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	private void fireSimulationAdvance(final long duration) {
 		final JPanel panel = this;
-		new Thread(new Runnable() {
-			public void run() {
+		
+		// disable actions
+		
+		new SwingWorker<Void,Void>() {
+			@Override
+			protected Void doInBackground() {
 				try {
 					simulator.advanceSimulation(
 							new SimulationControlEvent.Advance(
@@ -217,8 +232,14 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 							JOptionPane.ERROR_MESSAGE);
 					ex.printStackTrace();
 				}
+				return null;
 			}
-		}).start();
+			
+			@Override
+			protected void done() {
+				// enable actions
+			}
+		}.execute();
 	}
 
 
@@ -227,8 +248,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	private void fireSimulationAdvanceToEnd() {
 		final JPanel panel = this;
-		new Thread(new Runnable() {
-			public void run() {
+		
+		// disable actions
+		
+		new SwingWorker<Void,Void>() {
+			@Override
+			protected Void doInBackground() {
 				try {
 					simulator.advanceSimulationToEnd(
 							new SimulationControlEvent.AdvanceToEnd(panel));
@@ -238,8 +263,14 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 							JOptionPane.ERROR_MESSAGE);
 					ex.printStackTrace();
 				}
+				return null;
 			}
-		}).start();
+			
+			@Override
+			protected void done() {
+				// enable actions
+			}
+		}.execute();
 	}
 
 	/**
@@ -254,8 +285,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				getTopLevelAncestor(), input, 
 				"Initialize Simulation", JOptionPane.OK_CANCEL_OPTION)) {
 			final JPanel panel = this;
-			new Thread(new Runnable() {
-				public void run() {
+			
+			// disable actions
+			
+			new SwingWorker<Void,Void>() {
+				@Override
+				protected Void doInBackground() {
 					try {
 						simulator.initializeSimulation(
 								new SimulationControlEvent.Initialize(
@@ -267,8 +302,14 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 								JOptionPane.ERROR_MESSAGE);
 						fireSimulationInitialize();
 					}
+					return null;
 				}
-			}).start();
+				
+				@Override
+				protected void done() {
+					// enable actions
+				}
+			}.execute();
 		}
 	}
 
