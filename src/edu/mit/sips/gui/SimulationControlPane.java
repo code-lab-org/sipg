@@ -175,8 +175,25 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 					"Simulator cannot be null.");
 		}
 		this.simulator = simulator;
-		setLayout(new BorderLayout());
 		
+		toggleConnection.putValue(Action.SHORT_DESCRIPTION, 
+				"Toggle the network connection.");
+		autoOptimizeDistribution.putValue(Action.SHORT_DESCRIPTION, 
+				"Optimize resource distribution at each time step.");
+		autoOptimizeProductionAndDistribution.putValue(Action.SHORT_DESCRIPTION, 
+				"Optimize resource production and distribution at each time step.");
+		runOptimization.putValue(Action.SHORT_DESCRIPTION, 
+				"Run the optimization routine.");
+		initializeSim.putValue(Action.SHORT_DESCRIPTION, 
+				"Initialize the simulation.");
+		stepSim.putValue(Action.SHORT_DESCRIPTION, 
+				"Step the simulation by one year.");
+		advanceSim.putValue(Action.SHORT_DESCRIPTION, 
+				"Advance the simulation by five years.");
+		endSim.putValue(Action.SHORT_DESCRIPTION, 
+				"Run the simulation until the end.");
+		
+		setLayout(new BorderLayout());
 		timeSlider = new JSlider();
 		timeSlider.setPaintTrack(false);
 		timeSlider.setEnabled(false);
