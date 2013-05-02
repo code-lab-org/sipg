@@ -5,7 +5,7 @@ package edu.mit.sips.core;
  */
 public final class MutableSimpleLifecycleModel implements MutableLifecycleModel {
 	private long timeAvailable, timeInitialized, initializationDuration;
-	private long operationsDuration, decommissionDuration;
+	private long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private double capitalCost, fixedOperationsCost, decommissionCost;
 	private boolean levelizeCosts;
 
@@ -15,12 +15,11 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	@Override
 	public SimpleLifecycleModel createLifecycleModel() {
 		return new SimpleLifecycleModel(timeAvailable, timeInitialized, 
-				initializationDuration, 
+				initializationDuration, maxOperationsDuration,
 				operationsDuration, decommissionDuration,
 				capitalCost, fixedOperationsCost, 
 				decommissionCost, levelizeCosts);
 	}
-	
 	/**
 	 * Gets the capital cost.
 	 *
@@ -29,7 +28,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	public double getCapitalCost() {
 		return capitalCost;
 	}
-	
+
 	/**
 	 * Gets the decommission cost.
 	 *
@@ -64,6 +63,15 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public long getInitializationDuration() {
 		return initializationDuration;
+	}
+	
+	/**
+	 * Gets the max operations duration.
+	 *
+	 * @return the max operations duration
+	 */
+	public long getMaxOperationsDuration() {
+		return maxOperationsDuration;
 	}
 	
 	/**
@@ -154,6 +162,15 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public void setLevelizeCosts(boolean levelizeCosts) {
 		this.levelizeCosts = levelizeCosts;
+	}
+	
+	/**
+	 * Sets the max operations duration.
+	 *
+	 * @param maxOperationsDuration the new max operations duration
+	 */
+	public void setMaxOperationsDuration(long maxOperationsDuration) {
+		this.maxOperationsDuration = maxOperationsDuration;
 	}
 	
 	/**

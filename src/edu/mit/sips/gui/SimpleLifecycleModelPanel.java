@@ -28,7 +28,8 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 	private final JFormattedTextField timeAvailableText, timeInitializedText, 
 			initializationDurationText, capitalCostText;
 	private final JFormattedTextField fixedOperationsCostText;
-	private final JFormattedTextField operationsDurationText, decommissionDurationText, 
+	private final JFormattedTextField maxOperationsDurationText, 
+			operationsDurationText, decommissionDurationText, 
 			decommissionCostText;
 	private final JCheckBox levelizeCostsCheck;
 	
@@ -134,6 +135,27 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 					}
 				});
 		addInput(c, "Fixed Operations Cost", fixedOperationsCostText, "SAR/year");
+
+		c.gridx = 3;
+		c.gridy = 0;
+		
+		maxOperationsDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		maxOperationsDurationText.setColumns(10);
+		maxOperationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
+		maxOperationsDurationText.setValue(lifecycleModel.getMaxOperationsDuration());
+		maxOperationsDurationText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							lifecycleModel.setMaxOperationsDuration(
+									(Long) maxOperationsDurationText.getValue());
+							maxOperationsDurationText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							maxOperationsDurationText.setForeground(Color.red);
+						}
+					}
+				});
+		addInput(c, "Max Operations Duration", maxOperationsDurationText, "years");
 		operationsDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		operationsDurationText.setColumns(10);
 		operationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
@@ -150,9 +172,6 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 						}
 					}
 				});
-		
-		c.gridx = 3;
-		c.gridy = 0;
 		addInput(c, "Operations Duration", operationsDurationText, "years");
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
@@ -208,6 +227,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		initializationDurationText.setEnabled(template == null);
 		capitalCostText.setEnabled(template == null);
 		fixedOperationsCostText.setEnabled(template == null);
+		maxOperationsDurationText.setEnabled(template == null);
 		decommissionDurationText.setEnabled(template == null);
 		decommissionCostText.setEnabled(template == null);
 		levelizeCostsCheck.setEnabled(template == null);

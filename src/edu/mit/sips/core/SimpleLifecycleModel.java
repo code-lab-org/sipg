@@ -8,10 +8,10 @@ package edu.mit.sips.core;
 public class SimpleLifecycleModel implements LifecycleModel {
 	private long time, nextTime;
 	private final long timeAvailable, timeInitialized, initializationDuration;
-	private final long operationsDuration, decommissionDuration;
+	private final long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private final double capitalCost, fixedOperationsCost, decommissionCost;
 	private final boolean levelizeCosts;
-
+	
 	/**
 	 * Instantiates a new simple lifecycle model.
 	 */
@@ -19,6 +19,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		timeAvailable = 0;
 		timeInitialized = 0;
 		initializationDuration = 0;
+		maxOperationsDuration = 0;
 		operationsDuration = 0;
 		decommissionDuration = 0;
 		capitalCost = 0;
@@ -40,20 +41,24 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	 * @param decommissionCost the decommission cost
 	 */
 	public SimpleLifecycleModel(long timeAvailable, long timeInitialized, 
-			long initializationDuration, 
+			long initializationDuration, long maxOperationsDuration,
 			long timeDecommissioned, long decommissionDuration,
 			double capitalCost, double fixedOperationsCost, 
 			double decommissionCost) {
 		this(timeAvailable, timeInitialized, initializationDuration, 
-				timeDecommissioned, decommissionDuration, capitalCost, 
+				maxOperationsDuration, 
+				timeDecommissioned-timeInitialized-initializationDuration, 
+				decommissionDuration, capitalCost, 
 				fixedOperationsCost, decommissionCost, false);
 	}
 
 	/**
 	 * Instantiates a new simple lifecycle model.
 	 *
+	 * @param timeAvailable the time available
 	 * @param timeInitialized the time initialized
 	 * @param initializationDuration the initialization duration
+	 * @param maxOperationsDuration the max operations duration
 	 * @param operationsDuration the operations duration
 	 * @param decommissionDuration the decommission duration
 	 * @param capitalCost the capital cost
@@ -62,8 +67,8 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	 * @param levelizeCosts the levelize costs
 	 */
 	public SimpleLifecycleModel(long timeAvailable, long timeInitialized, 
-			long initializationDuration, long operationsDuration, 
-			long decommissionDuration, double capitalCost, 
+			long initializationDuration, long maxOperationsDuration,
+			long operationsDuration, long decommissionDuration, double capitalCost, 
 			double fixedOperationsCost, double decommissionCost, 
 			boolean levelizeCosts) {
 		// No validation needed for time available.
@@ -82,11 +87,18 @@ public class SimpleLifecycleModel implements LifecycleModel {
 					"Initialization duration cannot be negative.");
 		}
 		this.initializationDuration = initializationDuration;
+
+		// Validate the max operational duration
+		if(maxOperationsDuration < 0) {
+			throw new IllegalArgumentException(
+					"Max operations duration cannot be negative.");
+		}
+		this.maxOperationsDuration = maxOperationsDuration;
 		
 		// Validate the operational duration
-		if(operationsDuration < 0) {
+		if(operationsDuration > this.maxOperationsDuration) {
 			throw new IllegalArgumentException(
-					"Operations duration cannot be negative.");
+					"Operations duration cannot exceed maximum.");
 		}
 		this.operationsDuration = operationsDuration;
 		
@@ -121,7 +133,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		// No need to validate levelize capital.
 		this.levelizeCosts = levelizeCosts;
 	}
-	
+
 	/**
 	 * Gets the capital cost.
 	 *
@@ -130,7 +142,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public double getCapitalCost() {
 		return capitalCost;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#getCapitalExpense()
 	 */
@@ -193,7 +205,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public double getFixedOperationsCost() {
 		return fixedOperationsCost;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#getFixedOperationsExpense()
 	 */
@@ -205,7 +217,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * Gets the initialization duration.
 	 *
@@ -213,6 +225,15 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	 */
 	public long getInitializationDuration() {
 		return initializationDuration;
+	}
+
+	/**
+	 * Gets the max operations duration.
+	 *
+	 * @return the max operations duration
+	 */
+	public long getMaxOperationsDuration() {
+		return maxOperationsDuration;
 	}
 	
 	/* (non-Javadoc)
@@ -224,6 +245,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		model.setTimeAvailable(timeAvailable);
 		model.setTimeInitialized(timeInitialized);
 		model.setInitializationDuration(initializationDuration);
+		model.setMaxOperationsDuration(maxOperationsDuration);
 		model.setOperationsDuration(operationsDuration);
 		model.setDecommissionDuration(decommissionDuration);
 		model.setCapitalCost(capitalCost);
