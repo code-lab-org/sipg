@@ -194,11 +194,11 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		this.initialWaterInput = initialWaterInput;
 
 		// Validate energy intensity.
-		if(electricalIntensityOfWaterProduction < 0) {
+		if(electricalIntensityOfWaterDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Electrical intensity cannot be negative.");
 		}
-		this.electricalIntensityOfWaterDistribution = electricalIntensityOfWaterProduction;
+		this.electricalIntensityOfWaterDistribution = electricalIntensityOfWaterDistribution;
 		
 		// Validate distribution cost.
 		if(variableOperationsCostOfWaterDistribution < 0) {

@@ -42,16 +42,6 @@ public class PetroleumElementPanel extends ElementPanel {
 			final MutablePetroleumElement element) {
 		super(country, element);
 		
-		JPanel elementPanel = new JPanel();
-		elementPanel.setLayout(new GridBagLayout());
-		add(elementPanel);
-		
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 0;
-		c.insets = new Insets(2,2,2,2);
-
-		c.gridx = 0;
 		maxPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxPetroleumProductionText.setColumns(10);
 		maxPetroleumProductionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -69,8 +59,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Max Petroleum Production", 
-				maxPetroleumProductionText, "bbl/year");
 		initialPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialPetroleumProductionText.setColumns(10);
 		initialPetroleumProductionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -88,8 +76,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Initial Petroleum Production",
-				initialPetroleumProductionText,  " bbl/year");
 		reservoirIntensityOfPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		reservoirIntensityOfPetroleumProductionText.setColumns(10);
 		reservoirIntensityOfPetroleumProductionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -107,8 +93,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Reservoir Intensity of Production",
-				reservoirIntensityOfPetroleumProductionText, "bbl/bbl");
 		variableOperationsCostOfPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfPetroleumProductionText.setColumns(10);
 		variableOperationsCostOfPetroleumProductionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -126,11 +110,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Variable Cost of Production",
-				variableOperationsCostOfPetroleumProductionText, "SAR/bbl");
-		
-		c.gridx = 3;
-		c.gridy = 0;
 		maxPetroleumInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxPetroleumInputText.setColumns(10);
 		maxPetroleumInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -148,8 +127,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Max Petroleum Input", 
-				maxPetroleumInputText, "bbl/year");
 		initialPetroleumInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialPetroleumInputText.setColumns(10);
 		initialPetroleumInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -167,8 +144,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Initial Petroleum Input",
-				initialPetroleumInputText, "bbl/year");
 		distributionEfficiencyText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		distributionEfficiencyText.setColumns(10);
 		distributionEfficiencyText.setHorizontalAlignment(JTextField.RIGHT);
@@ -186,8 +161,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Distribution Efficiency",
-				distributionEfficiencyText, "bbl out/bbl in");
 		electricalIntensityOfPetroleumDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		electricalIntensityOfPetroleumDistributionText.setColumns(10);
 		electricalIntensityOfPetroleumDistributionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -205,8 +178,6 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Electrical Intensity of Distribution",
-				electricalIntensityOfPetroleumDistributionText, "MWh/bbl");
 		variableOperationsCostOfPetroleumDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfPetroleumDistributionText.setColumns(10);
 		variableOperationsCostOfPetroleumDistributionText.setHorizontalAlignment(JTextField.RIGHT);
@@ -224,8 +195,42 @@ public class PetroleumElementPanel extends ElementPanel {
 						}
 					}
 				});
-		addInput(elementPanel, c, "Variable Cost of Distribution",
-				variableOperationsCostOfPetroleumDistributionText, "SAR/bbl");
+		
+		JPanel elementPanel = new JPanel();
+		elementPanel.setLayout(new GridBagLayout());
+		add(elementPanel);
+		
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridy = 0;
+		c.insets = new Insets(2,2,2,2);
+
+		if(element.getTemplate() == null 
+				|| !element.getTemplate().isTransport()) {
+			c.gridx = 0;
+			addInput(elementPanel, c, "Max Petroleum Production", 
+					maxPetroleumProductionText, "bbl/year");
+			addInput(elementPanel, c, "Initial Petroleum Production",
+					initialPetroleumProductionText,  " bbl/year");
+			addInput(elementPanel, c, "Reservoir Intensity of Production",
+					reservoirIntensityOfPetroleumProductionText, "bbl/bbl");
+			addInput(elementPanel, c, "Variable Cost of Production",
+					variableOperationsCostOfPetroleumProductionText, "SAR/bbl");
+		}
+		if(element.getTemplate() == null 
+				|| element.getTemplate().isTransport()) {
+			c.gridx = 3;
+			c.gridy = 0;
+			addInput(elementPanel, c, "Max Petroleum Input", 
+					maxPetroleumInputText, "bbl/year");
+			addInput(elementPanel, c, "Initial Petroleum Input",
+					initialPetroleumInputText, "bbl/year");
+			addInput(elementPanel, c, "Distribution Efficiency",
+					distributionEfficiencyText, "bbl out/bbl in");
+			addInput(elementPanel, c, "Electrical Intensity of Distribution",
+					electricalIntensityOfPetroleumDistributionText, "MWh/bbl");
+			addInput(elementPanel, c, "Variable Cost of Distribution",
+					variableOperationsCostOfPetroleumDistributionText, "SAR/bbl");
+		}
 		
 		// set input enabled state
 		maxPetroleumProductionText.setEnabled(element.getTemplate() == null);
