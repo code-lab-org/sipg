@@ -17,6 +17,7 @@ import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
@@ -50,6 +51,7 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.comp.ElementTreeNode;
 import edu.mit.sips.gui.comp.NetworkTreeModel;
 import edu.mit.sips.gui.comp.SocietyTreeNode;
+import edu.mit.sips.gui.water.WaterElementInfoPanel;
 import edu.mit.sips.io.Icons;
 
 /**
@@ -204,15 +206,26 @@ public class ElementsPane extends JPanel {
 				KeyEvent.VK_ENTER, 0), "editElement");
 		elementsTree.getActionMap().put("editElement", editElement);
 		
+		
 		elementsTree.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 
 						&& e.getClickCount() == 2) {
+					
 					editElement.actionPerformed(
 							new ActionEvent(elementsTree, 
 									(int) System.currentTimeMillis(), 
 									"addElement"));
+				}
+				InfrastructureElement element = elementsTreeModel.getElement(
+						elementsTree.getPathForLocation(e.getX(), e.getY()));
+				if(element != null) {
+					JPopupMenu popup = new JPopupMenu(element.getName());
+					if(element instanceof WaterElement) {
+						popup.add(new WaterElementInfoPanel((WaterElement)element));
+						popup.show(e.getComponent(), e.getX()+10, e.getY()+10);
+					}
 				}
 			}
 		});
