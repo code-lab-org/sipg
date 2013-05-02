@@ -178,11 +178,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		setLayout(new BorderLayout());
 		
 		timeSlider = new JSlider();
-		timeSlider.setMinorTickSpacing(1);
-		timeSlider.setMajorTickSpacing(10);
-		timeSlider.setPaintTicks(true);
 		timeSlider.setPaintTrack(false);
-		timeSlider.setPaintLabels(true);
 		timeSlider.setEnabled(false);
 		
 		add(timeSlider, BorderLayout.NORTH);
@@ -383,6 +379,10 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		timeSlider.setMaximum((int) simulator.getEndTime());
 		timeSlider.setLabelTable(timeSlider.createStandardLabels(
 				10, timeSlider.getMinimum()));
+		timeSlider.setMinorTickSpacing(1);
+		timeSlider.setMajorTickSpacing(10);
+		timeSlider.setPaintTicks(true);
+		timeSlider.setPaintLabels(true);
 		timeSlider.setValue((int) simulator.getTime());
 		updateActions();
 	}
