@@ -12,6 +12,7 @@ public abstract class Icons {
 	public static final Icon CITY = loadIcon("resources/silk/building.png");
 
 	public static final Icon ADD = loadIcon("resources/silk/add.png");
+	public static final Icon ADD_WIZARD = loadIcon("resources/silk/wand.png");
 	public static final Icon EDIT = loadIcon("resources/silk/pencil.png");
 	public static final Icon DELETE = loadIcon("resources/silk/delete.png");
 

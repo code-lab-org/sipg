@@ -123,8 +123,8 @@ public class ElementsPane extends JPanel {
 		}
 	};
 
-	private final Action addElementTemplate = new AbstractAction("Add*", 
-			Icons.ADD) {
+	private final Action addElementTemplate = new AbstractAction(
+			null, Icons.ADD_WIZARD) {
 		private static final long serialVersionUID = -6723630338741885195L;
 
 		@Override
@@ -133,8 +133,8 @@ public class ElementsPane extends JPanel {
 		}
 	};
 	
-	private final Action addElement = new AbstractAction("Add", 
-			Icons.ADD) {
+	private final Action addElement = new AbstractAction(
+			null, Icons.ADD) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -143,8 +143,8 @@ public class ElementsPane extends JPanel {
 		}
 	};
 	
-	private final Action editElement = new AbstractAction("Edit", 
-			Icons.EDIT) {
+	private final Action editElement = new AbstractAction( 
+			null, Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -158,8 +158,8 @@ public class ElementsPane extends JPanel {
 		}
 	};
 	
-	private final Action removeElement = new AbstractAction("Remove", 
-			Icons.DELETE) {
+	private final Action removeElement = new AbstractAction(
+			null, Icons.DELETE) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -175,6 +175,16 @@ public class ElementsPane extends JPanel {
 	 */
 	public ElementsPane(Country country) {
 		this.country = country;
+		
+		addElementTemplate.putValue(Action.SHORT_DESCRIPTION, 
+				"Add element from a template.");
+		addElement.putValue(Action.SHORT_DESCRIPTION, 
+				"Add custom element.");
+		editElement.putValue(Action.SHORT_DESCRIPTION, 
+				"Edit element.");
+		removeElement.putValue(Action.SHORT_DESCRIPTION, 
+				"Remove element.");
+		
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(150,100));
 		elementsTreeModel = new NetworkTreeModel();
