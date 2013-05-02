@@ -7,19 +7,28 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.NumberFormat;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import edu.mit.sips.gui.event.ConnectionEvent;
@@ -36,12 +45,14 @@ import edu.mit.sips.io.Icons;
 public final class ConnectionPanel extends JPanel 
 implements ActionListener, ConnectionListener {
 	private static final long serialVersionUID = 8697615119488025958L;
-	
+
+	private static final String CONNECTION_DATA = "connection.data";
 	private static final String BROWSE_FOM = "browseFOM", 
 			TOGGLE_REMEMBER = "toggleReminder",
 			CONNECT = "connect";
 	
-	private final JTextField federateName, federateType, federationName, hostAddress, portNumber, fomPath;
+	private final JTextField federateName, federateType, federationName, hostAddress, fomPath;
+	private final JFormattedTextField portNumber;
 	private final JCheckBox rememberCheck;
 	private final JButton connectButton, browseButton;
 	private final JLabel statusLabel;
@@ -73,7 +84,10 @@ implements ActionListener, ConnectionListener {
 		federationName.setToolTipText("The federation to join.");
 		hostAddress = new JTextField(12);
 		hostAddress.setToolTipText("Address of the Central RTI Component.");
-		portNumber = new JTextField(6);
+		NumberFormat portFormat = NumberFormat.getIntegerInstance();
+		portFormat.setGroupingUsed(false);
+		portNumber = new JFormattedTextField(portFormat);
+		portNumber.setColumns(6);
 		portNumber.setToolTipText("Port number of the Central RTI Component.");
 		fomPath = new JTextField(20);
 		fomPath.setToolTipText("The Federation Object Model (FOM) file location.");
@@ -129,8 +143,19 @@ implements ActionListener, ConnectionListener {
 		c.gridx++;
 		c.gridwidth = 2;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		fomPath.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
+		fomPath.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				isFomValid();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				isFomValid();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
 				isFomValid();
 			}
 		});
@@ -145,8 +170,19 @@ implements ActionListener, ConnectionListener {
 		add(new JLabel("Host: "), c);
 		c.gridx++;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		hostAddress.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
+		hostAddress.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				isCrcAddressValid();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				isCrcAddressValid();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
 				isCrcAddressValid();
 			}
 		});
@@ -156,8 +192,19 @@ implements ActionListener, ConnectionListener {
 		add(new JLabel("Port: "), c);
 		c.gridx++;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		portNumber.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
+		portNumber.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				isCrcPortValid();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				isCrcPortValid();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
 				isCrcPortValid();
 			}
 		});
@@ -187,15 +234,80 @@ implements ActionListener, ConnectionListener {
 		this.connection = connection;
 		this.ambassador = ambassador;
 		
+		loadData();
 		connectButton.setText(connection.isConnected()?"Disconnect":"Connect");
 		federateName.setText(connection.getFederateName());
 		federateType.setText(connection.getFederateType());
 		federationName.setText(connection.getFederationName());
 		fomPath.setText(connection.getFomPath());
 		hostAddress.setText(connection.getHost());
-		portNumber.setText(new Integer(connection.getPort()).toString());
-		rememberCheck.setSelected(connection.isDataSaved());
+		portNumber.setValue(connection.getPort());
+		rememberCheck.setSelected(isDataSaved());
 		isDataValid();
+	}
+	
+	private boolean isDataSaved() {
+		InputStream input;
+		try {
+			input = new FileInputStream(new File(CONNECTION_DATA));
+			input.close();
+		} catch (FileNotFoundException e) {
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
+	/**
+	 * Loads connection data from file.
+	 */
+	private void loadData() {
+		InputStream input;
+		Properties properties = new Properties();
+		try {
+			input = new FileInputStream(new File(CONNECTION_DATA));
+			properties.loadFromXML(input);
+			input.close();
+		} catch (FileNotFoundException e) {
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		connection.setFederateName(properties.getProperty("name"));
+		connection.setFederateType(properties.getProperty("type"));
+		connection.setFederationName(properties.getProperty("federation"));
+		connection.setFomPath(properties.getProperty("fom"));
+		connection.setHost(properties.getProperty("host"));
+		connection.setPort(Integer.parseInt(properties.getProperty("port")));
+	}
+	
+	/**
+	 * Saves the connection data to file.
+	 */
+	public void saveData() {
+		OutputStream output;
+		Properties properties = new Properties();
+		properties.setProperty("name", connection.getFederateName());
+		properties.setProperty("type", connection.getFederateType());
+		properties.setProperty("federation", connection.getFederationName());
+		properties.setProperty("fom", connection.getFomPath());
+		properties.setProperty("host", connection.getHost());
+		properties.setProperty("port", new Integer(connection.getPort()).toString());
+		try {
+			output = new FileOutputStream(new File(CONNECTION_DATA));
+			properties.storeToXML(output, null);
+			output.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Clears the saved connection data file.
+	 */
+	private void clearData() {
+		new File(CONNECTION_DATA).delete();
 	}
 
 	/* (non-Javadoc)
@@ -214,14 +326,14 @@ implements ActionListener, ConnectionListener {
 			}
 		} else if(e.getActionCommand().equals(CONNECT)) {
 			if(rememberCheck.isSelected()) {
-				connection.saveData();
+				saveData();
 			}
 			connect();
 		} else if(e.getActionCommand().equals(TOGGLE_REMEMBER)) {
 			if(rememberCheck.isSelected()) {
-				connection.saveData();
+				saveData();
 			} else {
-				connection.clearData();
+				clearData();
 			}
 		}
 	}
@@ -248,7 +360,7 @@ implements ActionListener, ConnectionListener {
 				statusLabel.setText("Port is not valid (expected an integer).");
 			} else {
 				connection.setHost(hostAddress.getText());
-				connection.setPort(Integer.parseInt(portNumber.getText()));
+				connection.setPort(((Number) portNumber.getValue()).intValue());
 				connection.setFederationName(federationName.getText());
 				connection.setFomPath(fomPath.getText());
 				connection.setFederateName(federateName.getText());
@@ -331,7 +443,7 @@ implements ActionListener, ConnectionListener {
 	 * @return true, if the CRC port is valid
 	 */
 	private boolean isCrcPortValid() {
-		if(portNumber.getText().matches("[0-9]+")) {
+		if(((Number)portNumber.getValue()).intValue() > 0) {
 			portNumber.setForeground(Color.green);
 			return true;
 		} else {

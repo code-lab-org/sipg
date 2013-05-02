@@ -1,14 +1,6 @@
 package edu.mit.sips.hla;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.event.EventListenerList;
@@ -21,7 +13,6 @@ import edu.mit.sips.gui.event.ConnectionListener;
  */
 public class FederationConnection implements Serializable {
 	private static final long serialVersionUID = -4649447975331252471L;
-	private static final String CONNECTION_DATA = "connection.data";
 	private String host, federationName, fomPath, federateName, federateType;
 	private int port;
 	private transient volatile AtomicBoolean connected = new AtomicBoolean(false);
@@ -39,7 +30,6 @@ public class FederationConnection implements Serializable {
 		fomPath = "";
 		federateName = "";
 		federateType = "";
-		loadData();
 	}
 	
 	/**
@@ -69,13 +59,6 @@ public class FederationConnection implements Serializable {
 	 */
 	public void addConnectionListener(ConnectionListener listener) {
 		listenerList.add(ConnectionListener.class, listener);
-	}
-	
-	/**
-	 * Clears the saved connection data file.
-	 */
-	public void clearData() {
-		new File(CONNECTION_DATA).delete();
 	}
 	
 	/**
@@ -164,25 +147,7 @@ public class FederationConnection implements Serializable {
 			return connected.get();
 		}
 	}
-
-	/**
-	 * Checks if is data saved.
-	 *
-	 * @return true, if is data saved
-	 */
-	public boolean isDataSaved() {
-		InputStream input;
-		try {
-			input = new FileInputStream(new File(CONNECTION_DATA));
-			input.close();
-		} catch (FileNotFoundException e) {
-			return false;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-
+	
 	/**
 	 * Checks if is empty.
 	 *
@@ -198,56 +163,12 @@ public class FederationConnection implements Serializable {
 	}
 	
 	/**
-	 * Loads connection data from file.
-	 */
-	private void loadData() {
-		InputStream input;
-		Properties properties = new Properties();
-		try {
-			input = new FileInputStream(new File(CONNECTION_DATA));
-			properties.loadFromXML(input);
-			input.close();
-		} catch (FileNotFoundException e) {
-			return;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		federateName = properties.getProperty("name");
-		federateType = properties.getProperty("type");
-		federationName = properties.getProperty("federation");
-		fomPath = properties.getProperty("fom");
-		host = properties.getProperty("host");
-		port = Integer.parseInt(properties.getProperty("port"));
-	}
-	
-	/**
 	 * Removes the connection listener.
 	 *
 	 * @param listener the listener
 	 */
 	public void removeConnectionListener(ConnectionListener listener) {
 		listenerList.remove(ConnectionListener.class, listener);
-	}
-	
-	/**
-	 * Saves the connection data to file.
-	 */
-	public void saveData() {
-		OutputStream output;
-		Properties properties = new Properties();
-		properties.setProperty("name", federateName);
-		properties.setProperty("type", federateType);
-		properties.setProperty("federation", federationName);
-		properties.setProperty("fom", fomPath);
-		properties.setProperty("host", host);
-		properties.setProperty("port", new Integer(port).toString());
-		try {
-			output = new FileOutputStream(new File(CONNECTION_DATA));
-			properties.storeToXML(output, null);
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
