@@ -40,6 +40,7 @@ import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
 import edu.mit.sips.gui.energy.ElectricityElementPanel;
 import edu.mit.sips.gui.energy.PetroleumElementPanel;
 import edu.mit.sips.gui.water.WaterElementPanel;
+import edu.mit.sips.io.Icons;
 
 /**
  * The Class ElementPanel.
@@ -60,8 +61,11 @@ public class ElementPanel extends JPanel {
 		public Component getListCellRendererComponent(JList list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, 
+					isSelected, cellHasFocus);
 			if(value instanceof City) {
 				setText(((City)value).getName());
+				setIcon(Icons.CITY);
 			}
 			return this;
 		}
