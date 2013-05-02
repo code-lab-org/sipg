@@ -16,6 +16,13 @@ import java.util.EventListener;
 public interface UpdateListener extends EventListener {
 	
 	/**
+	 * Simulation completed.
+	 *
+	 * @param event the event
+	 */
+	public void simulationCompleted(UpdateEvent event);
+	
+	/**
 	 * Simulation initialized.
 	 *
 	 * @param event the event

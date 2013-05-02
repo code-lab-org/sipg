@@ -56,6 +56,30 @@ public class BasicEnergySystemPanel extends EnergySystemPanel {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do here
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationInitialized(UpdateEvent event) {
+		// nothing to do here
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationUpdated(UpdateEvent event) {
+		// nothing to do here
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
 	 */
 	@Override
@@ -69,16 +93,4 @@ public class BasicEnergySystemPanel extends EnergySystemPanel {
 		updateSeries(petroleumConsumption, "Consumption", year, 
 				getEnergySystem().getPetroleumConsumption());
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
-	@Override
-	public void simulationInitialized(UpdateEvent event) { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
-	@Override
-	public void simulationUpdated(UpdateEvent event) { }
 }

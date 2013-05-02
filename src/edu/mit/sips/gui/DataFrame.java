@@ -333,6 +333,22 @@ public class DataFrame extends JFrame implements UpdateListener {
 		editConnection.setEnabled(simulator != null);
 	}
 
+	/**
+	 * Show connection dialog.
+	 */
+	private void showConnectionDialog() {
+		JOptionPane.showMessageDialog(this, connectionPanel,
+				"Edit Connection", JOptionPane.PLAIN_MESSAGE);
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
 	 */
@@ -360,7 +376,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
 	 */
@@ -386,13 +402,5 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Show connection dialog.
-	 */
-	private void showConnectionDialog() {
-		JOptionPane.showMessageDialog(this, connectionPanel,
-				"Edit Connection", JOptionPane.PLAIN_MESSAGE);
 	}
 }

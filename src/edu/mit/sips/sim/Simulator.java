@@ -117,6 +117,7 @@ public class Simulator implements SimulationControlListener {
 		}
 		
 		if(time >= endTime) {
+			fireCompleteEvent(time);
 			try {
 				// TODO simAmbassador.disconnect();
 			} catch (Exception e) {
@@ -148,6 +149,19 @@ public class Simulator implements SimulationControlListener {
 	public synchronized void executeSimulation(Execute event) {
 		initialize(event.getStartTime(), event.getEndTime());
 		advance(endTime - time);
+	}
+	
+	/**
+	 * Fire complete event.
+	 *
+	 * @param event the event
+	 */
+	public void fireCompleteEvent(long time) {
+		System.out.println("Firing complete event with time " + time);
+		for(UpdateListener listener 
+				: listenerList.getListeners(UpdateListener.class)) {
+			listener.simulationCompleted(new UpdateEvent(this, time, country));
+		}
 	}
 	
 	/**

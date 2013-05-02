@@ -54,6 +54,11 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 	DefaultTableXYDataset electricityRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityNetRevenue = new DefaultTableXYDataset();
 
+	/**
+	 * Instantiates a new local energy system panel.
+	 *
+	 * @param energySystem the energy system
+	 */
 	public LocalEnergySystemPanel(EnergySystem.Local energySystem) {
 		super(energySystem);
 
@@ -148,19 +153,25 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 	public EnergySystem.Local getEnergySystem() {
 		return (EnergySystem.Local) getInfrastructureSystem();
 	}
-
-	@Override
-	public void simulationInitialized(UpdateEvent event) {
-		petroleumStatePanel.repaint();
-		electricityStatePanel.repaint();
+	
+	/**
+	 * Gets the nested energy systems.
+	 *
+	 * @return the nested energy systems
+	 */
+	private List<EnergySystem.Local> getNestedEnergySystems() {
+		List<EnergySystem.Local> systems = new ArrayList<EnergySystem.Local>();
+		for(Society nestedSociety : getSociety().getNestedSocieties()) {
+			if(nestedSociety.getWaterSystem() instanceof EnergySystem.Local) {
+				systems.add((EnergySystem.Local)nestedSociety.getEnergySystem());
+			}
+		}
+		return systems;
 	}
 
-	@Override
-	public void simulationUpdated(UpdateEvent event) {
-		petroleumStatePanel.repaint();
-		electricityStatePanel.repaint();
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
+	 */
 	@Override
 	public void initialize() {
 		petroleumReservoirIndicatorPanel.initialize();
@@ -187,21 +198,35 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 		petroleumNetRevenue.removeAllSeries();
 	}
 
-	/**
-	 * Gets the nested energy systems.
-	 *
-	 * @return the nested energy systems
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
-	private List<EnergySystem.Local> getNestedEnergySystems() {
-		List<EnergySystem.Local> systems = new ArrayList<EnergySystem.Local>();
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			if(nestedSociety.getWaterSystem() instanceof EnergySystem.Local) {
-				systems.add((EnergySystem.Local)nestedSociety.getEnergySystem());
-			}
-		}
-		return systems;
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do here
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationInitialized(UpdateEvent event) {
+		petroleumStatePanel.repaint();
+		electricityStatePanel.repaint();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationUpdated(UpdateEvent event) {
+		petroleumStatePanel.repaint();
+		electricityStatePanel.repaint();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
+	 */
 	@Override
 	public void update(int year) {
 		updateSeriesCollection(localElectricityData, getSociety().getName(), 

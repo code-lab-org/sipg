@@ -14,22 +14,6 @@ import edu.mit.sips.core.water.WaterSystem;
  */
 public class ConsoleLogger implements UpdateListener {
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
-	@Override
-	public void simulationInitialized(UpdateEvent event) {
-		printState(event.getCountry(), event.getTime());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
-	@Override
-	public void simulationUpdated(UpdateEvent event) {
-		printState(event.getCountry(), event.getTime());
-	}
-	
 	/**
 	 * Gets the local agriculture systems.
 	 *
@@ -41,22 +25,6 @@ public class ConsoleLogger implements UpdateListener {
 		for(City city : cities) {
 			if(city.getAgricultureSystem() instanceof AgricultureSystem.Local){
 				systems.add((AgricultureSystem.Local)city.getAgricultureSystem());
-			}
-		}
-		return systems;
-	}
-
-	/**
-	 * Gets the local water systems.
-	 *
-	 * @param cities the cities
-	 * @return the local water systems
-	 */
-	private List<WaterSystem.Local> getLocalWaterSystems(List<City> cities) {
-		List<WaterSystem.Local> systems = new ArrayList<WaterSystem.Local>();
-		for(City city : cities) {
-			if(city.getWaterSystem() instanceof WaterSystem.Local){
-				systems.add((WaterSystem.Local)city.getWaterSystem());
 			}
 		}
 		return systems;
@@ -78,6 +46,22 @@ public class ConsoleLogger implements UpdateListener {
 		return systems;
 	}
 	
+	/**
+	 * Gets the local water systems.
+	 *
+	 * @param cities the cities
+	 * @return the local water systems
+	 */
+	private List<WaterSystem.Local> getLocalWaterSystems(List<City> cities) {
+		List<WaterSystem.Local> systems = new ArrayList<WaterSystem.Local>();
+		for(City city : cities) {
+			if(city.getWaterSystem() instanceof WaterSystem.Local){
+				systems.add((WaterSystem.Local)city.getWaterSystem());
+			}
+		}
+		return systems;
+	}
+
 	/**
 	 * Prints the state.
 	 */
@@ -909,5 +893,29 @@ public class ConsoleLogger implements UpdateListener {
 		System.out.println();
 		
 		System.out.println();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationInitialized(UpdateEvent event) {
+		printState(event.getCountry(), event.getTime());
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationUpdated(UpdateEvent event) {
+		printState(event.getCountry(), event.getTime());
 	}
 }

@@ -273,6 +273,17 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		runOptimization.setEnabled(false);
+		stepSim.setEnabled(false);
+		advanceSim.setEnabled(false);
+		endSim.setEnabled(false);
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
@@ -288,7 +299,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) { 
-		// ignore
+		// nothing to do here
 	}
 
 	@Override

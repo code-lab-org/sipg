@@ -146,32 +146,12 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 	}
 	
-	/**
-	 * Update datasets.
-	 *
-	 * @param year the year
-	 * @param superSystem the system
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
-	public void updateDatasets(int year) {
-		infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
-				waterTab.getInfrastructureSystem().getName());
-		waterTab.update(year);
-
-		infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
-				agricultureTab.getInfrastructureSystem().getName());
-		agricultureTab.update(year);
-		
-		infraPane.setTitleAt(infraPane.indexOfComponent(energyTab), 
-				energyTab.getInfrastructureSystem().getName());
-		energyTab.update(year);
-
-		setTitleAt(indexOfComponent(socialTab), 
-				socialTab.getInfrastructureSystem().getName());
-		socialTab.update(year);
-		
-		for(SocietyPane subPane : nestedPaneList) {			
-			subPane.updateDatasets(year);
-		}
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do here
 	}
 	
 	/* (non-Javadoc)
@@ -201,6 +181,34 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		
 		for(SocietyPane nestedPane : nestedPaneList) {
 			nestedPane.simulationUpdated(event);
+		}
+	}
+
+	/**
+	 * Update datasets.
+	 *
+	 * @param year the year
+	 * @param superSystem the system
+	 */
+	public void updateDatasets(int year) {
+		infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
+				waterTab.getInfrastructureSystem().getName());
+		waterTab.update(year);
+
+		infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
+				agricultureTab.getInfrastructureSystem().getName());
+		agricultureTab.update(year);
+		
+		infraPane.setTitleAt(infraPane.indexOfComponent(energyTab), 
+				energyTab.getInfrastructureSystem().getName());
+		energyTab.update(year);
+
+		setTitleAt(indexOfComponent(socialTab), 
+				socialTab.getInfrastructureSystem().getName());
+		socialTab.update(year);
+		
+		for(SocietyPane subPane : nestedPaneList) {			
+			subPane.updateDatasets(year);
 		}
 	}
 }

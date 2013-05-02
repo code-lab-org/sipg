@@ -87,12 +87,26 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	public AgricultureSystem.Local getAgricultureSystem() {
 		return (AgricultureSystem.Local) getInfrastructureSystem();
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do here
+	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
+	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		agricultureStatePanel.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
+	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		agricultureStatePanel.repaint();

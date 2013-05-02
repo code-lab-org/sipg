@@ -69,16 +69,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 	}
 
 	@Override
-	public void simulationInitialized(UpdateEvent event) {
-		// nothing to do here
-	}
-
-	@Override
-	public void simulationUpdated(UpdateEvent event) {
-		// nothing to do here
-	}
-
-	@Override
 	public void initialize() {
 		fundsData.removeAllSeries();
 		infrastructureSystemRevenue.removeAllSeries();
@@ -89,6 +79,30 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 		societyRevenue.removeAllSeries();
 		societyNetRevenue.removeAllSeries();
 		domesticProductIndicatorPanel.initialize();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		// nothing to do here
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationInitialized(UpdateEvent event) {
+		// nothing to do here
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
+	 */
+	@Override
+	public void simulationUpdated(UpdateEvent event) {
+		// nothing to do here
 	}
 
 	@Override
