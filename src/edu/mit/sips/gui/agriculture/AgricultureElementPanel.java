@@ -30,7 +30,10 @@ public class AgricultureElementPanel extends ElementPanel {
 	private final JFormattedTextField maxLandAreaText;
 	private final JFormattedTextField initialLandAreaText;
 	private final JComboBox productCombo;
-	private final JLabel productOutput, productVariableCost, productWaterUse, productLaborUse;
+	private final JLabel productOutputLabel, productVariableCostLabel, 
+			productWaterUseLabel, productLaborUseLabel;
+	private final JLabel outputLabel, variableCostLabel, 
+			waterUseLabel, laborUseLabel;
 
 	private final JFormattedTextField maxFoodInput;
 	private final JFormattedTextField initialFoodInput;
@@ -73,6 +76,18 @@ public class AgricultureElementPanel extends ElementPanel {
 						try {
 							element.setInitialLandArea(
 									((Number) initialLandAreaText.getValue()).doubleValue());
+							outputLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getProduct().getFoodIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							variableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getProduct().getCostIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							waterUseLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getProduct().getWaterIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							laborUseLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getProduct().getLaborIntensityOfLandUsed()
+									*element.getInitialLandArea()));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -87,24 +102,36 @@ public class AgricultureElementPanel extends ElementPanel {
 				if(productCombo.getSelectedItem() instanceof AgricultureProduct) {
 					element.setProduct((AgricultureProduct)productCombo.getSelectedItem());
 				}
-				productOutput.setText(NumberFormat.getNumberInstance().format(
+				productOutputLabel.setText(NumberFormat.getNumberInstance().format(
 						element.getProduct().getFoodIntensityOfLandUsed()));
-				productVariableCost.setText(NumberFormat.getNumberInstance().format(
+				productVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
 						element.getProduct().getCostIntensityOfLandUsed()));
-				productWaterUse.setText(NumberFormat.getNumberInstance().format(
+				productWaterUseLabel.setText(NumberFormat.getNumberInstance().format(
 						element.getProduct().getWaterIntensityOfLandUsed()));
-				productLaborUse.setText(NumberFormat.getNumberInstance().format(
+				productLaborUseLabel.setText(NumberFormat.getNumberInstance().format(
 						element.getProduct().getLaborIntensityOfLandUsed()));
 			}
 		});
-		productOutput = new JLabel(NumberFormat.getNumberInstance().format(
+		productOutputLabel = new JLabel(NumberFormat.getNumberInstance().format(
 				element.getProduct().getFoodIntensityOfLandUsed()), JLabel.RIGHT);
-		productVariableCost = new JLabel(NumberFormat.getNumberInstance().format(
+		productVariableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
 				element.getProduct().getCostIntensityOfLandUsed()), JLabel.RIGHT);
-		productWaterUse = new JLabel(NumberFormat.getNumberInstance().format(
+		productWaterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
 				element.getProduct().getWaterIntensityOfLandUsed()), JLabel.RIGHT);
-		productLaborUse = new JLabel(NumberFormat.getNumberInstance().format(
+		productLaborUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
 				element.getProduct().getLaborIntensityOfLandUsed()), JLabel.RIGHT);
+		outputLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getFoodIntensityOfLandUsed()
+				*element.getInitialLandArea()), JLabel.RIGHT);
+		variableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getCostIntensityOfLandUsed()
+				*element.getInitialLandArea()), JLabel.RIGHT);
+		waterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getWaterIntensityOfLandUsed()
+				*element.getInitialLandArea()), JLabel.RIGHT);
+		laborUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				element.getProduct().getLaborIntensityOfLandUsed()
+				*element.getInitialLandArea()), JLabel.RIGHT);
 
 		maxFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxFoodInput.setColumns(10);
@@ -190,19 +217,31 @@ public class AgricultureElementPanel extends ElementPanel {
 					initialLandAreaText, "<html>km<sup>2</sup></html>");
 			addInput(elementPanel, c, "Product", productCombo, "");
 			JPanel productPanel = new JPanel();
-			productPanel.setLayout(new GridLayout(4, 3, 2, 2));
+			productPanel.setLayout(new GridLayout(4, 6, 2, 2));
 			productPanel.add(new JLabel("Food Output"));
-			productPanel.add(productOutput);
+			productPanel.add(productOutputLabel);
 			productPanel.add(new JLabel("<html>GJ/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("="));
+			productPanel.add(outputLabel);
+			productPanel.add(new JLabel("<html>Initial GJ</html>"));
 			productPanel.add(new JLabel("Variable Cost"));
-			productPanel.add(productVariableCost);
+			productPanel.add(productVariableCostLabel);
 			productPanel.add(new JLabel("<html>SAR/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("="));
+			productPanel.add(variableCostLabel);
+			productPanel.add(new JLabel("<html>Initial SAR</html>"));
 			productPanel.add(new JLabel("Water Use"));
-			productPanel.add(productWaterUse);
+			productPanel.add(productWaterUseLabel);
 			productPanel.add(new JLabel("<html>m<sup>3</sup>/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("="));
+			productPanel.add(waterUseLabel);
+			productPanel.add(new JLabel("<html>Initial m<sup>3</sup></html>"));
 			productPanel.add(new JLabel("Labor Use"));
-			productPanel.add(productLaborUse);
+			productPanel.add(productLaborUseLabel);
 			productPanel.add(new JLabel("<html>people/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("="));
+			productPanel.add(laborUseLabel);
+			productPanel.add(new JLabel("<html>Initial people</html>"));
 			addInput(elementPanel, c, "", productPanel, "");
 		}
 		if(element.getTemplate() == null 

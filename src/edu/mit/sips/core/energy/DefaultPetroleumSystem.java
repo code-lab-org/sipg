@@ -16,7 +16,8 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem.Local im
 			Collections.synchronizedList(new ArrayList<PetroleumElement>());
 	private final double maxPetroleumReservoirVolume;
 	private final double initialPetroleumReservoirVolume;
-	private double petroleumReservoirVolume, nextPetroleumReservoirVolume;
+	private double petroleumReservoirVolume;
+	private transient double nextPetroleumReservoirVolume;
 	
 	/**
 	 * Instantiates a new default petroleum system.

@@ -61,7 +61,8 @@ public class Country extends DefaultSociety implements Society {
 	}
 	
 	private final Globals globals = new Globals();	
-	private double funds, nextFunds;
+	private double funds;
+	private transient double nextFunds;
 
 	/**
 	 * Instantiates a new country.

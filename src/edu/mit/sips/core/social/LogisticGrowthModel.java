@@ -6,7 +6,8 @@ package edu.mit.sips.core.social;
  * See http://en.wikipedia.org/wiki/Logistic_function
  */
 public class LogisticGrowthModel implements PopulationModel {
-	private long time, nextTime;
+	private long time;
+	private transient long nextTime;
 	
 	private final long initialTime;
 	private final long initialPopulation;

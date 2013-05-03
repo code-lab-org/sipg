@@ -6,7 +6,8 @@ package edu.mit.sips.core;
  * @author Paul T. Grogan, ptgrogan@mit.edu
  */
 public class SimpleLifecycleModel implements LifecycleModel {
-	private long time, nextTime;
+	private long time;
+	private transient long nextTime;
 	private final long timeAvailable, timeInitialized, initializationDuration;
 	private final long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private final double capitalCost, fixedOperationsCost, decommissionCost;

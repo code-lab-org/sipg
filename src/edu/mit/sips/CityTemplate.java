@@ -1,12 +1,13 @@
 package edu.mit.sips;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.energy.DefaultEnergySystem;
+import edu.mit.sips.core.energy.EnergyElement;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -61,15 +62,7 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(3000, 
-									Arrays.asList(
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.RURAL.getName()),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.URBAN.getName())
-									)):
+									new ArrayList<AgricultureElement>()):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0,
@@ -77,17 +70,7 @@ public enum CityTemplate {
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
 							new DefaultEnergySystem.Local(1e10, 1e10,
-									Arrays.asList(
-											ElementFactory.createPetroleumWell(name, 1942),
-											ElementFactory.createPetroleumWell(name, 1955),
-											ElementFactory.createPetroleumWell(name, 1965),
-											ElementFactory.createPetroleumWell(name, 1975),
-											ElementFactory.createPetroleumWell(name, 1975),
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.RURAL.getName()),
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.URBAN.getName())
-									)):
+									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(
@@ -97,15 +80,7 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(10000, 
-									Arrays.asList(
-											ElementFactory.createGrazingLand(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.INDUSTRIAL.getName()),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.URBAN.getName())
-									)):
+									new ArrayList<AgricultureElement>()):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0,
@@ -113,12 +88,7 @@ public enum CityTemplate {
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
 							new DefaultEnergySystem.Local(0, 0,
-									Arrays.asList(
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.INDUSTRIAL.getName()),
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.URBAN.getName())
-									)):
+									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(
@@ -128,32 +98,15 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(4000, 
-									Arrays.asList(
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDateFarm(name),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.INDUSTRIAL.getName()),
-											ElementFactory.createDefaultFoodDistribution(
-													name, CityTemplate.RURAL.getName())
-									)):
+									new ArrayList<AgricultureElement>()):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0,
-									Arrays.asList(
-											ElementFactory.createAquiferWell(name, 1940),
-											ElementFactory.createAquiferWell(name, 1965)
-									)):
+									new ArrayList<WaterElement>()):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
 							new DefaultEnergySystem.Local(0, 0,
-									Arrays.asList(
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.INDUSTRIAL.getName()),
-											ElementFactory.createDefaultPetroleumDistribution(
-													name, CityTemplate.RURAL.getName())
-									)):
+									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(

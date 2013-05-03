@@ -20,7 +20,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
 		private final PopulationModel populationModel;
 		private final double initialDomesticProductPerCapita;
-		private double domesticProduct, nextDomesticProduct;
+		private double domesticProduct;
+		private transient double nextDomesticProduct;
 		
 		/**
 		 * Instantiates a new local.

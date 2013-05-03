@@ -43,11 +43,5 @@ public class SuperPlayer {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
-		try {
-			simulator.getAmbassador().connect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 }

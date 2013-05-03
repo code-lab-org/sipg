@@ -10,7 +10,8 @@ public class ExponentialGrowthModel implements PopulationModel {
 	private final long initialPopulation;
 	private final double growthRate;
 	
-	private long time, nextTime;
+	private long time;
+	private transient long nextTime;
 	
 	/**
 	 * Instantiates a new exponential growth model.

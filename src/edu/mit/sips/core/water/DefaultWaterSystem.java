@@ -26,7 +26,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private final double initialWaterSupplyPerCapita;
 		private final boolean coastal; // TODO use for desalination elements
 
-		private double waterReservoirVolume, nextWaterReservoirVolume;
+		private double waterReservoirVolume;
+		private transient double nextWaterReservoirVolume;
 		private double waterSupplyPerCapita;
 		
 		/**

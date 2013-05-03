@@ -76,42 +76,42 @@ public enum ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							62.5e3, 6.25e3, 12.5e3, true), 
-					250, 0, AgricultureProduct.LIVESTOCK);
+					500, 500, AgricultureProduct.LIVESTOCK);
 		case LIVESTOCK_2:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							220.0e3, 22.0e3, 44.0e3, true), 
-					1000, 0, AgricultureProduct.LIVESTOCK);
+					2000, 2000, AgricultureProduct.LIVESTOCK);
 		case DATES_1:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							12.5e6, 1.25e6, 2.5e6, true), 
-					250, 0, AgricultureProduct.DATES);
+					250, 250, AgricultureProduct.DATES);
 		case DATES_2:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							49.0e6, 4.9e6, 9.8e6, true), 
-					1000, 0, AgricultureProduct.DATES);
+					1000, 1000, AgricultureProduct.DATES);
 		case GRAINS_1:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							50e6, 5e6, 10e6, true), 
-					500, 0, AgricultureProduct.GRAINS);
+					500, 500, AgricultureProduct.GRAINS);
 		case GRAINS_2:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 200, 1, 
 							237.5e6, 2.375e6, 47.5e6, true), 
-					2500, 0, AgricultureProduct.GRAINS);
+					2500, 2500, AgricultureProduct.GRAINS);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 
@@ -125,63 +125,63 @@ public enum ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 50, 1, 
 							30e6, 3e6, 6e6, true), 
-					1, 1e6, 0, 0.0053, 3);
+					1, 1e6, 1e6, 0.0053, 3);
 		case AQUIFER_PUMP_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, 50, 1, 
 							125e6, 12.5e6, 25e6, true), 
-					1, 5e6, 0, 0.0053, 2.75);
+					1, 5e6, 5e6, 0.0053, 2.75);
 		case AQUIFER_PUMP_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, 50, 1, 
 							125e6, 12.5e6, 25e6, true), 
-					1, 25e6, 0, 0.0053, 2.5);
+					1, 25e6, 25e6, 0.0053, 2.5);
 		case TD_DESAL_1:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							4e9, 400e6, 800e6, true), 
-					0, 10e6, 0, 0.0533, 15);
+					0, 10e6, 10e6, 0.0533, 15);
 		case TD_DESAL_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							7.5e9, 750e6, 1.5e9, true), 
-					0, 25e6, 0, 0.048, 12);
+					0, 25e6, 25e6, 0.048, 12);
 		case TD_DESAL_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							10e9, 1e9, 2e9, true), 
-					0, 50e6, 0, 0.04, 10);
+					0, 50e6, 50e6, 0.04, 10);
 		case RO_DESAL_1:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							7e9, 700e6, 1.4e9, true), 
-					0, 20e6, 0, 0.04, 25);
+					0, 20e6, 20e6, 0.04, 25);
 		case RO_DESAL_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							12.5e9, 1.25e9, 2.5e9, true), 
-					0, 50e6, 0, 0.032, 20);
+					0, 50e6, 50e6, 0.032, 20);
 		case RO_DESAL_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, 40, 2, 
 							15e9, 1.5e9, 3e9, true), 
-					0, 100e6, 0, 0.0267, 18);
+					0, 100e6, 100e6, 0.0267, 18);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 
