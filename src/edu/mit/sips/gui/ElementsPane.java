@@ -51,8 +51,9 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.comp.ElementTreeNode;
 import edu.mit.sips.gui.comp.NetworkTreeModel;
 import edu.mit.sips.gui.comp.SocietyTreeNode;
-import edu.mit.sips.gui.water.WaterElementInfoPanel;
+import edu.mit.sips.gui.water.WaterPopupInfoPanel;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.sim.Simulator;
 
 /**
  * The Class ElementsPane.
@@ -60,9 +61,10 @@ import edu.mit.sips.io.Icons;
 public class ElementsPane extends JPanel {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
-	private NetworkTreeModel elementsTreeModel;
-	private JTree elementsTree;
-	private final Country country;
+	private final ElementPopup elementPopup;
+	private final NetworkTreeModel elementsTreeModel;
+	private final JTree elementsTree;
+	private final Simulator simulator;
 
 	private final ListCellRenderer templateRenderer = new DefaultListCellRenderer() {
 		private static final long serialVersionUID = 3761951866857845749L;
@@ -173,10 +175,11 @@ public class ElementsPane extends JPanel {
 	/**
 	 * Instantiates a new elements pane.
 	 *
-	 * @param country the country
+	 * @param simulator the simulator
 	 */
-	public ElementsPane(Country country) {
-		this.country = country;
+	public ElementsPane(Simulator simulator) {
+		this.simulator = simulator;
+		elementPopup = new ElementPopup(simulator);
 		
 		addElementTemplate.putValue(Action.SHORT_DESCRIPTION, 
 				"Add element from a template.");
@@ -223,10 +226,29 @@ public class ElementsPane extends JPanel {
 				if(element != null) {
 					JPopupMenu popup = new JPopupMenu(element.getName());
 					if(element instanceof WaterElement) {
-						popup.add(new WaterElementInfoPanel((WaterElement)element));
+						popup.add(new WaterPopupInfoPanel((WaterElement)element));
 						popup.show(e.getComponent(), e.getX()+10, e.getY()+10);
 					}
 				}
+			}
+		});
+		elementsTree.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				InfrastructureElement element = elementsTreeModel.getElement(
+						elementsTree.getPathForLocation(e.getX(), e.getY()));
+				if(element==null) {
+					elementPopup.setVisible(false);
+				} else {
+					if(!element.equals(elementPopup.getElement())) {
+						elementPopup.setElement(element);
+					}
+					elementPopup.show(e.getComponent(), e.getX()+10, e.getY()+10);
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				elementPopup.setVisible(false);
 			}
 		});
 		elementsTree.getSelectionModel().addTreeSelectionListener(
@@ -308,7 +330,7 @@ public class ElementsPane extends JPanel {
 	 * Initialize.
 	 */
 	public void initialize() {
-		elementsTreeModel.setState(country);
+		elementsTreeModel.setState(simulator.getCountry());
 		addElement.setEnabled(false);
 		addElementTemplate.setEnabled(false);
 		editElement.setEnabled(false);
@@ -323,7 +345,7 @@ public class ElementsPane extends JPanel {
 	 */
 	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementPanel.createElementPanel(country, mutableElement), 
+				ElementPanel.createElementPanel(simulator.getCountry(), mutableElement), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
@@ -370,7 +392,7 @@ public class ElementsPane extends JPanel {
 						"Element was not a known element type.");
 			}
 			elementsTreeModel.elementRemoved(element);
-			if(country.getInternalElements().contains(newElement)) {
+			if(simulator.getCountry().getInternalElements().contains(newElement)) {
 				elementsTreeModel.elementAdded(newElement);
 				elementsTree.setSelectionPath(elementsTreeModel.getPath(newElement));
 			}

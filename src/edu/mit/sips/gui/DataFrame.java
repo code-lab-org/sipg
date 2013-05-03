@@ -306,7 +306,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			societyPane = new SocietyPane(this.simulator.getCountry());
 			societyPane.initialize();
 			this.simulator.addUpdateListener(societyPane);
-			elementsPane = new ElementsPane(simulator.getCountry());
+			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
 			this.simulationPane = new SimulationControlPane(this.simulator);
 			this.simulator.getConnection().addConnectionListener(simulationPane);
