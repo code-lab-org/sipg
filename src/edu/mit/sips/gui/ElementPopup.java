@@ -98,6 +98,8 @@ public class ElementPopup extends JPopupMenu implements UpdateListener {
 	 * @return the popup info panel
 	 */
 	private static PopupInfoPanel createPopupInfoPanel(InfrastructureElement element) {
+		// TODO a more efficient implementation would cache created panels
+		// rather than recreating for each element type
 		if(element instanceof WaterElement) {
 			return new WaterPopupInfoPanel((WaterElement)element);
 		} else if(element instanceof AgricultureElement) {
