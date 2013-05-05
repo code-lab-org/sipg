@@ -15,6 +15,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
@@ -51,7 +52,6 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.comp.ElementTreeNode;
 import edu.mit.sips.gui.comp.NetworkTreeModel;
 import edu.mit.sips.gui.comp.SocietyTreeNode;
-import edu.mit.sips.gui.water.WaterPopupInfoPanel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
 
@@ -61,6 +61,7 @@ import edu.mit.sips.sim.Simulator;
 public class ElementsPane extends JPanel {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
+	private final JPopupMenu contextPopup;
 	private final ElementPopup elementPopup;
 	private final NetworkTreeModel elementsTreeModel;
 	private final JTree elementsTree;
@@ -128,7 +129,7 @@ public class ElementsPane extends JPanel {
 	};
 
 	private final Action addElementTemplate = new AbstractAction(
-			null, Icons.ADD_WIZARD) {
+			"Add from Template", Icons.ADD_WIZARD) {
 		private static final long serialVersionUID = -6723630338741885195L;
 
 		@Override
@@ -138,7 +139,7 @@ public class ElementsPane extends JPanel {
 	};
 	
 	private final Action addElement = new AbstractAction(
-			null, Icons.ADD) {
+			"Add Custom", Icons.ADD) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -148,7 +149,7 @@ public class ElementsPane extends JPanel {
 	};
 	
 	private final Action editElement = new AbstractAction( 
-			null, Icons.EDIT) {
+			"Edit Properties", Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -163,7 +164,7 @@ public class ElementsPane extends JPanel {
 	};
 	
 	private final Action removeElement = new AbstractAction(
-			null, Icons.DELETE) {
+			"Delete", Icons.DELETE) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -179,6 +180,13 @@ public class ElementsPane extends JPanel {
 	 */
 	public ElementsPane(Simulator simulator) {
 		this.simulator = simulator;
+		
+		contextPopup = new JPopupMenu();
+		contextPopup.add(new JMenuItem(addElementTemplate));
+		contextPopup.add(new JMenuItem(addElement));
+		contextPopup.add(new JMenuItem(editElement));
+		contextPopup.add(new JMenuItem(removeElement));
+		
 		elementPopup = new ElementPopup(simulator);
 		
 		addElementTemplate.putValue(Action.SHORT_DESCRIPTION, 
@@ -221,14 +229,17 @@ public class ElementsPane extends JPanel {
 									(int) System.currentTimeMillis(), 
 									"addElement"));
 				}
-				InfrastructureElement element = elementsTreeModel.getElement(
-						elementsTree.getPathForLocation(e.getX(), e.getY()));
-				if(element != null) {
-					JPopupMenu popup = new JPopupMenu(element.getName());
-					if(element instanceof WaterElement) {
-						popup.add(new WaterPopupInfoPanel((WaterElement)element));
-						popup.show(e.getComponent(), e.getX()+10, e.getY()+10);
-					}
+				maybeShowPopup(e);
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				maybeShowPopup(e);
+			}
+
+			private void maybeShowPopup(MouseEvent e) {
+				if(e.isPopupTrigger()) {
+					contextPopup.show(e.getComponent(), e.getX(), e.getY());
 				}
 			}
 		});
@@ -255,10 +266,6 @@ public class ElementsPane extends JPanel {
 				new TreeSelectionListener() {
 					@Override
 					public void valueChanged(TreeSelectionEvent e) {
-						boolean isCitySelected = elementsTreeModel.getSociety(
-								elementsTree.getSelectionPath()) instanceof City;
-						addElement.setEnabled(isCitySelected);
-						addElementTemplate.setEnabled(isCitySelected);
 						boolean isElementSelected = elementsTreeModel.getElement(
 								elementsTree.getSelectionPath()) != null;
 						editElement.setEnabled(isElementSelected);
@@ -269,10 +276,18 @@ public class ElementsPane extends JPanel {
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-		buttonPanel.add(new JButton(addElementTemplate));
-		buttonPanel.add(new JButton(addElement));
-		buttonPanel.add(new JButton(editElement));
-		buttonPanel.add(new JButton(removeElement));
+		JButton addTemplateButton = new JButton(addElementTemplate);
+		addTemplateButton.setText(null);
+		buttonPanel.add(addTemplateButton);
+		JButton addButton = new JButton(addElement);
+		addButton.setText(null);
+		buttonPanel.add(addButton);
+		JButton editButton = new JButton(editElement);
+		editButton.setText(null);
+		buttonPanel.add(editButton);
+		JButton removeButton = new JButton(removeElement);
+		removeButton.setText(null);
+		buttonPanel.add(removeButton);
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
 	
@@ -289,6 +304,9 @@ public class ElementsPane extends JPanel {
 				ElementTemplate template = (ElementTemplate)templateList.getSelectedValue();
 				City selectedCity = (City)elementsTreeModel.getSociety(
 						elementsTree.getSelectionPath());
+				if(selectedCity == null) {
+					selectedCity = simulator.getCountry().getCities().get(0);
+				}
 				MutableInfrastructureElement element = template.createElement(
 						template.getTimeAvailable(), selectedCity.getName(), 
 						selectedCity.getName()).getMutableElement();
@@ -331,8 +349,6 @@ public class ElementsPane extends JPanel {
 	 */
 	public void initialize() {
 		elementsTreeModel.setState(simulator.getCountry());
-		addElement.setEnabled(false);
-		addElementTemplate.setEnabled(false);
 		editElement.setEnabled(false);
 		removeElement.setEnabled(false);
 	}
