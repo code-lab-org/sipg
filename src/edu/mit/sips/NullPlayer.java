@@ -21,7 +21,7 @@ public class NullPlayer {
 		final Country ksa = CountryFactory.createSaudiCountry(
 				new ArrayList<CityTemplate>(), new ArrayList<Sector>());
 
-		final Simulator simulator = new Simulator("Null Player", ksa);
+		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -35,6 +35,9 @@ public class NullPlayer {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// set federate name after data is loaded in initialization
+		simulator.getConnection().setFederateName("Null Player");
 		
 		try {
 			simulator.getAmbassador().connect();

@@ -22,7 +22,7 @@ public class Player2 {
 				Arrays.asList(CityTemplate.URBAN),
 				Arrays.asList(Sector.WATER));
 
-		final Simulator simulator = new Simulator("Water Player", ksa);
+		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -36,6 +36,9 @@ public class Player2 {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// set federate name after data is loaded in initialization
+		simulator.getConnection().setFederateName("Water Player");
 		
 		try {
 			simulator.getAmbassador().connect();

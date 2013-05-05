@@ -22,7 +22,7 @@ public class Player1 {
 				Arrays.asList(CityTemplate.INDUSTRIAL),
 				Arrays.asList(Sector.ENERGY));
 
-		final Simulator simulator = new Simulator("Energy Player", ksa);
+		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -36,6 +36,9 @@ public class Player1 {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// set federate name after data is loaded in initialization
+		simulator.getConnection().setFederateName("Energy Player");
 		
 		try {
 			simulator.getAmbassador().connect();

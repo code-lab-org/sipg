@@ -112,8 +112,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					br.close();
 					fr.close();
 					
-					initialize(new Simulator(null,
-							Serialization.deserialize(jsonBuilder.toString())));
+					initialize(new Simulator(Serialization.deserialize(jsonBuilder.toString())));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
 							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -337,6 +336,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 * Show connection dialog.
 	 */
 	private void showConnectionDialog() {
+		connectionPanel.updateFields();
 		JOptionPane.showMessageDialog(this, connectionPanel,
 				"Edit Connection", JOptionPane.PLAIN_MESSAGE);
 	}

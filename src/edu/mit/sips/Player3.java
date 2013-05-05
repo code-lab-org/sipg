@@ -22,7 +22,7 @@ public class Player3 {
 				Arrays.asList(CityTemplate.RURAL),
 				Arrays.asList(Sector.AGRICULTURE));
 
-		final Simulator simulator = new Simulator("Agriculture Player", ksa);
+		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -36,6 +36,9 @@ public class Player3 {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// set federate name after data is loaded in initialization
+		simulator.getConnection().setFederateName("Agriculture Player");
 		
 		try {
 			simulator.getAmbassador().connect();

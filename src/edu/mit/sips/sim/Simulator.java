@@ -1,9 +1,9 @@
 package edu.mit.sips.sim;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIinternalError;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
@@ -57,11 +57,7 @@ public class Simulator implements SimulationControlListener {
 	 * @param federateName the federate name
 	 * @param country the country
 	 */
-	public Simulator(String federateName, Country country) {
-		if(federateName != null) {
-			this.connection.setFederateName(federateName);
-		}
-				
+	public Simulator(Country country) {
 		// Validate country.
 		if(country == null) {
 			throw new IllegalArgumentException("Country cannot be null.");

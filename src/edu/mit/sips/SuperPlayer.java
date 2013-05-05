@@ -29,7 +29,7 @@ public class SuperPlayer {
 						Sector.WATER,
 						Sector.ENERGY));
 
-		final Simulator simulator = new Simulator("Super Player", ksa);
+		final Simulator simulator = new Simulator(ksa);
 		simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
@@ -43,5 +43,8 @@ public class SuperPlayer {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		
+		// set federate name after data is loaded in initialization
+		simulator.getConnection().setFederateName("Super Player");
 	}
 }

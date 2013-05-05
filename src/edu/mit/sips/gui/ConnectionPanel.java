@@ -368,6 +368,14 @@ implements ActionListener, ConnectionListener {
 		this.simulator = simulator;
 		
 		loadData();
+		updateFields();
+		isDataValid();
+	}
+	
+	/**
+	 * Update fields.
+	 */
+	public void updateFields() {
 		connectButton.setText(simulator.getConnection().isConnected()?"Disconnect":"Connect");
 		federateName.setText(simulator.getConnection().getFederateName());
 		federateType.setText(simulator.getConnection().getFederateType());
@@ -376,7 +384,6 @@ implements ActionListener, ConnectionListener {
 		hostAddress.setText(simulator.getConnection().getHost());
 		portNumber.setValue(simulator.getConnection().getPort());
 		rememberCheck.setSelected(isDataSaved());
-		isDataValid();
 	}
 
 	/**
