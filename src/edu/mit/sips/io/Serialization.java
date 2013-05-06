@@ -1,6 +1,7 @@
 package edu.mit.sips.io;
 
 import java.lang.reflect.Type;
+import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,22 +16,27 @@ import com.google.gson.JsonSerializer;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.core.MutableSimpleLifecycleModel;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.core.energy.ElectricityElement;
 import edu.mit.sips.core.energy.ElectricitySoS;
 import edu.mit.sips.core.energy.ElectricitySystem;
 import edu.mit.sips.core.energy.EnergyElement;
 import edu.mit.sips.core.energy.EnergySoS;
 import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.energy.MutableElectricityElement;
+import edu.mit.sips.core.energy.MutablePetroleumElement;
 import edu.mit.sips.core.energy.PetroleumElement;
 import edu.mit.sips.core.energy.PetroleumSoS;
 import edu.mit.sips.core.energy.PetroleumSystem;
 import edu.mit.sips.core.social.PopulationModel;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
@@ -127,6 +133,99 @@ public final class Serialization {
 	public static Country deserialize(String json) {
 		Country country = getGson().fromJson(json, Country.class);
 		recursiveReplaceCircularReferences(country);
+		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local){
+			List<? extends AgricultureElement> elements = ((AgricultureSystem.Local)country.getAgricultureSystem()).getInternalElements();
+			for(AgricultureElement element : elements) {
+				((AgricultureSystem.Local)country.getAgricultureSystem()).removeElement(element);
+				MutableAgricultureElement mutable = (MutableAgricultureElement) element.getMutableElement();
+				MutableAgricultureElement template = (MutableAgricultureElement) 
+						element.getTemplate().createElement(
+								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+								element.getOrigin(), element.getDestination()).getMutableElement();
+				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
+						((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+				mutable.setDistributionEfficiency(template.getDistributionEfficiency());
+				//mutable.setInitialFoodInput(template.getInitialFoodInput());
+				//mutable.setInitialLandArea(template.getInitialLandArea());
+				mutable.setLifecycleModel(template.getLifecycleModel());
+				mutable.setMaxFoodInput(template.getMaxFoodInput());
+				mutable.setMaxLandArea(template.getMaxLandArea());
+				mutable.setProduct(template.getProduct());
+				mutable.setVariableOperationsCostOfFoodDistribution(template.getVariableOperationsCostOfFoodDistribution());
+				((AgricultureSystem.Local)country.getAgricultureSystem()).addElement(mutable.createElement());
+			}
+		}
+		if(country.getWaterSystem() instanceof WaterSystem.Local){
+			List<? extends WaterElement> elements = ((WaterSystem.Local)country.getWaterSystem()).getInternalElements();
+			for(WaterElement element : elements) {
+				((WaterSystem.Local)country.getWaterSystem()).removeElement(element);
+				MutableWaterElement mutable = (MutableWaterElement) element.getMutableElement();
+				MutableWaterElement template = (MutableWaterElement) 
+						element.getTemplate().createElement(
+								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+								element.getOrigin(), element.getDestination()).getMutableElement();
+				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
+						((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+				mutable.setDistributionEfficiency(template.getDistributionEfficiency());
+				mutable.setElectricalIntensityOfWaterDistribution(template.getElectricalIntensityOfWaterDistribution());
+				mutable.setElectricalIntensityOfWaterProduction(template.getElectricalIntensityOfWaterProduction());
+				//mutable.setInitialWaterInput(template.getInitialWaterInput());
+				//mutable.setInitialWaterProduction(template.getInitialWaterProduction());
+				mutable.setLifecycleModel(template.getLifecycleModel());
+				mutable.setMaxWaterInput(template.getMaxWaterInput());
+				mutable.setMaxWaterProduction(template.getMaxWaterProduction());
+				mutable.setReservoirIntensityOfWaterProduction(template.getReservoirIntensityOfWaterProduction());
+				mutable.setVariableOperationsCostOfWaterDistribution(template.getVariableOperationsCostOfWaterDistribution());
+				mutable.setVariableOperationsCostOfWaterProduction(template.getVariableOperationsCostOfWaterDistribution());
+				((WaterSystem.Local)country.getWaterSystem()).addElement(mutable.createElement());
+			}
+		}
+		if(country.getEnergySystem() instanceof EnergySystem.Local){
+			List<? extends EnergyElement> elements = ((EnergySystem.Local)country.getEnergySystem()).getInternalElements();
+			for(EnergyElement element : elements) {
+				((EnergySystem.Local)country.getEnergySystem()).removeElement(element);
+				if(element instanceof PetroleumElement) {
+					MutablePetroleumElement mutable = (MutablePetroleumElement) element.getMutableElement();
+					MutablePetroleumElement template = (MutablePetroleumElement) 
+							element.getTemplate().createElement(
+									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									element.getOrigin(), element.getDestination()).getMutableElement();
+					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
+							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
+					mutable.setElectricalIntensityOfPetroleumDistribution(template.getElectricalIntensityOfPetroleumDistribution());
+					//mutable.setInitialPetroleumInput(template.getInitialPetroleumInput());
+					//mutable.setInitialPetroleumProduction(template.getInitialPetroleumProduction());
+					mutable.setLifecycleModel(template.getLifecycleModel());
+					mutable.setMaxPetroleumInput(template.getMaxPetroleumInput());
+					mutable.setMaxPetroleumProduction(template.getMaxPetroleumProduction());
+					mutable.setReservoirIntensityOfPetroleumProduction(template.getReservoirIntensityOfPetroleumProduction());
+					mutable.setVariableOperationsCostOfPetroleumDistribution(template.getVariableOperationsCostOfPetroleumDistribution());
+					mutable.setVariableOperationsCostOfPetroleumProduction(template.getVariableOperationsCostOfPetroleumDistribution());
+					((EnergySystem.Local)country.getEnergySystem()).addElement(mutable.createElement());
+				}
+				if(element instanceof ElectricityElement) {
+					MutableElectricityElement mutable = (MutableElectricityElement) element.getMutableElement();
+					MutableElectricityElement template = (MutableElectricityElement) 
+							element.getTemplate().createElement(
+									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									element.getOrigin(), element.getDestination()).getMutableElement();
+					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
+							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
+					//mutable.setInitialElectricityInput(template.getInitialElectricityInput());
+					//mutable.setInitialElectricityProduction(template.getInitialElectricityProduction());
+					mutable.setLifecycleModel(template.getLifecycleModel());
+					mutable.setMaxElectricityInput(template.getMaxElectricityInput());
+					mutable.setMaxElectricityProduction(template.getMaxElectricityProduction());
+					mutable.setPetroleumIntensityOfElectricityProduction(template.getPetroleumIntensityOfElectricityProduction());
+					mutable.setVariableOperationsCostOfElectricityDistribution(template.getVariableOperationsCostOfElectricityDistribution());
+					mutable.setVariableOperationsCostOfElectricityProduction(template.getVariableOperationsCostOfElectricityDistribution());
+					mutable.setWaterIntensityOfElectricityProduction(template.getWaterIntensityOfElectricityProduction());
+					((EnergySystem.Local)country.getEnergySystem()).addElement(mutable.createElement());
+				}
+			}
+		}
 		return country;
 	}
 	
