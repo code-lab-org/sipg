@@ -24,7 +24,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 * @param variableOperationsCostOfElectricityDistribution the variable operations cost of electricity distribution
 	 * @return the electricity element
 	 */
-	public static ElectricityElement createDistributionEement(
+	public static ElectricityElement createDistributionElement(
 			ElementTemplate template, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,

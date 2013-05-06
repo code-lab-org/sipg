@@ -69,7 +69,7 @@ public enum CityTemplate {
 									new ArrayList<WaterElement>()):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(1e10, 1e10,
+							new DefaultEnergySystem.Local(3e9, 3e9,
 									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?
@@ -87,7 +87,7 @@ public enum CityTemplate {
 									new ArrayList<WaterElement>()):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(0, 0,
+							new DefaultEnergySystem.Local(500e6, 500e6,
 									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?
@@ -105,7 +105,7 @@ public enum CityTemplate {
 									new ArrayList<WaterElement>()):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(0, 0,
+							new DefaultEnergySystem.Local(500e6, 500e6,
 									new ArrayList<EnergyElement>()):
 								new DefaultEnergySystem.Remote(),
 					assigned?

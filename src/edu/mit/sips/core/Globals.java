@@ -1,6 +1,3 @@
-/*
- * 
- */
 package edu.mit.sips.core;
 
 /**
