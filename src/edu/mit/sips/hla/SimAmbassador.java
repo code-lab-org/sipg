@@ -730,7 +730,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		if(localSystem != null) {
 			try {
-				localSystem.updateAttributes(theAttributes);
+				localSystem.provideAttributes(theAttributes);
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				JOptionPane.showMessageDialog(null, "An exception of type " 
