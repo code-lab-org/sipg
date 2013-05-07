@@ -106,6 +106,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
 	private volatile AtomicBoolean syncRegistered = new AtomicBoolean(false);
+	private volatile AtomicBoolean syncRegisterSuccess = new AtomicBoolean(false);
 	private volatile AtomicBoolean syncAnnounced = new AtomicBoolean(false);
 	private volatile AtomicBoolean syncAchieved = new AtomicBoolean(false);
 	private volatile AtomicBoolean saveInitiated = new AtomicBoolean(false);
@@ -440,6 +441,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 				Thread.yield();
 			}
 			syncRegistered.set(false);
+			syncRegisterSuccess.set(false);
 			
 			System.out.println("GALT not valid: requesting ta to " 
 					+ timeFactory.makeTime((startTime-2)*unitsPerYear));
@@ -626,14 +628,19 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		syncAchieved.set(false);
 		
-		try {
-			rtiAmbassador.requestFederationRestore("initialState");
-			
-			while(!restorationConfirmed.get()) {
-				Thread.yield();
-			}
-			restorationConfirmed.set(false);
-		} catch(RestoreInProgress ignored) {}
+		if(syncRegisterSuccess.get()) {
+			// if this federate registered the sync point, it also
+			// requests the federation restore
+			try {
+				rtiAmbassador.requestFederationRestore("initialState");
+				
+				while(!restorationConfirmed.get()) {
+					Thread.yield();
+				}
+				restorationConfirmed.set(false);
+			} catch(RestoreInProgress ignored) {}
+		}
+		syncRegisterSuccess.set(false);
 		
 		while(!restorationBegun.get()) {
 			Thread.yield();
@@ -942,6 +949,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
 			throws FederateInternalError {
 		syncRegistered.set(true);
+		syncRegisterSuccess.set(true);
 		System.out.println(synchronizationPointLabel + " registration succeeded");
 	}
 
@@ -953,6 +961,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			SynchronizationPointFailureReason reason)
 					throws FederateInternalError {
 		syncRegistered.set(true);
+		syncRegisterSuccess.set(false);
 		System.out.println(synchronizationPointLabel + " registration failed: " + reason);
 	}
 
@@ -1049,7 +1058,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
 			throws FederateInternalError {
-		System.out.println("Federate Restore Initiated");
+		System.out.println("Federate Restore to " + label + " Initiated");
 		restorationInitiated.set(true);
 	}
 
