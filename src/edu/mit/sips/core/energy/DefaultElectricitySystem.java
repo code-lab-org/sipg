@@ -253,14 +253,13 @@ public class DefaultElectricitySystem extends DefaultInfrastructureSystem.Local 
 			double electricityFromBurningLocalPetroleum = 0;
 			if(getPetroleumBurned() > 0) {
 				electricityFromBurningLocalPetroleum = getElectricityFromBurningPetroleum()
-						* Math.min(getPetroleumBurned(), 
-								getEnergySystem().getPetroleumSystem().getPetroleumProduction())
-						/ getPetroleumBurned();
+						* Math.min(1, getEnergySystem().getPetroleumSystem().
+								getPetroleumProduction()/getPetroleumBurned());
 			}
 			
-			return Math.min(1, getElectricityProduction()
+			return Math.min(1, (getElectricityProduction()
 					+ electricityFromBurningLocalPetroleum)
-					/ getSociety().getTotalElectricityDemand();
+					/ getSociety().getTotalElectricityDemand());
 		}
 		return 0;
 	}
