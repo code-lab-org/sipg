@@ -9,13 +9,13 @@ public class Globals {
 	private double agricultureLaborParticipationRate = 0.50;			// -
 	private double foodDomesticPrice = 200;								// SAR/GJ
 	private double foodImportPrice = 250;								// SAR/GJ
-	private double foodExportPrice = 225;								// SAR/GJ
+	private double foodExportPrice = 200;								// SAR/GJ
 	private double minFoodDemandPerCapita = 2;							// GJ/person
 	private double maxFoodDemandPerCapita = 4.5;						// GJ/person
 	private double econProductMinFoodDemand = 0;						// SAR/SAR
 	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
-	private double privateConsumptionFromFoodProduction = 0;			// SAR/GJ
-	private double privateConsumptionFromFoodConsumption = 0;			// SAR/GJ
+	private double privateConsumptionFromFoodProduction = 50;			// SAR/GJ
+	private double privateConsumptionFromFoodConsumption = 500;			// SAR/GJ
 	
 	private double waterImportPrice = 40;								// SAR/m^3
 	private double waterDomesticPrice = 6.;								// SAR/m^3

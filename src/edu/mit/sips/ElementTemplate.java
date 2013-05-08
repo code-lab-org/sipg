@@ -110,15 +110,15 @@ public enum ElementTemplate {
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
-							12.5e6, 1.25e6, 2.5e6, true), 
-					250, 250, AgricultureProduct.DATES);
+							25e6, 2.5e6, 5e6, true), 
+					500, 500, AgricultureProduct.DATES);
 		case DATES_2:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
-							49.0e6, 4.9e6, 9.8e6, true), 
-					1000, 1000, AgricultureProduct.DATES);
+							98e6, 9.8e6, 19.6e6, true), 
+					2000, 2000, AgricultureProduct.DATES);
 		case GRAINS_1:
 			return DefaultAgricultureElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
@@ -131,15 +131,15 @@ public enum ElementTemplate {
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
-							237.5e6, 2.375e6, 47.5e6, true), 
-					2500, 2500, AgricultureProduct.GRAINS);
+							190e6, 19e6, 38e6, true), 
+					2000, 2000, AgricultureProduct.GRAINS);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 5, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, maxOperations, 2, 
 							100e6, 10e6, 20e6, true), 
-					0.95, 1e9, 0, 25);
+					0.95, 2e6, 0, 15);
 		case AQUIFER_PUMP_1:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 

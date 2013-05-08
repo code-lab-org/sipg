@@ -1,6 +1,7 @@
 package edu.mit.sips;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 
 import edu.mit.sips.core.City;
@@ -62,7 +63,10 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(3000, 
-									new ArrayList<AgricultureElement>()):
+									Arrays.asList(
+											(AgricultureElement) ElementTemplate.DATES_2.createElement(1920, name, name),
+											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1945, name, name)
+											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0,
@@ -80,7 +84,15 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(10000, 
-									new ArrayList<AgricultureElement>()):
+									Arrays.asList(
+											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1930, name, name),
+											(AgricultureElement) ElementTemplate.LIVESTOCK_2.createElement(1940, name, name),
+											(AgricultureElement) ElementTemplate.GRAINS_1.createElement(1975, name, name),
+											(AgricultureElement) ElementTemplate.GRAINS_2.createElement(1985, name, name),
+											(AgricultureElement) ElementTemplate.FOOD_TRANSPORT_1.createElement(1968, name, URBAN.name),
+											(AgricultureElement) ElementTemplate.FOOD_TRANSPORT_1.createElement(1968, name, INDUSTRIAL.name),
+											(AgricultureElement) ElementTemplate.FOOD_TRANSPORT_1.createElement(1978, name, INDUSTRIAL.name)
+											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0,
@@ -98,7 +110,10 @@ public enum CityTemplate {
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
 							new DefaultAgricultureSystem.Local(4000, 
-									new ArrayList<AgricultureElement>()):
+									Arrays.asList(
+											(AgricultureElement) ElementTemplate.DATES_2.createElement(1900, name, name),
+											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1920, name, name)
+											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0,

@@ -5,10 +5,10 @@ package edu.mit.sips.core.agriculture;
  */
 public enum AgricultureProduct {
 	NONE,
-	LIVESTOCK("Lifestock", 				15, 	50, 	300, 	0.5),
-	DATES("Dates", 						400, 	15000, 	5000, 	20),
-	GRAINS("Grains", 					2000, 	30000, 	35000,	10),
-	MODIFIED_GRAINS("Modified Grains", 	2000, 	52500, 	30000,	10);
+	LIVESTOCK("Lifestock", 				150, 	15000, 	500, 	15),
+	DATES("Dates", 						400, 	42000, 	1000, 	50),
+	GRAINS("Grains", 					2000, 	140000, 16666,	20),
+	MODIFIED_GRAINS("Modified Grains", 	2000, 	140000, 15833,	20);
 	
 	private final String name;
 	private final double foodIntensityOfLandUsed; 		// GJ/km^2

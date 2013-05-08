@@ -224,7 +224,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public double getLandArea() {
-		if(isExists()) {
+		if(isOperational()) {
 			return landArea;
 		} else {
 			return 0;
@@ -248,7 +248,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public double getMaxLandArea() {
-		if(isExists()) {
+		if(isOperational()) {
 			return maxLandArea;
 		} else {
 			return 0;
