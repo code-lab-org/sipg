@@ -2,9 +2,11 @@ package edu.mit.sips.core;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.sips.Sector;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.energy.DefaultEnergySystem;
@@ -105,6 +107,24 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 			value += system.getCashFlow();
 		}
 		return value;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getLocalSectors()
+	 */
+	@Override
+	public final Collection<Sector> getLocalSectors() {
+		List<Sector> sectors = new ArrayList<Sector>();
+		if(agricultureSystem instanceof AgricultureSystem.Local){
+			sectors.add(Sector.AGRICULTURE);
+		}
+		if(waterSystem instanceof WaterSystem.Local) {
+			sectors.add(Sector.WATER);
+		}
+		if(energySystem instanceof EnergySystem.Local) {
+			sectors.add(Sector.ENERGY);
+		}
+		return sectors;
 	}
 
 	/* (non-Javadoc)

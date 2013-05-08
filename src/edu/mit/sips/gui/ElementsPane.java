@@ -295,7 +295,8 @@ public class ElementsPane extends JPanel {
 	 * Adds the element template dialog.
 	 */
 	private void addElementTemplateDialog() {
-		JList templateList = new JList(ElementTemplate.values());
+		JList templateList = new JList(ElementTemplate.getTemplates(
+				simulator.getCountry().getLocalSectors()).toArray(new ElementTemplate[0]));
 		templateList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		templateList.setCellRenderer(templateRenderer);
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, new JScrollPane(templateList), 

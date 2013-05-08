@@ -1,5 +1,9 @@
 package edu.mit.sips;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
@@ -374,5 +378,21 @@ public enum ElementTemplate {
 	 */
 	public String toString() {
 		return name;
+	}
+	
+	/**
+	 * Gets the templates.
+	 *
+	 * @param sectors the sectors
+	 * @return the templates
+	 */
+	public static List<ElementTemplate> getTemplates(Collection<Sector> sectors) {
+		List<ElementTemplate> templates = new ArrayList<ElementTemplate>();
+		for(ElementTemplate template : values()) {
+			if(sectors.contains(template.getSector())) {
+				templates.add(template);
+			}
+		}
+		return templates;
 	}
 }

@@ -1,7 +1,9 @@
 package edu.mit.sips.core;
 
+import java.util.Collection;
 import java.util.List;
 
+import edu.mit.sips.Sector;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.energy.EnergySystem;
 import edu.mit.sips.core.social.SocialSystem;
@@ -61,6 +63,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the internal elements
 	 */
 	public List<? extends InfrastructureElement> getInternalElements();
+	
+	/**
+	 * Gets the local sectors.
+	 *
+	 * @return the local sectors
+	 */
+	public Collection<Sector> getLocalSectors();
 	
 	/**
 	 * Gets the nested societies.
