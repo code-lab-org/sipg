@@ -105,12 +105,14 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 		petroleumPane.addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
 				"Oil Reservoir Volume (bbl)", 
 				petroleumReservoirDataset), "Reservoir");
+		/* TODO
 		petroleumPane.addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/bbl)", 
 				petroleumProductCostData));
 		petroleumPane.addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
 				"Unit Supply Profit (SAR/bbl)", 
 				petroleumSupplyProfitData));
+		*/
 		
 		JTabbedPane electricityPane = new JTabbedPane();
 		addTab(energySystem.getElectricitySystem().getName(), 
@@ -137,12 +139,14 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 		electricityPane.addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
 				"Electricity Consumption per Capita (MWh/person)", 
 				electricityConsumptionPerCapita), "Consumption");
+		/* TODO
 		electricityPane.addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/MWh)", 
 				electricityProductCostData));
 		electricityPane.addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
 				"Unit Supply Profit (SAR/MWh)", 
 				electricitySupplyProfitData));
+		*/
 	}
 	
 	/**

@@ -71,12 +71,14 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset));
+		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/GJ)", 
 						foodProductCostData));
 		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
 				"Unit Supply Profit (SAR/GJ)", 
 						foodSupplyProfitData));
+		*/
 	}
 	
 	/**

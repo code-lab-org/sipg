@@ -92,12 +92,14 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 				waterConsumptionPerCapita));
 		addTab("Reservoir", Icons.WATER_RESERVOIR, createStackedAreaChart(
 				"Water Reservoir Volume (m^3)", waterReservoirDataset));
+		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/m^3)", 
 				waterProductCostData));
 		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
 				"Unit Supply Profit (SAR/m^3)", 
 				waterSupplyProfitData));
+		*/
 	}
 	
 	private List<WaterSystem.Local> getNestedWaterSystems() {
