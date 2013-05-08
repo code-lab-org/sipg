@@ -149,7 +149,7 @@ public class ElementsPane extends JPanel {
 	};
 	
 	private final Action editElement = new AbstractAction( 
-			"Edit Properties", Icons.EDIT) {
+			"Edit Static Properties", Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -158,6 +158,21 @@ public class ElementsPane extends JPanel {
 					elementsTree.getSelectionPath());
 			if(selection != null) {
 				openElementDialog((InfrastructureElement)selection);
+				elementsTree.setSelectionPath(elementsTreeModel.getPath(selection));
+			}
+		}
+	};
+	
+	private final Action editElementOperations = new AbstractAction( 
+			"Edit Operational Properties", Icons.EDIT) {
+		private static final long serialVersionUID = -3748518859196760510L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			InfrastructureElement selection = elementsTreeModel.getElement(
+					elementsTree.getSelectionPath());
+			if(selection != null) {
+				editElementOperationsDialog((InfrastructureElement)selection);
 				elementsTree.setSelectionPath(elementsTreeModel.getPath(selection));
 			}
 		}
@@ -185,6 +200,9 @@ public class ElementsPane extends JPanel {
 		contextPopup.add(new JMenuItem(addElementTemplate));
 		contextPopup.add(new JMenuItem(addElement));
 		contextPopup.add(new JMenuItem(editElement));
+		/*TODO 
+		contextPopup.add(new JMenuItem(editElementOperations));
+		*/
 		contextPopup.add(new JMenuItem(removeElement));
 		
 		elementPopup = new ElementPopup(simulator);
@@ -194,7 +212,9 @@ public class ElementsPane extends JPanel {
 		addElement.putValue(Action.SHORT_DESCRIPTION, 
 				"Add custom element.");
 		editElement.putValue(Action.SHORT_DESCRIPTION, 
-				"Edit element.");
+				"Edit element's static parameters.");
+		editElementOperations.putValue(Action.SHORT_DESCRIPTION, 
+				"Edit element's operational parameters.");
 		removeElement.putValue(Action.SHORT_DESCRIPTION, 
 				"Remove element.");
 		
@@ -266,10 +286,12 @@ public class ElementsPane extends JPanel {
 				new TreeSelectionListener() {
 					@Override
 					public void valueChanged(TreeSelectionEvent e) {
-						boolean isElementSelected = elementsTreeModel.getElement(
-								elementsTree.getSelectionPath()) != null;
-						editElement.setEnabled(isElementSelected);
-						removeElement.setEnabled(isElementSelected);
+						InfrastructureElement element = elementsTreeModel.getElement(
+								elementsTree.getSelectionPath());
+						editElement.setEnabled(element != null);
+						editElementOperations.setEnabled(element != null 
+								&& element.isOperational());
+						removeElement.setEnabled(element != null);
 					}
 		});
 		add(new JScrollPane(elementsTree), BorderLayout.CENTER);
@@ -285,6 +307,11 @@ public class ElementsPane extends JPanel {
 		JButton editButton = new JButton(editElement);
 		editButton.setText(null);
 		buttonPanel.add(editButton);
+		/*TODO 
+		JButton editOperationsButton = new JButton(editElementOperations);
+		editOperationsButton.setText(null);
+		buttonPanel.add(editOperationsButton);
+		 */
 		JButton removeButton = new JButton(removeElement);
 		removeButton.setText(null);
 		buttonPanel.add(removeButton);
@@ -351,6 +378,7 @@ public class ElementsPane extends JPanel {
 	public void initialize() {
 		elementsTreeModel.setState(simulator.getCountry());
 		editElement.setEnabled(false);
+		editElementOperations.setEnabled(false);
 		removeElement.setEnabled(false);
 	}
 	
@@ -374,6 +402,18 @@ public class ElementsPane extends JPanel {
 			}
 		} else {
 			return null;
+		}
+	}
+
+	/**
+	 * Edits the element operations dialog.
+	 *
+	 * @param element the element
+	 */
+	private void editElementOperationsDialog(InfrastructureElement element) {		
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
+				ElementOperationsPanel.createElementOperationsPanel(element), 
+				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 		}
 	}
 	
@@ -416,6 +456,9 @@ public class ElementsPane extends JPanel {
 		}
 	}
 	
+	/**
+	 * Removes the element dialog.
+	 */
 	private void removeElementDialog() {
 		InfrastructureElement selection = elementsTreeModel.getElement(
 				elementsTree.getSelectionPath());

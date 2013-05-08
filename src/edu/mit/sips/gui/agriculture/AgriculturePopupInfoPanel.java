@@ -51,21 +51,21 @@ public class AgriculturePopupInfoPanel extends DefaultPopupInfoPanel {
 		if(element.getTemplate() == null 
 				|| !element.getTemplate().isTransport()) {
 			addField("Food Production:", productionLabel, 
-					"<html>GJ</html>");
+					"<html>GJ/year</html>");
 			addField("Land Use:", landLabel, 
 					"<html>km<sup>2</sup></html>");
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {
 			addField("Food Input:", inputLabel, 
-					"<html>GJ</html>");
+					"<html>GJ/year</html>");
 			addField("Food Output:", outputLabel, 
-					"<html>GJ</html>");
+					"<html>GJ/year</html>");
 		}
 		addField("Expenses:", expensesLabel, 
-				"<html>SAR</html>");
+				"<html>SAR/year</html>");
 		addField("Water Use:", waterLabel, 
-				"<html>m<sup>3</sup></html>");
+				"<html>m<sup>3</sup>/year</html>");
 	}
 
 	/* (non-Javadoc)

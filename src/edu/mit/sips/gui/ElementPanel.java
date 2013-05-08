@@ -24,8 +24,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
@@ -92,20 +90,8 @@ public class ElementPanel extends JPanel {
 		c.gridx = 0;
 		nameText = new JTextField(10);
 		nameText.setText(element.getName());
-		nameText.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				documentChanged();
-			}
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				documentChanged();
-			}
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				documentChanged();
-			}
-			private void documentChanged() {
+		nameText.getDocument().addDocumentListener(new DocumentChangeListener() {
+			public void documentChanged() {
 				element.setName(nameText.getText());
 			}
 		});
