@@ -78,9 +78,9 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			// X: exports (distribution and export revenue)
 			// M: imports (distribution and import expense)
 			return getCapitalExpense() + getDecommissionExpense()
-				+ getOperationsExpense() + getConsumptionExpense()
-				+ getDistributionRevenue() + getExportRevenue()
-				- getDistributionExpense() - getImportExpense();
+					+ getOperationsExpense() + getConsumptionExpense()
+					+ getDistributionRevenue() + getExportRevenue()
+					- getDistributionExpense() - getImportExpense();
 		}
 
 		/* (non-Javadoc)

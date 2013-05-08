@@ -1,6 +1,5 @@
 package edu.mit.sips;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -65,20 +64,52 @@ public enum CityTemplate {
 							new DefaultAgricultureSystem.Local(3000, 
 									Arrays.asList(
 											(AgricultureElement) ElementTemplate.DATES_2.createElement(1920, name, name),
-											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1945, name, name)
+											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1945, name, name),
+											(AgricultureElement) ElementTemplate.GRAINS_1.createElement(1980, name, name)
 											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0,
-									new ArrayList<WaterElement>()):
+									Arrays.asList(
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1945, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1958, name, name),
+											(WaterElement) ElementTemplate.TD_DESAL_1.createElement(1970, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1980, name, name),
+											(WaterElement) ElementTemplate.TD_DESAL_2.createElement(1990, name, name)
+											)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(3e9, 3e9,
-									new ArrayList<EnergyElement>()):
+							new DefaultEnergySystem.Local(10e9, 10e9,
+									Arrays.asList(
+											(EnergyElement) ElementTemplate.PETRO_WELL_1.createElement(1940, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_1.createElement(1945, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_1.createElement(1945, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_2.createElement(1960, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_2.createElement(1965, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_2.createElement(1970, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_2.createElement(1970, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_3.createElement(1980, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_3.createElement(1982, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_3.createElement(1984, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_3.createElement(1986, name, name),
+											(EnergyElement) ElementTemplate.PETRO_WELL_3.createElement(1988, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1960, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1980, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1985, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1990, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1995, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(2000, name, name),
+											(EnergyElement) ElementTemplate.PETRO_PIPELINE_2.createElement(1950, name, CityTemplate.URBAN.name),
+											(EnergyElement) ElementTemplate.PETRO_PIPELINE_3.createElement(1970, name, CityTemplate.URBAN.name),
+											(EnergyElement) ElementTemplate.PETRO_PIPELINE_1.createElement(1960, name, CityTemplate.RURAL.name),
+											(EnergyElement) ElementTemplate.PETRO_PIPELINE_2.createElement(1985, name, CityTemplate.RURAL.name)
+											)):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(
-									new LogisticGrowthModel(1950, 50000, 0.08, 20000000), 1000):
+									new LogisticGrowthModel(1950, 50000, 0.08, 20000000), 10000):
 								new DefaultSocialSystem.Remote());
 		case RURAL:
 			return new City(name, 
@@ -96,15 +127,23 @@ public enum CityTemplate {
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0,
-									new ArrayList<WaterElement>()):
+									Arrays.asList(
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1955, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1973, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1965, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_3.createElement(1984, name, name)
+											)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(500e6, 500e6,
-									new ArrayList<EnergyElement>()):
+							new DefaultEnergySystem.Local(0, 0,
+									Arrays.asList(
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1975, name, name)
+											)):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(
-									new LogisticGrowthModel(1950, 10000, 0.05, 750000), 1000):
+									new LogisticGrowthModel(1950, 10000, 0.05, 750000), 8000):
 								new DefaultSocialSystem.Remote());
 		case URBAN:
 			return new City(name, 
@@ -117,15 +156,30 @@ public enum CityTemplate {
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
 							new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0,
-									new ArrayList<WaterElement>()):
+									Arrays.asList(
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1920, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1940, name, name),
+											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1960, name, name),
+											(WaterElement) ElementTemplate.RO_DESAL_1.createElement(1970, name, name),
+											(WaterElement) ElementTemplate.RO_DESAL_1.createElement(1990, name, name)
+											)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ENERGY)?
-							new DefaultEnergySystem.Local(500e6, 500e6,
-									new ArrayList<EnergyElement>()):
+							new DefaultEnergySystem.Local(0, 0,
+									Arrays.asList(
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_1.createElement(1960, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1970, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1980, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(1990, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(2000, name, name),
+											(EnergyElement) ElementTemplate.POWER_PLANT_2.createElement(2005, name, name)
+											)):
 								new DefaultEnergySystem.Remote(),
 					assigned?
 							new DefaultSocialSystem.Local(
-									new LogisticGrowthModel(1950, 100000, 0.07, 10000000), 1000):
+									new LogisticGrowthModel(1950, 100000, 0.07, 10000000), 20000):
 								new DefaultSocialSystem.Remote());
 		default:
 			throw new IllegalArgumentException("Unknown city template.");

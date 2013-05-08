@@ -35,18 +35,18 @@ public enum ElementTemplate {
 	WATER_PIPELINE_1(Sector.WATER, 			true, 	"Small Water Pipeline", 			1950,	200),
 	WATER_PIPELINE_2(Sector.WATER, 			true, 	"Medium Water Pipeline", 			1950,	200),
 	WATER_PIPELINE_3(Sector.WATER, 			true, 	"Large Water Pipeline", 			1950,	200),
-	PETRO_WELL_1	(Sector.ENERGY, 		true, 	"Small Petroleum Well", 			1940,	200),
-	PETRO_WELL_2	(Sector.ENERGY, 		true, 	"Medium Petroleum Well", 			1960,	200),
-	PETRO_WELL_3	(Sector.ENERGY, 		true, 	"Large Petroleum Well", 			1980,	200),
+	PETRO_WELL_1	(Sector.ENERGY, 		false, 	"Small Petroleum Well", 			1940,	200),
+	PETRO_WELL_2	(Sector.ENERGY, 		false, 	"Medium Petroleum Well", 			1960,	200),
+	PETRO_WELL_3	(Sector.ENERGY, 		false, 	"Large Petroleum Well", 			1980,	200),
 	PETRO_PIPELINE_1(Sector.ENERGY, 		true, 	"Small Petroleum Pipeline", 		1940,	200),
 	PETRO_PIPELINE_2(Sector.ENERGY, 		true, 	"Medium Petroleum Pipeline", 		1940,	200),
 	PETRO_PIPELINE_3(Sector.ENERGY, 		true, 	"Large Petroleum Pipeline", 		1940,	200),
-	POWER_PLANT_1	(Sector.ENERGY, 		true, 	"Small Oil Power Plant", 			1940,	40),
-	POWER_PLANT_2	(Sector.ENERGY, 		true, 	"Large Oil Power Plant", 			1970,	40),
-	PV_PLANT_1		(Sector.ENERGY, 		true, 	"Solar Photovoltaics Power Plant", 	1970,	25),
-	CSP_PLANT_1		(Sector.ENERGY, 		true, 	"Concentraed Solar Power Plant", 	1980,	25),
-	WIND_PLANT_1	(Sector.ENERGY, 		true, 	"Wind Power Plant", 				1980,	15),
-	NUCLEAR_PLANT_1	(Sector.ENERGY, 		true, 	"Nuclear Power Plant", 				2020,	40),
+	POWER_PLANT_1	(Sector.ENERGY, 		false, 	"Small Oil Power Plant", 			1940,	40),
+	POWER_PLANT_2	(Sector.ENERGY, 		false, 	"Large Oil Power Plant", 			1970,	40),
+	PV_PLANT_1		(Sector.ENERGY, 		false, 	"Solar Photovoltaics Power Plant", 	1970,	25),
+	CSP_PLANT_1		(Sector.ENERGY, 		false, 	"Concentraed Solar Power Plant", 	1980,	25),
+	WIND_PLANT_1	(Sector.ENERGY, 		false, 	"Wind Power Plant", 				1980,	15),
+	NUCLEAR_PLANT_1	(Sector.ENERGY, 		false, 	"Nuclear Power Plant", 				2020,	40),
 	POWER_LINE_1	(Sector.ENERGY, 		true, 	"Low-capacity Power Line", 			1940,	200),
 	POWER_LINE_2	(Sector.ENERGY, 		true, 	"High-capacity Power Line", 		1940,	200),
 	;
@@ -229,22 +229,22 @@ public enum ElementTemplate {
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 2, 
-							50e6, 10e6, 20e6, true), 
-					1, 1e6, 1e6, 10);
+							100e6, 20e6, 40e6, true), 
+					1, 2e6, 2e6, 10);
 		case PETRO_WELL_2:
 			return DefaultPetroleumElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 2, 
-							125e6, 25e6, 50e6, true), 
-					1, 3e6, 3e6, 10);
+							250e6, 50e6, 100e6, true), 
+					1, 6e6, 6e6, 10);
 		case PETRO_WELL_3:
 			return DefaultPetroleumElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 2, 
-							300e6, 75e6, 125e6, true), 
-					1, 10e6, 10e6, 8);
+							600e6, 150e6, 250e6, true), 
+					1, 20e6, 20e6, 8);
 		case PETRO_PIPELINE_1:
 			return DefaultPetroleumElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 
@@ -278,8 +278,8 @@ public enum ElementTemplate {
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
-							275e6, 27.5e6, 68.75e6, true), 
-					1e6, 1e6, 1.4, 0.05, 0.05);
+							687.5e6, 68.75e6, 171.875e6, true), 
+					2.5e6, 2.5e6, 1.4, 0.05, 0.05);
 		case PV_PLANT_1:
 			return DefaultElectricityElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 

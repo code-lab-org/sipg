@@ -7,36 +7,36 @@ public class Globals {
 	private double initialFunds = 10000;								// SAR
 
 	private double agricultureLaborParticipationRate = 0.50;			// -
-	private double foodDomesticPrice = 200;								// SAR/GJ
-	private double foodImportPrice = 250;								// SAR/GJ
-	private double foodExportPrice = 200;								// SAR/GJ
+	private double foodDomesticPrice = 150;								// SAR/GJ
+	private double foodImportPrice = 200;								// SAR/GJ
+	private double foodExportPrice = 150;								// SAR/GJ
 	private double minFoodDemandPerCapita = 2;							// GJ/person
 	private double maxFoodDemandPerCapita = 4.5;						// GJ/person
-	private double econProductMinFoodDemand = 0;						// SAR/SAR
+	private double econProductMinFoodDemand = 8000;						// SAR/SAR
 	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
-	private double privateConsumptionFromFoodProduction = 50;			// SAR/GJ
-	private double privateConsumptionFromFoodConsumption = 500;			// SAR/GJ
+	private double privateConsumptionFromFoodProduction = 0;			// SAR/GJ
+	private double privateConsumptionFromFoodConsumption = 5000;		// SAR/GJ
 	
 	private double waterImportPrice = 40;								// SAR/m^3
 	private double waterDomesticPrice = 6.;								// SAR/m^3
 	private double privateConsumptionFromWaterProduction = 0;			// SAR/m^3
-	private double privateConsumptionFromWaterConsumption = 0;			// SAR/m^3
+	private double privateConsumptionFromWaterConsumption = 100;		// SAR/m^3
 	private double minWaterDemandPerCapita = 10;						// m^3
 	private double maxWaterDemandPerCapita = 100;						// m^3
 	
 	private double petroleumDomesticPrice = 50.;						// SAR/bbl
 	private double petroleumExportPrice = 300;							// SAR/bbl
 	private double petroleumImportPrice = 375;							// SAR/bbl
-	private double privateConsumptionFromPetroleumProduction = 0;		// SAR/bbl
+	private double privateConsumptionFromPetroleumProduction = 100;		// SAR/bbl
 	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
 	
 	private double electricityDomesticPrice = 375.;						// SAR/MWh
 	private double minElectricityDemandPerCapita = 1;					// MWh/person
 	private double maxElectricityDemandPerCapita = 10;					// MWh/person
-	private double econProductMinElectricityDemand = 0;					// SAR/person
-	private double econProductMaxElectricityDemand = 100000;			// SAR/person
+	private double econProductMinElectricityDemand = 8000;				// SAR/person
+	private double econProductMaxElectricityDemand = 100000;				// SAR/person
 	private double privateConsumptionFromElectricityProduction = 0;		// SAR/MWh
-	private double privateConsumptionFromElectricityConsumption = 0.5;	// SAR/MWh
+	private double privateConsumptionFromElectricityConsumption = 2000;	// SAR/MWh
 	/**
 	 * Instantiates a new globals.
 	 */
