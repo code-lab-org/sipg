@@ -440,9 +440,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 			while(!syncRegistered.get()) {
 				Thread.yield();
 			}
+			if(!syncRegisterSuccess.get()) {
+				// another federate managed to register the syncronization point first!
+				// this is not the first federate
+				firstFederate = false;
+			}
 			syncRegistered.set(false);
 			syncRegisterSuccess.set(false);
-			
+		}
+		if(firstFederate) {
 			System.out.println("GALT not valid: requesting ta to " 
 					+ timeFactory.makeTime((startTime-2)*unitsPerYear));
 			rtiAmbassador.timeAdvanceRequest(
