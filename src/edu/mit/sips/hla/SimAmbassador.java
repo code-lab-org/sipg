@@ -431,25 +431,18 @@ public class SimAmbassador extends NullFederateAmbassador {
 			Thread.yield();
 		}
 		
-		TimeQueryReturn query = rtiAmbassador.queryGALT();
-		boolean firstFederate = !query.timeIsValid;
-		if(firstFederate) {
-			// announce synchronization point
-			rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
-			
-			while(!syncRegistered.get()) {
-				Thread.yield();
-			}
-			if(!syncRegisterSuccess.get()) {
-				// another federate managed to register the syncronization point first!
-				// this is not the first federate
-				firstFederate = false;
-			}
-			syncRegistered.set(false);
-			syncRegisterSuccess.set(false);
+		// announce synchronization point
+		rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
+		
+		while(!syncRegistered.get()) {
+			Thread.yield();
 		}
+		boolean firstFederate = syncRegisterSuccess.get();
+		syncRegistered.set(false);
+		syncRegisterSuccess.set(false);
+		
 		if(firstFederate) {
-			System.out.println("GALT not valid: requesting ta to " 
+			System.out.println("Registered sync. point: requesting ta to " 
 					+ timeFactory.makeTime((startTime-2)*unitsPerYear));
 			rtiAmbassador.timeAdvanceRequest(
 					timeFactory.makeTime((startTime-2)*unitsPerYear));
@@ -459,6 +452,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			timeAdvanceGranted.set(false);
 		} else {
 			/* use for non-time regulating federates
+			TimeQueryReturn query = rtiAmbassador.queryGALT();
 			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
 			rtiAmbassador.timeAdvanceRequest(query.time);
 			while(!timeAdvanceGranted.get()) {
