@@ -1,6 +1,7 @@
-package edu.mit.sips.core.social;
+package edu.mit.sips.core.social.demand;
 
 import edu.mit.sips.core.SimEntity;
+import edu.mit.sips.core.social.SocialSystem;
 
 /**
  * The Interface DemandModel.

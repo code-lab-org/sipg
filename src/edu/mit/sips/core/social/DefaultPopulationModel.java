@@ -1,5 +1,7 @@
 package edu.mit.sips.core.social;
 
+import edu.mit.sips.core.social.population.PopulationModel;
+
 /**
  * The Class DefaultPopulationModel.
  */

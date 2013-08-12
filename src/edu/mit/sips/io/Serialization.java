@@ -33,9 +33,10 @@ import edu.mit.sips.core.energy.MutablePetroleumElement;
 import edu.mit.sips.core.energy.PetroleumElement;
 import edu.mit.sips.core.energy.PetroleumSoS;
 import edu.mit.sips.core.energy.PetroleumSystem;
-import edu.mit.sips.core.social.PopulationModel;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.social.demand.DemandModel;
+import edu.mit.sips.core.social.population.PopulationModel;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
@@ -52,6 +53,8 @@ public final class Serialization {
 				new InterfaceAdapter<LifecycleModel>());
 		gsonBuilder.registerTypeAdapter(PopulationModel.class, 
 				new InterfaceAdapter<PopulationModel>());
+		gsonBuilder.registerTypeAdapter(DemandModel.class, 
+				new InterfaceAdapter<DemandModel>());
 		gsonBuilder.registerTypeAdapter(AgricultureSystem.class, 
 				new InterfaceAdapter<AgricultureSystem>());
 		gsonBuilder.registerTypeAdapter(AgricultureSystem.Local.class, 

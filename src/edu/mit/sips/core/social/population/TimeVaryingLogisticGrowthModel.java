@@ -1,4 +1,4 @@
-package edu.mit.sips.core.social;
+package edu.mit.sips.core.social.population;
 
 import java.util.Collections;
 import java.util.Map;

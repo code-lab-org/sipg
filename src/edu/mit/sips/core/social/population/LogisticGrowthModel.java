@@ -1,4 +1,4 @@
-package edu.mit.sips.core.social;
+package edu.mit.sips.core.social.population;
 
 /**
  * The Class LogisticGrowthModel.

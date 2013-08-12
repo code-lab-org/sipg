@@ -1,42 +1,41 @@
-package edu.mit.sips.core.social;
+package edu.mit.sips.core.social.demand;
 
+import edu.mit.sips.core.social.SocialSystem;
 
 /**
- * The Class LinearDemandModel.
+ * The Class LinearBoundedProductDemandModel.
  */
-public class LinearBoundedDemandModel implements DemandModel {
+public class LinearBoundedProductDemandModel implements DemandModel {
 	private final double minDemand, maxDemand;
-	private final double minIndicator, maxIndicator;
+	private final double minProduct, maxProduct;
 	private SocialSystem socialSystem;
 	private double indicator;
 	private transient double nextIndicator;
 	
 	/**
-	 * Instantiates a new linear bounded demand model.
+	 * Instantiates a new linear bounded product demand model.
 	 */
-	protected LinearBoundedDemandModel() {
+	protected LinearBoundedProductDemandModel() {
 		minDemand = 0;
 		maxDemand = 0;
-		minIndicator = 0;
-		maxIndicator = 0;
+		minProduct = 0;
+		maxProduct = 0;
 	}
 	
 	/**
-	 * Instantiates a new linear demand model.
+	 * Instantiates a new linear bounded product demand model.
 	 *
 	 * @param minIndicator the min indicator
 	 * @param minDemand the min demand
 	 * @param maxIndicator the max indicator
 	 * @param maxDemand the max demand
 	 */
-	public LinearBoundedDemandModel(double minIndicator, double minDemand, 
+	public LinearBoundedProductDemandModel(double minIndicator, double minDemand, 
 			double maxIndicator, double maxDemand) {
-		// TODO: validate arguments
-		
 		this.minDemand = minDemand;
 		this.maxDemand = maxDemand;
-		this.minIndicator = minIndicator;
-		this.maxIndicator = maxIndicator;
+		this.minProduct = minIndicator;
+		this.maxProduct = maxIndicator;
 	}
 
 	/* (non-Javadoc)
@@ -45,7 +44,7 @@ public class LinearBoundedDemandModel implements DemandModel {
 	@Override
 	public double getDemand() {
 		double demand = minDemand + (maxDemand - minDemand) 
-				* (indicator - minIndicator)/(maxIndicator - minIndicator);
+				* (indicator - minProduct)/(maxProduct - minProduct);
 		return Math.max(minDemand, Math.min(maxDemand, demand));
 	}
 

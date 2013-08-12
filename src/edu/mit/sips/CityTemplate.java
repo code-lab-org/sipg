@@ -9,8 +9,8 @@ import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.energy.DefaultEnergySystem;
 import edu.mit.sips.core.energy.EnergyElement;
 import edu.mit.sips.core.social.DefaultSocialSystem;
-import edu.mit.sips.core.social.LinearBoundedDemandModel;
-import edu.mit.sips.core.social.LogisticGrowthModel;
+import edu.mit.sips.core.social.demand.LinearBoundedProductDemandModel;
+import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 
@@ -111,8 +111,8 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(10000,
 									new LogisticGrowthModel(1950, 50000, 0.08, 20000000),
-									new LinearBoundedDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
 								new DefaultSocialSystem.Remote());
 		case RURAL:
 			return new City(name, 
@@ -147,8 +147,8 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(8000, 
 									new LogisticGrowthModel(1950, 10000, 0.05, 750000),
-									new LinearBoundedDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
 								new DefaultSocialSystem.Remote());
 		case URBAN:
 			return new City(name, 
@@ -185,8 +185,8 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(20000,
 									new LogisticGrowthModel(1950, 100000, 0.07, 10000000),
-									new LinearBoundedDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
 								new DefaultSocialSystem.Remote());
 		default:
 			throw new IllegalArgumentException("Unknown city template.");

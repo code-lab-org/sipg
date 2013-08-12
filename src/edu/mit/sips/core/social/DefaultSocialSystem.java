@@ -8,6 +8,9 @@ import java.util.List;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.social.demand.DefaultDemandModel;
+import edu.mit.sips.core.social.demand.DemandModel;
+import edu.mit.sips.core.social.population.PopulationModel;
 
 /**
  * The Class DefaultSocialSystem.
