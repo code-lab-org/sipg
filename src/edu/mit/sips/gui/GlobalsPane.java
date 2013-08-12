@@ -28,10 +28,6 @@ public class GlobalsPane extends JTabbedPane {
 	private final JTextField foodExportPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromFoodProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromFoodConsumption = new JTextField(15);
-	private final JTextField minFoodDemandPerCapita = new JTextField(15);
-	private final JTextField econProductMinFoodDemand = new JTextField(15);
-	private final JTextField maxFoodDemandPerCapita = new JTextField(15);
-	private final JTextField econProductMaxFoodDemand = new JTextField(15);
 	private final JTextField agricultureLaborParticipationRate = new JTextField(15);
 
 	private final JTextField waterImportPrice = new JTextField(15);
@@ -50,10 +46,6 @@ public class GlobalsPane extends JTabbedPane {
 	private final JTextField privateConsumptionFromElectricityProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromElectricityConsumption = new JTextField(15);
 	private final JTextField electricalIntensityOfBurningPetroleum = new JTextField(15);
-	private final JTextField minElectricityDemandPerCapita = new JTextField(15);
-	private final JTextField maxElectricityDemandPerCapita = new JTextField(15);
-	private final JTextField econProductMinElectricityDemand = new JTextField(15);
-	private final JTextField econProductMaxElectricityDemand = new JTextField(15);
 
 	/**
 	 * Instantiates a new globals pane.
@@ -106,38 +98,6 @@ public class GlobalsPane extends JTabbedPane {
 				country.getGlobals().setEconomicIntensityOfFoodConsumption(tryParse(
 						privateConsumptionFromFoodConsumption,
 						country.getGlobals().getPrivateConsumptionFromFoodConsumption()));
-			}
-		});
-		minFoodDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMinFoodDemandPerCapita(tryParse(
-						minFoodDemandPerCapita,
-						country.getGlobals().getMinFoodDemandPerCapita()));
-			}
-		});
-		maxFoodDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMaxFoodDemandPerCapita(tryParse(
-						maxFoodDemandPerCapita,
-						country.getGlobals().getMaxFoodDemandPerCapita()));	
-			}
-		});
-		econProductMinFoodDemand.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconProductMinFoodDemand(tryParse(
-						econProductMinFoodDemand,
-						country.getGlobals().getEconProductMinFoodDemand()));	
-			}
-		});
-		econProductMaxFoodDemand.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconProductMaxFoodDemand(tryParse(
-						econProductMaxFoodDemand,
-						country.getGlobals().getEconProductMaxFoodDemand()));
 			}
 		});
 		agricultureLaborParticipationRate.getDocument().addDocumentListener(new DocumentChangeListener() {
@@ -260,38 +220,6 @@ public class GlobalsPane extends JTabbedPane {
 						country.getGlobals().getElectricalIntensityOfBurningPetroleum()));
 			}
 		});
-		minElectricityDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMinElectricityDemandPerCapita(tryParse(
-						minElectricityDemandPerCapita,
-						country.getGlobals().getMinElectricityDemandPerCapita()));
-			}
-		});
-		maxElectricityDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMaxElectricityDemandPerCapita(tryParse(
-						maxElectricityDemandPerCapita,
-						country.getGlobals().getMaxElectricityDemandPerCapita()));
-			}
-		});
-		econProductMinElectricityDemand.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconProductMinElectricityDemand(tryParse(
-						econProductMinElectricityDemand,
-						country.getGlobals().getEconProductMinElectricityDemand()));
-			}
-		});
-		econProductMaxElectricityDemand.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconProductMaxElectricityDemand(tryParse(
-						econProductMaxElectricityDemand,
-						country.getGlobals().getEconProductMaxElectricityDemand()));
-			}
-		});
 		
 		addTab("National", Icons.COUNTRY, createNationalPanel());
 		addTab("Agriculture", Icons.AGRICULTURE, createAgriculturePanel());
@@ -338,14 +266,6 @@ public class GlobalsPane extends JTabbedPane {
 				privateConsumptionFromFoodProduction, c);
 		addField(foodPanel, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
 				privateConsumptionFromFoodConsumption, c);
-		addField(foodPanel, "Min Food Use per Capita (GJ)",
-				minFoodDemandPerCapita, c);
-		addField(foodPanel, "Economic Product for Min Food Use (SAR)",
-				econProductMinFoodDemand, c);
-		addField(foodPanel, "Max Food Use per Capita (GJ)",
-				maxFoodDemandPerCapita, c);
-		addField(foodPanel, "Economic Product for Max Food Use (SAR)",
-				econProductMaxFoodDemand, c);
 		addField(foodPanel, "Labor Participation Rate (-)",
 				agricultureLaborParticipationRate, c);
 		c.weighty = 1;
@@ -412,14 +332,6 @@ public class GlobalsPane extends JTabbedPane {
 				privateConsumptionFromElectricityConsumption, c);
 		addField(energyPanel, "Electrical Intensity of Burning Petroleum (MWh/bbl)", 
 				electricalIntensityOfBurningPetroleum, c);
-		addField(energyPanel, "Min Electricity Use per Capita (MWh)",
-				minElectricityDemandPerCapita, c);
-		addField(energyPanel, "Economic Product for Min Electricity Use (SAR)",
-				econProductMinElectricityDemand, c);
-		addField(energyPanel, "Max Electricity Use per Capita (MWh)",
-				maxElectricityDemandPerCapita, c);
-		addField(energyPanel, "Economic Product for Max Electricity Use (SAR)",
-				econProductMaxElectricityDemand, c);
 		c.weighty = 1;
 		energyPanel.add(new JPanel(), c);
 		return energyPanel;
@@ -463,10 +375,6 @@ public class GlobalsPane extends JTabbedPane {
 				country.getGlobals().getPrivateConsumptionFromFoodProduction()).toString());
 		privateConsumptionFromFoodConsumption.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromFoodConsumption()).toString());
-		minFoodDemandPerCapita.setText(new Double(
-				country.getGlobals().getMinFoodDemandPerCapita()).toString());
-		maxFoodDemandPerCapita.setText(new Double(
-				country.getGlobals().getMaxFoodDemandPerCapita()).toString());
 		agricultureLaborParticipationRate.setText(new Double(
 				country.getGlobals().getAgricultureLaborParticipationRate()).toString());
 		
@@ -480,12 +388,8 @@ public class GlobalsPane extends JTabbedPane {
 				country.getGlobals().getPrivateConsumptionFromWaterConsumption()).toString());
 		minWaterDemandPerCapita.setText(new Double(
 				country.getGlobals().getMinWaterDemandPerCapita()).toString());
-		econProductMinFoodDemand.setText(new Double(
-				country.getGlobals().getEconProductMinFoodDemand()).toString());
 		maxWaterDemandPerCapita.setText(new Double(
 				country.getGlobals().getMaxWaterDemandPerCapita()).toString());
-		econProductMaxFoodDemand.setText(new Double(
-				country.getGlobals().getEconProductMaxFoodDemand()).toString());
 
 		petroleumDomesticPrice.setText(new Double(
 				country.getGlobals().getPetroleumDomesticPrice()).toString());
@@ -503,14 +407,6 @@ public class GlobalsPane extends JTabbedPane {
 				country.getGlobals().getPrivateConsumptionFromElectricityConsumption()).toString());
 		electricalIntensityOfBurningPetroleum.setText(new Double(
 				country.getGlobals().getElectricalIntensityOfBurningPetroleum()).toString());
-		minElectricityDemandPerCapita.setText(new Double(
-				country.getGlobals().getMinElectricityDemandPerCapita()).toString());
-		maxElectricityDemandPerCapita.setText(new Double(
-				country.getGlobals().getMaxElectricityDemandPerCapita()).toString());
-		econProductMinElectricityDemand.setText(new Double(
-				country.getGlobals().getEconProductMinElectricityDemand()).toString());
-		econProductMaxElectricityDemand.setText(new Double(
-				country.getGlobals().getEconProductMaxElectricityDemand()).toString());
 	}
 
 	/**

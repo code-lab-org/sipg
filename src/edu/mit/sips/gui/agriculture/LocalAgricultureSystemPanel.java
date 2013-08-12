@@ -21,8 +21,7 @@ import edu.mit.sips.io.Icons;
 public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	private static final long serialVersionUID = 569560127649283731L;
 
-	private final LinearIndicatorPanel localFoodIndicatorPanel, 
-	foodConsumptionIndicatorPanel;
+	private final LinearIndicatorPanel localFoodIndicatorPanel;
 	
 	private final SpatialStatePanel agricultureStatePanel;
 	
@@ -46,11 +45,6 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		localFoodIndicatorPanel = new LinearIndicatorPanel(
 				"Food Independence", 0, 1);
 		indicatorsPanel.add(localFoodIndicatorPanel);
-		foodConsumptionIndicatorPanel = new LinearIndicatorPanel(
-				"Food Consumption", 
-				getSociety().getGlobals().getMinFoodDemandPerCapita(), 
-				getSociety().getGlobals().getMaxFoodDemandPerCapita());
-		indicatorsPanel.add(foodConsumptionIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		agricultureStatePanel = new SpatialStatePanel(
@@ -117,7 +111,6 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	@Override
 	public void initialize() {
 		localFoodIndicatorPanel.initialize();
-		foodConsumptionIndicatorPanel.initialize();
 		localFoodData.removeAllSeries();
 		foodProductCostData.removeAllSeries();
 		foodSupplyProfitData.removeAllSeries();
@@ -171,7 +164,6 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		
 		updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 
 				year, getSociety().getSocialSystem().getFoodConsumptionPerCapita());
-		foodConsumptionIndicatorPanel.setValue(getSociety().getSocialSystem().getFoodConsumptionPerCapita());
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
 			updateSeriesCollection(foodConsumptionPerCapita, nestedSociety.getName(), 
 					year, nestedSociety.getSocialSystem().getFoodConsumptionPerCapita());

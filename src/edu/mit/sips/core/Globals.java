@@ -10,10 +10,6 @@ public class Globals {
 	private double foodDomesticPrice = 150;								// SAR/GJ
 	private double foodImportPrice = 200;								// SAR/GJ
 	private double foodExportPrice = 150;								// SAR/GJ
-	private double minFoodDemandPerCapita = 2;							// GJ/person
-	private double maxFoodDemandPerCapita = 4.5;						// GJ/person
-	private double econProductMinFoodDemand = 8000;						// SAR/SAR
-	private double econProductMaxFoodDemand = 100000;					// SAR/SAR
 	private double privateConsumptionFromFoodProduction = 0;			// SAR/GJ
 	private double privateConsumptionFromFoodConsumption = 5000;		// SAR/GJ
 	
@@ -31,10 +27,6 @@ public class Globals {
 	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
 	
 	private double electricityDomesticPrice = 375.;						// SAR/MWh
-	private double minElectricityDemandPerCapita = 1;					// MWh/person
-	private double maxElectricityDemandPerCapita = 10;					// MWh/person
-	private double econProductMinElectricityDemand = 8000;				// SAR/person
-	private double econProductMaxElectricityDemand = 100000;				// SAR/person
 	private double privateConsumptionFromElectricityProduction = 0;		// SAR/MWh
 	private double privateConsumptionFromElectricityConsumption = 2000;	// SAR/MWh
 	/**
@@ -115,42 +107,6 @@ public class Globals {
 	public double getPrivateConsumptionFromWaterProduction() {
 		return privateConsumptionFromWaterProduction;
 	}
-	
-	/**
-	 * Gets the econ product max electricity demand.
-	 *
-	 * @return the econ product max electricity demand
-	 */
-	public double getEconProductMaxElectricityDemand() {
-		return econProductMaxElectricityDemand;
-	}
-
-	/**
-	 * Gets the econ product max food demand.
-	 *
-	 * @return the econ product max food demand
-	 */
-	public double getEconProductMaxFoodDemand() {
-		return econProductMaxFoodDemand;
-	}
-
-	/**
-	 * Gets the econ product min electricity demand.
-	 *
-	 * @return the econ product min electricity demand
-	 */
-	public double getEconProductMinElectricityDemand() {
-		return econProductMinElectricityDemand;
-	}
-
-	/**
-	 * Gets the econ product min food demand.
-	 *
-	 * @return the econ product min food demand
-	 */
-	public double getEconProductMinFoodDemand() {
-		return econProductMinFoodDemand;
-	}
 
 	/**
 	 * Gets the electrical intensity of burning petroleum.
@@ -162,36 +118,12 @@ public class Globals {
 	}
 
 	/**
-	 * Gets the electricity demand.
-	 *
-	 * @param economicProduct the economic product
-	 * @return the electricity demand
-	 */
-	public double getElectricityDemand(double economicProduct) {
-		return new LinearBoundedDemandModel(econProductMinElectricityDemand, 
-				minElectricityDemandPerCapita, econProductMaxElectricityDemand, 
-				maxElectricityDemandPerCapita).getDemand(economicProduct);
-	}
-
-	/**
 	 * Gets the electricity domestic price.
 	 *
 	 * @return the electricity domestic price
 	 */
 	public double getElectricityDomesticPrice() {
 		return electricityDomesticPrice;
-	}
-
-	/**
-	 * Gets the food demand.
-	 *
-	 * @param economicProduct the economic product
-	 * @return the food demand
-	 */
-	public double getFoodDemand(double economicProduct) {
-		return new LinearBoundedDemandModel(econProductMinFoodDemand, 
-				minFoodDemandPerCapita, econProductMaxFoodDemand, 
-				maxFoodDemandPerCapita).getDemand(economicProduct);
 	}
 
 	/**
@@ -230,23 +162,6 @@ public class Globals {
 		return initialFunds;
 	}
 	
-	/**
-	 * Gets the max electricity demand per capita.
-	 *
-	 * @return the max electricity demand per capita
-	 */
-	public double getMaxElectricityDemandPerCapita() {
-		return maxElectricityDemandPerCapita;
-	}
-
-	/**
-	 * Gets the max food demand per capita.
-	 *
-	 * @return the max food demand per capita
-	 */
-	public double getMaxFoodDemandPerCapita() {
-		return maxFoodDemandPerCapita;
-	}
 
 	/**
 	 * Gets the max water demand per capita.
@@ -255,24 +170,6 @@ public class Globals {
 	 */
 	public double getMaxWaterDemandPerCapita() {
 		return maxWaterDemandPerCapita;
-	}
-
-	/**
-	 * Gets the min electricity demand per capita.
-	 *
-	 * @return the min electricity demand per capita
-	 */
-	public double getMinElectricityDemandPerCapita() {
-		return minElectricityDemandPerCapita;
-	}
-
-	/**
-	 * Gets the min food demand per capita.
-	 *
-	 * @return the min food demand per capita
-	 */
-	public double getMinFoodDemandPerCapita() {
-		return minFoodDemandPerCapita;
 	}
 
 	/**
@@ -410,43 +307,6 @@ public class Globals {
 	}
 
 	/**
-	 * Sets the econ product max electricity demand.
-	 *
-	 * @param econProductMaxElectricityDemand the new econ product max electricity demand
-	 */
-	public void setEconProductMaxElectricityDemand(
-			double econProductMaxElectricityDemand) {
-		this.econProductMaxElectricityDemand = econProductMaxElectricityDemand;
-	}
-
-	/**
-	 * Sets the econ product max food demand.
-	 *
-	 * @param econProductMaxFoodDemand the new econ product max food demand
-	 */
-	public void setEconProductMaxFoodDemand(double econProductMaxFoodDemand) {
-		this.econProductMaxFoodDemand = econProductMaxFoodDemand;
-	}
-
-	/**
-	 * Sets the econ product min electricity demand.
-	 *
-	 * @param econProductMinElectricityDemand the new econ product min electricity demand
-	 */
-	public void setEconProductMinElectricityDemand(
-			double econProductMinElectricityDemand) {
-		this.econProductMinElectricityDemand = econProductMinElectricityDemand;
-	}
-	/**
-	 * Sets the econ product min food demand.
-	 *
-	 * @param econProductMinFoodDemand the new econ product min food demand
-	 */
-	public void setEconProductMinFoodDemand(double econProductMinFoodDemand) {
-		this.econProductMinFoodDemand = econProductMinFoodDemand;
-	}
-
-	/**
 	 * Sets the electrical intensity of burning petroleum.
 	 *
 	 * @param electricalIntensityOfBurningPetroleum the new electrical intensity of burning petroleum
@@ -497,23 +357,6 @@ public class Globals {
 	public void setInitialFunds(double initialFunds) {
 		this.initialFunds = initialFunds;
 	}
-	/**
-	 * Sets the max electricity demand per capita.
-	 *
-	 * @param maxElectricityDemandPerCapita the new max electricity demand per capita
-	 */
-	public void setMaxElectricityDemandPerCapita(
-			double maxElectricityDemandPerCapita) {
-		this.maxElectricityDemandPerCapita = maxElectricityDemandPerCapita;
-	}
-	/**
-	 * Sets the max food demand per capita.
-	 *
-	 * @param maxFoodDemandPerCapita the new max food demand per capita
-	 */
-	public void setMaxFoodDemandPerCapita(double maxFoodDemandPerCapita) {
-		this.maxFoodDemandPerCapita = maxFoodDemandPerCapita;
-	}
 	
 	/**
 	 * Sets the max water demand per capita.
@@ -522,25 +365,6 @@ public class Globals {
 	 */
 	public void setMaxWaterDemandPerCapita(double maxWaterDemandPerCapita) {
 		this.maxWaterDemandPerCapita = maxWaterDemandPerCapita;
-	}
-
-	/**
-	 * Sets the min electricity demand per capita.
-	 *
-	 * @param minElectricityDemandPerCapita the new min electricity demand per capita
-	 */
-	public void setMinElectricityDemandPerCapita(
-			double minElectricityDemandPerCapita) {
-		this.minElectricityDemandPerCapita = minElectricityDemandPerCapita;
-	}
-
-	/**
-	 * Sets the min food demand per capita.
-	 *
-	 * @param minFoodDemandPerCapita the new min food demand per capita
-	 */
-	public void setMinFoodDemandPerCapita(double minFoodDemandPerCapita) {
-		this.minFoodDemandPerCapita = minFoodDemandPerCapita;
 	}
 
 	/**

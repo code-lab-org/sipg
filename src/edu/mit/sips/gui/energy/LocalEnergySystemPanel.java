@@ -27,8 +27,7 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 	private static final long serialVersionUID = 2218175276232419659L;
 	
 	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel, 
-	renewableEnergyIndicatorPanel, localEnergyIndicatorPanel, 
-	electricityConsumptionIndicatorPanel;
+	renewableEnergyIndicatorPanel, localEnergyIndicatorPanel;
 	
 	private final SpatialStatePanel petroleumStatePanel, electricityStatePanel;
 	
@@ -72,14 +71,9 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 				"Renewable Energy", 0, 1);
 		localEnergyIndicatorPanel = new LinearIndicatorPanel(
 				"Energy Independence", 0, 1);
-		electricityConsumptionIndicatorPanel = new LinearIndicatorPanel(
-				"Energy Consumption", 
-				getSociety().getGlobals().getMinElectricityDemandPerCapita(), 
-				getSociety().getGlobals().getMaxElectricityDemandPerCapita());
 		indicatorsPanel.add(petroleumReservoirIndicatorPanel);
 		indicatorsPanel.add(renewableEnergyIndicatorPanel);
 		indicatorsPanel.add(localEnergyIndicatorPanel);
-		indicatorsPanel.add(electricityConsumptionIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		addTab("Revenue", Icons.REVENUE, 
@@ -181,7 +175,6 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 		petroleumReservoirIndicatorPanel.initialize();
 		renewableEnergyIndicatorPanel.initialize();
 		localEnergyIndicatorPanel.initialize();
-		electricityConsumptionIndicatorPanel.initialize();
 		energyRevenue.removeAllSeries();
 		energyNetRevenue.removeAllSeries();
 		petroleumProductCostData.removeAllSeries();
@@ -280,8 +273,6 @@ public class LocalEnergySystemPanel extends EnergySystemPanel {
 		
 		updateSeriesCollection(electricityConsumptionPerCapita, getSociety().getName(), 
 				year, getSociety().getSocialSystem().getElectricityConsumptionPerCapita());
-		electricityConsumptionIndicatorPanel.setValue(
-				getSociety().getSocialSystem().getElectricityConsumptionPerCapita());
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
 			updateSeriesCollection(electricityConsumptionPerCapita, nestedSociety.getName(), year, 
 					nestedSociety.getSocialSystem().getElectricityConsumptionPerCapita());

@@ -19,6 +19,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
 		private final PopulationModel populationModel;
+		private final DemandModel electricityDemandModel, foodDemandModel;
 		private final double initialDomesticProductPerCapita;
 		private double domesticProduct;
 		private transient double nextDomesticProduct;
@@ -26,21 +27,27 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		/**
 		 * Instantiates a new local.
 		 *
-		 * @param name the name
 		 */
 		public Local() {
 			super("Society");
 			this.populationModel = new DefaultPopulationModel();
+			this.electricityDemandModel = new DefaultDemandModel();
+			this.foodDemandModel = new DefaultDemandModel();
 			this.initialDomesticProductPerCapita = 0;
 		}
 		
 		/**
 		 * Instantiates a new local.
 		 *
-		 * @param populationModel the population model
 		 * @param initialDomesticProductPerCapita the initial domestic product per capita
+		 * @param populationModel the population model
+		 * @param electricityDemandModel the electricity demand model
+		 * @param foodDemandModel the food demand model
 		 */
-		public Local(PopulationModel populationModel, double initialDomesticProductPerCapita) {
+		public Local(double initialDomesticProductPerCapita, 
+				PopulationModel populationModel, 
+				DemandModel electricityDemandModel, 
+				DemandModel foodDemandModel) {
 			super("Society");
 			// Validate population model.
 			if(populationModel == null) {
@@ -48,6 +55,22 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Population model cannot be null.");
 			}
 			this.populationModel = populationModel;
+			
+			// Validate electricity demand model.
+			if(electricityDemandModel == null) {
+				throw new IllegalArgumentException(
+						"Electricity demand model cannot be null.");
+			}
+			this.electricityDemandModel = electricityDemandModel;
+			this.electricityDemandModel.setSocialSystem(this);
+			
+			// Validate food demand model.
+			if(foodDemandModel == null) {
+				throw new IllegalArgumentException(
+						"Food demand model cannot be null.");
+			}
+			this.foodDemandModel = foodDemandModel;
+			this.foodDemandModel.setSocialSystem(this);
 
 			// No need to validate initial domestic product
 			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
@@ -132,11 +155,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getElectricityConsumptionPerCapita() {
-			if(getPopulation() > 0) {
-				return getSociety().getGlobals().getElectricityDemand(
-						getDomesticProduct()/getPopulation());
-			} 
-			return getSociety().getGlobals().getElectricityDemand(0);
+			return electricityDemandModel.getDemand();
 		}
 
 		/* (non-Javadoc)
@@ -178,11 +197,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getFoodConsumptionPerCapita() {
-			if(getPopulation() > 0) {
-				return getSociety().getGlobals().getFoodDemand(
-						getDomesticProduct()/getPopulation());
-			}
-			return getSociety().getGlobals().getFoodDemand(0);
+			return foodDemandModel.getDemand();
 		}
 
 		/* (non-Javadoc)
@@ -264,6 +279,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public void initialize(long time) {
 			populationModel.initialize(time);
 			domesticProduct = initialDomesticProductPerCapita*populationModel.getPopulation();
+			
+			// initialize demand models after domestic product
+			electricityDemandModel.initialize(time);
+			foodDemandModel.initialize(time);
 		}
 
 		/* (non-Javadoc)
@@ -273,6 +292,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public void tick() {
 			nextDomesticProduct = getNextEconomicProduction();
 			populationModel.tick();
+			electricityDemandModel.tick();
+			foodDemandModel.tick();
 		}
 
 		/* (non-Javadoc)
@@ -282,6 +303,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public void tock() {
 			domesticProduct = nextDomesticProduct;
 			populationModel.tock();
+			electricityDemandModel.tock();
+			foodDemandModel.tock();
 		}
 	}
 	
