@@ -18,9 +18,9 @@ import edu.mit.sips.core.water.WaterElement;
  * The Enum CityTemplate.
  */
 public enum CityTemplate { 
-	RURAL("Sakakah"), 
-	URBAN("Jeddah"), 
-	INDUSTRIAL("Riyadh");
+	RURAL("Rural"), 
+	URBAN("Urban"), 
+	INDUSTRIAL("Industrial");
 	
 	private final String name;
 	
