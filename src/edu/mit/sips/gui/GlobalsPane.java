@@ -140,22 +140,6 @@ public class GlobalsPane extends JTabbedPane {
 						country.getGlobals().getPrivateConsumptionFromWaterConsumption()));
 			}
 		});
-		minWaterDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMinWaterDemandPerCapita(tryParse(
-						minWaterDemandPerCapita,
-						country.getGlobals().getMinWaterDemandPerCapita()));
-			}
-		});
-		maxWaterDemandPerCapita.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setMaxWaterDemandPerCapita(tryParse(
-						maxWaterDemandPerCapita,
-						country.getGlobals().getMaxWaterDemandPerCapita()));
-			}
-		});
 		petroleumDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
@@ -386,10 +370,6 @@ public class GlobalsPane extends JTabbedPane {
 				country.getGlobals().getPrivateConsumptionFromWaterProduction()).toString());
 		privateConsumptionFromWaterConsumption.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromWaterConsumption()).toString());
-		minWaterDemandPerCapita.setText(new Double(
-				country.getGlobals().getMinWaterDemandPerCapita()).toString());
-		maxWaterDemandPerCapita.setText(new Double(
-				country.getGlobals().getMaxWaterDemandPerCapita()).toString());
 
 		petroleumDomesticPrice.setText(new Double(
 				country.getGlobals().getPetroleumDomesticPrice()).toString());

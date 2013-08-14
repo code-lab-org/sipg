@@ -22,7 +22,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
 		private final PopulationModel populationModel;
-		private final DemandModel electricityDemandModel, foodDemandModel;
+		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel;
 		private final double initialDomesticProductPerCapita;
 		private double domesticProduct;
 		private transient double nextDomesticProduct;
@@ -36,6 +36,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			this.populationModel = new DefaultPopulationModel();
 			this.electricityDemandModel = new DefaultDemandModel();
 			this.foodDemandModel = new DefaultDemandModel();
+			this.waterDemandModel = new DefaultDemandModel();
 			this.initialDomesticProductPerCapita = 0;
 		}
 		
@@ -46,12 +47,18 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @param populationModel the population model
 		 * @param electricityDemandModel the electricity demand model
 		 * @param foodDemandModel the food demand model
+		 * @param waterDemandModel the water demand model
 		 */
 		public Local(double initialDomesticProductPerCapita, 
 				PopulationModel populationModel, 
 				DemandModel electricityDemandModel, 
-				DemandModel foodDemandModel) {
+				DemandModel foodDemandModel,
+				DemandModel waterDemandModel) {
 			super("Society");
+
+			// No need to validate initial domestic product
+			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
+			
 			// Validate population model.
 			if(populationModel == null) {
 				throw new IllegalArgumentException(
@@ -74,9 +81,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			}
 			this.foodDemandModel = foodDemandModel;
 			this.foodDemandModel.setSocialSystem(this);
-
-			// No need to validate initial domestic product
-			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
+			
+			// Validate water demand model.
+			if(waterDemandModel == null) {
+				throw new IllegalArgumentException(
+						"Water demand model cannot be null.");
+			}
+			this.waterDemandModel = waterDemandModel;
+			this.waterDemandModel.setSocialSystem(this);
 		}
 
 		/* (non-Javadoc)
@@ -270,9 +282,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getWaterConsumptionPerCapita() {
-			return Math.min(getSociety().getGlobals().getMaxWaterDemandPerCapita(), 
-					Math.max(getSociety().getGlobals().getMinWaterDemandPerCapita(), 
-							getSociety().getWaterSystem().getWaterSupplyPerCapita()));
+			return waterDemandModel.getDemand();
 		}
 
 		/* (non-Javadoc)
@@ -286,6 +296,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			// initialize demand models after domestic product
 			electricityDemandModel.initialize(time);
 			foodDemandModel.initialize(time);
+			waterDemandModel.initialize(time);
 		}
 
 		/* (non-Javadoc)
@@ -297,6 +308,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			populationModel.tick();
 			electricityDemandModel.tick();
 			foodDemandModel.tick();
+			waterDemandModel.tick();
 		}
 
 		/* (non-Javadoc)
@@ -308,6 +320,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			populationModel.tock();
 			electricityDemandModel.tock();
 			foodDemandModel.tock();
+			waterDemandModel.tock();
 		}
 	}
 	

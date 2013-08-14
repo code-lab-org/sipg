@@ -162,13 +162,6 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @return true, if successful
 		 */
 		public boolean removeElement(WaterElement element);
-		
-		/**
-		 * Sets the water supply per capita.
-		 *
-		 * @return the water supply per capita
-		 */
-		public void setWaterSupplyPerCapita(double waterSupplyPerCapita);
 	}
 	
 	/**
@@ -182,19 +175,11 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @param electricityConsumption the new electricity consumption
 		 */
 		public void setElectricityConsumption(double electricityConsumption);
-		
-		/**
-		 * Sets the water supply per capita.
-		 *
-		 * @return the water supply per capita
-		 */
-		public void setWaterSupplyPerCapita(double waterSupplyPerCapita);
 
 	}
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "waterSupplyPerCapita";
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption";
 	
 	/**
 	 * Gets the energy consumption.
@@ -202,11 +187,4 @@ public interface WaterSystem extends InfrastructureSystem {
 	 * @return the energy consumption
 	 */
 	public double getElectricityConsumption();
-	
-	/**
-	 * Gets the water supply per capita.
-	 *
-	 * @return the water supply per capita
-	 */
-	public double getWaterSupplyPerCapita();
 }

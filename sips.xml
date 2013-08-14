@@ -89,18 +89,6 @@
                         <order>TimeStamp</order>
                         <semantics>Electricity consumed (MWh) by the water system.</semantics>
                     </attribute>
-                    <attribute>
-                        <name>WaterSupplyPerCapita</name>
-                        <dataType>HLAfloat64BE</dataType>
-                        <updateType>Periodic</updateType>
-                        <updateCondition>On water supply policy change.</updateCondition>
-                        <ownership>NoTransfer</ownership>
-                        <sharing>Neither</sharing>
-                        <dimensions/>
-                        <transportation>HLAreliable</transportation>
-                        <order>TimeStamp</order>
-                        <semantics>Water supplied per capita (m^3) to the social system.</semantics>
-                    </attribute>
                 </objectClass>
                 <objectClass>
                     <name>AgricultureSystem</name>

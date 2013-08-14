@@ -32,16 +32,14 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
-	WATER_SUPPLY_PER_CAPITA_ATTRIBUTE = "WaterSupplyPerCapita";
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-		WATER_SUPPLY_PER_CAPITA_ATTRIBUTE
+		ELECTRICITY_CONSUMPTION_ATTRIBUTE
 	};
 
 	/**
@@ -172,7 +170,6 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	
 	private final HLAfloat64BE electricityConsumption;
 
-	private final HLAfloat64BE waterSupplyPerCapita;
 	/**
 	 * Instantiates a new hL awater system.
 	 *
@@ -200,12 +197,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		super(rtiAmbassador, encoderFactory, instanceName, waterSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE(
 				waterSystem.getElectricityConsumption());
-		waterSupplyPerCapita = encoderFactory.createHLAfloat64BE(
-				waterSystem.getWaterSupplyPerCapita());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
-		attributeValues.put(getAttributeHandle(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE), 
-				waterSupplyPerCapita);
 	}
 	
 	/* (non-Javadoc)
@@ -224,12 +217,6 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 							getWaterSystem().getElectricityConsumption());
 					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				}
-				if(evt.getAttributeNames().contains(
-						WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
-					waterSupplyPerCapita.setValue(
-							getWaterSystem().getWaterSupplyPerCapita());
-					//attributesToUpdate.add(WATER_SUPPLY_PER_CAPITA_ATTRIBUTE);
-				}
 				//updateAttributes(attributesToUpdate);
 			//} catch(AttributeNotOwned ignored) {
 			//} catch(Exception ex) {
@@ -242,11 +229,6 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE)) {
-				remote.setWaterSupplyPerCapita(
-						waterSupplyPerCapita.getValue());
 			}
 		}
 	}
@@ -292,7 +274,6 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	public void setWaterSystem(WaterSystem.Remote waterSystem) {
 		// copy attribute values to new system
 		waterSystem.setElectricityConsumption(getWaterSystem().getElectricityConsumption());
-		waterSystem.setWaterSupplyPerCapita(getWaterSystem().getWaterSupplyPerCapita());
 		super.setInfrastructureSystem(waterSystem);
 	}
 }

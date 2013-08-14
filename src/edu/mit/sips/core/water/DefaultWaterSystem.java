@@ -23,12 +23,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private final double maxWaterReservoirVolume;
 		private final double initialWaterReservoirVolume;
 		private final double waterReservoirRechargeRate;
-		private final double initialWaterSupplyPerCapita;
 		private final boolean coastal; // TODO use for desalination elements
 
 		private double waterReservoirVolume;
 		private transient double nextWaterReservoirVolume;
-		private double waterSupplyPerCapita;
 		
 		/**
 		 * Instantiates a new city agriculture system.
@@ -39,7 +37,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.initialWaterReservoirVolume = 0;
 			this.waterReservoirRechargeRate = 0;
 			this.coastal = false;
-			this.initialWaterSupplyPerCapita = 0;
 		}
 		
 		/**
@@ -49,13 +46,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @param maxWaterReservoirVolume the max water reservoir volume
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
-		 * @param initialWaterSupplyPerCapita the initial water supply per capita
 		 * @param elements the elements
 		 */
 		public Local(boolean coastal, double maxWaterReservoirVolume,
 				double initialWaterReservoirVolume, 
 				double waterReservoirRechargeRate,
-				double initialWaterSupplyPerCapita, 
 				Collection<? extends WaterElement> elements) {
 			super("Water");
 			// Validate max water reservoir volume.
@@ -80,12 +75,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 
 			// No need to validate coastal.
 			this.coastal = coastal;
-
-			if(initialWaterSupplyPerCapita < 0) {
-				throw new IllegalArgumentException(
-						"Initial water supply per capita cannot be negative.");
-			}
-			this.initialWaterSupplyPerCapita = 0;
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
@@ -414,14 +403,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#getWaterSupplyPerCapita()
-		 */
-		@Override
-		public double getWaterSupplyPerCapita() {
-			return waterSupplyPerCapita;
-		}
-		
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
 		@Override
@@ -440,7 +421,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public void initialize(long time) {
 			waterReservoirVolume = initialWaterReservoirVolume;
-			setWaterSupplyPerCapita(initialWaterSupplyPerCapita);
 		}
 		
 		/**
@@ -458,18 +438,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public synchronized boolean removeElement(WaterElement element) {
 			return elements.remove(element);
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.WaterSystem#setWaterSupplyPerCapita(double)
-		 */
-		@Override
-		public void setWaterSupplyPerCapita(double waterSupplyPerCapita) {
-			this.waterSupplyPerCapita = waterSupplyPerCapita;
-			fireAttributeChangeEvent(Arrays.asList(
-					CASH_FLOW_ATTRIBUTE, DOMESTIC_PRODUCTION_ATTRIBUTE, 
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
-					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
 		}
 
 		/* (non-Javadoc)
@@ -501,7 +469,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
 		private double electricityConsumption;
-		private double waterSupplyPerCapita;
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
@@ -512,14 +479,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterSupplyPerCapita()
-		 */
-		@Override
-		public double getWaterSupplyPerCapita() {
-			return waterSupplyPerCapita;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setElectricityConsumption(double)
 		 */
 		@Override
@@ -527,16 +486,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.electricityConsumption = electricityConsumption;
 			fireAttributeChangeEvent(Arrays.asList(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterSupplyPerCapita(double)
-		 */
-		@Override
-		public void setWaterSupplyPerCapita(double waterSupplyPerCapita) {
-			this.waterSupplyPerCapita = waterSupplyPerCapita;
-			fireAttributeChangeEvent(Arrays.asList(
-					WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
 		}
 	}
 }

@@ -314,19 +314,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterSupplyPerCapita()
-		 */
-		@Override
-		public double getWaterSupplyPerCapita() {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += system.getWaterSupplyPerCapita() *
-						system.getSociety().getSocialSystem().getPopulation();
-			}
-			return value / getSociety().getSocialSystem().getPopulation();
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterWasted()
 		 */
 		@Override
@@ -586,16 +573,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#setWaterSupplyPerCapita(double)
-		 */
-		@Override
-		public void setWaterSupplyPerCapita(double waterSupplyPerCapita) {
-			for(WaterSystem.Local system : getNestedSystems()) {
-				system.setWaterSupplyPerCapita(waterSupplyPerCapita);
-			}
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#tick()
 		 */
 		@Override
@@ -637,18 +614,5 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			systems.add(society.getWaterSystem());
 		}
 		return Collections.unmodifiableList(systems);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterSupplyPerCapita()
-	 */
-	@Override
-	public double getWaterSupplyPerCapita() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += system.getWaterSupplyPerCapita() *
-					system.getSociety().getSocialSystem().getPopulation();
-		}
-		return value / getSociety().getSocialSystem().getPopulation();
 	}
 }

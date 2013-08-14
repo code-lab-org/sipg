@@ -17,8 +17,6 @@ public class Globals {
 	private double waterDomesticPrice = 6.;								// SAR/m^3
 	private double privateConsumptionFromWaterProduction = 0;			// SAR/m^3
 	private double privateConsumptionFromWaterConsumption = 100;		// SAR/m^3
-	private double minWaterDemandPerCapita = 10;						// m^3
-	private double maxWaterDemandPerCapita = 100;						// m^3
 	
 	private double petroleumDomesticPrice = 50.;						// SAR/bbl
 	private double petroleumExportPrice = 300;							// SAR/bbl
@@ -160,25 +158,6 @@ public class Globals {
 	 */
 	public double getInitialFunds() {
 		return initialFunds;
-	}
-	
-
-	/**
-	 * Gets the max water demand per capita.
-	 *
-	 * @return the max water demand per capita
-	 */
-	public double getMaxWaterDemandPerCapita() {
-		return maxWaterDemandPerCapita;
-	}
-
-	/**
-	 * Gets the min water demand per capita.
-	 *
-	 * @return the min water demand per capita
-	 */
-	public double getMinWaterDemandPerCapita() {
-		return minWaterDemandPerCapita;
 	}
 
 	/**
@@ -356,24 +335,6 @@ public class Globals {
 	 */
 	public void setInitialFunds(double initialFunds) {
 		this.initialFunds = initialFunds;
-	}
-	
-	/**
-	 * Sets the max water demand per capita.
-	 *
-	 * @param maxWaterDemandPerCapita the new max water demand per capita
-	 */
-	public void setMaxWaterDemandPerCapita(double maxWaterDemandPerCapita) {
-		this.maxWaterDemandPerCapita = maxWaterDemandPerCapita;
-	}
-
-	/**
-	 * Sets the min water demand per capita.
-	 *
-	 * @param minWaterDemandPerCapita the new min water demand per capita
-	 */
-	public void setMinWaterDemandPerCapita(double minWaterDemandPerCapita) {
-		this.minWaterDemandPerCapita = minWaterDemandPerCapita;
 	}
 
 	/**

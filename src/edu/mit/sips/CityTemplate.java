@@ -70,7 +70,7 @@ public enum CityTemplate {
 											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
-							new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0,
+							new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6,
 									Arrays.asList(
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1945, name, name),
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1958, name, name),
@@ -111,8 +111,9 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(10000,
 									new LogisticGrowthModel(1950, 50000, 0.08, 20000000),
-									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 100000, 4.5),
+									new LinearBoundedProductDemandModel(8000, 10, 100000, 100)):
 								new DefaultSocialSystem.Remote());
 		case RURAL:
 			return new City(name, 
@@ -129,7 +130,7 @@ public enum CityTemplate {
 											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
-							new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0,
+							new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6,
 									Arrays.asList(
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1955, name, name),
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_2.createElement(1973, name, name),
@@ -147,8 +148,9 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(8000, 
 									new LogisticGrowthModel(1950, 10000, 0.05, 750000),
-									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 100000, 4.5),
+									new LinearBoundedProductDemandModel(8000, 10, 100000, 100)):
 								new DefaultSocialSystem.Remote());
 		case URBAN:
 			return new City(name, 
@@ -160,7 +162,7 @@ public enum CityTemplate {
 											)):
 								new DefaultAgricultureSystem.Remote(),
 					sectors.contains(Sector.WATER)?
-							new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0,
+							new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6,
 									Arrays.asList(
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1920, name, name),
 											(WaterElement) ElementTemplate.AQUIFER_PUMP_1.createElement(1940, name, name),
@@ -185,8 +187,9 @@ public enum CityTemplate {
 					assigned?
 							new DefaultSocialSystem.Local(20000,
 									new LogisticGrowthModel(1950, 100000, 0.07, 10000000),
-									new LinearBoundedProductDemandModel(8000, 1, 10000, 10),
-									new LinearBoundedProductDemandModel(8000, 2, 10000, 4.5)):
+									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
+									new LinearBoundedProductDemandModel(8000, 2, 100000, 4.5),
+									new LinearBoundedProductDemandModel(8000, 10, 100000, 100)):
 								new DefaultSocialSystem.Remote());
 		default:
 			throw new IllegalArgumentException("Unknown city template.");

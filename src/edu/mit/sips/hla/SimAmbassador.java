@@ -17,7 +17,6 @@ import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SaveFailureReason;
 import hla.rti1516e.SynchronizationPointFailureReason;
-import hla.rti1516e.TimeQueryReturn;
 import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
@@ -183,8 +182,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 					city.getWaterSystem().fireAttributeChangeEvent(
 							Arrays.asList(WaterSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
 								WaterSystem.CASH_FLOW_ATTRIBUTE,
-								WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-								WaterSystem.WATER_SUPPLY_PER_CAPITA_ATTRIBUTE));
+								WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 				}
 				if(city.getEnergySystem() instanceof EnergySystem.Local) {
 					city.getEnergySystem().fireAttributeChangeEvent(

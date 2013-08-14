@@ -25,8 +25,7 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 	private static final long serialVersionUID = -3665986046863585665L;
 	
 	private final LinearIndicatorPanel localWaterIndicatorPanel, 
-	waterReservoirIndicatorPanel, renewableWaterIndicatorPanel, 
-	waterConsumptionIndicatorPanel;
+	waterReservoirIndicatorPanel, renewableWaterIndicatorPanel;
 	
 	private final SpatialStatePanel waterStatePanel;
 
@@ -63,11 +62,6 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		renewableWaterIndicatorPanel = new LinearIndicatorPanel(
 				"Renewable Water", 0, 1);
 		indicatorsPanel.add(renewableWaterIndicatorPanel);
-		waterConsumptionIndicatorPanel = new LinearIndicatorPanel(
-				"Water Consumption", 
-				getSociety().getGlobals().getMinWaterDemandPerCapita(), 
-				getSociety().getGlobals().getMaxWaterDemandPerCapita());
-		indicatorsPanel.add(waterConsumptionIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		waterStatePanel = new SpatialStatePanel(
@@ -194,8 +188,6 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 
 		updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), 
 				year, getSociety().getSocialSystem().getWaterConsumptionPerCapita());
-		waterConsumptionIndicatorPanel.setValue(
-				getSociety().getSocialSystem().getWaterConsumptionPerCapita());
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
 			updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), 
 					year, nestedSociety.getSocialSystem().getWaterConsumptionPerCapita());
