@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 
 /**
@@ -177,9 +178,7 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.EnergySoS.Local#optimizeEnergyProductionAndDistribution(double, double)
 		 */
-		public void optimizeEnergyProductionAndDistribution(
-				double deltaPetroleumProductionCost, 
-				double deltaElectricityProductionCost) {
+		public void optimizeEnergyProductionAndDistribution(OptimizationOptions optimizationOptions) {
 			List<City> cities = getSociety().getCities();
 			List<? extends PetroleumElement> petroElements = 
 					getPetroleumSystem().getInternalElements();
@@ -211,8 +210,9 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				// Minimize costs - most obvious cost is importing, though also 
 				// minimize transportation even if free.
 				costCoefficients[petroElements.indexOf(element)] 
-						= element.getVariableOperationsCostOfPetroleumProduction() 
-		                		 + deltaPetroleumProductionCost;
+						= element.getVariableOperationsCostOfPetroleumProduction()
+								+ element.getReservoirIntensityOfPetroleumProduction() 
+								* optimizationOptions.getDeltaReservoirOilPrice();
 				initialValues[petroElements.indexOf(element)] 
 						= element.getPetroleumProduction();
 
@@ -222,6 +222,7 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 		                // TODO removed because internalized as export capability
 						//+ element.getElectricalIntensityOfPetroleumDistribution()
 						//* getSociety().getGlobals().getElectricityDomesticPrice();
+						// optimizationOptions.getDeltaDomesticOilPrice());
 				initialValues[petroElements.size() + petroElements.indexOf(element)] 
 						= element.getPetroleumInput();
 			}
@@ -248,11 +249,12 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				                 + electElements.indexOf(element)] 
 				                		 = element.getVariableOperationsCostOfElectricityProduction() 
 				                		 + element.getWaterIntensityOfElectricityProduction()
-				                		 * getSociety().getGlobals().getWaterDomesticPrice()
+				                		 * (getSociety().getGlobals().getWaterDomesticPrice()
+				                				 + optimizationOptions.getDeltaDomesticWaterPrice());
 				                		 // TODO removed because internalized as export capability
 				                		 //+ element.getPetroleumIntensityOfElectricityProduction()
-				                		 //* getSociety().getGlobals().getPetroleumDomesticPrice()
-				                		 + deltaElectricityProductionCost;
+				                		 //* (getSociety().getGlobals().getPetroleumDomesticPrice()
+										 // optimizationOptions.getDeltaDomesticOilPrice());
 				initialValues[2*petroElements.size() 
 				              + electElements.indexOf(element)] 
 				            		  = element.getElectricityProduction();
@@ -377,7 +379,8 @@ public class DefaultEnergySoS extends DefaultInfrastructureSoS implements Energy
 				/*TODO removed because internalized in export capability
 				costCoefficients[2*petroElements.size() + 2*electElements.size() 
 						          + 2*cities.size() + cities.indexOf(city)] 
-						        		  = city.getGlobals().getPetroleumDomesticPrice();
+						        		  = city.getGlobals().getPetroleumDomesticPrice()
+						        		  + optimizationOptions.getDeltaDomesticOilPrice();
 				 */
 				initialValues[2*petroElements.size() + 2*electElements.size() 
 					          + 2*cities.size() + cities.indexOf(city)] = Math.max(0,

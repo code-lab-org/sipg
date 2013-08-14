@@ -20,6 +20,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 
 /**
@@ -390,7 +391,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		 * @see edu.mit.sips.core.agriculture.AgricultureSoS.Local#optimizeFoodProductionAndDistribution(double)
 		 */
 		@Override
-		public void optimizeFoodProductionAndDistribution(double deltaProductionCost) {
+		public void optimizeFoodProductionAndDistribution(OptimizationOptions optimizationOptions) {
 			List<City> cities = getSociety().getCities();
 			List<? extends AgricultureElement> elements = getInternalElements();
 			
@@ -420,8 +421,8 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				costCoefficients[elements.indexOf(element)] = 
 						element.getProduct().getCostIntensityOfLandUsed() 
 						+ element.getProduct().getWaterIntensityOfLandUsed()
-						* getSociety().getGlobals().getWaterDomesticPrice()
-						+ deltaProductionCost;
+						* (getSociety().getGlobals().getWaterDomesticPrice()
+								+ optimizationOptions.getDeltaDomesticWaterPrice());
 				initialValues[elements.indexOf(element)] = element.getLandArea();
 
 				// Set the distribution cost.
@@ -485,12 +486,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getFoodImportPrice();
+						= city.getGlobals().getFoodImportPrice() 
+						+ optimizationOptions.getDeltaImportFoodPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodImport();
 				// Set export price in each city.
 				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= -city.getGlobals().getFoodExportPrice();
+						= -city.getGlobals().getFoodExportPrice()
+						- optimizationOptions.getDeltaExportFoodPrice();
 				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodExport();
 			}

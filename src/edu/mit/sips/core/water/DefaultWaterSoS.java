@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 
 /**
@@ -437,7 +438,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterProductionAndDistribution(double)
 		 */
 		@Override
-		public void optimizeWaterProductionAndDistribution(double deltaProductionCost) {
+		public void optimizeWaterProductionAndDistribution(OptimizationOptions optimizationOptions) {
 			List<City> cities = getSociety().getCities();
 			List<? extends WaterElement> elements = getInternalElements();
 
@@ -467,16 +468,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterProduction() 
 						+ element.getElectricalIntensityOfWaterProduction()
-						* getSociety().getGlobals().getElectricityDomesticPrice()
-						+ deltaProductionCost;
+						* (getSociety().getGlobals().getElectricityDomesticPrice()
+								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.indexOf(element)] 
 						= element.getWaterProduction();
 
 				// Set a distribution cost using variable operations expense.
 				costCoefficients[elements.size() + elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterDistribution()
+						+ element.getReservoirIntensityOfWaterProduction()
+						* optimizationOptions.getDeltaAquiferWaterPrice()
 						+ element.getElectricalIntensityOfWaterDistribution()
-						* getSociety().getGlobals().getElectricityDomesticPrice();
+						* (getSociety().getGlobals().getElectricityDomesticPrice()
+								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.size() + elements.indexOf(element)] 
 						= element.getWaterInput();
 			}
@@ -527,7 +531,8 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getWaterImportPrice();
+						= city.getGlobals().getWaterImportPrice() 
+						+ optimizationOptions.getDeltaImportWaterPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= waterSystem.getWaterImport();
 			}

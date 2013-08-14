@@ -95,6 +95,18 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 			}
 		}
 	};
+	
+	private final Action configureOptimization = 
+			new AbstractAction(null, Icons.CONFIGURATION) {
+		private static final long serialVersionUID = 1172926404685767961L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showConfirmDialog(getTopLevelAncestor(), new OptimizationOptionsPanel(
+					simulator.getCountry(), simulator.getOptimizationOptions()),
+					"Configure Optimization Settings", JOptionPane.PLAIN_MESSAGE);
+		}
+	};
 
 	private final Action runOptimization = 
 			new AbstractAction(null, Icons.RECALC) {
@@ -182,6 +194,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				"Optimize resource distribution at each time step.");
 		autoOptimizeProductionAndDistribution.putValue(Action.SHORT_DESCRIPTION, 
 				"Optimize resource production and distribution at each time step.");
+		configureOptimization.putValue(Action.SHORT_DESCRIPTION, 
+				"Edit optimization settings.");
 		runOptimization.putValue(Action.SHORT_DESCRIPTION, 
 				"Run the optimization routine.");
 		initializeSim.putValue(Action.SHORT_DESCRIPTION, 
@@ -230,6 +244,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		c.gridx++;
 		c.gridheight = 2;
 		c.fill = GridBagConstraints.BOTH;
+		optimizationPanel.add(new JButton(configureOptimization), c);
+		c.gridx++;
 		optimizationPanel.add(new JButton(runOptimization), c);
 		add(optimizationPanel, BorderLayout.SOUTH);
 		

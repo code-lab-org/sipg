@@ -1,6 +1,7 @@
 package edu.mit.sips.core.energy;
 
 import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 
 /**
  * The Interface EnergySoS.
@@ -20,11 +21,8 @@ public interface EnergySoS extends InfrastructureSoS, EnergySystem {
 		/**
 		 * Optimize energy production and distribution.
 		 *
-		 * @param deltaPetroleumProductionCost the delta petroleum production cost
-		 * @param deltaElectricityProductionCost the delta electricity production cost
+		 * @param optimizationOptions the optimization options
 		 */
-		public void optimizeEnergyProductionAndDistribution(
-				double deltaPetroleumProductionCost, 
-				double deltaElectricityProductionCost);
+		public void optimizeEnergyProductionAndDistribution(OptimizationOptions optimizationOptions);
 	}
 }

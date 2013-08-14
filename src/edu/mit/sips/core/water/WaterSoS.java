@@ -1,6 +1,7 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 
 /**
  * The Interface WaterSoS.
@@ -20,8 +21,8 @@ public interface WaterSoS extends InfrastructureSoS, WaterSystem {
 		/**
 		 * Optimize water production and distribution.
 		 *
-		 * @param deltaProductionCost the delta production cost
+		 * @param optimizationOptions the optimization options
 		 */
-		public void optimizeWaterProductionAndDistribution(double deltaProductionCost);
+		public void optimizeWaterProductionAndDistribution(OptimizationOptions optimizationOptions);
 	}
 }

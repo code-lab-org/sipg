@@ -1,6 +1,7 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 
 /**
  * The Interface AgricultureSoS.
@@ -20,8 +21,8 @@ public interface AgricultureSoS extends InfrastructureSoS, AgricultureSystem {
 		/**
 		 * Optimize food production and distribution.
 		 *
-		 * @param deltaProductionCost the delta production cost
+		 * @param optimizationOptions the optimization options
 		 */
-		public void optimizeFoodProductionAndDistribution(double deltaProductionCost);
+		public void optimizeFoodProductionAndDistribution(OptimizationOptions optimizationOptions);
 	}
 }

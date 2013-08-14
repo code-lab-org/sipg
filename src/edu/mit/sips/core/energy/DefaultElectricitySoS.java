@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 
 /**
@@ -399,7 +400,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS.Local implem
 	 * @param deltaProductionCost the delta production cost
 	 */
 	@Override
-	public void optimizeElectricityProductionAndDistribution(double deltaProductionCost) {
+	public void optimizeElectricityProductionAndDistribution(OptimizationOptions optimizationOptions) {
 		List<City> cities = getSociety().getCities();
 		List<? extends ElectricityElement> elements = getInternalElements();
 		
@@ -429,10 +430,11 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS.Local implem
 			costCoefficients[elements.indexOf(element)] 
 					= element.getVariableOperationsCostOfElectricityProduction()
 	                		 + element.getWaterIntensityOfElectricityProduction()
-	                		 * getSociety().getGlobals().getWaterDomesticPrice()
+	                		 * (getSociety().getGlobals().getWaterDomesticPrice()
+	                				 + optimizationOptions.getDeltaDomesticWaterPrice())
 	                		 + element.getPetroleumIntensityOfElectricityProduction()
-	                		 * getSociety().getGlobals().getPetroleumDomesticPrice()
-	                		 + deltaProductionCost;
+	                		 * (getSociety().getGlobals().getPetroleumDomesticPrice()
+	                				 + optimizationOptions.getDeltaDomesticOilPrice());
 			initialValues[elements.indexOf(element)] 
 					= element.getElectricityProduction();
 
@@ -479,7 +481,8 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS.Local implem
 
 			// Set petroleum burn cost in each city.
 			costCoefficients[2*elements.size() + cities.indexOf(city)] = 
-					city.getGlobals().getPetroleumDomesticPrice();
+					city.getGlobals().getPetroleumDomesticPrice()
+					+ optimizationOptions.getDeltaDomesticOilPrice();
 			initialValues[2*elements.size() + cities.indexOf(city)] = 
 					Math.max(0,electricitySystem.getPetroleumBurned());
 		}

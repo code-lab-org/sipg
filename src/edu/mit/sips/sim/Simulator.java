@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.energy.EnergySoS;
 import edu.mit.sips.core.water.WaterSoS;
@@ -30,8 +31,7 @@ public class Simulator implements SimulationControlListener {
 	
 	private boolean autoOptimizeDistribution = true;
 	private boolean autoOptimizeProductionAndDistribution = true;
-	private double deltaAgricultureCost = 0, deltaWaterCost = 0, 
-			deltaPetroleumCost = 0, deltaElectricityCost = 0;
+	private final OptimizationOptions optimizationOptions = new OptimizationOptions();
 
 	private final AtomicBoolean initialized = new AtomicBoolean(false);
 	private final AtomicBoolean completed = new AtomicBoolean(false);
@@ -225,6 +225,15 @@ public class Simulator implements SimulationControlListener {
 	}
 	
 	/**
+	 * Gets the optimization options.
+	 *
+	 * @return the optimization options
+	 */
+	public OptimizationOptions getOptimizationOptions() {
+		return optimizationOptions;
+	}
+	
+	/**
 	 * Gets the start time.
 	 *
 	 * @return the start time
@@ -301,7 +310,7 @@ public class Simulator implements SimulationControlListener {
 		initialized.set(true);
 		completed.set(false);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SimulationControlListener#initializeSimulation(edu.mit.sips.gui.SimulationControlEvent)
 	 */
@@ -336,7 +345,7 @@ public class Simulator implements SimulationControlListener {
 	public boolean isCompleted() {
 		return completed.get();
 	}
-
+	
 	/**
 	 * Checks if is initialized.
 	 *
@@ -370,18 +379,17 @@ public class Simulator implements SimulationControlListener {
 		if(autoOptimizeProductionAndDistribution) {
 			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
 				((AgricultureSoS.Local)country.getAgricultureSystem())
-				.optimizeFoodProductionAndDistribution(deltaAgricultureCost);
+				.optimizeFoodProductionAndDistribution(optimizationOptions);
 			}
 			
 			if(country.getWaterSystem() instanceof WaterSoS.Local) {
 				((WaterSoS.Local)country.getWaterSystem())
-				.optimizeWaterProductionAndDistribution(deltaWaterCost);
+				.optimizeWaterProductionAndDistribution(optimizationOptions);
 			}
 			
 			if(country.getEnergySystem() instanceof EnergySoS.Local) {
 				((EnergySoS.Local)country.getEnergySystem())
-				.optimizeEnergyProductionAndDistribution(deltaPetroleumCost, 
-						deltaElectricityCost);
+				.optimizeEnergyProductionAndDistribution(optimizationOptions);
 			}
 		} else if(autoOptimizeDistribution) {
 			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {

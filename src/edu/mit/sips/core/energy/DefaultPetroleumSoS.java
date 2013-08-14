@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 
 /**
@@ -371,7 +372,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS.Local implemen
 	 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumProductionAndDistribution(double)
 	 */
 	@Override
-	public void optimizePetroleumProductionAndDistribution(double deltaProductionCost) {
+	public void optimizePetroleumProductionAndDistribution(OptimizationOptions optimizationOptions) {
 		List<City> cities = getSociety().getCities();
 		List<? extends PetroleumElement> elements = getInternalElements();
 		
@@ -399,16 +400,18 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS.Local implemen
 			// Minimize costs - most obvious cost is importing, though also 
 			// minimize transportation even if free.
 			costCoefficients[elements.indexOf(element)] 
-					= element.getVariableOperationsCostOfPetroleumProduction() 
-					+ deltaProductionCost;
+					= element.getVariableOperationsCostOfPetroleumProduction();
 			initialValues[elements.indexOf(element)] 
 					= element.getPetroleumProduction();
 
 			// Set distribution cost.
 			costCoefficients[elements.size() + elements.indexOf(element)] 
 					= element.getVariableOperationsCostOfPetroleumDistribution()
+					+ element.getReservoirIntensityOfPetroleumProduction() 
+					* optimizationOptions.getDeltaReservoirOilPrice()
 					+ element.getElectricalIntensityOfPetroleumDistribution()
-					* getSociety().getGlobals().getElectricityDomesticPrice();
+					* (getSociety().getGlobals().getElectricityDomesticPrice()
+							+ optimizationOptions.getDeltaDomesticElectricityPrice());
 			initialValues[elements.size() + elements.indexOf(element)] 
 					= element.getPetroleumInput();
 		}
@@ -460,12 +463,14 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS.Local implemen
 
 			// Set import cost in each city.
 			costCoefficients[2*elements.size() + cities.indexOf(city)] 
-					= city.getGlobals().getPetroleumImportPrice();
+					= city.getGlobals().getPetroleumImportPrice() 
+					+ optimizationOptions.getDeltaImportOilPrice();
 			initialValues[2*elements.size() + cities.indexOf(city)] 
 					= Math.max(0, -energySystem.getPetroleumSystem().getPetroleumExport());
 			// Set export price in each city.
 			costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-					= -city.getGlobals().getPetroleumExportPrice();
+					= -city.getGlobals().getPetroleumExportPrice() 
+					- optimizationOptions.getDeltaExportOilPrice();
 			initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 					= Math.max(0, energySystem.getPetroleumSystem().getPetroleumExport());
 		}
