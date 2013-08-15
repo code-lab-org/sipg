@@ -102,7 +102,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showConfirmDialog(getTopLevelAncestor(), new OptimizationOptionsPanel(
+			JOptionPane.showMessageDialog(getTopLevelAncestor(), new OptimizationOptionsPanel(
 					simulator.getCountry(), simulator.getOptimizationOptions()),
 					"Configure Optimization Settings", JOptionPane.PLAIN_MESSAGE);
 		}

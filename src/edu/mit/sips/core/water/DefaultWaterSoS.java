@@ -501,6 +501,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 								= element.getReservoirIntensityOfWaterProduction();
 					}
 				}
+				//resourceConstraint[2*elements.size() + cities.size() + cities.indexOf(city)] = 1;
 				constraints.add(new LinearConstraint(resourceConstraint, 
 						Relationship.LEQ, waterSystem.getWaterReservoirVolume()));
 
@@ -524,6 +525,9 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				}
 				// Allow import in this city.
 				flowCoefficients[2*elements.size() + cities.indexOf(city)] = 1;
+				
+				// Allow artesian well in this city.
+				//flowCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] = 1;
 
 				// Constrain in-flow and production to meet demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
@@ -535,6 +539,13 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 						+ optimizationOptions.getDeltaImportWaterPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= waterSystem.getWaterImport();
+				
+				// Set artesian well cost in each city.
+				//costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
+				//		= optimizationOptions.getDeltaAquiferWaterPrice();
+				//initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
+				//		= waterSystem.getWaterFromArtesianWell();
+				
 			}
 
 			try {
@@ -555,6 +566,12 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 							output.getPoint()[elements.size() + i],
 							elements.get(i).getMaxWaterInput()));
 				}
+				//for(int i = 0; i < cities.size(); i++) {
+				//	if(cities.get(i).getWaterSystem() instanceof WaterSystem.Local) { 
+				//		((WaterSystem.Local) cities.get(i).getWaterSystem()).setWaterFromArtesianWell(
+				//				output.getPoint()[2*elements.size() + cities.size() + i]);
+				//	}
+				//}
 			} catch(TooManyIterationsException ignore) { 
 				// Don't overwrite existing values.
 				ignore.printStackTrace();
