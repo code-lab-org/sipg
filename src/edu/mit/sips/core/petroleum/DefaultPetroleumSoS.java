@@ -106,15 +106,15 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.energy.PetroleumSystem#getLocalPetroleumSupply()
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#getLocalPetroleumFraction()
 		 */
 		@Override
-		public double getLocalPetroleumSupply() {
-			double value = 0;
-			for(PetroleumSystem.Local system : getNestedSystems()) {
-				value += system.getLocalPetroleumSupply();
+		public double getLocalPetroleumFraction() {
+			if(getSociety().getTotalPetroleumDemand() > 0) {
+				return Math.min(1, getPetroleumProduction()
+						/ getSociety().getTotalPetroleumDemand());
 			}
-			return value;
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -276,7 +276,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
@@ -388,7 +388,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				ignore.printStackTrace();
 			}
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumProductionAndDistribution(double)
 		 */

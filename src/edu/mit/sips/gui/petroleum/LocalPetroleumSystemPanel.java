@@ -24,7 +24,8 @@ import edu.mit.sips.io.Icons;
 public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 	private static final long serialVersionUID = 2218175276232419659L;
 	
-	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel;
+	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel, 
+	localPetroleumIndicatorPanel;
 	
 	private final SpatialStatePanel petroleumStatePanel;
 	
@@ -51,7 +52,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		petroleumReservoirIndicatorPanel = new LinearIndicatorPanel(
 				"Oil Reservoir", 0, 
 				petroleumSystem.getMaxPetroleumReservoirVolume());
+		localPetroleumIndicatorPanel = new LinearIndicatorPanel(
+				"Oil Independence", 0, 1);
 		indicatorsPanel.add(petroleumReservoirIndicatorPanel);
+		indicatorsPanel.add(localPetroleumIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		addTab("Revenue", Icons.REVENUE, 
@@ -113,6 +117,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 	@Override
 	public void initialize() {
 		petroleumReservoirIndicatorPanel.initialize();
+		localPetroleumIndicatorPanel.initialize();
 		petroleumRevenue.removeAllSeries();
 		petroleumNetRevenue.removeAllSeries();
 		petroleumProductCostData.removeAllSeries();
@@ -169,6 +174,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		
 		petroleumReservoirIndicatorPanel.setValue(
 				getPetroleumSystem().getPetroleumReservoirVolume());
+		
+		localPetroleumIndicatorPanel.setValue(
+				getPetroleumSystem().getLocalPetroleumFraction());
 		
 		updateSeries(petroleumRevenue, "Capital", year, 
 				-getPetroleumSystem().getCapitalExpense());

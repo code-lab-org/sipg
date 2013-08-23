@@ -38,11 +38,11 @@ public interface PetroleumSystem extends InfrastructureSystem {
 		public List<? extends PetroleumElement> getInternalElements();
 
 		/**
-		 * Gets the local petroleum supply.
+		 * Gets the local petroleum fraction.
 		 *
-		 * @return the local petroleum supply
+		 * @return the local petroleum fraction
 		 */
-		public double getLocalPetroleumSupply();
+		public double getLocalPetroleumFraction();
 
 		/**
 		 * Gets the max petroleum reservoir volume.
