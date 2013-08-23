@@ -28,7 +28,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 	localPetroleumIndicatorPanel;
 	
 	private final SpatialStatePanel petroleumStatePanel;
-	
+
+	TimeSeriesCollection localPetroleumData = new TimeSeriesCollection();
 	TimeSeriesCollection petroleumProductCostData = new TimeSeriesCollection();
 	TimeSeriesCollection petroleumSupplyProfitData = new TimeSeriesCollection();
 	
@@ -57,10 +58,6 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		indicatorsPanel.add(petroleumReservoirIndicatorPanel);
 		indicatorsPanel.add(localPetroleumIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		
-		addTab("Revenue", Icons.REVENUE, 
-				createStackedAreaChart("Petroleum Revenue (SAR/year)", 
-				petroleumRevenue, null, petroleumNetRevenue));
 
 		petroleumStatePanel = new SpatialStatePanel(getSociety(), 
 				new PetroleumStateProvider());
@@ -74,6 +71,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (bbl/year)", petroleumUseData));
 		
+		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
+				"Local Petroleum Use Fraction (-)", 
+				localPetroleumData));
 		addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
 				"Oil Reservoir Volume (bbl)", 
 				petroleumReservoirDataset), "Reservoir");
@@ -120,6 +120,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		localPetroleumIndicatorPanel.initialize();
 		petroleumRevenue.removeAllSeries();
 		petroleumNetRevenue.removeAllSeries();
+		localPetroleumData.removeAllSeries();
 		petroleumProductCostData.removeAllSeries();
 		petroleumSupplyProfitData.removeAllSeries();
 		petroleumReservoirDataset.removeAllSeries();
@@ -175,8 +176,14 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 		petroleumReservoirIndicatorPanel.setValue(
 				getPetroleumSystem().getPetroleumReservoirVolume());
 		
+		updateSeriesCollection(localPetroleumData, getSociety().getName(), 
+				year, getPetroleumSystem().getLocalPetroleumFraction());
 		localPetroleumIndicatorPanel.setValue(
 				getPetroleumSystem().getLocalPetroleumFraction());
+		for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
+			updateSeriesCollection(localPetroleumData, nestedSystem.getSociety().getName(), 
+					year, nestedSystem.getLocalPetroleumFraction());
+		}
 		
 		updateSeries(petroleumRevenue, "Capital", year, 
 				-getPetroleumSystem().getCapitalExpense());

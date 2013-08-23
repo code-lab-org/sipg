@@ -59,10 +59,6 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel {
 		indicatorsPanel.add(localElectricityIndicatorPanel);
 		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
-		addTab("Revenue", Icons.REVENUE, 
-				createStackedAreaChart("Electricity Revenue (SAR/year)", 
-				electricityRevenue, null, electricityNetRevenue));
-		
 		electricityStatePanel = new SpatialStatePanel(
 				getSociety(), new ElectricityStateProvider());
 		addTab("Network Flow", Icons.NETWORK, electricityStatePanel);
