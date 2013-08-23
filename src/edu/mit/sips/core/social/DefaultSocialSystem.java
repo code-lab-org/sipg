@@ -241,16 +241,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/**
-		 * Gets the next economic production.
+		 * Gets the next domestic product.
 		 *
-		 * @return the next economic production
+		 * @return the next domestic product
 		 */
-		private double getNextEconomicProduction() {
-			double economicProduction = 0;
+		private double getNextDomesticProduct() {
+			double nextDomesticProduct = 0;
 			for(InfrastructureSystem s : getSociety().getInfrastructureSystems()) {
-				economicProduction += s.getDomesticProduction();
+				nextDomesticProduct += s.getDomesticProduction();
 			}
-			return economicProduction;
+			return nextDomesticProduct;
 		}
 
 		/* (non-Javadoc)
@@ -304,7 +304,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public void tick() {
-			nextDomesticProduct = getNextEconomicProduction();
+			nextDomesticProduct = getNextDomesticProduct();
 			populationModel.tick();
 			electricityDemandModel.tick();
 			foodDemandModel.tick();
