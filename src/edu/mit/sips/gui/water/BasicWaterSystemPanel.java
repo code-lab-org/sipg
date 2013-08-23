@@ -14,7 +14,6 @@ public class BasicWaterSystemPanel extends WaterSystemPanel {
 
 	DefaultTableXYDataset waterRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityConsumption = new DefaultTableXYDataset();
-	DefaultTableXYDataset waterSupplyPerCapita = new DefaultTableXYDataset();
 
 	/**
 	 * Instantiates a new basic water system panel.
@@ -26,8 +25,6 @@ public class BasicWaterSystemPanel extends WaterSystemPanel {
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Water Revenue (SAR/year)", waterRevenue));
-		addTab("Water Supply", Icons.CONSUMPTION, createStackedAreaChart(
-				"Water Supply per Capita (m^3/person)", waterSupplyPerCapita));
 		addTab("Electricity Consumption", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Consumed (m^3/year)", electricityConsumption));
 	}
@@ -48,7 +45,6 @@ public class BasicWaterSystemPanel extends WaterSystemPanel {
 	public void initialize() {
 		waterRevenue.removeAllSeries();
 		electricityConsumption.removeAllSeries();
-		waterSupplyPerCapita.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
