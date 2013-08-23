@@ -20,7 +20,7 @@ public class Player1 {
 	public static void main(String[] args) {
 		final Country ksa = CountryFactory.createSaudiCountry(
 				Arrays.asList(CityTemplate.INDUSTRIAL),
-				Arrays.asList(Sector.ENERGY));
+				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM));
 
 		final Simulator simulator = new Simulator(ksa);
 		//simulator.addUpdateListener(new ConsoleLogger());

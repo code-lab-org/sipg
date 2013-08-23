@@ -6,8 +6,10 @@ import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
-import edu.mit.sips.core.energy.DefaultEnergySoS;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.DefaultElectricitySoS;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.DefaultPetroleumSoS;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.DefaultSocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.DefaultWaterSoS;
@@ -44,11 +46,20 @@ public class Region extends DefaultSociety implements Society {
 			}
 		}
 		
-		EnergySystem energySystem = new DefaultEnergySoS();
-		// energy system is local if there is a nested local system
+		ElectricitySystem electricitySystem = new DefaultElectricitySoS();
+		// electricity system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
-			if(society.getEnergySystem() instanceof EnergySystem.Local) {
-				energySystem = new DefaultEnergySoS.Local();
+			if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+				electricitySystem = new DefaultElectricitySoS.Local();
+				break;
+			}
+		}
+		
+		PetroleumSystem petroleumSystem = new DefaultPetroleumSoS();
+		// petroleum system is national if there is a nested local system
+		for(Society society : nestedSocieties) {
+			if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+				petroleumSystem = new DefaultPetroleumSoS.Local();
 				break;
 			}
 		}
@@ -57,7 +68,7 @@ public class Region extends DefaultSociety implements Society {
 		SocialSystem socialSystem = new DefaultSocialSoS();
 		
 		return new Region(name, nestedSocieties, agricultureSystem, 
-				waterSystem, energySystem, socialSystem);
+				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}
 
 	/**
@@ -75,9 +86,10 @@ public class Region extends DefaultSociety implements Society {
 	 */
 	private Region(String name, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			EnergySystem energySystem, SocialSystem socialSystem) {
+			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem, 
+			SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
-				waterSystem, energySystem, socialSystem);
+				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}
 	
 	/* (non-Javadoc)

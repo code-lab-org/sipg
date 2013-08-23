@@ -40,12 +40,12 @@ import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
-import edu.mit.sips.core.energy.ElectricityElement;
-import edu.mit.sips.core.energy.EnergyElement;
-import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.energy.MutableElectricityElement;
-import edu.mit.sips.core.energy.MutablePetroleumElement;
-import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.electricity.ElectricityElement;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.petroleum.MutablePetroleumElement;
+import edu.mit.sips.core.petroleum.PetroleumElement;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
@@ -82,8 +82,11 @@ public class ElementsPane extends JPanel {
 				case AGRICULTURE:
 					setIcon(Icons.AGRICULTURE);
 					break;
-				case ENERGY:
-					setIcon(Icons.ENERGY);
+				case ELECTRICITY:
+					setIcon(Icons.ELECTRICITY);
+					break;
+				case PETROLEUM:
+					setIcon(Icons.PETROLEUM);
 					break;
 				case WATER:
 					setIcon(Icons.WATER);
@@ -438,12 +441,18 @@ public class ElementsPane extends JPanel {
 						(WaterSystem.Local) city.getWaterSystem();
 				waterSystem.removeElement((WaterElement)element);
 				waterSystem.addElement((WaterElement)newElement);
-			} else if(element instanceof EnergyElement
-					&& city.getEnergySystem() instanceof EnergySystem.Local) {
-				EnergySystem.Local energySystem = 
-						(EnergySystem.Local) city.getEnergySystem();
-				energySystem.removeElement((EnergyElement)element);
-				energySystem.addElement((EnergyElement)newElement);
+			} else if(element instanceof ElectricityElement
+					&& city.getElectricitySystem() instanceof ElectricitySystem.Local) {
+				ElectricitySystem.Local energySystem = 
+						(ElectricitySystem.Local) city.getElectricitySystem();
+				energySystem.removeElement((ElectricityElement)element);
+				energySystem.addElement((ElectricityElement)newElement);
+			} else if(element instanceof PetroleumElement
+					&& city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+				PetroleumSystem.Local energySystem = 
+						(PetroleumSystem.Local) city.getPetroleumSystem();
+				energySystem.removeElement((PetroleumElement)element);
+				energySystem.addElement((PetroleumElement)newElement);
 			} else {
 				throw new IllegalStateException(
 						"Element was not a known element type.");
@@ -475,10 +484,14 @@ public class ElementsPane extends JPanel {
 					&& city.getWaterSystem() instanceof WaterSystem.Local) {
 				((WaterSystem.Local)city.getWaterSystem())
 				.removeElement((WaterElement)selection);
-			} else if(selection instanceof EnergyElement
-					&& city.getEnergySystem() instanceof EnergySystem.Local) {
-				((EnergySystem.Local)city.getEnergySystem())
-				.removeElement((EnergyElement)selection);
+			} else if(selection instanceof ElectricityElement
+					&& city.getElectricitySystem() instanceof ElectricitySystem.Local) {
+				((ElectricitySystem.Local)city.getElectricitySystem())
+				.removeElement((ElectricityElement)selection);
+			} else if(selection instanceof PetroleumElement
+					&& city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+				((PetroleumSystem.Local)city.getPetroleumSystem())
+				.removeElement((PetroleumElement)selection);
 			} else {
 				throw new IllegalStateException(
 						"Selection was not a known element type.");

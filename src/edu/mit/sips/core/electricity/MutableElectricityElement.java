@@ -1,4 +1,4 @@
-package edu.mit.sips.core.energy;
+package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
 

@@ -1,4 +1,4 @@
-package edu.mit.sips.gui.energy;
+package edu.mit.sips.gui.electricity;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.energy.MutableElectricityElement;
+import edu.mit.sips.core.electricity.MutableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 

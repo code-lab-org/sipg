@@ -9,8 +9,10 @@ import java.util.List;
 import edu.mit.sips.Sector;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
-import edu.mit.sips.core.energy.DefaultEnergySystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.DefaultElectricitySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -24,7 +26,8 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	
 	private AgricultureSystem agricultureSystem;
 	private WaterSystem waterSystem;
-	private EnergySystem energySystem;
+	private ElectricitySystem electricitySystem;
+	private PetroleumSystem petroleumSystem;
 	private SocialSystem socialSystem;
 	
 	/**
@@ -38,8 +41,10 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		agricultureSystem.setSociety(this);
 		this.waterSystem = new DefaultWaterSystem.Remote();
 		waterSystem.setSociety(this);
-		this.energySystem = new DefaultEnergySystem.Remote();
-		energySystem.setSociety(this);
+		this.electricitySystem = new DefaultElectricitySystem.Remote();
+		electricitySystem.setSociety(this);
+		this.petroleumSystem = new DefaultPetroleumSystem.Remote();
+		petroleumSystem.setSociety(this);
 		this.socialSystem = new DefaultSocialSystem.Remote();
 		socialSystem.setSociety(this);
 	}
@@ -56,7 +61,8 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	public DefaultSociety(String name, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			EnergySystem energySystem, SocialSystem socialSystem) {
+			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem, 
+			SocialSystem socialSystem) {
 		super(name);
 		
 		// Validate cities.
@@ -82,8 +88,11 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		this.waterSystem = waterSystem;
 		this.waterSystem.setSociety(this);
 
-		this.energySystem = energySystem;
-		this.energySystem.setSociety(this);
+		this.electricitySystem = electricitySystem;
+		this.electricitySystem.setSociety(this);
+		
+		this.petroleumSystem = petroleumSystem;
+		this.petroleumSystem.setSociety(this);
 
 		this.socialSystem = socialSystem;
 		this.socialSystem.setSociety(this);
@@ -121,8 +130,11 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 		if(waterSystem instanceof WaterSystem.Local) {
 			sectors.add(Sector.WATER);
 		}
-		if(energySystem instanceof EnergySystem.Local) {
-			sectors.add(Sector.ENERGY);
+		if(electricitySystem instanceof ElectricitySystem.Local) {
+			sectors.add(Sector.ELECTRICITY);
+		}
+		if(petroleumSystem instanceof PetroleumSystem.Local) {
+			sectors.add(Sector.PETROLEUM);
 		}
 		return sectors;
 	}
@@ -140,11 +152,11 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getEnergySystem()
+	 * @see edu.mit.sips.core.Society#getElectricitySystem()
 	 */
 	@Override
-	public EnergySystem getEnergySystem() {
-		return energySystem;
+	public ElectricitySystem getElectricitySystem() {
+		return electricitySystem;
 	}
 
 	/* (non-Javadoc)
@@ -153,8 +165,16 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public List<? extends InfrastructureSystem> getInfrastructureSystems() {
 		return Arrays.asList(getAgricultureSystem(), getWaterSystem(), 
-				getEnergySystem(), getSocialSystem());
+				getElectricitySystem(), getPetroleumSystem(), getSocialSystem());
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getPetroleumSystem()
+	 */
+	@Override
+	public PetroleumSystem getPetroleumSystem() {
+		return petroleumSystem;
+	}	
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getInternalElements()
@@ -207,7 +227,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public double getTotalElectricityDemand() {
 		return getWaterSystem().getElectricityConsumption() 
-				+ getEnergySystem().getElectricityConsumption()
+				+ getPetroleumSystem().getElectricityConsumption()
 				+ getSocialSystem().getElectricityConsumption();
 	}
 
@@ -224,7 +244,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 */
 	@Override
 	public double getTotalPetroleumDemand() {
-		return getEnergySystem().getPetroleumConsumption();
+		return getElectricitySystem().getPetroleumConsumption();
 	}
 
 	/* (non-Javadoc)
@@ -233,7 +253,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public double getTotalWaterDemand() {
 		return getAgricultureSystem().getWaterConsumption()
-				+ getEnergySystem().getWaterConsumption()
+				+ getElectricitySystem().getWaterConsumption()
 				+ getSocialSystem().getWaterConsumption();
 	}
 
@@ -300,12 +320,21 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#setEnergySystem(edu.mit.sips.core.energy.EnergySystem)
+	 * @see edu.mit.sips.core.Society#setElectricitySystem(edu.mit.sips.core.electricity.ElectricitySystem)
 	 */
 	@Override
-	public void setEnergySystem(EnergySystem.Remote energySystem) {
-		energySystem.setSociety(this);
-		this.energySystem = energySystem;
+	public void setElectricitySystem(ElectricitySystem.Remote electricitySystem) {
+		electricitySystem.setSociety(this);
+		this.electricitySystem = electricitySystem;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#setPetroleumSystem(edu.mit.sips.core.petroleum.PetroleumSystem)
+	 */
+	@Override
+	public void setPetroleumSystem(PetroleumSystem.Remote petroleumSystem) {
+		petroleumSystem.setSociety(this);
+		this.petroleumSystem = petroleumSystem;
 	}
 
 	/* (non-Javadoc)

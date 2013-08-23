@@ -1,9 +1,11 @@
-package edu.mit.sips.core.energy;
+package edu.mit.sips.core.electricity;
+
+import edu.mit.sips.core.InfrastructureElement;
 
 /**
  * The Interface ElectricityElement.
  */
-public interface ElectricityElement extends EnergyElement {
+public interface ElectricityElement extends InfrastructureElement {
 	
 	/**
 	 * Gets the distribution efficiency.

@@ -1,9 +1,11 @@
-package edu.mit.sips.core.energy;
+package edu.mit.sips.core.petroleum;
+
+import edu.mit.sips.core.InfrastructureElement;
 
 /**
  * The Interface PetroleumElement.
  */
-public interface PetroleumElement extends EnergyElement {
+public interface PetroleumElement extends InfrastructureElement {
 
 	/**
 	 * Gets the distribution efficiency.

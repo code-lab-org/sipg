@@ -1,10 +1,10 @@
-package edu.mit.sips.gui.energy;
+package edu.mit.sips.gui.electricity;
 
 import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 
-import edu.mit.sips.core.energy.ElectricityElement;
+import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.gui.DefaultPopupInfoPanel;
 
 /**

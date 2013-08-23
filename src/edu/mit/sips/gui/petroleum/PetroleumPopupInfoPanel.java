@@ -1,10 +1,10 @@
-package edu.mit.sips.gui.energy;
+package edu.mit.sips.gui.petroleum;
 
 import java.text.NumberFormat;
 
 import javax.swing.JLabel;
 
-import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.gui.DefaultPopupInfoPanel;
 
 /**

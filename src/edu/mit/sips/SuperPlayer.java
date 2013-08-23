@@ -27,7 +27,8 @@ public class SuperPlayer {
 				Arrays.asList(
 						Sector.AGRICULTURE,
 						Sector.WATER,
-						Sector.ENERGY));
+						Sector.ELECTRICITY,
+						Sector.PETROLEUM));
 
 		final Simulator simulator = new Simulator(ksa);
 		simulator.addUpdateListener(new ConsoleLogger());

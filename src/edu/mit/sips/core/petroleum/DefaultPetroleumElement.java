@@ -1,4 +1,4 @@
-package edu.mit.sips.core.energy;
+package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;

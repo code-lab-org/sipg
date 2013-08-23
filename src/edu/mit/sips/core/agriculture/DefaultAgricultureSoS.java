@@ -578,7 +578,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				System.out.println("];");
 			}
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
 		 */

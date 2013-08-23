@@ -6,7 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
@@ -24,14 +25,15 @@ public class City extends DefaultSociety implements Society {
 	 * @param name the name
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
-	 * @param energySystem the energy system
+	 * @param electricitySystem the electricity system
+	 * @param petroleumSystem the petroleum system
 	 * @param socialSystem the social system
 	 */
 	public City(String name, AgricultureSystem agricultureSystem,
-			WaterSystem waterSystem, EnergySystem energySystem,
-			SocialSystem socialSystem) {
+			WaterSystem waterSystem, ElectricitySystem electricitySystem,
+			PetroleumSystem petroleumSystem, SocialSystem socialSystem) {
 		super(name, new ArrayList<Society>(), agricultureSystem,
-				waterSystem, energySystem, socialSystem);
+				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}
 	
 	/* (non-Javadoc)

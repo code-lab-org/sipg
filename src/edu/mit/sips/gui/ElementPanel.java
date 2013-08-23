@@ -31,12 +31,12 @@ import edu.mit.sips.core.DefaultLifecycleModel;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
-import edu.mit.sips.core.energy.MutableElectricityElement;
-import edu.mit.sips.core.energy.MutablePetroleumElement;
+import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
-import edu.mit.sips.gui.energy.ElectricityElementPanel;
-import edu.mit.sips.gui.energy.PetroleumElementPanel;
+import edu.mit.sips.gui.electricity.ElectricityElementPanel;
+import edu.mit.sips.gui.petroleum.PetroleumElementPanel;
 import edu.mit.sips.gui.water.WaterElementPanel;
 import edu.mit.sips.io.Icons;
 

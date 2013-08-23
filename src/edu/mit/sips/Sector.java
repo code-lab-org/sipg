@@ -6,7 +6,8 @@ package edu.mit.sips;
 public enum Sector { 
 	AGRICULTURE("Agriculture"), 
 	WATER("Water"),
-	ENERGY("Energy");
+	ELECTRICITY("Electricity"),
+	PETROLEUM("Petroleum");
 	
 	private final String name;
 	

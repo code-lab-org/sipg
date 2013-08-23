@@ -6,12 +6,12 @@ import javax.swing.JPopupMenu;
 
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.agriculture.AgricultureElement;
-import edu.mit.sips.core.energy.ElectricityElement;
-import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.electricity.ElectricityElement;
+import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.gui.agriculture.AgriculturePopupInfoPanel;
-import edu.mit.sips.gui.energy.ElectricityPopupInfoPanel;
-import edu.mit.sips.gui.energy.PetroleumPopupInfoPanel;
+import edu.mit.sips.gui.electricity.ElectricityPopupInfoPanel;
+import edu.mit.sips.gui.petroleum.PetroleumPopupInfoPanel;
 import edu.mit.sips.gui.water.WaterPopupInfoPanel;
 import edu.mit.sips.sim.Simulator;
 

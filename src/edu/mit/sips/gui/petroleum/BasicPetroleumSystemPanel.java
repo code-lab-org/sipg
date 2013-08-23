@@ -1,47 +1,41 @@
-package edu.mit.sips.gui.energy;
+package edu.mit.sips.gui.petroleum;
 
 import org.jfree.data.xy.DefaultTableXYDataset;
 
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**
- * The Class BasicEnergySystemPanel.
+ * The Class BasicPetroleumSystemPanel.
  */
-public class BasicEnergySystemPanel extends EnergySystemPanel {
+public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 	private static final long serialVersionUID = 569560127649283731L;
 
-	DefaultTableXYDataset energyRevenue = new DefaultTableXYDataset();
-	DefaultTableXYDataset waterConsumption = new DefaultTableXYDataset();
+	DefaultTableXYDataset petroleumRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityConsumption = new DefaultTableXYDataset();
-	DefaultTableXYDataset petroleumConsumption = new DefaultTableXYDataset();
 
 	/**
-	 * Instantiates a new basic energy system panel.
+	 * Instantiates a new basic petroleum system panel.
 	 *
-	 * @param energySystem the energy system
+	 * @param petroleumSystem the petroleum system
 	 */
-	public BasicEnergySystemPanel(EnergySystem energySystem) {
-		super(energySystem);
+	public BasicPetroleumSystemPanel(PetroleumSystem petroleumSystem) {
+		super(petroleumSystem);
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Energy Revenue (SAR/year)", energyRevenue));
-		addTab("Water Consumption", Icons.WATER_USE, createStackedAreaChart(
-				"Water Consumed (m^3/year)", waterConsumption));
+				"Petroleum Revenue (SAR/year)", petroleumRevenue));
 		addTab("Electricity Consumption", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Consumed (MWh/year)", electricityConsumption));
-		addTab("Petroleum Consumption", Icons.PETROLEUM_USE, createStackedAreaChart(
-				"Petroleum Consumed (bbl/year)", petroleumConsumption));
 	}
 	
 	/**
-	 * Gets the energy system.
+	 * Gets the petroleum system.
 	 *
-	 * @return the energy system
+	 * @return the petroleum system
 	 */
-	public EnergySystem getEnergySystem() {
-		return (EnergySystem) getInfrastructureSystem();
+	public PetroleumSystem getPetroleumSystem() {
+		return (PetroleumSystem) getInfrastructureSystem();
 	}
 
 	/* (non-Javadoc)
@@ -49,10 +43,8 @@ public class BasicEnergySystemPanel extends EnergySystemPanel {
 	 */
 	@Override
 	public void initialize() {
-		energyRevenue.removeAllSeries();
-		waterConsumption.removeAllSeries();
+		petroleumRevenue.removeAllSeries();
 		electricityConsumption.removeAllSeries();
-		petroleumConsumption.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -84,13 +76,9 @@ public class BasicEnergySystemPanel extends EnergySystemPanel {
 	 */
 	@Override
 	public void update(int year) {
-		updateSeries(energyRevenue, "Revenue", year, 
-				getEnergySystem().getCashFlow());
-		updateSeries(waterConsumption, "Consumption", year, 
-				getEnergySystem().getWaterConsumption());
+		updateSeries(petroleumRevenue, "Revenue", year, 
+				getPetroleumSystem().getCashFlow());
 		updateSeries(electricityConsumption, "Consumption", year, 
-				getEnergySystem().getElectricityConsumption());
-		updateSeries(petroleumConsumption, "Consumption", year, 
-				getEnergySystem().getPetroleumConsumption());
+				getPetroleumSystem().getElectricityConsumption());
 	}
 }

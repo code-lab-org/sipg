@@ -11,7 +11,8 @@ import javax.swing.event.EventListenerList;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
-import edu.mit.sips.core.energy.EnergySoS;
+import edu.mit.sips.core.electricity.ElectricitySoS;
+import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.gui.SimulationControlEvent;
 import edu.mit.sips.gui.SimulationControlEvent.AdvanceToEnd;
@@ -387,9 +388,14 @@ public class Simulator implements SimulationControlListener {
 				.optimizeWaterProductionAndDistribution(optimizationOptions);
 			}
 			
-			if(country.getEnergySystem() instanceof EnergySoS.Local) {
-				((EnergySoS.Local)country.getEnergySystem())
-				.optimizeEnergyProductionAndDistribution(optimizationOptions);
+			if(country.getElectricitySystem() instanceof ElectricitySoS.Local) {
+				((ElectricitySoS.Local)country.getElectricitySystem())
+				.optimizeElectricityProductionAndDistribution(optimizationOptions);
+			}
+			
+			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local) {
+				((PetroleumSoS.Local)country.getPetroleumSystem())
+				.optimizePetroleumProductionAndDistribution(optimizationOptions);
 			}
 		} else if(autoOptimizeDistribution) {
 			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
@@ -402,9 +408,14 @@ public class Simulator implements SimulationControlListener {
 				.optimizeWaterDistribution();
 			}
 			
-			if(country.getEnergySystem() instanceof EnergySoS.Local) {
-				((EnergySoS.Local)country.getEnergySystem())
-				.optimizeEnergyDistribution();
+			if(country.getElectricitySystem() instanceof ElectricitySoS.Local) {
+				((ElectricitySoS.Local)country.getElectricitySystem())
+				.optimizeElectricityDistribution();
+			}
+			
+			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local) {
+				((PetroleumSoS.Local)country.getPetroleumSystem())
+				.optimizePetroleumDistribution();
 			}
 		}
 	}

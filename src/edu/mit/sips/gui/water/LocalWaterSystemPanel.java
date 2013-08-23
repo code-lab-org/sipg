@@ -219,8 +219,8 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 				getSociety().getSocialSystem().getWaterConsumption());
 		updateSeries(waterUseData, "Agriculture", year, 
 				getSociety().getAgricultureSystem().getWaterConsumption());
-		updateSeries(waterUseData, "Energy", year, 
-				getSociety().getEnergySystem().getWaterConsumption());
+		updateSeries(waterUseData, "Electricity", year, 
+				getSociety().getElectricitySystem().getWaterConsumption());
 		updateSeries(waterUseData, "Wasted", year, 
 				getWaterSystem().getWaterWasted());
 		

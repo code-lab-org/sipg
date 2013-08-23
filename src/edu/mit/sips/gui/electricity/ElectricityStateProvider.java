@@ -1,4 +1,4 @@
-package edu.mit.sips.gui.energy;
+package edu.mit.sips.gui.electricity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,21 +6,21 @@ import java.util.List;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.energy.EnergySystem;
-import edu.mit.sips.core.energy.PetroleumElement;
+import edu.mit.sips.core.electricity.ElectricityElement;
+import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.gui.SpatialStateProvider;
 
 /**
- * The Class PetroleumStateProvider.
+ * The Class ElectricityStateProvider.
  */
-public class PetroleumStateProvider implements SpatialStateProvider {
+public class ElectricityStateProvider implements SpatialStateProvider {
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getConsumption(Society society) {
-		return society.getTotalPetroleumDemand();
+		return society.getTotalElectricityDemand();
 	}
 
 	/* (non-Javadoc)
@@ -29,13 +29,13 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-			for(PetroleumElement e : energySystem.getPetroleumSystem().getExternalElements()) {
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			for(ElectricityElement e : energySystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(origin.getCities().contains(origCity)) {
-					distribution += e.getPetroleumOutput();
+					distribution += e.getElectricityOutput();
 				}
 			}
 		}
@@ -48,17 +48,17 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-			for(PetroleumElement e : energySystem.getPetroleumSystem().getInternalElements()) {
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			for(ElectricityElement e : energySystem.getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(destination.getCities().contains(destCity)) {
 					if(society.getCities().contains(destCity)) {
 						// if a self-loop, only add distribution losses
-						distribution += e.getPetroleumInput() - e.getPetroleumOutput();
+						distribution += e.getElectricityInput() - e.getElectricityOutput();
 					} else {
-						distribution += e.getPetroleumInput();
+						distribution += e.getElectricityInput();
 					}
 				}
 			}
@@ -70,12 +70,12 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getElements(edu.mit.sips.Society)
 	 */
 	@Override
-	public List<PetroleumElement> getElements(Society society) {
-		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-			for(PetroleumElement element : energySystem.getPetroleumSystem().getElements()) {
+	public List<ElectricityElement> getElements(Society society) {
+		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			for(ElectricityElement element : energySystem.getElements()) {
 				if(element.isExists()) elements.add(element);
 			}
 		}
@@ -87,11 +87,6 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getExport(Society society) {
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-		return energySystem.getPetroleumSystem().getPetroleumExport();
-		} 
 		return 0;
 	}
 
@@ -100,11 +95,6 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getImport(Society society) {
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-		return energySystem.getPetroleumSystem().getPetroleumImport();
-		} 
 		return 0;
 	}
 
@@ -113,25 +103,23 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getInput(InfrastructureElement element) {
-		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumInput();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityInput();
 		} else {
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getNetFlow(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getNetFlow(Society society) {
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-		return energySystem.getPetroleumSystem().getPetroleumExport()
-				- energySystem.getPetroleumSystem().getPetroleumImport()
-				+ energySystem.getPetroleumSystem().getPetroleumOutDistribution()
-				- energySystem.getPetroleumSystem().getPetroleumInDistribution();
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			return energySystem.getElectricityOutDistribution()
+					- energySystem.getElectricityInDistribution();
 		} 
 		return 0;
 	}
@@ -142,13 +130,13 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-			for(PetroleumElement e : energySystem.getPetroleumSystem().getExternalElements()) {
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			for(ElectricityElement e : energySystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(!society.getCities().contains(origCity)) {
-					distribution += e.getPetroleumOutput();
+					distribution += e.getElectricityOutput();
 				}
 			}
 		}
@@ -161,13 +149,13 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
-		if(society.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) 
-					society.getEnergySystem(); 
-			for(PetroleumElement e : energySystem.getPetroleumSystem().getInternalElements()) {
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			for(ElectricityElement e : energySystem.getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(!society.getCities().contains(destCity)) {
-					distribution += e.getPetroleumInput();
+					distribution += e.getElectricityInput();
 				}
 			}
 		}
@@ -179,6 +167,11 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getOtherProduction(Society society) {
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
+					society.getElectricitySystem(); 
+			return energySystem.getElectricityFromBurningPetroleum();
+		} 
 		return 0;
 	}
 
@@ -187,7 +180,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getOtherProductionLabel() {
-		return "";
+		return "Petroleum Burn";
 	}
 
 	/* (non-Javadoc)
@@ -195,8 +188,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getOutput(InfrastructureElement element) {
-		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumOutput();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityOutput();
 		} else {
 			return 0;
 		}
@@ -207,8 +200,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public double getProduction(InfrastructureElement element) {
-		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumProduction();
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getElectricityProduction();
 		} else {
 			return 0;
 		}
@@ -219,7 +212,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "bbl";
+		return "MWh";
 	}
 
 	/* (non-Javadoc)
@@ -227,8 +220,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isDistribution(InfrastructureElement element) {
-		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getMaxPetroleumInput() > 0;
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityInput() > 0;
 		} else {
 			return false;
 		}
@@ -239,7 +232,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isExportAllowed() {
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -247,7 +240,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isImportAllowed() {
-		return true;
+		return false;
 	}
 
 	/* (non-Javadoc)
@@ -255,7 +248,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isOtherProductionAllowed() {
-		return false;
+		return true;
 	}
 
 	/* (non-Javadoc)
@@ -263,8 +256,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public boolean isProduction(InfrastructureElement element) {
-		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getMaxPetroleumProduction() > 0;
+		if(element instanceof ElectricityElement) {
+			return ((ElectricityElement)element).getMaxElectricityProduction() > 0;
 		} else {
 			return false;
 		}

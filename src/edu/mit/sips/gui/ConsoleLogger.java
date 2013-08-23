@@ -6,7 +6,8 @@ import java.util.List;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -31,16 +32,32 @@ public class ConsoleLogger implements UpdateListener {
 	}
 
 	/**
-	 * Gets the local energy systems.
+	 * Gets the local electricity systems.
 	 *
 	 * @param cities the cities
-	 * @return the local energy systems
+	 * @return the local electricity systems
 	 */
-	private List<EnergySystem.Local> getLocalEnergySystems(List<City> cities) {
-		List<EnergySystem.Local> systems = new ArrayList<EnergySystem.Local>();
+	private List<ElectricitySystem.Local> getLocalElectricitySystems(List<City> cities) {
+		List<ElectricitySystem.Local> systems = new ArrayList<ElectricitySystem.Local>();
 		for(City city : cities) {
-			if(city.getEnergySystem() instanceof EnergySystem.Local){
-				systems.add((EnergySystem.Local)city.getEnergySystem());
+			if(city.getElectricitySystem() instanceof ElectricitySystem.Local){
+				systems.add((ElectricitySystem.Local)city.getElectricitySystem());
+			}
+		}
+		return systems;
+	}
+
+	/**
+	 * Gets the local petroleum systems.
+	 *
+	 * @param cities the cities
+	 * @return the local petroleum systems
+	 */
+	private List<PetroleumSystem.Local> getLocalPetroleumSystems(List<City> cities) {
+		List<PetroleumSystem.Local> systems = new ArrayList<PetroleumSystem.Local>();
+		for(City city : cities) {
+			if(city.getPetroleumSystem() instanceof PetroleumSystem.Local){
+				systems.add((PetroleumSystem.Local)city.getPetroleumSystem());
 			}
 		}
 		return systems;
@@ -64,6 +81,9 @@ public class ConsoleLogger implements UpdateListener {
 
 	/**
 	 * Prints the state.
+	 *
+	 * @param country the country
+	 * @param time the time
 	 */
 	private void printState(Country country, long time) {
 		System.out.printf("%-20s  %15s |", "*" + time 
@@ -121,11 +141,18 @@ public class ConsoleLogger implements UpdateListener {
 					city.getWaterSystem().getCashFlow());
 		}
 		System.out.println();
-		System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "SAR", 
-				country.getEnergySystem().getCashFlow());
+		System.out.printf("%-15s %-5s %,15.0f |", "  Electricity", "SAR", 
+				country.getElectricitySystem().getCashFlow());
 		for(City city : country.getCities()) {
 			System.out.printf(" %,15.0f", 
-					city.getEnergySystem().getCashFlow());
+					city.getElectricitySystem().getCashFlow());
+		}
+		System.out.println();
+		System.out.printf("%-15s %-5s %,15.0f |", "  Petroleum", "SAR", 
+				country.getPetroleumSystem().getCashFlow());
+		for(City city : country.getCities()) {
+			System.out.printf(" %,15.0f", 
+					city.getPetroleumSystem().getCashFlow());
 		}
 		System.out.println();
 		
@@ -384,13 +411,13 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.printf("%-15s %-5s %,15.0f |", "Water Use", "m^3", 
 					waterSystem.getWaterOutDistribution()
 					+ country.getSocialSystem().getWaterConsumption()
-					+ country.getEnergySystem().getWaterConsumption()
+					+ country.getElectricitySystem().getWaterConsumption()
 					+ waterSystem.getWaterWasted());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
 						system.getWaterOutDistribution()
 						+ system.getSociety().getSocialSystem().getWaterConsumption()
-						+ system.getSociety().getEnergySystem().getWaterConsumption()
+						+ system.getSociety().getElectricitySystem().getWaterConsumption()
 						+ system.getWaterWasted());
 			}
 			System.out.println();
@@ -412,10 +439,10 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "m^3", 
-					country.getEnergySystem().getWaterConsumption());
+					country.getElectricitySystem().getWaterConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getWaterConsumption());
+						city.getElectricitySystem().getWaterConsumption());
 			}
 			System.out.println();
 			
@@ -518,253 +545,256 @@ public class ConsoleLogger implements UpdateListener {
 
 		System.out.println();
 		
-		if(country.getEnergySystem() instanceof EnergySystem.Local) {
-			EnergySystem.Local energySystem = (EnergySystem.Local) country.getEnergySystem(); 
+		if(country.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) country.getPetroleumSystem(); 
 			
-
 			System.out.printf("%-15s %-5s %,15.0f |", "Reservoir Vol.", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumReservoirVolume());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
-				System.out.printf(" %,15.0f", system.getPetroleumSystem().getPetroleumReservoirVolume());
+					energySystem.getPetroleumReservoirVolume());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
+				System.out.printf(" %,15.0f", system.getPetroleumReservoirVolume());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumWithdrawals());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumWithdrawals());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumWithdrawals());
+						system.getPetroleumWithdrawals());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "Petrol. Source", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumProduction()
-					+ energySystem.getPetroleumSystem().getPetroleumInDistribution()
-					+ energySystem.getPetroleumSystem().getPetroleumImport());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumProduction()
+					+ energySystem.getPetroleumInDistribution()
+					+ energySystem.getPetroleumImport());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumProduction()
-						+ system.getPetroleumSystem().getPetroleumInDistribution()
-						+ system.getPetroleumSystem().getPetroleumImport());
+						system.getPetroleumProduction()
+						+ system.getPetroleumInDistribution()
+						+ system.getPetroleumImport());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumProduction());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumProduction());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumProduction());
+						system.getPetroleumProduction());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumInDistribution());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumInDistribution());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumInDistribution());
+						system.getPetroleumInDistribution());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumImport());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumImport());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumImport());
+						system.getPetroleumImport());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumOutDistribution()
-					+ country.getEnergySystem().getPetroleumConsumption()
-					+ energySystem.getPetroleumSystem().getPetroleumExport());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumOutDistribution()
+					+ country.getElectricitySystem().getPetroleumConsumption()
+					+ energySystem.getPetroleumExport());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumOutDistribution()
-						+ system.getSociety().getEnergySystem().getPetroleumConsumption()
-						+ system.getPetroleumSystem().getPetroleumExport());
+						system.getPetroleumOutDistribution()
+						+ system.getSociety().getElectricitySystem().getPetroleumConsumption()
+						+ system.getPetroleumExport());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumOutDistribution());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumOutDistribution());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumOutDistribution());
+						system.getPetroleumOutDistribution());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "bbl", 
-					country.getEnergySystem().getPetroleumConsumption());
+					country.getElectricitySystem().getPetroleumConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getPetroleumConsumption());
+						city.getElectricitySystem().getPetroleumConsumption());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "bbl", 
-					energySystem.getPetroleumSystem().getPetroleumExport());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getPetroleumExport());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getPetroleumExport());
+						system.getPetroleumExport());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "MWh", 
-					energySystem.getPetroleumSystem().getElectricityConsumption());
+					energySystem.getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getElectricityConsumption());
+						city.getPetroleumSystem().getElectricityConsumption());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Total Revenue", "SAR", 
-					energySystem.getPetroleumSystem().getTotalRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getTotalRevenue());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getTotalRevenue());
+						system.getTotalRevenue());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Sales", "SAR", 
-					energySystem.getPetroleumSystem().getSalesRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getSalesRevenue());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getSalesRevenue());
+						system.getSalesRevenue());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", "SAR", 
-					energySystem.getPetroleumSystem().getDistributionRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDistributionRevenue());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getDistributionRevenue());
+						system.getDistributionRevenue());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "SAR", 
-					energySystem.getPetroleumSystem().getExportRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getExportRevenue());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getExportRevenue());
+						system.getExportRevenue());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Total Expenses", "SAR", 
-					energySystem.getPetroleumSystem().getTotalExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getTotalExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getTotalExpense());
+						system.getTotalExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Capital", "SAR", 
-					energySystem.getPetroleumSystem().getCapitalExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getCapitalExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getCapitalExpense());
+						system.getCapitalExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Operations", "SAR", 
-					energySystem.getPetroleumSystem().getOperationsExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getOperationsExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getOperationsExpense());
+						system.getOperationsExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Resources", "SAR", 
-					energySystem.getPetroleumSystem().getConsumptionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getConsumptionExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getConsumptionExpense());
+						system.getConsumptionExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Decommission", "SAR", 
-					energySystem.getPetroleumSystem().getDecommissionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDecommissionExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getDecommissionExpense());
+						system.getDecommissionExpense());
 			}
 			
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", "SAR", 
-					energySystem.getPetroleumSystem().getDistributionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDistributionExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getDistributionExpense());
+						system.getDistributionExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "SAR", 
-					energySystem.getPetroleumSystem().getImportExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getImportExpense());
+			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumSystem().getImportExpense());
+						system.getImportExpense());
 			}
 			System.out.println();
-			
-			System.out.println();
+		}
+		
+		System.out.println();
+
+		if(country.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) country.getElectricitySystem(); 
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "Elect. Source", "MWh", 
-					energySystem.getElectricitySystem().getElectricityProduction()
-					+ energySystem.getElectricitySystem().getElectricityInDistribution()
-					+ energySystem.getElectricitySystem().getElectricityFromBurningPetroleum());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityProduction()
+					+ energySystem.getElectricityInDistribution()
+					+ energySystem.getElectricityFromBurningPetroleum());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityProduction()
-						+ system.getElectricitySystem().getElectricityInDistribution()
-						+ system.getElectricitySystem().getElectricityFromBurningPetroleum());
+						system.getElectricityProduction()
+						+ system.getElectricityInDistribution()
+						+ system.getElectricityFromBurningPetroleum());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "MWh", 
-					energySystem.getElectricitySystem().getElectricityProduction());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityProduction());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityProduction());
+						system.getElectricityProduction());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "MWh", 
-					energySystem.getElectricitySystem().getElectricityInDistribution());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityInDistribution());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityInDistribution());
+						system.getElectricityInDistribution());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Direct-Burn", "MWh", 
-					energySystem.getElectricitySystem().getElectricityFromBurningPetroleum());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityFromBurningPetroleum());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityFromBurningPetroleum());
+						system.getElectricityFromBurningPetroleum());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "MWh", 
-					energySystem.getElectricitySystem().getElectricityOutDistribution()
+					energySystem.getElectricityOutDistribution()
 					+ country.getSocialSystem().getElectricityConsumption()
-					+ country.getEnergySystem().getElectricityConsumption()
+					+ country.getPetroleumSystem().getElectricityConsumption()
 					+ country.getWaterSystem().getElectricityConsumption()
-					+ energySystem.getElectricitySystem().getElectricityWasted());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					+ energySystem.getElectricityWasted());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityOutDistribution()
+						system.getElectricityOutDistribution()
 						+ system.getSociety().getSocialSystem().getElectricityConsumption()
-						+ system.getSociety().getEnergySystem().getElectricityConsumption()
+						+ system.getSociety().getPetroleumSystem().getElectricityConsumption()
 						+ system.getSociety().getWaterSystem().getElectricityConsumption()
-						+ system.getElectricitySystem().getElectricityWasted());
+						+ system.getElectricityWasted());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "MWh", 
-					energySystem.getElectricitySystem().getElectricityOutDistribution());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityOutDistribution());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityOutDistribution());
+						system.getElectricityOutDistribution());
 			}
 			System.out.println();
 			
@@ -777,10 +807,10 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "MWh", 
-					country.getEnergySystem().getElectricityConsumption());
+					country.getPetroleumSystem().getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getElectricityConsumption());
+						city.getPetroleumSystem().getElectricityConsumption());
 			}
 			System.out.println();
 			
@@ -793,99 +823,99 @@ public class ConsoleLogger implements UpdateListener {
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Wasted", "MWh", 
-					energySystem.getElectricitySystem().getElectricityWasted());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getElectricityWasted());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getElectricityWasted());
+						system.getElectricityWasted());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "bbl", 
-					energySystem.getElectricitySystem().getPetroleumConsumption());
+					energySystem.getPetroleumConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getPetroleumConsumption());
+						city.getElectricitySystem().getPetroleumConsumption());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Water Use", "m^3", 
-					energySystem.getElectricitySystem().getWaterConsumption());
+					energySystem.getWaterConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						city.getEnergySystem().getWaterConsumption());
+						city.getElectricitySystem().getWaterConsumption());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Total Revenue", "SAR", 
-					energySystem.getElectricitySystem().getTotalRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getTotalRevenue());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getTotalRevenue());
+						system.getTotalRevenue());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Sales", "SAR", 
-					energySystem.getElectricitySystem().getSalesRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getSalesRevenue());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getSalesRevenue());
+						system.getSalesRevenue());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", "SAR", 
-					energySystem.getElectricitySystem().getDistributionRevenue());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDistributionRevenue());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getDistributionRevenue());
+						system.getDistributionRevenue());
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Total Expenses", "SAR", 
-					energySystem.getElectricitySystem().getTotalExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getTotalExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getTotalExpense());
+						system.getTotalExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Capital", "SAR", 
-					energySystem.getElectricitySystem().getCapitalExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getCapitalExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getCapitalExpense());
+						system.getCapitalExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Operations", "SAR", 
-					energySystem.getElectricitySystem().getOperationsExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getOperationsExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getOperationsExpense());
+						system.getOperationsExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Resources", "SAR", 
-					energySystem.getElectricitySystem().getConsumptionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getConsumptionExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getConsumptionExpense());
+						system.getConsumptionExpense());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Decommission", "SAR", 
-					energySystem.getElectricitySystem().getDecommissionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDecommissionExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getDecommissionExpense());
+						system.getDecommissionExpense());
 			}
 			
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", "SAR", 
-					energySystem.getElectricitySystem().getDistributionExpense());
-			for(EnergySystem.Local system : getLocalEnergySystems(country.getCities())) {
+					energySystem.getDistributionExpense());
+			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricitySystem().getDistributionExpense());
+						system.getDistributionExpense());
 			}
 			System.out.println();
 		}

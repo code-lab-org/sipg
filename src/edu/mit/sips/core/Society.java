@@ -5,7 +5,8 @@ import java.util.List;
 
 import edu.mit.sips.Sector;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
@@ -34,15 +35,14 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the country
 	 */
 	public Country getCountry();
-	
-	/**
-	 * Gets the energy system.
-	 *
-	 * @return the energy system
-	 */
-	public EnergySystem getEnergySystem();
-	
 
+	/**
+	 * Gets the electricity system.
+	 *
+	 * @return the electricity system
+	 */
+	public ElectricitySystem getElectricitySystem();
+	
 	/**
 	 * Gets the globals.
 	 *
@@ -50,6 +50,7 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 */
 	public Globals getGlobals();
 	
+
 	/**
 	 * Gets the infrastructure systems.
 	 *
@@ -77,6 +78,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the nested societies
 	 */
 	public List<? extends Society> getNestedSocieties();
+	
+	/**
+	 * Gets the petroleum system.
+	 *
+	 * @return the petroleum system
+	 */
+	public PetroleumSystem getPetroleumSystem();
 	
 	/**
 	 * Gets the social system.
@@ -135,11 +143,18 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem);
 	
 	/**
-	 * Sets the energy system.
+	 * Sets the electricity system.
 	 *
-	 * @param energySystem the new energy system
+	 * @param electricitySystem the new electricity system
 	 */
-	public void setEnergySystem(EnergySystem.Remote energySystem);
+	public void setElectricitySystem(ElectricitySystem.Remote electricitySystem);
+	
+	/**
+	 * Sets the petroleum system.
+	 *
+	 * @param petroluemSystem the new petroleum system
+	 */
+	public void setPetroleumSystem(PetroleumSystem.Remote petroluemSystem);
 	
 	/**
 	 * Sets the social system.

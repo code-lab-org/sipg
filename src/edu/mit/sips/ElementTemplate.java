@@ -8,8 +8,8 @@ import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
-import edu.mit.sips.core.energy.DefaultElectricityElement;
-import edu.mit.sips.core.energy.DefaultPetroleumElement;
+import edu.mit.sips.core.electricity.DefaultElectricityElement;
+import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
 /**
@@ -35,20 +35,20 @@ public enum ElementTemplate {
 	WATER_PIPELINE_1(Sector.WATER, 			true, 	"Small Water Pipeline", 			1950,	200),
 	WATER_PIPELINE_2(Sector.WATER, 			true, 	"Medium Water Pipeline", 			1950,	200),
 	WATER_PIPELINE_3(Sector.WATER, 			true, 	"Large Water Pipeline", 			1950,	200),
-	PETRO_WELL_1	(Sector.ENERGY, 		false, 	"Small Petroleum Well", 			1940,	200),
-	PETRO_WELL_2	(Sector.ENERGY, 		false, 	"Medium Petroleum Well", 			1960,	200),
-	PETRO_WELL_3	(Sector.ENERGY, 		false, 	"Large Petroleum Well", 			1980,	200),
-	PETRO_PIPELINE_1(Sector.ENERGY, 		true, 	"Small Petroleum Pipeline", 		1940,	200),
-	PETRO_PIPELINE_2(Sector.ENERGY, 		true, 	"Medium Petroleum Pipeline", 		1940,	200),
-	PETRO_PIPELINE_3(Sector.ENERGY, 		true, 	"Large Petroleum Pipeline", 		1940,	200),
-	POWER_PLANT_1	(Sector.ENERGY, 		false, 	"Small Oil Power Plant", 			1940,	40),
-	POWER_PLANT_2	(Sector.ENERGY, 		false, 	"Large Oil Power Plant", 			1970,	40),
-	PV_PLANT_1		(Sector.ENERGY, 		false, 	"Solar Photovoltaics Power Plant", 	1970,	25),
-	CSP_PLANT_1		(Sector.ENERGY, 		false, 	"Concentraed Solar Power Plant", 	1980,	25),
-	WIND_PLANT_1	(Sector.ENERGY, 		false, 	"Wind Power Plant", 				1980,	15),
-	NUCLEAR_PLANT_1	(Sector.ENERGY, 		false, 	"Nuclear Power Plant", 				2020,	40),
-	POWER_LINE_1	(Sector.ENERGY, 		true, 	"Low-capacity Power Line", 			1940,	200),
-	POWER_LINE_2	(Sector.ENERGY, 		true, 	"High-capacity Power Line", 		1940,	200),
+	PETRO_WELL_1	(Sector.PETROLEUM,		false, 	"Small Petroleum Well", 			1940,	200),
+	PETRO_WELL_2	(Sector.PETROLEUM, 		false, 	"Medium Petroleum Well", 			1960,	200),
+	PETRO_WELL_3	(Sector.PETROLEUM, 		false, 	"Large Petroleum Well", 			1980,	200),
+	PETRO_PIPELINE_1(Sector.PETROLEUM, 		true, 	"Small Petroleum Pipeline", 		1940,	200),
+	PETRO_PIPELINE_2(Sector.PETROLEUM, 		true, 	"Medium Petroleum Pipeline", 		1940,	200),
+	PETRO_PIPELINE_3(Sector.PETROLEUM, 		true, 	"Large Petroleum Pipeline", 		1940,	200),
+	POWER_PLANT_1	(Sector.ELECTRICITY,	false, 	"Small Oil Power Plant", 			1940,	40),
+	POWER_PLANT_2	(Sector.ELECTRICITY, 	false, 	"Large Oil Power Plant", 			1970,	40),
+	PV_PLANT_1		(Sector.ELECTRICITY, 	false, 	"Solar Photovoltaics Power Plant", 	1970,	25),
+	CSP_PLANT_1		(Sector.ELECTRICITY, 	false, 	"Concentraed Solar Power Plant", 	1980,	25),
+	WIND_PLANT_1	(Sector.ELECTRICITY, 	false, 	"Wind Power Plant", 				1980,	15),
+	NUCLEAR_PLANT_1	(Sector.ELECTRICITY, 	false, 	"Nuclear Power Plant", 				2020,	40),
+	POWER_LINE_1	(Sector.ELECTRICITY, 	true, 	"Low-capacity Power Line", 			1940,	200),
+	POWER_LINE_2	(Sector.ELECTRICITY, 	true, 	"High-capacity Power Line", 		1940,	200),
 	;
 	
 	private final Sector sector;

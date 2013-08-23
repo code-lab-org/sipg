@@ -21,18 +21,17 @@ import hla.rti1516e.exceptions.SaveInProgress;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.core.energy.DefaultEnergySystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.DefaultElectricitySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
 
 /**
  * The Class HLAenergySystem.
  */
-public class HLAenergySystem extends HLAinfrastructureSystem {
+public class HLAelectricitySystem extends HLAinfrastructureSystem {
 	public static final String 
-	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.EnergySystem";
+	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.ElectricitySystem";
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
 	PETROLEUM_CONSUMPTION_ATTRIBUTE = "PetroleumConsumption",
 	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption";
 	
@@ -41,7 +40,6 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		PETROLEUM_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE
 	};
@@ -64,14 +62,14 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws RestoreInProgress the restore in progress
 	 * @throws ObjectInstanceNotKnown the object instance not known
 	 */
-	public static HLAenergySystem createLocalEnergySystem(
+	public static HLAelectricitySystem createLocalElectricitySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			EnergySystem.Local energySystem) 
+			ElectricitySystem.Local energySystem) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectClassNotPublished, ObjectClassNotDefined, 
 					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
-		HLAenergySystem hlaSystem = new HLAenergySystem(
+		HLAelectricitySystem hlaSystem = new HLAelectricitySystem(
 				rtiAmbassador, encoderFactory, null, energySystem);
 		energySystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -97,16 +95,16 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotDefined 
 	 * @throws ObjectClassNotPublished 
 	 */
-	public static HLAenergySystem createRemoteEnergySystem(
+	public static HLAelectricitySystem createRemoteElectricitySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) 
 					throws NameNotFound, FederateNotExecutionMember, 
 					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
 					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
 					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
-		HLAenergySystem hlaSystem = new HLAenergySystem(
+		HLAelectricitySystem hlaSystem = new HLAelectricitySystem(
 				rtiAmbassador, encoderFactory, instanceName, 
-				new DefaultEnergySystem.Remote());
+				new DefaultElectricitySystem.Remote());
 		//hlaSystem.requestAttributeValueUpdate();
 		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
@@ -171,11 +169,10 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-	
-	private final HLAfloat64BE electricityConsumption;
 
 	private final HLAfloat64BE petroleumConsumption;
 	private final HLAfloat64BE waterConsumption;
+	
 	/**
 	 * Instantiates a new hL aenergy system.
 	 *
@@ -193,22 +190,18 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 * @throws ObjectClassNotDefined 
 	 * @throws ObjectClassNotPublished 
 	 */
-	protected HLAenergySystem(RTIambassador rtiAmbassador, 
+	protected HLAelectricitySystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName,
-			EnergySystem energySystem) throws NameNotFound, 
+			ElectricitySystem energySystem) throws NameNotFound, 
 			FederateNotExecutionMember, NotConnected, RTIinternalError, 
 			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, instanceName, energySystem);
-		electricityConsumption = encoderFactory.createHLAfloat64BE(
-				energySystem.getElectricityConsumption());
 		petroleumConsumption = encoderFactory.createHLAfloat64BE(
 				energySystem.getPetroleumConsumption());
 		waterConsumption = encoderFactory.createHLAfloat64BE(
 				energySystem.getWaterConsumption());
-		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
-				electricityConsumption);
 		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
 				petroleumConsumption);
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
@@ -226,21 +219,15 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 			//try {
 				//List<String> attributesToUpdate = new ArrayList<String>();
 				if(evt.getAttributeNames().contains(
-						EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
-					electricityConsumption.setValue(
-							getEnergySystem().getElectricityConsumption());
-					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
+						ElectricitySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
 					petroleumConsumption.setValue(
-							getEnergySystem().getPetroleumConsumption());
+							getElectricitySystem().getPetroleumConsumption());
 					//attributesToUpdate.add(PETROLEUM_CONSUMPTION_ATTRIBUTE);
 				}
 				if(evt.getAttributeNames().contains(
-						EnergySystem.WATER_CONSUMPTION_ATTRIBUTE)) {
+						ElectricitySystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
-							getEnergySystem().getWaterConsumption());
+							getElectricitySystem().getWaterConsumption());
 					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
 				//updateAttributes(attributesToUpdate);
@@ -248,14 +235,9 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 			//} catch(Exception ex) {
 			//	ex.printStackTrace();
 			//}
-		} else if(getEnergySystem() instanceof EnergySystem.Remote) {
-			EnergySystem.Remote remote = (EnergySystem.Remote) getEnergySystem();
+		} else if(getElectricitySystem() instanceof ElectricitySystem.Remote) {
+			ElectricitySystem.Remote remote = (ElectricitySystem.Remote) getElectricitySystem();
 			// federation changed values -- send updates to object model
-			if(evt.getAttributeNames().contains(
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
-				remote.setElectricityConsumption(
-						electricityConsumption.getValue());
-			}
 			if(evt.getAttributeNames().contains(
 					PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
 				remote.setPetroleumConsumption(
@@ -290,8 +272,8 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 *
 	 * @return the water system
 	 */
-	public EnergySystem getEnergySystem() {
-		return (EnergySystem) getInfrastructureSystem();
+	public ElectricitySystem getElectricitySystem() {
+		return (ElectricitySystem) getInfrastructureSystem();
 	}
 
 	/* (non-Javadoc)
@@ -307,11 +289,10 @@ public class HLAenergySystem extends HLAinfrastructureSystem {
 	 *
 	 * @param energySystem the new energy system
 	 */
-	public void setEnergySystem(EnergySystem.Remote energySystem) {
+	public void setElectricitySystem(ElectricitySystem.Remote energySystem) {
 		// copy attribute values to new system
-		energySystem.setElectricityConsumption(getEnergySystem().getElectricityConsumption());
-		energySystem.setPetroleumConsumption(getEnergySystem().getPetroleumConsumption());
-		energySystem.setWaterConsumption(getEnergySystem().getWaterConsumption());
+		energySystem.setPetroleumConsumption(getElectricitySystem().getPetroleumConsumption());
+		energySystem.setWaterConsumption(getElectricitySystem().getWaterConsumption());
 		super.setInfrastructureSystem(energySystem);
 	}
 }

@@ -108,7 +108,7 @@
                     </attribute>
                 </objectClass>
                 <objectClass>
-                    <name>EnergySystem</name>
+                    <name>ElectricitySystem</name>
                     <sharing>Neither</sharing>
                     <semantics></semantics>
                     <attribute>
@@ -121,19 +121,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Water consumed (m^3) by the energy system.</semantics>
-                    </attribute>
-                    <attribute>
-                        <name>ElectricityConsumption</name>
-                        <dataType>HLAfloat64BE</dataType>
-                        <updateType>Periodic</updateType>
-                        <updateCondition>Every time step.</updateCondition>
-                        <ownership>NoTransfer</ownership>
-                        <sharing>PublishSubscribe</sharing>
-                        <dimensions/>
-                        <transportation>HLAreliable</transportation>
-                        <order>TimeStamp</order>
-                        <semantics>Electricity consumed (kWh) by the energy system.</semantics>
+                        <semantics>Water consumed (m^3) by the electricity system.</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumConsumption</name>
@@ -145,7 +133,24 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Petroleum consumed (bbl) by the energy system.</semantics>
+                        <semantics>Petroleum consumed (bbl) by the electricity system.</semantics>
+                    </attribute>
+                </objectClass>
+                <objectClass>
+                    <name>PetroleumSystem</name>
+                    <sharing>Neither</sharing>
+                    <semantics></semantics>
+                    <attribute>
+                        <name>ElectricityConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Electricity consumed (kWh) by the petroleum system.</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>

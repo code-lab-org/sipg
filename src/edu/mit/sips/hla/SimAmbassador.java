@@ -86,7 +86,8 @@ import javax.swing.JOptionPane;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.energy.EnergySystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.sim.Simulator;
@@ -184,13 +185,18 @@ public class SimAmbassador extends NullFederateAmbassador {
 								WaterSystem.CASH_FLOW_ATTRIBUTE,
 								WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 				}
-				if(city.getEnergySystem() instanceof EnergySystem.Local) {
-					city.getEnergySystem().fireAttributeChangeEvent(
-							Arrays.asList(EnergySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-									EnergySystem.CASH_FLOW_ATTRIBUTE,
-									EnergySystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-									EnergySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
-									EnergySystem.WATER_CONSUMPTION_ATTRIBUTE));
+				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
+					city.getElectricitySystem().fireAttributeChangeEvent(
+							Arrays.asList(ElectricitySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+									ElectricitySystem.CASH_FLOW_ATTRIBUTE,
+									ElectricitySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
+									ElectricitySystem.WATER_CONSUMPTION_ATTRIBUTE));
+				}
+				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+					city.getPetroleumSystem().fireAttributeChangeEvent(
+							Arrays.asList(PetroleumSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
+									PetroleumSystem.CASH_FLOW_ATTRIBUTE,
+									PetroleumSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE));
 				}
 			}
 			synchronized(hlaObjects) {
@@ -329,9 +335,17 @@ public class SimAmbassador extends NullFederateAmbassador {
 					hlaObjects.put(theObject, remoteSystem);
 				}
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLAenergySystem.CLASS_NAME))) {
-				HLAenergySystem remoteSystem = 
-						HLAenergySystem.createRemoteEnergySystem(
+					HLAelectricitySystem.CLASS_NAME))) {
+				HLAelectricitySystem remoteSystem = 
+						HLAelectricitySystem.createRemoteElectricitySystem(
+								rtiAmbassador, encoderFactory, objectName);
+				synchronized(hlaObjects) {
+					hlaObjects.put(theObject, remoteSystem);
+				}
+			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
+					HLApetroleumSystem.CLASS_NAME))) {
+				HLApetroleumSystem remoteSystem = 
+						HLApetroleumSystem.createRemotePetroleumSystem(
 								rtiAmbassador, encoderFactory, objectName);
 				synchronized(hlaObjects) {
 					hlaObjects.put(theObject, remoteSystem);
@@ -509,16 +523,16 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAwaterSystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getCountry().getEnergySystem() instanceof EnergySystem.Local) {
-			// if country includes a local national energy system
+		if(simulator.getCountry().getElectricitySystem() instanceof ElectricitySystem.Local) {
+			// if country includes a local national electricity system
 			// publish its attributes
-			HLAenergySystem.publishAll(rtiAmbassador);
+			HLAelectricitySystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getCountry().getCities()) {
-				if(city.getEnergySystem() instanceof EnergySystem.Local) {
-					EnergySystem.Local localSystem = 
-							(EnergySystem.Local) city.getEnergySystem();
-					HLAenergySystem hlaObject = HLAenergySystem.
-							createLocalEnergySystem(rtiAmbassador, encoderFactory, 
+				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
+					ElectricitySystem.Local localSystem = 
+							(ElectricitySystem.Local) city.getElectricitySystem();
+					HLAelectricitySystem hlaObject = HLAelectricitySystem.
+							createLocalElectricitySystem(rtiAmbassador, encoderFactory, 
 									localSystem);
 					synchronized(hlaObjects) {
 						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
@@ -526,7 +540,26 @@ public class SimAmbassador extends NullFederateAmbassador {
 				}
 			}
 		}
-		HLAenergySystem.subscribeAll(rtiAmbassador);
+		HLAelectricitySystem.subscribeAll(rtiAmbassador);
+		
+		if(simulator.getCountry().getPetroleumSystem() instanceof PetroleumSystem.Local) {
+			// if country includes a local national petroleum system
+			// publish its attributes
+			HLApetroleumSystem.publishAll(rtiAmbassador);
+			for(City city : simulator.getCountry().getCities()) {
+				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+					PetroleumSystem.Local localSystem = 
+							(PetroleumSystem.Local) city.getPetroleumSystem();
+					HLApetroleumSystem hlaObject = HLApetroleumSystem.
+							createLocalPetroleumSystem(rtiAmbassador, encoderFactory, 
+									localSystem);
+					synchronized(hlaObjects) {
+						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					}	
+				}
+			}
+		}
+		HLApetroleumSystem.subscribeAll(rtiAmbassador);
 
 		// always publish city social system attributes
 		HLAsocialSystem.publishAll(rtiAmbassador);
@@ -787,14 +820,24 @@ public class SimAmbassador extends NullFederateAmbassador {
 											system.getSocietyName()).getWaterSystem());
 						}
 						// simulator.fireUpdateEvent(time);
-					} else if(hlaObjects.get(theObject) instanceof HLAenergySystem) {
-						HLAenergySystem system = (HLAenergySystem) hlaObjects.get(theObject);
+					} else if(hlaObjects.get(theObject) instanceof HLAelectricitySystem) {
+						HLAelectricitySystem system = (HLAelectricitySystem) hlaObjects.get(theObject);
 						system.setAllAttributes(theAttributes);
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
-							system.setEnergySystem((EnergySystem.Remote)
+							system.setElectricitySystem((ElectricitySystem.Remote)
 									simulator.getCountry().getSociety(
-											system.getSocietyName()).getEnergySystem());
+											system.getSocietyName()).getElectricitySystem());
+						}
+						// simulator.fireUpdateEvent(time);
+					} else if(hlaObjects.get(theObject) instanceof HLApetroleumSystem) {
+						HLApetroleumSystem system = (HLApetroleumSystem) hlaObjects.get(theObject);
+						system.setAllAttributes(theAttributes);
+						if(system.getInfrastructureSystem().getSociety() == null
+								&& !system.getSocietyName().isEmpty()) {
+							system.setPetroleumSystem((PetroleumSystem.Remote)
+									simulator.getCountry().getSociety(
+											system.getSocietyName()).getPetroleumSystem());
 						}
 						// simulator.fireUpdateEvent(time);
 					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
