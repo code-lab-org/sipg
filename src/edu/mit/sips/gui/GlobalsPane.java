@@ -7,7 +7,6 @@ import java.awt.Insets;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.Country;
@@ -16,7 +15,7 @@ import edu.mit.sips.io.Icons;
 /**
  * The Class GlobalsPane.
  */
-public class GlobalsPane extends JTabbedPane {
+public class GlobalsPane extends JPanel {
 	private static final long serialVersionUID = 4456067057386611657L;
 
 	private final Country country;
@@ -34,8 +33,6 @@ public class GlobalsPane extends JTabbedPane {
 	private final JTextField waterDomesticPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromWaterProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromWaterConsumption = new JTextField(15);
-	private final JTextField minWaterDemandPerCapita = new JTextField(15);
-	private final JTextField maxWaterDemandPerCapita = new JTextField(15);
 
 	private final JTextField petroleumDomesticPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromPetroleumProduction = new JTextField(15);
@@ -205,120 +202,86 @@ public class GlobalsPane extends JTabbedPane {
 			}
 		});
 		
-		addTab("National", Icons.COUNTRY, createNationalPanel());
-		addTab("Agriculture", Icons.AGRICULTURE, createAgriculturePanel());
-		addTab("Water", Icons.WATER, createWaterPanel());
-		addTab("Energy", Icons.ENERGY, createEnergyPanel());
-		initialize();
-	}
-	
-	private JPanel createNationalPanel() {
-		JPanel nationalPanel = new JPanel();
-		nationalPanel.setLayout(new GridBagLayout());
+		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		c.insets = new Insets(2,2,2,2);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		addField(nationalPanel, "Initial Funds (SAR)", 
+		c.gridwidth = 2;
+		JLabel nationalLabel = new JLabel("National");
+		nationalLabel.setIcon(Icons.COUNTRY);
+		add(nationalLabel, c);
+		c.gridwidth = 1;
+		c.gridy++;
+		addField(this, "Initial Funds (SAR)", 
 				initialFunds, c);
-		c.weighty = 1;
-		nationalPanel.add(new JPanel(), c);
-		return nationalPanel;
-	}
-
-	/**
-	 * Creates the agriculture panel.
-	 *
-	 * @return the j panel
-	 */
-	private JPanel createAgriculturePanel() {
-		JPanel foodPanel = new JPanel();
-		foodPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(2,2,2,2);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
 		c.gridx = 0;
-		c.gridy = 0;
-		addField(foodPanel, "Food Domestic Price (SAR/GJ)", 
+		JLabel foodLabel = new JLabel("Agriculture");
+		foodLabel.setIcon(Icons.AGRICULTURE);
+		add(foodLabel, c);
+		c.gridwidth = 1;
+		c.gridy++;
+		addField(this, "Food Domestic Price (SAR/GJ)", 
 				foodDomesticPrice, c);
-		addField(foodPanel, "Food Import Price (SAR/GJ)", 
+		addField(this, "Food Import Price (SAR/GJ)", 
 				foodImportPrice, c);
-		addField(foodPanel, "Food Export Price (SAR/GJ)",
+		addField(this, "Food Export Price (SAR/GJ)",
 				foodExportPrice, c);
-		addField(foodPanel, "<html>Secondary Private Consumption from Food Production (SAR/GJ)</html>",
+		addField(this, "<html>Secondary Private Consumption from Food Production (SAR/GJ)</html>",
 				privateConsumptionFromFoodProduction, c);
-		addField(foodPanel, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
+		addField(this, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
 				privateConsumptionFromFoodConsumption, c);
-		addField(foodPanel, "Labor Participation Rate (-)",
+		addField(this, "Labor Participation Rate (-)",
 				agricultureLaborParticipationRate, c);
-		c.weighty = 1;
-		foodPanel.add(new JPanel(), c);
-		return foodPanel;
-	}
-
-	/**
-	 * Creates the water panel.
-	 *
-	 * @return the j panel
-	 */
-	private JPanel createWaterPanel() {
-		JPanel waterPanel = new JPanel();
-		waterPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(2,2,2,2);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
 		c.gridx = 0;
-		c.gridy = 0;
-		addField(waterPanel, "<html>Water Import Price (SAR/m<sup>3</sup>)</html>", 
+		JLabel waterLabel = new JLabel("Water");
+		waterLabel.setIcon(Icons.WATER);
+		add(waterLabel, c);
+		c.gridwidth = 1;
+		c.gridy++;
+		addField(this, "<html>Water Import Price (SAR/m<sup>3</sup>)</html>", 
 				waterImportPrice, c);
-		addField(waterPanel, "<html>Water Domestic Price (SAR/m<sup>3</sup>)</html>", 
+		addField(this, "<html>Water Domestic Price (SAR/m<sup>3</sup>)</html>", 
 				waterDomesticPrice, c);
-		addField(waterPanel, "<html>Secondary Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
+		addField(this, "<html>Secondary Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
 				privateConsumptionFromWaterProduction, c);
-		addField(waterPanel, "<html>Secondary Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
+		addField(this, "<html>Secondary Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
 				privateConsumptionFromWaterConsumption, c);
-		addField(waterPanel, "<html>Min Water Use per Capita (m<sup>3</sup>)</html>",
-				minWaterDemandPerCapita, c);
-		addField(waterPanel, "<html>Max Water Use per Capita (m<sup>3</sup>)</html>",
-				maxWaterDemandPerCapita, c);
-		c.weighty = 1;
-		waterPanel.add(new JPanel(), c);
-		return waterPanel;
-	}
-
-	/**
-	 * Creates the energy panel.
-	 *
-	 * @return the j panel
-	 */
-	private JPanel createEnergyPanel() {
-		JPanel energyPanel = new JPanel();
-		energyPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(2,2,2,2);
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridwidth = 2;
 		c.gridx = 0;
-		c.gridy = 0;
-		addField(energyPanel, "Petroleum Domestic Price (SAR/bbl)", 
-				petroleumDomesticPrice, c);
-		addField(energyPanel, "Secondary Private Consumption from Petroleum Production (SAR/bbl)", 
-				privateConsumptionFromPetroleumProduction, c);
-		addField(energyPanel, "Petroleum Export Price (SAR/bbl)",
-				petroleumExportPrice, c);
-		addField(energyPanel, "Petroleum Import Price (SAR/bbl)",
-				petroleumImportPrice, c);
-		addField(energyPanel, "Electricity Domestic Price (SAR/MWh)", 
+		JLabel electricityLabel = new JLabel("Electricity");
+		electricityLabel.setIcon(Icons.ELECTRICITY);
+		add(electricityLabel, c);
+		c.gridwidth = 1;
+		c.gridy++;
+		addField(this, "Electricity Domestic Price (SAR/MWh)", 
 				electricityDomesticPrice, c);
-		addField(energyPanel, "Secondary Private Consumption from Electricity Production (SAR/MWh)", 
+		addField(this, "Secondary Private Consumption from Electricity Production (SAR/MWh)", 
 				privateConsumptionFromElectricityProduction, c);
-		addField(energyPanel, "Secondary Private Consumption from Electricity Consumption (SAR/MWh)", 
+		addField(this, "Secondary Private Consumption from Electricity Consumption (SAR/MWh)", 
 				privateConsumptionFromElectricityConsumption, c);
-		addField(energyPanel, "Electrical Intensity of Burning Petroleum (MWh/bbl)", 
+		addField(this, "Electrical Intensity of Burning Petroleum (MWh/bbl)", 
 				electricalIntensityOfBurningPetroleum, c);
-		c.weighty = 1;
-		energyPanel.add(new JPanel(), c);
-		return energyPanel;
+		c.gridwidth = 2;
+		c.gridx = 0;
+		JLabel petroleumLabel = new JLabel("Petroleum");
+		petroleumLabel.setIcon(Icons.PETROLEUM);
+		add(petroleumLabel, c);
+		c.gridwidth = 1;
+		c.gridy++;
+		addField(this, "Petroleum Domestic Price (SAR/bbl)", 
+				petroleumDomesticPrice, c);
+		addField(this, "Secondary Private Consumption from Petroleum Production (SAR/bbl)", 
+				privateConsumptionFromPetroleumProduction, c);
+		addField(this, "Petroleum Export Price (SAR/bbl)",
+				petroleumExportPrice, c);
+		addField(this, "Petroleum Import Price (SAR/bbl)",
+				petroleumImportPrice, c);
+		
+		initialize();
 	}
 
 	/**

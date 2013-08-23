@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Icon;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import edu.mit.sips.core.City;
@@ -116,7 +117,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 
 		if(society instanceof Country) {
 			addTab("Globals", Icons.CONFIGURATION, 
-					new GlobalsPane((Country)society));
+					new JScrollPane(new GlobalsPane((Country)society)));
 		}
 	}
 	
