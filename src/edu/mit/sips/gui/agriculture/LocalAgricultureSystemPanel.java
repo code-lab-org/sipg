@@ -170,19 +170,13 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		}
 		
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
-			updateSeries(landAvailableDataset, "Available", year, 
+			updateSeries(landAvailableDataset, "Land", year, 
 					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
-			updateSeries(landAvailableDataset, "Used", year, 
-					getAgricultureSystem().getLandAreaUsed());
 
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", 
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName(), 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
-			}
-			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", 
-						year, nestedSystem.getLandAreaUsed());
 			}
 		}
 	

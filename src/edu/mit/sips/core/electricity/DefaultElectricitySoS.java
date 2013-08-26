@@ -53,6 +53,21 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
+		 */
+		@Override
+		public double getElectricityDomesticPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(ElectricitySystem system : getNestedSystems()) {
+					value += system.getElectricityDomesticPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityFromBurningPetroleum()
 		 */
 		@Override
@@ -294,7 +309,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		 */
 		@Override
 		public void initialize(long time) { }
-
+		
 		/**
 		 * Optimize electricity distribution.
 		 */
@@ -363,7 +378,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 
 				// Set petroleum burn cost in each city.
 				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getPetroleumDomesticPrice();
+						city.getPetroleumSystem().getPetroleumDomesticPrice();
 				initialValues[elements.size() + cities.indexOf(city)] = 
 						Math.max(0,electricitySystem.getPetroleumBurned());
 			}
@@ -394,7 +409,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				ignore.printStackTrace();
 			}
 		}
-		
+
 		/**
 		 * Optimize electricity production and distribution.
 		 *
@@ -431,10 +446,10 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfElectricityProduction()
 		                		 + element.getWaterIntensityOfElectricityProduction()
-		                		 * (getSociety().getGlobals().getWaterDomesticPrice()
+		                		 * (getSociety().getWaterSystem().getWaterDomesticPrice()
 		                				 + optimizationOptions.getDeltaDomesticWaterPrice())
 		                		 + element.getPetroleumIntensityOfElectricityProduction()
-		                		 * (getSociety().getGlobals().getPetroleumDomesticPrice()
+		                		 * (getSociety().getPetroleumSystem().getPetroleumDomesticPrice()
 		                				 + optimizationOptions.getDeltaDomesticOilPrice());
 				initialValues[elements.indexOf(element)] 
 						= element.getElectricityProduction();
@@ -482,7 +497,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 
 				// Set petroleum burn cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getPetroleumDomesticPrice()
+						city.getPetroleumSystem().getPetroleumDomesticPrice()
 						+ optimizationOptions.getDeltaDomesticOilPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] = 
 						Math.max(0,electricitySystem.getPetroleumBurned());
@@ -547,6 +562,21 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	public DefaultElectricitySoS() {
 		super("Electricity");
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
+	 */
+	@Override
+	public double getElectricityDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(ElectricitySystem system : getNestedSystems()) {
+				value += system.getElectricityDomesticPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)

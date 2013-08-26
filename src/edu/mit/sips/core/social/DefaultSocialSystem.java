@@ -135,13 +135,13 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public double getDomesticProduction() {
 			// add private consumption to base domestic production
 			return super.getDomesticProduction()
-					+ (getSociety().getGlobals().getFoodDomesticPrice()
+					+ (getSociety().getAgricultureSystem().getFoodDomesticPrice()
 					+ getSociety().getGlobals().getPrivateConsumptionFromFoodConsumption())
 					* getFoodConsumption()
-					+ (getSociety().getGlobals().getWaterDomesticPrice()
+					+ (getSociety().getWaterSystem().getWaterDomesticPrice()
 					+ getSociety().getGlobals().getPrivateConsumptionFromWaterConsumption())
 					* getWaterConsumption()
-					+ (getSociety().getGlobals().getElectricityDomesticPrice() 
+					+ (getSociety().getElectricitySystem().getElectricityDomesticPrice() 
 					+ getSociety().getGlobals().getPrivateConsumptionFromElectricityConsumption())
 					* getElectricityConsumption();
 		}

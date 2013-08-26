@@ -33,7 +33,8 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 	
 	public static final String 
 	PETROLEUM_CONSUMPTION_ATTRIBUTE = "PetroleumConsumption",
-	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption";
+	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
+	ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE = "ElectricityDomesticPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
@@ -41,7 +42,8 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
 		PETROLEUM_CONSUMPTION_ATTRIBUTE,
-		WATER_CONSUMPTION_ATTRIBUTE
+		WATER_CONSUMPTION_ATTRIBUTE,
+		ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE
 	};
 
 	/**
@@ -172,6 +174,7 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 
 	private final HLAfloat64BE petroleumConsumption;
 	private final HLAfloat64BE waterConsumption;
+	private final HLAfloat64BE electricityDomesticPrice;
 	
 	/**
 	 * Instantiates a new hL aenergy system.
@@ -202,10 +205,14 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 				energySystem.getPetroleumConsumption());
 		waterConsumption = encoderFactory.createHLAfloat64BE(
 				energySystem.getWaterConsumption());
+		electricityDomesticPrice = encoderFactory.createHLAfloat64BE(
+				energySystem.getElectricityDomesticPrice());
 		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
 				petroleumConsumption);
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
+		attributeValues.put(getAttributeHandle(ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE), 
+				electricityDomesticPrice);
 	}
 	
 	/* (non-Javadoc)
@@ -230,6 +237,12 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 							getElectricitySystem().getWaterConsumption());
 					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
+				if(evt.getAttributeNames().contains(
+						ElectricitySystem.ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE)) {
+					electricityDomesticPrice.setValue(
+							getElectricitySystem().getElectricityDomesticPrice());
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
 				//updateAttributes(attributesToUpdate);
 			//} catch(AttributeNotOwned ignored) {
 			//} catch(Exception ex) {
@@ -247,6 +260,11 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 					WATER_CONSUMPTION_ATTRIBUTE)) {
 				remote.setWaterConsumption(
 						waterConsumption.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE)) {
+				remote.setElectricityDomesticPrice(
+						electricityDomesticPrice.getValue());
 			}
 		}
 	}
@@ -293,6 +311,7 @@ public class HLAelectricitySystem extends HLAinfrastructureSystem {
 		// copy attribute values to new system
 		energySystem.setPetroleumConsumption(getElectricitySystem().getPetroleumConsumption());
 		energySystem.setWaterConsumption(getElectricitySystem().getWaterConsumption());
+		energySystem.setElectricityDomesticPrice(getElectricitySystem().getElectricityDomesticPrice());
 		super.setInfrastructureSystem(energySystem);
 	}
 }

@@ -7,24 +7,15 @@ public class Globals {
 	private double initialFunds = 10000;								// SAR
 
 	private double agricultureLaborParticipationRate = 0.50;			// -
-	private double foodDomesticPrice = 150;								// SAR/GJ
-	private double foodImportPrice = 200;								// SAR/GJ
-	private double foodExportPrice = 150;								// SAR/GJ
 	private double privateConsumptionFromFoodProduction = 0;			// SAR/GJ
 	private double privateConsumptionFromFoodConsumption = 5000;		// SAR/GJ
 	
-	private double waterImportPrice = 40;								// SAR/m^3
-	private double waterDomesticPrice = 6.;								// SAR/m^3
 	private double privateConsumptionFromWaterProduction = 0;			// SAR/m^3
 	private double privateConsumptionFromWaterConsumption = 100;		// SAR/m^3
 	
-	private double petroleumDomesticPrice = 50.;						// SAR/bbl
-	private double petroleumExportPrice = 300;							// SAR/bbl
-	private double petroleumImportPrice = 375;							// SAR/bbl
 	private double privateConsumptionFromPetroleumProduction = 100;		// SAR/bbl
 	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
 	
-	private double electricityDomesticPrice = 375.;						// SAR/MWh
 	private double privateConsumptionFromElectricityProduction = 0;		// SAR/MWh
 	private double privateConsumptionFromElectricityConsumption = 2000;	// SAR/MWh
 	/**
@@ -116,93 +107,12 @@ public class Globals {
 	}
 
 	/**
-	 * Gets the electricity domestic price.
-	 *
-	 * @return the electricity domestic price
-	 */
-	public double getElectricityDomesticPrice() {
-		return electricityDomesticPrice;
-	}
-
-	/**
-	 * Gets the food domestic price.
-	 *
-	 * @return the food domestic price
-	 */
-	public double getFoodDomesticPrice() {
-		return foodDomesticPrice;
-	}
-
-	/**
-	 * Gets the food export price.
-	 *
-	 * @return the food export price
-	 */
-	public double getFoodExportPrice() {
-		return foodExportPrice;
-	}
-
-	/**
-	 * Gets the food import price.
-	 *
-	 * @return the food import price
-	 */
-	public double getFoodImportPrice() {
-		return foodImportPrice;
-	}
-
-	/**
 	 * Gets the initial funds.
 	 *
 	 * @return the initial funds
 	 */
 	public double getInitialFunds() {
 		return initialFunds;
-	}
-
-	/**
-	 * Gets the petroleum domestic price.
-	 *
-	 * @return the petroleum domestic price
-	 */
-	public double getPetroleumDomesticPrice() {
-		return petroleumDomesticPrice;
-	}
-
-	/**
-	 * Gets the petroleum export price.
-	 *
-	 * @return the petroleum export price
-	 */
-	public double getPetroleumExportPrice() {
-		return petroleumExportPrice;
-	}
-
-	/**
-	 * Gets the petroleum import price.
-	 *
-	 * @return the petroleum import price
-	 */
-	public double getPetroleumImportPrice() {
-		return petroleumImportPrice;
-	}
-
-	/**
-	 * Gets the water domestic price.
-	 *
-	 * @return the water domestic price
-	 */
-	public double getWaterDomesticPrice() {
-		return waterDomesticPrice;
-	}
-
-	/**
-	 * Gets the water import price.
-	 *
-	 * @return the water import price
-	 */
-	public double getWaterImportPrice() {
-		return waterImportPrice;
 	}
 
 	/**
@@ -295,39 +205,7 @@ public class Globals {
 		this.electricalIntensityOfBurningPetroleum = electricalIntensityOfBurningPetroleum;
 	}
 	
-	/**
-	 * Sets the electricity domestic price.
-	 *
-	 * @param electricityDomesticPrice the new electricity domestic price
-	 */
-	public void setElectricityDomesticPrice(double electricityDomesticPrice) {
-		this.electricityDomesticPrice = electricityDomesticPrice;
-	}
 
-	/**
-	 * Sets the food domestic price.
-	 *
-	 * @param foodDomesticPrice the new food domestic price
-	 */
-	public void setFoodDomesticPrice(double foodDomesticPrice) {
-		this.foodDomesticPrice = foodDomesticPrice;
-	}
-	/**
-	 * Sets the food export price.
-	 *
-	 * @param foodExportPrice the new food export price
-	 */
-	public void setFoodExportPrice(double foodExportPrice) {
-		this.foodExportPrice = foodExportPrice;
-	}
-	/**
-	 * Sets the food import price.
-	 *
-	 * @param foodImportPrice the new food import price
-	 */
-	public void setFoodImportPrice(double foodImportPrice) {
-		this.foodImportPrice = foodImportPrice;
-	}
 	/**
 	 * Sets the initial funds.
 	 *
@@ -335,50 +213,5 @@ public class Globals {
 	 */
 	public void setInitialFunds(double initialFunds) {
 		this.initialFunds = initialFunds;
-	}
-
-	/**
-	 * Sets the petroleum domestic price.
-	 *
-	 * @param petroleumDomesticPrice the new petroleum domestic price
-	 */
-	public void setPetroleumDomesticPrice(double petroleumDomesticPrice) {
-		this.petroleumDomesticPrice = petroleumDomesticPrice;
-	}
-
-	/**
-	 * Sets the petroleum export price.
-	 *
-	 * @param petroleumExportPrice the new petroleum export price
-	 */
-	public void setPetroleumExportPrice(double petroleumExportPrice) {
-		this.petroleumExportPrice = petroleumExportPrice;
-	}
-
-	/**
-	 * Sets the petroleum import price.
-	 *
-	 * @param petroleumImportPrice the new petroleum import price
-	 */
-	public void setPetroleumImportPrice(double petroleumImportPrice) {
-		this.petroleumImportPrice = petroleumImportPrice;
-	}
-
-	/**
-	 * Sets the water domestic price.
-	 *
-	 * @param waterDomesticPrice the new water domestic price
-	 */
-	public void setWaterDomesticPrice(double waterDomesticPrice) {
-		this.waterDomesticPrice = waterDomesticPrice;
-	}
-
-	/**
-	 * Sets the water import price.
-	 *
-	 * @param waterImportPrice the new water import price
-	 */
-	public void setWaterImportPrice(double waterImportPrice) {
-		this.waterImportPrice = waterImportPrice;
 	}
 }

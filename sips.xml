@@ -89,6 +89,30 @@
                         <order>TimeStamp</order>
                         <semantics>Electricity consumed (MWh) by the water system.</semantics>
                     </attribute>
+                    <attribute>
+                        <name>WaterDomesticPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of domestic water (SAR/m^3).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>WaterImportPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of import water (SAR/m^3).</semantics>
+                    </attribute>
                 </objectClass>
                 <objectClass>
                     <name>AgricultureSystem</name>
@@ -105,6 +129,42 @@
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
                         <semantics>Water consumed (m^3) by the agriculture system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>FoodDomesticPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of domestic food (SAR/GJ).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>FoodImportPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of import food (SAR/GJ).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>FoodExportPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of export food (SAR/GJ).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -135,6 +195,18 @@
                         <order>TimeStamp</order>
                         <semantics>Petroleum consumed (bbl) by the electricity system.</semantics>
                     </attribute>
+                    <attribute>
+                        <name>ElectricityDomesticPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of domestic electricity (SAR/MWh).</semantics>
+                    </attribute>
                 </objectClass>
                 <objectClass>
                     <name>PetroleumSystem</name>
@@ -151,6 +223,42 @@
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
                         <semantics>Electricity consumed (kWh) by the petroleum system.</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>PetroleumDomesticPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of domestic petroleum (SAR/bbl).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>PetroleumImportPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of import petroleum (SAR/bbl).</semantics>
+                    </attribute>
+                    <attribute>
+                        <name>PetroleumExportPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of export petroleum (SAR/bbl).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>

@@ -216,6 +216,21 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
+		 */
+		@Override
+		public double getWaterDomesticPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(WaterSystem system : getNestedSystems()) {
+					value += system.getWaterDomesticPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterFromArtesianWell()
 		 */
 		@Override
@@ -237,6 +252,21 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				value += system.getWaterImport();
 			}
 			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+		 */
+		@Override
+		public double getWaterImportPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(WaterSystem system : getNestedSystems()) {
+					value += system.getWaterImportPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -314,6 +344,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterWasted()
 		 */
@@ -326,12 +357,12 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) { }
-
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterDistribution()
@@ -365,7 +396,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterDistribution()
 						+ element.getElectricalIntensityOfWaterDistribution()
-						* getSociety().getGlobals().getElectricityDomesticPrice();
+						* getSociety().getElectricitySystem().getElectricityDomesticPrice();
 				initialValues[elements.indexOf(element)] 
 						= element.getWaterInput();
 			}
@@ -402,7 +433,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 
 				// Set import cost in each city.
 				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getWaterImportPrice();
+						city.getWaterSystem().getWaterImportPrice();
 				initialValues[elements.size() + cities.indexOf(city)] = 
 						Math.max(0, waterSystem.getWaterImport());
 			}
@@ -432,7 +463,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				ignore.printStackTrace();
 			}
 		}
-
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterProductionAndDistribution(double)
@@ -468,7 +498,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterProduction() 
 						+ element.getElectricalIntensityOfWaterProduction()
-						* (getSociety().getGlobals().getElectricityDomesticPrice()
+						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.indexOf(element)] 
 						= element.getWaterProduction();
@@ -479,7 +509,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 						+ element.getReservoirIntensityOfWaterProduction()
 						* optimizationOptions.getDeltaAquiferWaterPrice()
 						+ element.getElectricalIntensityOfWaterDistribution()
-						* (getSociety().getGlobals().getElectricityDomesticPrice()
+						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.size() + elements.indexOf(element)] 
 						= element.getWaterInput();
@@ -535,7 +565,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getWaterImportPrice() 
+						= city.getWaterSystem().getWaterImportPrice() 
 						+ optimizationOptions.getDeltaImportWaterPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= waterSystem.getWaterImport();
@@ -636,5 +666,35 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			systems.add(society.getWaterSystem());
 		}
 		return Collections.unmodifiableList(systems);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
+	 */
+	@Override
+	public double getWaterDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += system.getWaterDomesticPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+	 */
+	@Override
+	public double getWaterImportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += system.getWaterImportPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
 	}
 }

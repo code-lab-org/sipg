@@ -7,6 +7,8 @@ import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.price.DefaultPriceModel;
+import edu.mit.sips.core.price.PriceModel;
 
 
 /**
@@ -18,6 +20,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements ElectricitySystem.Local {
+		private final PriceModel domesticPriceModel;
 		private final List<ElectricityElement> elements = 
 				Collections.synchronizedList(new ArrayList<ElectricityElement>());
 		
@@ -26,6 +29,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		public Local() {
 			super("Electricity");
+			this.domesticPriceModel = new DefaultPriceModel();
 		}
 		
 		/**
@@ -33,12 +37,20 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 *
 		 * @param elements the elements
 		 */
-		public Local(Collection<? extends ElectricityElement> elements) {
+		public Local(Collection<? extends ElectricityElement> elements,
+				PriceModel domesticPriceModel) {
 			super("Electricity");
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+			
+			// Validate domestic price model.
+			if(domesticPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic price model cannot be null.");
+			}
+			this.domesticPriceModel = domesticPriceModel;
 		}
 		
 		/* (non-Javadoc)
@@ -54,7 +66,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getGlobals().getPetroleumDomesticPrice()
+			return getSociety().getPetroleumSystem().getPetroleumDomesticPrice()
 					* getPetroleumConsumption();
 		}
 
@@ -63,8 +75,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getDistributionExpense() {
-			return getSociety().getGlobals().getElectricityDomesticPrice()
-					* getElectricityInDistribution();
+			return getElectricityDomesticPrice() * getElectricityInDistribution();
 		}
 		
 		/* (non-Javadoc)
@@ -72,8 +83,8 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getDistributionRevenue() {
-			return getSociety().getGlobals().getElectricityDomesticPrice()
-					* (getElectricityOutDistribution() - getElectricityOutDistributionLosses());
+			return getElectricityDomesticPrice() * (getElectricityOutDistribution() 
+					- getElectricityOutDistributionLosses());
 		}
 		
 		/* (non-Javadoc)
@@ -88,6 +99,14 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
+		 */
+		@Override
+		public double getElectricityDomesticPrice() {
+			return domesticPriceModel.getUnitPrice();
+		}
+		
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
 		 */
 		@Override
@@ -97,7 +116,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 					- getElectricityInDistribution()
 					- getElectricityProduction());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
 		 */
@@ -109,7 +128,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistribution()
 		 */
@@ -124,7 +143,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistributionLosses()
 		 */
@@ -136,7 +155,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getEnergyProduction()
 		 */
@@ -148,7 +167,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return energyProduction;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getEnergyWasted()
 		 */
@@ -258,7 +277,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return petroleumConsumption;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
 		 */
@@ -270,7 +289,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.ElectricitySystem#getRenewableEnergyProduction()
 		 */
@@ -284,14 +303,14 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return production;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getSociety().getGlobals().getElectricityDomesticPrice()
-					* (getSociety().getTotalElectricityDemand() - getElectricityFromBurningPetroleum());
+			return getElectricityDomesticPrice() * (getSociety().getTotalElectricityDemand() 
+					- getElectricityFromBurningPetroleum());
 		}
 		
 		/* (non-Javadoc)
@@ -315,7 +334,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyCost()
 		 */
@@ -326,7 +345,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getWaterConsumption()
 		 */
@@ -338,7 +357,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return waterConsumption;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
@@ -372,7 +391,16 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements ElectricitySystem.Remote {
 		private double waterConsumption;
 		private double petroleumConsumption;
+		private double domesticPrice;
 		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
+		 */
+		@Override
+		public double getElectricityDomesticPrice() {
+			return domesticPrice;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getPetroleumConsumption()
 		 */
@@ -380,7 +408,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getPetroleumConsumption() {
 			return petroleumConsumption;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 		 */
@@ -390,13 +418,21 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 		
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Remote#setElectricityDomesticPrice(double)
+		 */
+		@Override
+		public void setElectricityDomesticPrice(double domesticPrice) {
+			this.domesticPrice = domesticPrice;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Remote#setPetroleumConsumption(double)
 		 */
 		@Override
 		public void setPetroleumConsumption(double petroleumConsumption) {
 			this.petroleumConsumption = petroleumConsumption;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setWaterConsumption(double)
 		 */

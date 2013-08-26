@@ -32,14 +32,18 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption";
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
+	WATER_DOMESTIC_PRICE_ATTRIBUTE = "WaterDomesticPrice",
+	WATER_IMPORT_PRICE_ATTRIBUTE = "WaterImportPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		ELECTRICITY_CONSUMPTION_ATTRIBUTE
+		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+		WATER_DOMESTIC_PRICE_ATTRIBUTE,
+		WATER_IMPORT_PRICE_ATTRIBUTE
 	};
 
 	/**
@@ -169,6 +173,7 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	}
 	
 	private final HLAfloat64BE electricityConsumption;
+	private final HLAfloat64BE waterDomesticPrice, waterImportPrice;
 
 	/**
 	 * Instantiates a new hL awater system.
@@ -197,8 +202,16 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		super(rtiAmbassador, encoderFactory, instanceName, waterSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE(
 				waterSystem.getElectricityConsumption());
+		waterDomesticPrice = encoderFactory.createHLAfloat64BE(
+				waterSystem.getWaterDomesticPrice());
+		waterImportPrice = encoderFactory.createHLAfloat64BE(
+				waterSystem.getWaterImportPrice());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
+		attributeValues.put(getAttributeHandle(WATER_DOMESTIC_PRICE_ATTRIBUTE), 
+				waterDomesticPrice);
+		attributeValues.put(getAttributeHandle(WATER_IMPORT_PRICE_ATTRIBUTE), 
+				waterImportPrice);
 	}
 	
 	/* (non-Javadoc)
@@ -217,6 +230,18 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 							getWaterSystem().getElectricityConsumption());
 					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				}
+				if(evt.getAttributeNames().contains(
+						WaterSystem.WATER_DOMESTIC_PRICE_ATTRIBUTE)) {
+					waterDomesticPrice.setValue(
+							getWaterSystem().getWaterDomesticPrice());
+					//attributesToUpdate.add(WATER_DOMESTIC_PRICE_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						WaterSystem.WATER_IMPORT_PRICE_ATTRIBUTE)) {
+					waterImportPrice.setValue(
+							getWaterSystem().getWaterImportPrice());
+					//attributesToUpdate.add(WATER_IMPORT_PRICE_ATTRIBUTE);
+				}
 				//updateAttributes(attributesToUpdate);
 			//} catch(AttributeNotOwned ignored) {
 			//} catch(Exception ex) {
@@ -229,6 +254,16 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					WATER_DOMESTIC_PRICE_ATTRIBUTE)) {
+				remote.setWaterDomesticPrice(
+						waterDomesticPrice.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					WATER_IMPORT_PRICE_ATTRIBUTE)) {
+				remote.setWaterImportPrice(
+						waterImportPrice.getValue());
 			}
 		}
 	}
@@ -274,6 +309,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	public void setWaterSystem(WaterSystem.Remote waterSystem) {
 		// copy attribute values to new system
 		waterSystem.setElectricityConsumption(getWaterSystem().getElectricityConsumption());
+		waterSystem.setWaterDomesticPrice(getWaterSystem().getWaterDomesticPrice());
+		waterSystem.setWaterImportPrice(getWaterSystem().getWaterImportPrice());
 		super.setInfrastructureSystem(waterSystem);
 	}
 }

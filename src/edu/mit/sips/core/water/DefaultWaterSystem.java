@@ -8,6 +8,8 @@ import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.price.DefaultPriceModel;
+import edu.mit.sips.core.price.PriceModel;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -20,6 +22,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
 		private final List<WaterElement> elements = 
 				Collections.synchronizedList(new ArrayList<WaterElement>());
+		private final PriceModel domesticPriceModel, importPriceModel;
 		private final double maxWaterReservoirVolume;
 		private final double initialWaterReservoirVolume;
 		private final double waterReservoirRechargeRate;
@@ -33,6 +36,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		protected Local() {
 			super("Water");
+			this.domesticPriceModel = new DefaultPriceModel();
+			this.importPriceModel = new DefaultPriceModel();
 			this.maxWaterReservoirVolume = 0;
 			this.initialWaterReservoirVolume = 0;
 			this.waterReservoirRechargeRate = 0;
@@ -47,11 +52,15 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
 		 * @param elements the elements
+		 * @param domesticPriceModel the domestic price model
+		 * @param importPriceModel the import price model
 		 */
 		public Local(boolean coastal, double maxWaterReservoirVolume,
 				double initialWaterReservoirVolume, 
 				double waterReservoirRechargeRate,
-				Collection<? extends WaterElement> elements) {
+				Collection<? extends WaterElement> elements,
+				PriceModel domesticPriceModel, 
+				PriceModel importPriceModel) {
 			super("Water");
 			// Validate max water reservoir volume.
 			if(maxWaterReservoirVolume < 0) {
@@ -79,6 +88,20 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+			
+			// Validate domestic price model.
+			if(domesticPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic price model cannot be null.");
+			}
+			this.domesticPriceModel = domesticPriceModel;
+			
+			// Validate import price model.
+			if(importPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Import price model cannot be null.");
+			}
+			this.importPriceModel = importPriceModel;
 		}
 		
 		/* (non-Javadoc)
@@ -94,7 +117,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getGlobals().getElectricityDomesticPrice()
+			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
 					* getElectricityConsumption();
 		}
 
@@ -103,8 +126,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getDistributionExpense() {
-			return getSociety().getGlobals().getWaterDomesticPrice()
-					* getWaterInDistribution();
+			return getWaterDomesticPrice() * getWaterInDistribution();
 		}
 
 		/* (non-Javadoc)
@@ -112,8 +134,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getDistributionRevenue() {
-			return getSociety().getGlobals().getWaterDomesticPrice()
-					* (getWaterOutDistribution() - getWaterOutDistributionLosses());
+			return getWaterDomesticPrice() * (getWaterOutDistribution() 
+					- getWaterOutDistributionLosses());
 		}
 
 		/* (non-Javadoc)
@@ -192,7 +214,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getImportExpense() {
-			return getSociety().getGlobals().getWaterImportPrice() * getWaterImport();
+			return getWaterImportPrice() * getWaterImport();
 		}
 
 		/* (non-Javadoc)
@@ -271,8 +293,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getSociety().getGlobals().getWaterDomesticPrice()
-					* (getSociety().getTotalWaterDemand() - getWaterFromArtesianWell());
+			return getWaterDomesticPrice() * (getSociety().getTotalWaterDemand() 
+					- getWaterFromArtesianWell());
 		}
 
 		/* (non-Javadoc)
@@ -309,6 +331,14 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
+		 */
+		@Override
+		public double getWaterDomesticPrice() {
+			return domesticPriceModel.getUnitPrice();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
 		 */
 		@Override
@@ -333,6 +363,14 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterInDistribution()
 					- getWaterProduction()
 					- getWaterFromArtesianWell());
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+		 */
+		@Override
+		public double getWaterImportPrice() {
+			return importPriceModel.getUnitPrice();
 		}
 
 		/* (non-Javadoc)
@@ -385,7 +423,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return waterProduction;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
 		 */
@@ -414,7 +452,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterOutDistribution()
 					- getSociety().getTotalWaterDemand());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SimEntity#initialize(long)
 		 */
@@ -422,7 +460,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void initialize(long time) {
 			waterReservoirVolume = initialWaterReservoirVolume;
 		}
-		
+
 		/**
 		 * Checks if is coastal.
 		 *
@@ -431,7 +469,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public boolean isCoastal() {
 			return coastal;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#removeElement(edu.mit.sips.core.water.WaterElement)
 		 */
@@ -469,13 +507,28 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
 		private double electricityConsumption;
-
+		private double domesticPrice, importPrice;
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 		 */
 		@Override
 		public double getElectricityConsumption() {
 			return electricityConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
+		 */
+		public double getWaterDomesticPrice() {
+			return domesticPrice;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+		 */
+		public double getWaterImportPrice() {
+			return importPrice;
 		}
 
 		/* (non-Javadoc)
@@ -486,6 +539,20 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.electricityConsumption = electricityConsumption;
 			fireAttributeChangeEvent(Arrays.asList(
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterDomesticPrice(double)
+		 */
+		public void setWaterDomesticPrice(double domesticPrice) {
+			this.domesticPrice = domesticPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterImportPrice(double)
+		 */
+		public void setWaterImportPrice(double importPrice) {
+			this.importPrice = importPrice;
 		}
 	}
 }

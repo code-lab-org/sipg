@@ -7,6 +7,8 @@ import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.price.DefaultPriceModel;
+import edu.mit.sips.core.price.PriceModel;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -17,6 +19,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
+		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final double arableLandArea;	
 		private final List<AgricultureElement> elements = 
 				Collections.synchronizedList(new ArrayList<AgricultureElement>());
@@ -26,6 +29,9 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		public Local() {
 			super("Agriculture");
+			this.domesticPriceModel = new DefaultPriceModel();
+			this.importPriceModel = new DefaultPriceModel();
+			this.exportPriceModel = new DefaultPriceModel();
 			this.arableLandArea = 0;
 		}
 		
@@ -34,9 +40,15 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 *
 		 * @param arableLandArea the arable land area
 		 * @param elements the elements
+		 * @param domesticPriceModel the domestic price model
+		 * @param importPriceModel the import price model
+		 * @param exportPriceModel the export price model
 		 */
 		public Local(double arableLandArea, 
-				Collection<? extends AgricultureElement> elements) {
+				Collection<? extends AgricultureElement> elements, 
+				PriceModel domesticPriceModel, 
+				PriceModel importPriceModel, 
+				PriceModel exportPriceModel) {
 			super("Agriculture");
 			
 			// Validate arable land area.
@@ -49,6 +61,27 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+			
+			// Validate domestic price model.
+			if(domesticPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic price model cannot be null.");
+			}
+			this.domesticPriceModel = domesticPriceModel;
+			
+			// Validate import price model.
+			if(importPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Import price model cannot be null.");
+			}
+			this.importPriceModel = importPriceModel;
+			
+			// Validate export price model.
+			if(exportPriceModel == null) {
+				throw new IllegalArgumentException(
+						"Export price model cannot be null.");
+			}
+			this.exportPriceModel = exportPriceModel;
 		}
 
 		/* (non-Javadoc)
@@ -72,7 +105,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getGlobals().getWaterDomesticPrice()
+			return getSociety().getWaterSystem().getWaterDomesticPrice()
 					* getWaterConsumption();
 		}
 		
@@ -81,8 +114,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getDistributionExpense() {
-			return getSociety().getGlobals().getFoodDomesticPrice()
-					* getFoodInDistribution();
+			return getFoodDomesticPrice() * getFoodInDistribution();
 		}
 		
 		/* (non-Javadoc)
@@ -90,8 +122,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getDistributionRevenue() {
-			return getSociety().getGlobals().getFoodDomesticPrice()
-					* (getFoodOutDistribution() - getFoodOutDistributionLosses());
+			return getFoodDomesticPrice() * (getFoodOutDistribution() 
+					- getFoodOutDistributionLosses());
 		}
 		
 		/* (non-Javadoc)
@@ -121,7 +153,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getExportRevenue() {
-			return getSociety().getGlobals().getFoodExportPrice() * getFoodExport();
+			return getFoodExportPrice() * getFoodExport();
 		}
 		
 		/* (non-Javadoc)
@@ -154,6 +186,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+		 */
+		@Override
+		public double getFoodDomesticPrice() {
+			return domesticPriceModel.getUnitPrice();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodExport()
 		 */
 		@Override
@@ -165,6 +205,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+		 */
+		@Override
+		public double getFoodExportPrice() {
+			return exportPriceModel.getUnitPrice();
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodImport()
 		 */
 		@Override
@@ -173,6 +221,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					+ getFoodOutDistribution() 
 					- getFoodInDistribution()
 					- getFoodProduction());
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+		 */
+		@Override
+		public double getFoodImportPrice() {
+			return importPriceModel.getUnitPrice();
 		}
 
 		/* (non-Javadoc)
@@ -201,7 +257,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 		 */
@@ -226,14 +282,15 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return foodProduction;
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 		 */
 		@Override
 		public double getImportExpense() {
-			return getSociety().getGlobals().getFoodImportPrice() * getFoodImport();
+			return getFoodImportPrice() * getFoodImport();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
@@ -241,7 +298,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public List<AgricultureElement> getInternalElements() {
 			return Collections.unmodifiableList(elements);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
 		 */
@@ -253,7 +310,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return landAreaUsed;
 		}
-
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
@@ -276,16 +332,15 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					+ getFoodInDistribution() 
 					- getFoodOutDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getSociety().getGlobals().getFoodDomesticPrice() 
-					* getSociety().getTotalFoodDemand();
+			return getFoodDomesticPrice() * getSociety().getTotalFoodDemand();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getTotalFoodSupply()
 		 */
@@ -293,7 +348,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getTotalFoodSupply() {
 			return getLocalFoodSupply() + getFoodImport() - getFoodExport();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
 		 */
@@ -316,7 +371,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 		 */
@@ -328,7 +383,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return waterConsumption;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
@@ -348,7 +403,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public void tick() { }
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#tock()
 		 */
@@ -361,13 +416,56 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
 		private double waterConsumption;
+		private double domesticPrice, importPrice, exportPrice;
 		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+		 */
+		public double getFoodDomesticPrice() {
+			return domesticPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+		 */
+		public double getFoodExportPrice() {
+			return exportPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+		 */
+		public double getFoodImportPrice() {
+			return importPrice;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 		 */
 		@Override
 		public double getWaterConsumption() {
 			return waterConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodDomesticPrice(double)
+		 */
+		public void setFoodDomesticPrice(double foodDomesticPrice) {
+			this.domesticPrice = foodDomesticPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodExportPrice(double)
+		 */
+		public void setFoodExportPrice(double foodExportPrice) {
+			this.exportPrice = foodExportPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodImportPrice(double)
+		 */
+		public void setFoodImportPrice(double foodImportPrice) {
+			this.importPrice = foodImportPrice;
 		}
 
 		/* (non-Javadoc)

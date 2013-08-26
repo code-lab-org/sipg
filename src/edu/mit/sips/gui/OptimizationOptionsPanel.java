@@ -60,7 +60,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		domesticWaterPriceText = new JFormattedTextField(format);
 		domesticWaterPriceText.setColumns(10);
 		domesticWaterPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		domesticWaterPriceText.setValue(country.getGlobals().getWaterDomesticPrice() 
+		domesticWaterPriceText.setValue(country.getWaterSystem().getWaterDomesticPrice() 
 				+ optimizationOptions.getDeltaDomesticWaterPrice());
 		domesticWaterPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -68,7 +68,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaDomesticWaterPrice(
 							((Number) domesticWaterPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getWaterDomesticPrice());
+							- country.getWaterSystem().getWaterDomesticPrice());
 					domesticWaterPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					domesticWaterPriceText.setForeground(Color.red);
@@ -85,7 +85,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaDomesticWaterPrice(0);
-				domesticWaterPriceText.setValue(country.getGlobals().getWaterDomesticPrice());
+				domesticWaterPriceText.setValue(country.getWaterSystem().getWaterDomesticPrice());
 			}
 		});
 		add(resetDomesticWaterPriceButton, c);
@@ -131,7 +131,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		importWaterPriceText = new JFormattedTextField(format); 
 		importWaterPriceText.setColumns(10);
 		importWaterPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		importWaterPriceText.setValue(country.getGlobals().getWaterImportPrice() 
+		importWaterPriceText.setValue(country.getWaterSystem().getWaterImportPrice() 
 				+ optimizationOptions.getDeltaImportWaterPrice());
 		importWaterPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -139,7 +139,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaImportWaterPrice(
 							((Number) importWaterPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getWaterImportPrice());
+							- country.getWaterSystem().getWaterImportPrice());
 					importWaterPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					importWaterPriceText.setForeground(Color.red);
@@ -155,7 +155,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaImportWaterPrice(0);
-				importWaterPriceText.setValue(country.getGlobals().getWaterImportPrice());
+				importWaterPriceText.setValue(country.getWaterSystem().getWaterImportPrice());
 			}
 		});
 		add(resetImportWaterPriceButton, c);
@@ -167,7 +167,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		domesticFoodPriceText = new JFormattedTextField(format);
 		domesticFoodPriceText.setColumns(10);
 		domesticFoodPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		domesticFoodPriceText.setValue(country.getGlobals().getFoodDomesticPrice() 
+		domesticFoodPriceText.setValue(country.getAgricultureSystem().getFoodDomesticPrice() 
 				+ optimizationOptions.getDeltaDomesticFoodPrice());
 		domesticFoodPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -175,7 +175,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaDomesticFoodPrice(
 							((Number) domesticFoodPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getFoodDomesticPrice());
+							- country.getAgricultureSystem().getFoodDomesticPrice());
 					domesticFoodPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					domesticFoodPriceText.setForeground(Color.red);
@@ -191,7 +191,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaDomesticWaterPrice(0);
-				domesticFoodPriceText.setValue(country.getGlobals().getFoodDomesticPrice());
+				domesticFoodPriceText.setValue(country.getAgricultureSystem().getFoodDomesticPrice());
 			}
 		});
 		add(resetDomesticFoodPriceButton, c);
@@ -203,7 +203,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		importFoodPriceText = new JFormattedTextField(format);
 		importFoodPriceText.setColumns(10);
 		importFoodPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		importFoodPriceText.setValue(country.getGlobals().getFoodImportPrice() 
+		importFoodPriceText.setValue(country.getAgricultureSystem().getFoodImportPrice() 
 				+ optimizationOptions.getDeltaImportFoodPrice());
 		importFoodPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -211,7 +211,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaDomesticWaterPrice(
 							((Number) importFoodPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getFoodImportPrice());
+							- country.getAgricultureSystem().getFoodImportPrice());
 					importFoodPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					importFoodPriceText.setForeground(Color.red);
@@ -227,7 +227,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaImportFoodPrice(0);
-				importFoodPriceText.setValue(country.getGlobals().getFoodImportPrice());
+				importFoodPriceText.setValue(country.getAgricultureSystem().getFoodImportPrice());
 			}
 		});
 		add(resetImportFoodPriceButton, c);
@@ -239,7 +239,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		exportFoodPriceText = new JFormattedTextField(format);
 		exportFoodPriceText.setColumns(10);
 		exportFoodPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		exportFoodPriceText.setValue(country.getGlobals().getFoodExportPrice() 
+		exportFoodPriceText.setValue(country.getAgricultureSystem().getFoodExportPrice() 
 				+ optimizationOptions.getDeltaExportFoodPrice());
 		exportFoodPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -247,7 +247,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaExportFoodPrice(
 							((Number) exportFoodPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getFoodExportPrice());
+							- country.getAgricultureSystem().getFoodExportPrice());
 					exportFoodPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					exportFoodPriceText.setForeground(Color.red);
@@ -263,7 +263,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaExportFoodPrice(0);
-				exportFoodPriceText.setValue(country.getGlobals().getFoodExportPrice());
+				exportFoodPriceText.setValue(country.getAgricultureSystem().getFoodExportPrice());
 			}
 		});
 		add(resetExportFoodPriceButton, c);
@@ -275,7 +275,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		domesticOilPriceText = new JFormattedTextField(format);
 		domesticOilPriceText.setColumns(10);
 		domesticOilPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		domesticOilPriceText.setValue(country.getGlobals().getPetroleumDomesticPrice() 
+		domesticOilPriceText.setValue(country.getPetroleumSystem().getPetroleumDomesticPrice() 
 				+ optimizationOptions.getDeltaDomesticOilPrice());
 		domesticOilPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -283,7 +283,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaDomesticOilPrice(
 							((Number) domesticOilPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getPetroleumDomesticPrice());
+							- country.getPetroleumSystem().getPetroleumDomesticPrice());
 					domesticOilPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					domesticOilPriceText.setForeground(Color.red);
@@ -299,7 +299,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaDomesticOilPrice(0);
-				domesticOilPriceText.setValue(country.getGlobals().getPetroleumDomesticPrice());
+				domesticOilPriceText.setValue(country.getPetroleumSystem().getPetroleumDomesticPrice());
 			}
 		});
 		add(resetDomesticOilPriceButton, c);
@@ -345,7 +345,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		importOilPriceText = new JFormattedTextField(format);
 		importOilPriceText.setColumns(10);
 		importOilPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		importOilPriceText.setValue(country.getGlobals().getPetroleumImportPrice() 
+		importOilPriceText.setValue(country.getPetroleumSystem().getPetroleumImportPrice() 
 				+ optimizationOptions.getDeltaImportOilPrice());
 		importOilPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -353,7 +353,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaImportOilPrice(
 							((Number) importOilPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getPetroleumImportPrice());
+							- country.getPetroleumSystem().getPetroleumImportPrice());
 					importOilPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					importOilPriceText.setForeground(Color.red);
@@ -369,7 +369,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaImportOilPrice(0);
-				importOilPriceText.setValue(country.getGlobals().getPetroleumImportPrice());
+				importOilPriceText.setValue(country.getPetroleumSystem().getPetroleumImportPrice());
 			}
 		});
 		add(resetImportOilPriceButton, c);
@@ -381,7 +381,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		exportOilPriceText = new JFormattedTextField(format);
 		exportOilPriceText.setColumns(10);
 		exportOilPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		exportOilPriceText.setValue(country.getGlobals().getPetroleumExportPrice() 
+		exportOilPriceText.setValue(country.getPetroleumSystem().getPetroleumExportPrice() 
 				+ optimizationOptions.getDeltaExportOilPrice());
 		exportOilPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -389,7 +389,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaExportOilPrice(
 							((Number) exportOilPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getPetroleumExportPrice());
+							- country.getPetroleumSystem().getPetroleumExportPrice());
 					exportOilPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					exportOilPriceText.setForeground(Color.red);
@@ -405,7 +405,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaExportOilPrice(0);
-				exportOilPriceText.setValue(country.getGlobals().getPetroleumExportPrice() 
+				exportOilPriceText.setValue(country.getPetroleumSystem().getPetroleumExportPrice() 
 						+ optimizationOptions.getDeltaExportOilPrice());
 			}
 		});
@@ -418,7 +418,7 @@ public class OptimizationOptionsPanel extends JPanel {
 		domesticElectricityPriceText = new JFormattedTextField(format);
 		domesticElectricityPriceText.setColumns(10);
 		domesticElectricityPriceText.setHorizontalAlignment(JTextField.RIGHT);
-		domesticElectricityPriceText.setValue(country.getGlobals().getElectricityDomesticPrice() 
+		domesticElectricityPriceText.setValue(country.getElectricitySystem().getElectricityDomesticPrice() 
 				+ optimizationOptions.getDeltaDomesticElectricityPrice());
 		domesticElectricityPriceText.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
@@ -426,7 +426,7 @@ public class OptimizationOptionsPanel extends JPanel {
 				try {
 					optimizationOptions.setDeltaDomesticElectricityPrice(
 							((Number) domesticElectricityPriceText.getValue()).doubleValue() 
-							- country.getGlobals().getElectricityDomesticPrice());
+							- country.getElectricitySystem().getElectricityDomesticPrice());
 					domesticElectricityPriceText.setForeground(Color.black);
 				} catch(NumberFormatException ex) {
 					domesticElectricityPriceText.setForeground(Color.red);
@@ -442,7 +442,7 @@ public class OptimizationOptionsPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				optimizationOptions.setDeltaDomesticElectricityPrice(0);
-				domesticElectricityPriceText.setValue(country.getGlobals().getElectricityDomesticPrice());
+				domesticElectricityPriceText.setValue(country.getElectricitySystem().getElectricityDomesticPrice());
 			}
 		});
 		add(resetDomesticElectricityPriceButton, c);
@@ -460,28 +460,28 @@ public class OptimizationOptionsPanel extends JPanel {
 						getTopLevelAncestor(), "Reset all values to the default?", 
 						"Reset Warning", JOptionPane.YES_NO_OPTION)) {
 					optimizationOptions.setDeltaDomesticWaterPrice(0);
-					domesticWaterPriceText.setValue(country.getGlobals().getWaterDomesticPrice());
+					domesticWaterPriceText.setValue(country.getWaterSystem().getWaterDomesticPrice());
 					optimizationOptions.setDeltaDomesticWaterPrice(0);
 					aquiferWaterPriceText.setValue(0);
 					optimizationOptions.setDeltaImportWaterPrice(0);
-					importWaterPriceText.setValue(country.getGlobals().getWaterImportPrice());
+					importWaterPriceText.setValue(country.getWaterSystem().getWaterImportPrice());
 					optimizationOptions.setDeltaDomesticWaterPrice(0);
-					domesticFoodPriceText.setValue(country.getGlobals().getFoodDomesticPrice());
+					domesticFoodPriceText.setValue(country.getAgricultureSystem().getFoodDomesticPrice());
 					optimizationOptions.setDeltaImportFoodPrice(0);
-					importFoodPriceText.setValue(country.getGlobals().getFoodImportPrice());
+					importFoodPriceText.setValue(country.getAgricultureSystem().getFoodImportPrice());
 					optimizationOptions.setDeltaExportFoodPrice(0);
-					exportFoodPriceText.setValue(country.getGlobals().getFoodExportPrice());
+					exportFoodPriceText.setValue(country.getAgricultureSystem().getFoodExportPrice());
 					optimizationOptions.setDeltaDomesticOilPrice(0);
-					domesticOilPriceText.setValue(country.getGlobals().getPetroleumDomesticPrice());
+					domesticOilPriceText.setValue(country.getPetroleumSystem().getPetroleumDomesticPrice());
 					optimizationOptions.setDeltaReservoirOilPrice(0);
 					reservoirOilPriceText.setValue(0);
 					optimizationOptions.setDeltaImportOilPrice(0);
-					importOilPriceText.setValue(country.getGlobals().getPetroleumImportPrice());
+					importOilPriceText.setValue(country.getPetroleumSystem().getPetroleumImportPrice());
 					optimizationOptions.setDeltaExportOilPrice(0);
-					exportOilPriceText.setValue(country.getGlobals().getPetroleumExportPrice() 
+					exportOilPriceText.setValue(country.getPetroleumSystem().getPetroleumExportPrice() 
 							+ optimizationOptions.getDeltaExportOilPrice());
 					optimizationOptions.setDeltaDomesticElectricityPrice(0);
-					domesticElectricityPriceText.setValue(country.getGlobals().getElectricityDomesticPrice());
+					domesticElectricityPriceText.setValue(country.getElectricitySystem().getElectricityDomesticPrice());
 				}
 			}
 		});

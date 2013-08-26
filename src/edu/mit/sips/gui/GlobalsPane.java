@@ -22,24 +22,15 @@ public class GlobalsPane extends JPanel {
 
 	private final JTextField initialFunds = new JTextField(15);
 
-	private final JTextField foodDomesticPrice = new JTextField(15);
-	private final JTextField foodImportPrice = new JTextField(15);
-	private final JTextField foodExportPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromFoodProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromFoodConsumption = new JTextField(15);
 	private final JTextField agricultureLaborParticipationRate = new JTextField(15);
 
-	private final JTextField waterImportPrice = new JTextField(15);
-	private final JTextField waterDomesticPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromWaterProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromWaterConsumption = new JTextField(15);
 
-	private final JTextField petroleumDomesticPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromPetroleumProduction = new JTextField(15);
-	private final JTextField petroleumExportPrice = new JTextField(15);
-	private final JTextField petroleumImportPrice = new JTextField(15);
 
-	private final JTextField electricityDomesticPrice = new JTextField(15);
 	private final JTextField privateConsumptionFromElectricityProduction = new JTextField(15);
 	private final JTextField privateConsumptionFromElectricityConsumption = new JTextField(15);
 	private final JTextField electricalIntensityOfBurningPetroleum = new JTextField(15);
@@ -55,30 +46,6 @@ public class GlobalsPane extends JPanel {
 				country.getGlobals().setInitialFunds(tryParse(
 						initialFunds, 
 						country.getGlobals().getInitialFunds()));
-			}
-		});
-		foodDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setFoodDomesticPrice(tryParse(
-						foodDomesticPrice, 
-						country.getGlobals().getFoodDomesticPrice()));
-			}
-		});
-		foodImportPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setFoodImportPrice(tryParse(
-						foodImportPrice,
-						country.getGlobals().getFoodImportPrice()));
-			}
-		});
-		foodExportPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setFoodExportPrice(tryParse(
-						foodExportPrice,
-						country.getGlobals().getFoodExportPrice()));
 			}
 		});
 		privateConsumptionFromFoodProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
@@ -105,22 +72,6 @@ public class GlobalsPane extends JPanel {
 						country.getGlobals().getAgricultureLaborParticipationRate()));
 			}
 		});
-		waterImportPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setWaterImportPrice(tryParse(
-						waterImportPrice, 
-						country.getGlobals().getWaterImportPrice()));
-			}
-		});
-		waterDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setWaterDomesticPrice(tryParse(
-						waterDomesticPrice,
-						country.getGlobals().getWaterDomesticPrice()));
-			}
-		});
 		privateConsumptionFromWaterProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
@@ -137,44 +88,12 @@ public class GlobalsPane extends JPanel {
 						country.getGlobals().getPrivateConsumptionFromWaterConsumption()));
 			}
 		});
-		petroleumDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setPetroleumDomesticPrice(tryParse(
-						petroleumDomesticPrice, 
-						country.getGlobals().getPetroleumDomesticPrice()));
-			}
-		});
 		privateConsumptionFromPetroleumProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
 				country.getGlobals().setEconomicIntensityOfPetroleumProduction(tryParse(
 						privateConsumptionFromPetroleumProduction,
 						country.getGlobals().getPrivateConsumptionFromPetroleumProduction()));
-			}
-		});
-		petroleumExportPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setPetroleumExportPrice(tryParse(
-						petroleumExportPrice,
-						country.getGlobals().getPetroleumExportPrice()));
-			}
-		});
-		petroleumImportPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setPetroleumImportPrice(tryParse(
-						petroleumImportPrice,
-						country.getGlobals().getPetroleumImportPrice()));
-			}
-		});
-		electricityDomesticPrice.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setElectricityDomesticPrice(tryParse(
-						electricityDomesticPrice,
-						country.getGlobals().getElectricityDomesticPrice()));
 			}
 		});
 		privateConsumptionFromElectricityProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
@@ -223,12 +142,6 @@ public class GlobalsPane extends JPanel {
 		add(foodLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Food Domestic Price (SAR/GJ)", 
-				foodDomesticPrice, c);
-		addField(this, "Food Import Price (SAR/GJ)", 
-				foodImportPrice, c);
-		addField(this, "Food Export Price (SAR/GJ)",
-				foodExportPrice, c);
 		addField(this, "<html>Secondary Private Consumption from Food Production (SAR/GJ)</html>",
 				privateConsumptionFromFoodProduction, c);
 		addField(this, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
@@ -242,10 +155,6 @@ public class GlobalsPane extends JPanel {
 		add(waterLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "<html>Water Import Price (SAR/m<sup>3</sup>)</html>", 
-				waterImportPrice, c);
-		addField(this, "<html>Water Domestic Price (SAR/m<sup>3</sup>)</html>", 
-				waterDomesticPrice, c);
 		addField(this, "<html>Secondary Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
 				privateConsumptionFromWaterProduction, c);
 		addField(this, "<html>Secondary Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
@@ -257,8 +166,6 @@ public class GlobalsPane extends JPanel {
 		add(electricityLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Electricity Domestic Price (SAR/MWh)", 
-				electricityDomesticPrice, c);
 		addField(this, "Secondary Private Consumption from Electricity Production (SAR/MWh)", 
 				privateConsumptionFromElectricityProduction, c);
 		addField(this, "Secondary Private Consumption from Electricity Consumption (SAR/MWh)", 
@@ -272,14 +179,8 @@ public class GlobalsPane extends JPanel {
 		add(petroleumLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Petroleum Domestic Price (SAR/bbl)", 
-				petroleumDomesticPrice, c);
 		addField(this, "Secondary Private Consumption from Petroleum Production (SAR/bbl)", 
 				privateConsumptionFromPetroleumProduction, c);
-		addField(this, "Petroleum Export Price (SAR/bbl)",
-				petroleumExportPrice, c);
-		addField(this, "Petroleum Import Price (SAR/bbl)",
-				petroleumImportPrice, c);
 		
 		initialize();
 	}
@@ -312,12 +213,6 @@ public class GlobalsPane extends JPanel {
 		initialFunds.setText(new Double(
 				country.getGlobals().getInitialFunds()).toString());
 		
-		foodDomesticPrice.setText(new Double(
-				country.getGlobals().getFoodDomesticPrice()).toString());
-		foodImportPrice.setText(new Double(
-				country.getGlobals().getFoodImportPrice()).toString());
-		foodExportPrice.setText(new Double(
-				country.getGlobals().getFoodExportPrice()).toString());
 		privateConsumptionFromFoodProduction.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromFoodProduction()).toString());
 		privateConsumptionFromFoodConsumption.setText(new Double(
@@ -325,25 +220,13 @@ public class GlobalsPane extends JPanel {
 		agricultureLaborParticipationRate.setText(new Double(
 				country.getGlobals().getAgricultureLaborParticipationRate()).toString());
 		
-		waterImportPrice.setText(new Double(
-				country.getGlobals().getWaterImportPrice()).toString());
-		waterDomesticPrice.setText(new Double(
-				country.getGlobals().getWaterDomesticPrice()).toString());
 		privateConsumptionFromWaterProduction.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromWaterProduction()).toString());
 		privateConsumptionFromWaterConsumption.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromWaterConsumption()).toString());
 
-		petroleumDomesticPrice.setText(new Double(
-				country.getGlobals().getPetroleumDomesticPrice()).toString());
 		privateConsumptionFromPetroleumProduction.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromPetroleumProduction()).toString());
-		petroleumExportPrice.setText(new Double(
-				country.getGlobals().getPetroleumExportPrice()).toString());
-		petroleumImportPrice.setText(new Double(
-				country.getGlobals().getPetroleumImportPrice()).toString());
-		electricityDomesticPrice.setText(new Double(
-				country.getGlobals().getElectricityDomesticPrice()).toString());
 		privateConsumptionFromElectricityProduction.setText(new Double(
 				country.getGlobals().getPrivateConsumptionFromElectricityProduction()).toString());
 		privateConsumptionFromElectricityConsumption.setText(new Double(

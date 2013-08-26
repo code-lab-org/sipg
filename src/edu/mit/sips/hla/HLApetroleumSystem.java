@@ -32,14 +32,20 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.PetroleumSystem";
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption";
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
+	PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE = "PetroleumDomesticPrice",
+	PETROLEUM_IMPORT_PRICE_ATTRIBUTE = "PetroleumImportPrice",
+	PETROLEUM_EXPORT_PRICE_ATTRIBUTE = "PetroleumExportPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		ELECTRICITY_CONSUMPTION_ATTRIBUTE
+		ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
+		PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE, 
+		PETROLEUM_IMPORT_PRICE_ATTRIBUTE,
+		PETROLEUM_EXPORT_PRICE_ATTRIBUTE
 	};
 
 	/**
@@ -168,6 +174,7 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 	}
 	
 	private final HLAfloat64BE electricityConsumption;
+	private final HLAfloat64BE petroleumDomesticPrice, petroleumImportPrice, petroleumExportPrice;
 
 	/**
 	 * Instantiates a new hL aenergy system.
@@ -197,8 +204,20 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 		super(rtiAmbassador, encoderFactory, instanceName, energySystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE(
 				energySystem.getElectricityConsumption());
+		petroleumDomesticPrice = encoderFactory.createHLAfloat64BE(
+				energySystem.getPetroleumDomesticPrice());
+		petroleumImportPrice = encoderFactory.createHLAfloat64BE(
+				energySystem.getPetroleumImportPrice());
+		petroleumExportPrice = encoderFactory.createHLAfloat64BE(
+				energySystem.getPetroleumExportPrice());
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
+		attributeValues.put(getAttributeHandle(PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE), 
+				petroleumDomesticPrice);
+		attributeValues.put(getAttributeHandle(PETROLEUM_IMPORT_PRICE_ATTRIBUTE), 
+				petroleumImportPrice);
+		attributeValues.put(getAttributeHandle(PETROLEUM_EXPORT_PRICE_ATTRIBUTE), 
+				petroleumExportPrice);
 	}
 	
 	/* (non-Javadoc)
@@ -217,6 +236,24 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 							getPetroleumSystem().getElectricityConsumption());
 					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
 				}
+				if(evt.getAttributeNames().contains(
+						PetroleumSystem.PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE)) {
+					petroleumDomesticPrice.setValue(
+							getPetroleumSystem().getPetroleumDomesticPrice());
+					//attributesToUpdate.add(PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						PetroleumSystem.PETROLEUM_IMPORT_PRICE_ATTRIBUTE)) {
+					petroleumImportPrice.setValue(
+							getPetroleumSystem().getPetroleumImportPrice());
+					//attributesToUpdate.add(PETROLEUM_IMPORT_PRICE_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						PetroleumSystem.PETROLEUM_EXPORT_PRICE_ATTRIBUTE)) {
+					petroleumExportPrice.setValue(
+							getPetroleumSystem().getPetroleumExportPrice());
+					//attributesToUpdate.add(PETROLEUM_EXPORT_PRICE_ATTRIBUTE);
+				}
 				//updateAttributes(attributesToUpdate);
 			//} catch(AttributeNotOwned ignored) {
 			//} catch(Exception ex) {
@@ -229,6 +266,21 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
 				remote.setElectricityConsumption(
 						electricityConsumption.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE)) {
+				remote.setPetroleumDomesticPrice(
+						petroleumDomesticPrice.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					PETROLEUM_IMPORT_PRICE_ATTRIBUTE)) {
+				remote.setPetroleumImportPrice(
+						petroleumImportPrice.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					PETROLEUM_EXPORT_PRICE_ATTRIBUTE)) {
+				remote.setPetroleumExportPrice(
+						petroleumExportPrice.getValue());
 			}
 		}
 	}
@@ -274,6 +326,9 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem {
 	public void setPetroleumSystem(PetroleumSystem.Remote energySystem) {
 		// copy attribute values to new system
 		energySystem.setElectricityConsumption(getPetroleumSystem().getElectricityConsumption());
+		energySystem.setPetroleumDomesticPrice(getPetroleumSystem().getPetroleumDomesticPrice());
+		energySystem.setPetroleumImportPrice(getPetroleumSystem().getPetroleumImportPrice());
+		energySystem.setPetroleumExportPrice(getPetroleumSystem().getPetroleumExportPrice());
 		super.setInfrastructureSystem(energySystem);
 	}
 }

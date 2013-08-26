@@ -207,11 +207,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 				getPetroleumSystem().getCashFlow());
 		
 		if(getPetroleumSystem() instanceof DefaultPetroleumSystem.Local) {
-			updateSeries(petroleumReservoirDataset, "Available", year, 
+			updateSeries(petroleumReservoirDataset, "Reservoir", year, 
 					getPetroleumSystem().getPetroleumReservoirVolume());
-			updateSeries(petroleumReservoirDataset, "Depleted", year, 
-					getPetroleumSystem().getMaxPetroleumReservoirVolume()
-					- getPetroleumSystem().getPetroleumReservoirVolume());
 			
 			for(PetroleumElement element : getPetroleumSystem().getInternalElements()) {
 				if(element.getMaxPetroleumProduction() > 0) {
@@ -233,13 +230,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 			}
 		} else {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
-				updateSeries(petroleumReservoirDataset, nestedSociety.getName() + " (Available)", year, 
+				updateSeries(petroleumReservoirDataset, nestedSociety.getName(), year, 
 						getPetroleumSystem().getPetroleumReservoirVolume());
-			}
-			for(Society nestedSociety : getSociety().getNestedSocieties()) {
-				updateSeries(petroleumReservoirDataset, nestedSociety.getName() + " (Depleted)", year,  
-						getPetroleumSystem().getMaxPetroleumReservoirVolume()
-						- getPetroleumSystem().getPetroleumReservoirVolume());
 			}
 
 			updateSeries(petroleumSourceData, "Production", year, 

@@ -144,6 +144,21 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
+		 */
+		@Override
+		public double getPetroleumDomesticPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(PetroleumSystem system : getNestedSystems()) {
+					value += system.getPetroleumDomesticPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumExport()
 		 */
 		@Override
@@ -156,6 +171,21 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
+		 */
+		@Override
+		public double getPetroleumExportPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(PetroleumSystem system : getNestedSystems()) {
+					value += system.getPetroleumExportPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumImport()
 		 */
 		@Override
@@ -165,6 +195,21 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				value += system.getPetroleumImport();
 			}
 			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
+		 */
+		@Override
+		public double getPetroleumImportPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(PetroleumSystem system : getNestedSystems()) {
+					value += system.getPetroleumImportPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -241,7 +286,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getTotalPetroleumSupply()
 		 */
@@ -253,7 +298,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getUnitProductionCost()
 		 */
@@ -276,13 +321,13 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) { }
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumDistribution()
 		 */
@@ -315,7 +360,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfPetroleumDistribution()
 						+ element.getElectricalIntensityOfPetroleumDistribution() * 
-						getSociety().getGlobals().getElectricityDomesticPrice();
+						getSociety().getElectricitySystem().getElectricityDomesticPrice();
 				initialValues[elements.indexOf(element)] 
 						= element.getPetroleumInput();
 			}
@@ -353,12 +398,12 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 
 				// Set import cost in each city.
 				costCoefficients[elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getPetroleumImportPrice();
+						= city.getPetroleumSystem().getPetroleumImportPrice();
 				initialValues[elements.size() + cities.indexOf(city)] 
 						= energySystem.getPetroleumImport();
 				// Set export price in each city.
 				costCoefficients[elements.size() + cities.size() + cities.indexOf(city)] 
-						= -city.getGlobals().getPetroleumExportPrice();
+						= -city.getPetroleumSystem().getPetroleumExportPrice();
 				initialValues[elements.size() + cities.size() + cities.indexOf(city)] 
 						= energySystem.getPetroleumExport();
 			}
@@ -431,7 +476,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 						+ element.getReservoirIntensityOfPetroleumProduction() 
 						* optimizationOptions.getDeltaReservoirOilPrice()
 						+ element.getElectricalIntensityOfPetroleumDistribution()
-						* (getSociety().getGlobals().getElectricityDomesticPrice()
+						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.size() + elements.indexOf(element)] 
 						= element.getPetroleumInput();
@@ -484,13 +529,13 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getPetroleumImportPrice() 
+						= city.getPetroleumSystem().getPetroleumImportPrice() 
 						+ optimizationOptions.getDeltaImportOilPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= Math.max(0, -energySystem.getPetroleumExport());
 				// Set export price in each city.
 				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= -city.getGlobals().getPetroleumExportPrice() 
+						= -city.getPetroleumSystem().getPetroleumExportPrice() 
 						- optimizationOptions.getDeltaExportOilPrice();
 				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= Math.max(0, energySystem.getPetroleumExport());
@@ -523,7 +568,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				ignore.printStackTrace();
 			}
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#removeElement(edu.mit.sips.core.petroleum.PetroleumElement)
 		 */
@@ -579,5 +624,50 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			systems.add(society.getPetroleumSystem());
 		}
 		return Collections.unmodifiableList(systems);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
+	 */
+	@Override
+	public double getPetroleumDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += system.getPetroleumDomesticPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
+	 */
+	@Override
+	public double getPetroleumExportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += system.getPetroleumExportPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
+	 */
+	@Override
+	public double getPetroleumImportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += system.getPetroleumImportPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
 	}
 }

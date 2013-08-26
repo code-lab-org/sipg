@@ -32,14 +32,20 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.AgricultureSystem";
 	
 	public static final String 
-	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption";
+	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
+	FOOD_DOMESTIC_PRICE_ATTRIBUTE = "FoodDomesticPrice",
+	FOOD_IMPORT_PRICE_ATTRIBUTE = "FoodImportPrice",
+	FOOD_EXPORT_PRICE_ATTRIBUTE = "FoodExportPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		WATER_CONSUMPTION_ATTRIBUTE
+		WATER_CONSUMPTION_ATTRIBUTE,
+		FOOD_DOMESTIC_PRICE_ATTRIBUTE,
+		FOOD_IMPORT_PRICE_ATTRIBUTE,
+		FOOD_EXPORT_PRICE_ATTRIBUTE
 	};
 
 	/**
@@ -168,6 +174,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	}
 	
 	private final HLAfloat64BE waterConsumption;
+	private final HLAfloat64BE foodDomesticPrice, foodImportPrice, foodExportPrice;
 
 	/**
 	 * Instantiates a new hL aagriculture system.
@@ -194,9 +201,22 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 			ObjectClassNotPublished, ObjectClassNotDefined, 
 			SaveInProgress, RestoreInProgress {
 		super(rtiAmbassador, encoderFactory, instanceName, agricultureSystem);
-		waterConsumption = encoderFactory.createHLAfloat64BE();
+		waterConsumption = encoderFactory.createHLAfloat64BE(
+				agricultureSystem.getWaterConsumption());
+		foodDomesticPrice = encoderFactory.createHLAfloat64BE(
+				agricultureSystem.getFoodDomesticPrice());
+		foodImportPrice = encoderFactory.createHLAfloat64BE(
+				agricultureSystem.getFoodImportPrice());
+		foodExportPrice = encoderFactory.createHLAfloat64BE(
+				agricultureSystem.getFoodExportPrice());
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
+		attributeValues.put(getAttributeHandle(FOOD_DOMESTIC_PRICE_ATTRIBUTE), 
+				foodDomesticPrice);
+		attributeValues.put(getAttributeHandle(FOOD_IMPORT_PRICE_ATTRIBUTE), 
+				foodImportPrice);
+		attributeValues.put(getAttributeHandle(FOOD_EXPORT_PRICE_ATTRIBUTE), 
+				foodExportPrice);
 	}
 	
 	/* (non-Javadoc)
@@ -215,6 +235,24 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 							getAgricultureSystem().getWaterConsumption());
 					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
+				if(evt.getAttributeNames().contains(
+						AgricultureSystem.FOOD_DOMESTIC_PRICE_ATTRIBUTE)) {
+					foodDomesticPrice.setValue(
+							getAgricultureSystem().getFoodDomesticPrice());
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						AgricultureSystem.FOOD_IMPORT_PRICE_ATTRIBUTE)) {
+					foodImportPrice.setValue(
+							getAgricultureSystem().getFoodImportPrice());
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						AgricultureSystem.FOOD_EXPORT_PRICE_ATTRIBUTE)) {
+					foodExportPrice.setValue(
+							getAgricultureSystem().getFoodExportPrice());
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
 			//	updateAttributes(attributesToUpdate);
 			//} catch(AttributeNotOwned ignored) {
 			//} catch(Exception ex) {
@@ -228,6 +266,21 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 					WATER_CONSUMPTION_ATTRIBUTE)) {
 				remote.setWaterConsumption(
 						waterConsumption.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					FOOD_DOMESTIC_PRICE_ATTRIBUTE)) {
+				remote.setFoodDomesticPrice(
+						foodDomesticPrice.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					FOOD_IMPORT_PRICE_ATTRIBUTE)) {
+				remote.setFoodImportPrice(
+						foodImportPrice.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					FOOD_EXPORT_PRICE_ATTRIBUTE)) {
+				remote.setFoodExportPrice(
+						foodExportPrice.getValue());
 			}
 		}
 	}
@@ -273,6 +326,9 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
 		// copy attribute values to new system
 		agricultureSystem.setWaterConsumption(getAgricultureSystem().getWaterConsumption());
+		agricultureSystem.setFoodDomesticPrice(getAgricultureSystem().getFoodDomesticPrice());
+		agricultureSystem.setFoodImportPrice(getAgricultureSystem().getFoodImportPrice());
+		agricultureSystem.setFoodExportPrice(getAgricultureSystem().getFoodExportPrice());
 		super.setInfrastructureSystem(agricultureSystem);
 	}
 }

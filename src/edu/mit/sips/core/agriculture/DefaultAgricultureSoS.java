@@ -92,6 +92,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+		 */
+		@Override
+		public double getFoodDomesticPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(AgricultureSystem system : getNestedSystems()) {
+					value += system.getFoodDomesticPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodExport()
 		 */
 		@Override
@@ -104,6 +119,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+		 */
+		@Override
+		public double getFoodExportPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(AgricultureSystem system : getNestedSystems()) {
+					value += system.getFoodExportPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodImport()
 		 */
 		@Override
@@ -113,6 +143,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				value += system.getFoodImport();
 			}
 			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+		 */
+		@Override
+		public double getFoodImportPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(AgricultureSystem system : getNestedSystems()) {
+					value += system.getFoodImportPrice();
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -274,7 +319,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
@@ -351,12 +396,12 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 
 				// Set import cost in each city.
 				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getGlobals().getFoodImportPrice();
+						city.getAgricultureSystem().getFoodImportPrice();
 				initialValues[elements.size() + cities.indexOf(city)] = 
 						agricultureSystem.getFoodImport();
 				// Set export price in each city.
 				costCoefficients[elements.size() + cities.size() + cities.indexOf(city)] = 
-						-city.getGlobals().getFoodExportPrice();
+						-city.getAgricultureSystem().getFoodExportPrice();
 				initialValues[elements.size() + cities.size() + cities.indexOf(city)] = 
 						agricultureSystem.getFoodExport();
 			}
@@ -421,7 +466,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				costCoefficients[elements.indexOf(element)] = 
 						element.getProduct().getCostIntensityOfLandUsed() 
 						+ element.getProduct().getWaterIntensityOfLandUsed()
-						* (getSociety().getGlobals().getWaterDomesticPrice()
+						* (getSociety().getWaterSystem().getWaterDomesticPrice()
 								+ optimizationOptions.getDeltaDomesticWaterPrice());
 				initialValues[elements.indexOf(element)] = element.getLandArea();
 
@@ -486,13 +531,13 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getFoodImportPrice() 
+						= city.getAgricultureSystem().getFoodImportPrice() 
 						+ optimizationOptions.getDeltaImportFoodPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodImport();
 				// Set export price in each city.
 				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= -city.getGlobals().getFoodExportPrice()
+						= -city.getAgricultureSystem().getFoodExportPrice()
 						- optimizationOptions.getDeltaExportFoodPrice();
 				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodExport();
@@ -578,7 +623,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				System.out.println("];");
 			}
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
 		 */
@@ -610,6 +655,42 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	public DefaultAgricultureSoS() {
 		super("Agriculture");
+	}
+
+	@Override
+	public double getFoodDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(AgricultureSystem system : getNestedSystems()) {
+				value += system.getFoodDomesticPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getFoodExportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(AgricultureSystem system : getNestedSystems()) {
+				value += system.getFoodExportPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+	
+	@Override
+	public double getFoodImportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(AgricultureSystem system : getNestedSystems()) {
+				value += system.getFoodImportPrice();
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
 	}
 
 	/* (non-Javadoc)

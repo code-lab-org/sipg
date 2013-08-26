@@ -19,11 +19,11 @@ public class SuperPlayer {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = CountryFactory.createSaudiCountry(
+		final Country ksa = CountryFactory.createValidatedCountry(
 				Arrays.asList(
-						CityTemplate.INDUSTRIAL, 
-						CityTemplate.URBAN, 
-						CityTemplate.RURAL),
+						CityTemplate.INDUSTRIAL_VALIDATED, 
+						CityTemplate.URBAN_VALIDATED, 
+						CityTemplate.RURAL_VALIDATED),
 				Arrays.asList(
 						Sector.AGRICULTURE,
 						Sector.WATER,

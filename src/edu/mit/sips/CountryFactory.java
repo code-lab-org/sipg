@@ -29,4 +29,22 @@ public abstract class CountryFactory {
 						cities.contains(CityTemplate.RURAL), sectors)
 		));
 	}
+	
+	/**
+	 * Creates a new Country object.
+	 *
+	 * @param cities the cities
+	 * @param sectors the sectors
+	 * @return the country
+	 */
+	public static Country createValidatedCountry(Collection<CityTemplate> cities, 
+			List<Sector> sectors) {
+		return Country.buildCountry("KSA", Arrays.asList(
+				CityTemplate.INDUSTRIAL_VALIDATED.createCity(
+						cities.contains(CityTemplate.INDUSTRIAL_VALIDATED), sectors),
+				CityTemplate.URBAN_VALIDATED.createCity(
+						cities.contains(CityTemplate.URBAN_VALIDATED), sectors),
+				CityTemplate.RURAL_VALIDATED.createCity(
+						cities.contains(CityTemplate.RURAL_VALIDATED), sectors)));
+	}
 }

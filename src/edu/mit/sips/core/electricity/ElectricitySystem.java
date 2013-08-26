@@ -143,6 +143,13 @@ public interface ElectricitySystem extends InfrastructureSystem {
 	public static interface Remote extends ElectricitySystem, InfrastructureSystem.Remote {
 		
 		/**
+		 * Sets the electricity domestic price.
+		 *
+		 * @param domesticPrice the new electricity domestic price
+		 */
+		public void setElectricityDomesticPrice(double domesticPrice);
+		
+		/**
 		 * Sets the petroleum consumption.
 		 *
 		 * @param petroleumConsumption the new petroleum consumption
@@ -157,8 +164,17 @@ public interface ElectricitySystem extends InfrastructureSystem {
 		public void setWaterConsumption(double waterConsumption);
 	}
 	
-	public static String WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
-	public static String PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption";
+	/** The water consumption attribute. */
+	public static String WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption",
+			PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
+			ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE = "electricityDomesticPrice";
+	
+	/**
+	 * Gets the electricity domestic price.
+	 *
+	 * @return the electricity domestic price
+	 */
+	public double getElectricityDomesticPrice();
 	
 	/**
 	 * Gets the petroleum consumption.

@@ -30,6 +30,7 @@ import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
+import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.social.demand.DemandModel;
@@ -98,6 +99,8 @@ public final class Serialization {
 				new InterfaceAdapter<PetroleumElement>());
 		gsonBuilder.registerTypeAdapter(ElectricityElement.class, 
 				new InterfaceAdapter<ElectricityElement>());
+		gsonBuilder.registerTypeAdapter(PriceModel.class, 
+				new InterfaceAdapter<PriceModel>());
 	}
 	
 	private static Gson gson = gsonBuilder.create();

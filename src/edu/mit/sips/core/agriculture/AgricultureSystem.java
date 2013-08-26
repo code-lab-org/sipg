@@ -146,10 +146,34 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 * @param waterConsumption the new water consumption
 		 */
 		public void setWaterConsumption(double waterConsumption);
+		
+		/**
+		 * Sets the food domestic price.
+		 *
+		 * @param foodDomesticPrice the new food domestic price
+		 */
+		public void setFoodDomesticPrice(double foodDomesticPrice);
+		
+		/**
+		 * Sets the food import price.
+		 *
+		 * @param foodImportPrice the new food import price
+		 */
+		public void setFoodImportPrice(double foodImportPrice);
+		
+		/**
+		 * Sets the food export price.
+		 *
+		 * @param foodExportPrice the new food export price
+		 */
+		public void setFoodExportPrice(double foodExportPrice);
 	}
 	
 	public final static String 
-	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption";
+	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption",
+	FOOD_DOMESTIC_PRICE_ATTRIBUTE = "foodDomesticPrice",
+	FOOD_IMPORT_PRICE_ATTRIBUTE = "foodImportPrice",
+	FOOD_EXPORT_PRICE_ATTRIBUTE = "foodExportPrice";
 
 	/**
 	 * Gets the water consumption.
@@ -157,4 +181,25 @@ public interface AgricultureSystem extends InfrastructureSystem {
 	 * @return the water consumption
 	 */
 	public double getWaterConsumption();
+	
+	/**
+	 * Gets the food domestic price.
+	 *
+	 * @return the food domestic price
+	 */
+	public double getFoodDomesticPrice();
+	
+	/**
+	 * Gets the food import price.
+	 *
+	 * @return the food import price
+	 */
+	public double getFoodImportPrice();
+	
+	/**
+	 * Gets the food export price.
+	 *
+	 * @return the food export price
+	 */
+	public double getFoodExportPrice();
 }

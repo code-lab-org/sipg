@@ -148,9 +148,33 @@ public interface PetroleumSystem extends InfrastructureSystem {
 		 * @param electricityConsumption the new electricity consumption
 		 */
 		public void setElectricityConsumption(double electricityConsumption);
+		
+		/**
+		 * Sets the petroleum domestic price.
+		 *
+		 * @param domesticPrice the new petroleum domestic price
+		 */
+		public void setPetroleumDomesticPrice(double domesticPrice);
+		
+		/**
+		 * Sets the petroleum export price.
+		 *
+		 * @param exportPrice the new petroleum export price
+		 */
+		public void setPetroleumExportPrice(double exportPrice);
+		
+		/**
+		 * Sets the petroleum import price.
+		 *
+		 * @param importPrice the new petroleum import price
+		 */
+		public void setPetroleumImportPrice(double importPrice);
 	}
 	
-	public static String ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption";
+	public static String ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+			PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE = "petroleumDomesticPrice",
+			PETROLEUM_IMPORT_PRICE_ATTRIBUTE = "petroleumImportPrice",
+			PETROLEUM_EXPORT_PRICE_ATTRIBUTE = "petroleumExportPrice";
 	
 	/**
 	 * Gets the electricity consumed.
@@ -158,4 +182,25 @@ public interface PetroleumSystem extends InfrastructureSystem {
 	 * @return the electricity consumed
 	 */
 	public double getElectricityConsumption();
+	
+	/**
+	 * Gets the petroleum domestic price.
+	 *
+	 * @return the petroleum domestic price
+	 */
+	public double getPetroleumDomesticPrice();
+	
+	/**
+	 * Gets the petroleum export price.
+	 *
+	 * @return the petroleum export price
+	 */
+	public double getPetroleumExportPrice();
+	
+	/**
+	 * Gets the petroleum import price.
+	 *
+	 * @return the petroleum import price
+	 */
+	public double getPetroleumImportPrice();
 }

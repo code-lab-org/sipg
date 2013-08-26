@@ -175,11 +175,27 @@ public interface WaterSystem extends InfrastructureSystem {
 		 * @param electricityConsumption the new electricity consumption
 		 */
 		public void setElectricityConsumption(double electricityConsumption);
+		
+		/**
+		 * Sets the water domestic price.
+		 *
+		 * @param domesticPrice the domestic price
+		 */
+		public void setWaterDomesticPrice(double domesticPrice);
+		
+		/**
+		 * Sets the water import price.
+		 *
+		 * @param importPrice the import price
+		 */
+		public void setWaterImportPrice(double importPrice);
 
 	}
 	
 	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption";
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
+	WATER_DOMESTIC_PRICE_ATTRIBUTE = "waterDomesticPrice",
+	WATER_IMPORT_PRICE_ATTRIBUTE = "waterImportPrice";
 	
 	/**
 	 * Gets the energy consumption.
@@ -187,4 +203,18 @@ public interface WaterSystem extends InfrastructureSystem {
 	 * @return the energy consumption
 	 */
 	public double getElectricityConsumption();
+	
+	/**
+	 * Gets the water domestic price.
+	 *
+	 * @return the water domestic price
+	 */
+	public double getWaterDomesticPrice();
+	
+	/**
+	 * Gets the water import price.
+	 *
+	 * @return the water import price
+	 */
+	public double getWaterImportPrice();
 }
