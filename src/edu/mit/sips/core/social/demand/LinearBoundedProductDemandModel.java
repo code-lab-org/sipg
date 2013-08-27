@@ -40,10 +40,15 @@ public class LinearBoundedProductDemandModel implements DemandModel {
 	 */
 	@Override
 	public double getDemand(SocialSystem socialSystem) {
-		double demand = minDemand + (maxDemand - minDemand) 
-				* (socialSystem.getDomesticProductPerCapita() 
-						- minProduct)/(maxProduct - minProduct);
-		return Math.max(minDemand, Math.min(maxDemand, demand));
+		if(socialSystem.getPopulation() > 0) {
+			double demand = minDemand + (maxDemand - minDemand) 
+					* (socialSystem.getDomesticProduct() / socialSystem.getPopulation() 
+							- minProduct)/(maxProduct - minProduct);
+			return Math.max(minDemand, Math.min(maxDemand, demand)) 
+					* socialSystem.getPopulation();
+		} else {
+			return minDemand;
+		}
 	}
 
 	/* (non-Javadoc)

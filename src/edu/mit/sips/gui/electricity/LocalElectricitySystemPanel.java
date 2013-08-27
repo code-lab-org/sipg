@@ -193,11 +193,18 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel {
 					year, nestedSystem.getUnitSupplyProfit());
 		}
 		
-		updateSeriesCollection(electricityConsumptionPerCapita, getSociety().getName(), 
-				year, getSociety().getSocialSystem().getElectricityConsumptionPerCapita());
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			updateSeriesCollection(electricityConsumptionPerCapita, nestedSociety.getName(), year, 
-					nestedSociety.getSocialSystem().getElectricityConsumptionPerCapita());
+		if(getSociety().getSocialSystem().getPopulation() > 0) {
+			updateSeriesCollection(electricityConsumptionPerCapita, getSociety().getName(), 
+					year, getSociety().getSocialSystem().getElectricityConsumption() 
+						/ getSociety().getSocialSystem().getPopulation());
+			for(Society nestedSociety : getSociety().getNestedSocieties()) {
+				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
+					updateSeriesCollection(electricityConsumptionPerCapita, 
+							nestedSociety.getName(), year, 
+							nestedSociety.getSocialSystem().getElectricityConsumption() 
+							/ nestedSociety.getSocialSystem().getPopulation());
+				}
+			}
 		}
 		
 		updateSeries(electricityRevenue, "Capital", year, 

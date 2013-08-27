@@ -73,13 +73,6 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * @return the domestic product
 	 */
 	public double getDomesticProduct();
-	
-	/**
-	 * Gets the domestic product per capita.
-	 *
-	 * @return the domestic product per capita
-	 */
-	public double getDomesticProductPerCapita();
 
 	/**
 	 * Gets the electricity consumption.
@@ -87,13 +80,6 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * @return the electricity consumption
 	 */
 	public double getElectricityConsumption();
-	
-	/**
-	 * Gets the electricity consumption per capita.
-	 *
-	 * @return the electricity consumption per capita
-	 */
-	public double getElectricityConsumptionPerCapita();
 
 	/**
 	 * Gets the food consumption.
@@ -101,13 +87,6 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * @return the food consumption
 	 */
 	public double getFoodConsumption();
-	
-	/**
-	 * Gets the food consumption per capita.
-	 *
-	 * @return the food consumption per capita
-	 */
-	public double getFoodConsumptionPerCapita();
 
 	/**
 	 * Gets the population.
@@ -122,11 +101,4 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * @return the water consumption
 	 */
 	public double getWaterConsumption();
-	
-	/**
-	 * Gets the water consumption per capita.
-	 *
-	 * @return the water consumption per capita
-	 */
-	public double getWaterConsumptionPerCapita();
 }

@@ -112,13 +112,19 @@ public class ConsoleLogger implements UpdateListener {
 					city.getSocialSystem().getDomesticProduct());
 		}
 		System.out.println();
-		System.out.printf("%-15s %-5s %,15.0f |", "  per capita", "SAR", 
-				country.getSocialSystem().getDomesticProductPerCapita());
-		for(City city : country.getCities()) {
-			System.out.printf(" %,15.0f", 
-					city.getSocialSystem().getDomesticProductPerCapita());
+		if(country.getSocialSystem().getPopulation() > 0) {
+			System.out.printf("%-15s %-5s %,15.0f |", "  per capita", "SAR", 
+					country.getSocialSystem().getDomesticProduct() 
+					/ country.getSocialSystem().getPopulation());
+			for(City city : country.getCities()) {
+				if(city.getSocialSystem().getPopulation() > 0) {
+					System.out.printf(" %,15.0f", 
+							city.getSocialSystem().getDomesticProduct() 
+							/ country.getSocialSystem().getPopulation());
+				}
+			}
+			System.out.println();
 		}
-		System.out.println();
 		
 		System.out.printf("%-15s %-5s %,15.0f |", "Net Cash Flow", "SAR", 
 				country.getCashFlow());

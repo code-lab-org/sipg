@@ -44,14 +44,6 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProductPerCapita()
-	 */
-	@Override
-	public double getDomesticProductPerCapita() {
-		return getDomesticProduct() / getPopulation();
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
 	 */
 	@Override
@@ -64,14 +56,6 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumptionPerCapita()
-	 */
-	@Override
-	public double getElectricityConsumptionPerCapita() {
-		return getElectricityConsumption() / getPopulation();
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
 	 */
 	@Override
@@ -81,14 +65,6 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 			value += system.getFoodConsumption();
 		}
 		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumptionPerCapita()
-	 */
-	@Override
-	public double getFoodConsumptionPerCapita() {
-		return getFoodConsumption() / getPopulation();
 	}
 
 	/* (non-Javadoc)
@@ -113,13 +89,5 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 			value += system.getWaterConsumption();
 		}
 		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumptionPerCapita()
-	 */
-	@Override
-	public double getWaterConsumptionPerCapita() {
-		return getWaterConsumption() / getPopulation();
 	}
 }

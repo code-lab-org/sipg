@@ -29,7 +29,7 @@ public class ConstantDemandModel implements DemandModel {
 	 */
 	@Override
 	public double getDemand(SocialSystem socialSystem) {
-		return baselineDemand;
+		return baselineDemand * socialSystem.getPopulation();
 	}
 
 	/* (non-Javadoc)

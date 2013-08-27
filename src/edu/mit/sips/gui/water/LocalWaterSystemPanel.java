@@ -186,11 +186,17 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 					year, nestedSystem.getUnitSupplyProfit());
 		}
 
-		updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), 
-				year, getSociety().getSocialSystem().getWaterConsumptionPerCapita());
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), 
-					year, nestedSociety.getSocialSystem().getWaterConsumptionPerCapita());
+		if(getSociety().getSocialSystem().getPopulation() > 0) {
+			updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), 
+					year, getSociety().getSocialSystem().getWaterConsumption() 
+					/ getSociety().getSocialSystem().getPopulation());
+			for(Society nestedSociety : getSociety().getNestedSocieties()) {
+				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
+					updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), 
+							year, nestedSociety.getSocialSystem().getWaterConsumption() 
+							/ nestedSociety.getSocialSystem().getPopulation());
+				}
+			}
 		}
 
 		waterReservoirIndicatorPanel.setValue(

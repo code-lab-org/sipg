@@ -61,6 +61,7 @@ public class ExponentialTimeDemandModel implements DemandModel {
 	 */
 	@Override
 	public double getDemand(SocialSystem socialSystem) {
-		return baselineDemand * Math.exp(growthRate * (time - baselineTime));
+		return baselineDemand * Math.exp(growthRate * (time - baselineTime)) 
+				* socialSystem.getPopulation();
 	}
 }

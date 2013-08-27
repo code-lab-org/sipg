@@ -120,10 +120,14 @@ public class SocialSystemPanel extends InfrastructureSystemPanel {
 					nestedSociety.getCashFlow());
 		}
 		
-		updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
-				year, getSocialSystem().getDomesticProductPerCapita());
-		domesticProductIndicatorPanel.setValue(
-				getSocialSystem().getDomesticProductPerCapita());
+		if(getSocialSystem().getPopulation() > 0) {
+			updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
+					year, getSocialSystem().getDomesticProduct() 
+					/ getSocialSystem().getPopulation());
+			domesticProductIndicatorPanel.setValue(
+					getSocialSystem().getDomesticProduct() 
+					/ getSocialSystem().getPopulation());
+		}
 		
 		if(getSocialSystem() instanceof SocialSoS) {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {

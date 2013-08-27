@@ -61,6 +61,7 @@ public class LinearTimeDemandModel implements DemandModel {
 	 */
 	@Override
 	public double getDemand(SocialSystem socialSystem) {
-		return baselineDemand + (time - baselineTime) * demandSlope;
+		return baselineDemand + (time - baselineTime) * demandSlope 
+				* socialSystem.getPopulation();
 	}
 }

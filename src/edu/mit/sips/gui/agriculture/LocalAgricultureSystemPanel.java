@@ -162,11 +162,17 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 					year, nestedSystem.getUnitSupplyProfit());
 		}
 		
-		updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 
-				year, getSociety().getSocialSystem().getFoodConsumptionPerCapita());
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			updateSeriesCollection(foodConsumptionPerCapita, nestedSociety.getName(), 
-					year, nestedSociety.getSocialSystem().getFoodConsumptionPerCapita());
+		if(getSociety().getSocialSystem().getPopulation() > 0) {
+			updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 
+					year, getSociety().getSocialSystem().getFoodConsumption() 
+					/ getSociety().getSocialSystem().getPopulation());
+			for(Society nestedSociety : getSociety().getNestedSocieties()) {
+				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
+					updateSeriesCollection(foodConsumptionPerCapita, nestedSociety.getName(), 
+							year, nestedSociety.getSocialSystem().getFoodConsumption() 
+							/ nestedSociety.getSocialSystem().getPopulation());
+				}
+			}
 		}
 		
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {

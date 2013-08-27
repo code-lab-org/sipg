@@ -147,29 +147,10 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProductPerCapita()
-		 */
-		@Override
-		public double getDomesticProductPerCapita() {
-			if(getPopulation() > 0) {
-				return getDomesticProduct() / getPopulation();
-			} 
-			return 0;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.SocialSystem#getSocietyElectricityConsumption()
 		 */
 		@Override
 		public double getElectricityConsumption() {
-			return getElectricityConsumptionPerCapita() * getPopulation();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SocialSystem#getSocietyElectricityConsumptionPerCapita()
-		 */
-		@Override
-		public double getElectricityConsumptionPerCapita() {
 			return electricityDemandModel.getDemand(this);
 		}
 
@@ -204,14 +185,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getFoodConsumption() {
-			return getFoodConsumptionPerCapita() * getPopulation();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SocialSystem#getSocietyFoodConsumptionPerCapita()
-		 */
-		@Override
-		public double getFoodConsumptionPerCapita() {
 			return foodDemandModel.getDemand(this);
 		}
 
@@ -274,14 +247,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getWaterConsumption() {
-			return getWaterConsumptionPerCapita() * getPopulation();
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.SocialSystem#getSocietyWaterConsumptionPerCapita()
-		 */
-		@Override
-		public double getWaterConsumptionPerCapita() {
 			return waterDemandModel.getDemand(this);
 		}
 
@@ -341,17 +306,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public double getDomesticProduct() {
 			return domesticProduct;
 		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProductPerCapita()
-		 */
-		@Override
-		public double getDomesticProductPerCapita() {
-			if(population > 0) {
-				return domesticProduct / population;
-			}
-			return 0;
-		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
@@ -362,33 +316,11 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumptionPerCapita()
-		 */
-		@Override
-		public double getElectricityConsumptionPerCapita() {
-			if(population > 0) {
-				return electricityConsumption / population;
-			}
-			return 0;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
 		 */
 		@Override
 		public double getFoodConsumption() {
 			return foodConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumptionPerCapita()
-		 */
-		@Override
-		public double getFoodConsumptionPerCapita() {
-			if(population > 0) {
-				return foodConsumption / population;
-			}
-			return 0;
 		}
 
 		/* (non-Javadoc)
@@ -405,17 +337,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public double getWaterConsumption() {
 			return waterConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumptionPerCapita()
-		 */
-		@Override
-		public double getWaterConsumptionPerCapita() {
-			if(population > 0) {
-				return waterConsumption / population;
-			} 
-			return 0;
 		}
 
 		/* (non-Javadoc)
