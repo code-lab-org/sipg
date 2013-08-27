@@ -27,6 +27,13 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 */
 		public double getArableLandArea();
 		
+		/**
+		 * Gets the labor participation rate.
+		 *
+		 * @return the labor participation rate
+		 */
+		public double getLaborParticipationRate();
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */

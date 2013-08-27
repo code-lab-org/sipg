@@ -24,6 +24,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final double arableLandArea;	
+		private final double laborParticipationRate;
 		private final List<AgricultureElement> elements = 
 				Collections.synchronizedList(new ArrayList<AgricultureElement>());
 		
@@ -38,19 +39,21 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			this.importPriceModel = new DefaultPriceModel();
 			this.exportPriceModel = new DefaultPriceModel();
 			this.arableLandArea = 0;
+			this.laborParticipationRate = 1;
 		}
 		
 		/**
 		 * Instantiates a new local.
 		 *
 		 * @param arableLandArea the arable land area
+		 * @param laborParticipationRate the labor participation rate
 		 * @param elements the elements
 		 * @param domesticProductionModel the domestic production model
 		 * @param domesticPriceModel the domestic price model
 		 * @param importPriceModel the import price model
 		 * @param exportPriceModel the export price model
 		 */
-		public Local(double arableLandArea, 
+		public Local(double arableLandArea, double laborParticipationRate,
 				Collection<? extends AgricultureElement> elements, 
 				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel, 
@@ -64,6 +67,13 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 						"Arable land area cannot be negative.");
 			}
 			this.arableLandArea = arableLandArea;
+			
+			// Validate labor participation rate.
+			if(laborParticipationRate < 0 || laborParticipationRate > 1) {
+				throw new IllegalArgumentException(
+						"Labor participation rate must be between 0 and 1.");
+			}
+			this.laborParticipationRate = laborParticipationRate;
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
@@ -312,6 +322,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 		
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborParticipationRate()
+		 */
+		@Override
+		public double getLaborParticipationRate() {
+			return laborParticipationRate;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
 		 */
 		@Override
@@ -322,7 +340,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return landAreaUsed;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
 		 */
@@ -334,7 +352,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			} 
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -344,7 +362,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					+ getFoodInDistribution() 
 					- getFoodOutDistribution();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -352,7 +370,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getSalesRevenue() {
 			return getFoodDomesticPrice() * getSociety().getTotalFoodDemand();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getTotalFoodSupply()
 		 */
@@ -383,7 +401,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 		 */
@@ -395,7 +413,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return waterConsumption;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */

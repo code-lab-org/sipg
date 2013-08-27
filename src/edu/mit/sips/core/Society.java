@@ -43,13 +43,6 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 */
 	public ElectricitySystem getElectricitySystem();
 	
-	/**
-	 * Gets the globals.
-	 *
-	 * @return the globals
-	 */
-	public Globals getGlobals();
-	
 
 	/**
 	 * Gets the infrastructure systems.

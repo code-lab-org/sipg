@@ -73,7 +73,6 @@ public class Country extends DefaultSociety implements Society {
 				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}
 	
-	private final Globals globals = new Globals();	
 	private final long initialFunds;
 	private double funds;
 	private transient double nextFunds;
@@ -180,14 +179,6 @@ public class Country extends DefaultSociety implements Society {
 	 */
 	public double getFunds() {
 		return funds;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getGlobals()
-	 */
-	@Override
-	public Globals getGlobals() {
-		return globals;
 	}
 
 	/* (non-Javadoc)

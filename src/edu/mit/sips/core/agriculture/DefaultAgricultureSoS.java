@@ -224,6 +224,22 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborParticipationRate()
+		 */
+		@Override
+		public double getLaborParticipationRate() {
+			if(getSociety().getSocialSystem().getPopulation() > 0) {
+				double workers = 0;
+				for(AgricultureSystem.Local system : getNestedSystems()) {
+					workers += system.getLaborParticipationRate() * system.getSociety().getSocialSystem().getPopulation();
+				}
+				return workers / getSociety().getSocialSystem().getPopulation();
+			} else {
+				return 0;
+			}
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLandAreaUsed()
 		 */
 		@Override
@@ -307,7 +323,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 		 */
@@ -319,7 +335,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
@@ -499,7 +515,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 						Relationship.LEQ, agricultureSystem.getArableLandArea()));
 				constraints.add(new LinearConstraint(laborConstraint, 
 						Relationship.LEQ, city.getSocialSystem().getPopulation() 
-						* city.getGlobals().getAgricultureLaborParticipationRate()));
+						* agricultureSystem.getLaborParticipationRate()));
 				
 				// Constrain supply = demand in each city.
 				double[] flowCoefficients = new double[numVariables];

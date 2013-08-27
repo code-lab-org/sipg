@@ -54,12 +54,4 @@ public class City extends DefaultSociety implements Society {
 		}
 		return getSociety().getCountry();
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getGlobals()
-	 */
-	@Override
-	public Globals getGlobals() {
-		return getCountry().getGlobals();
-	}
 }

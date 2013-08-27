@@ -22,6 +22,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements ElectricitySystem.Local {
+		private final double electricalIntensityOfBurningPetroleum;
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel;
 		private final List<ElectricityElement> elements = 
@@ -32,6 +33,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		public Local() {
 			super("Electricity");
+			this.electricalIntensityOfBurningPetroleum = 0;
 			this.domesticProductionModel = new DefaultDomesticProductionModel();
 			this.domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
@@ -40,12 +42,23 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		/**
 		 * Instantiates a new default electricity system.
 		 *
+		 * @param electricalIntensityOfBurningPetroleum the electrical intensity of burning petroleum
 		 * @param elements the elements
+		 * @param domesticProductionModel the domestic production model
+		 * @param domesticPriceModel the domestic price model
 		 */
-		public Local(Collection<? extends ElectricityElement> elements,
+		public Local(double electricalIntensityOfBurningPetroleum,
+				Collection<? extends ElectricityElement> elements,
 				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel) {
 			super("Electricity");
+			
+			// Validate electrical intensity of burning petroleum.
+			if(electricalIntensityOfBurningPetroleum < 0){ 
+				throw new IllegalArgumentException(
+						"Electrical intensity of burning petrleum cannot be negative.");
+			}
+			this.electricalIntensityOfBurningPetroleum = electricalIntensityOfBurningPetroleum;
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
@@ -274,7 +287,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getPetroleumBurned() {
 			// Petroleum is burned to meet shortfall in energy demand.
 			return getElectricityFromBurningPetroleum()
-					/ getSociety().getGlobals().getElectricalIntensityOfBurningPetroleum();
+					/ getElectricalIntensityOfBurningPetroleum();
 		}
 
 		/* (non-Javadoc)
@@ -394,6 +407,14 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public void tock() { }
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
+		 */
+		@Override
+		public double getElectricalIntensityOfBurningPetroleum() {
+			return electricalIntensityOfBurningPetroleum;
+		}
 	}
 	
 	/**

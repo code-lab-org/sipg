@@ -77,7 +77,7 @@ public enum CityTemplate {
 		case INDUSTRIAL:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(3000, 
+							new DefaultAgricultureSystem.Local(3000, 0.5,
 									Arrays.asList(
 											(AgricultureElement) ElementTemplate.DATES_2.createElement(1920, name, name),
 											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1945, name, name),
@@ -99,7 +99,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -147,7 +147,7 @@ public enum CityTemplate {
 		case RURAL:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(10000, 
+							new DefaultAgricultureSystem.Local(10000, 0.5,
 									Arrays.asList(
 											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1930, name, name),
 											(AgricultureElement) ElementTemplate.LIVESTOCK_2.createElement(1940, name, name),
@@ -172,7 +172,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_2.createElement(1975, name, name)
@@ -196,7 +196,7 @@ public enum CityTemplate {
 		case URBAN:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(4000, 
+							new DefaultAgricultureSystem.Local(4000, 0.5,
 									Arrays.asList(
 											(AgricultureElement) ElementTemplate.DATES_2.createElement(1900, name, name),
 											(AgricultureElement) ElementTemplate.LIVESTOCK_1.createElement(1920, name, name)
@@ -217,7 +217,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -247,7 +247,7 @@ public enum CityTemplate {
 		case INDUSTRIAL_VALIDATED:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(3000, 
+							new DefaultAgricultureSystem.Local(3000, 0.5,
 									new ArrayList<AgricultureElement>(),
 									new AgricultureSystemDomesticProductionModel(0),
 									new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
@@ -259,7 +259,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -281,7 +281,7 @@ public enum CityTemplate {
 		case RURAL_VALIDATED:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(10000, 
+							new DefaultAgricultureSystem.Local(10000, 0.5,
 									new ArrayList<AgricultureElement>(),
 									new AgricultureSystemDomesticProductionModel(0),
 									new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
@@ -293,7 +293,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -314,7 +314,7 @@ public enum CityTemplate {
 		case URBAN_VALIDATED:
 			return new City(name, 
 					sectors.contains(Sector.AGRICULTURE)?
-							new DefaultAgricultureSystem.Local(4000, 
+							new DefaultAgricultureSystem.Local(4000, 0.5,
 									new ArrayList<AgricultureElement>(),
 									new AgricultureSystemDomesticProductionModel(0),
 									new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
@@ -326,7 +326,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(
+							new DefaultElectricitySystem.Local(0.300,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):

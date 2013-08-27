@@ -53,6 +53,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
+		 */
+		@Override
+		public double getElectricalIntensityOfBurningPetroleum() {
+			if(getNestedSystems().size() > 0) {
+				double value = 0;
+				for(ElectricitySystem.Local system : getNestedSystems()) {
+					value += system.getElectricalIntensityOfBurningPetroleum();
+				}
+				return value / getNestedSystems().size();
+			} else {
+				return 0;
+			}
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
 		 */
 		@Override
@@ -303,13 +319,13 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) { }
-		
+
 		/**
 		 * Optimize electricity distribution.
 		 */
@@ -370,7 +386,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				}
 				// Allow petroleum burning in this city.
 				flowCoefficients[elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getElectricalIntensityOfBurningPetroleum();
+						= electricitySystem.getElectricalIntensityOfBurningPetroleum();
 				// Constrain in-flow to meet net demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
 						city.getTotalElectricityDemand() 
@@ -489,7 +505,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				}
 				// Allow burning of petroleum in this city.
 				flowCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= city.getGlobals().getElectricalIntensityOfBurningPetroleum();
+						= electricitySystem.getElectricalIntensityOfBurningPetroleum();
 				
 				// Constrain in-flow and production to meet demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
