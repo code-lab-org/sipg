@@ -67,11 +67,11 @@ public class LogisticTimeDemandModel implements DemandModel {
 	 */
 	@Override
 	public double getDemand(SocialSystem socialSystem) {
-		return minimumDemand + (maximumDemand-minimumDemand) 
+		return (minimumDemand + (maximumDemand-minimumDemand) 
 				* (baselineDemand-minimumDemand) 
 				* Math.exp(growthRate * (time - baselineTime)) 
 				/ ((maximumDemand-minimumDemand) + (baselineDemand-minimumDemand) 
-						* (Math.exp(growthRate * (time - baselineTime)) - 1)) 
+						* (Math.exp(growthRate * (time - baselineTime)) - 1)))
 				* socialSystem.getPopulation();
 	}
 }
