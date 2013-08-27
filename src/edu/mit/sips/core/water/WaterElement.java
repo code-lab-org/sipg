@@ -62,14 +62,14 @@ public interface WaterElement extends InfrastructureElement {
 	 * @return the variable operations cost of water distribution
 	 */
 	public double getVariableOperationsCostOfWaterDistribution();
-
+	
 	/**
 	 * Gets the variable operations cost of water production.
 	 *
 	 * @return the variable operations cost of water production
 	 */
 	public double getVariableOperationsCostOfWaterProduction();
-	
+
 	/**
 	 * Gets the water input.
 	 *
@@ -90,13 +90,20 @@ public interface WaterElement extends InfrastructureElement {
 	 * @return the water production
 	 */
 	public double getWaterProduction();
-
+	
 	/**
 	 * Gets the water withdrawals.
 	 *
 	 * @return the water withdrawals
 	 */
 	public double getWaterWithdrawals();
+
+	/**
+	 * Checks if is coastal access required.
+	 *
+	 * @return true, if is coastal access required
+	 */
+	public boolean isCoastalAccessRequired();
 
 	/**
 	 * Sets the water input.

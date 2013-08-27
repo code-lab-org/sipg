@@ -484,8 +484,15 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				// Constrain maximum production in each fixed element.
 				double[] productionConstraint = new double[numVariables];
 				productionConstraint[elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(productionConstraint, 
-						Relationship.LEQ, element.getMaxWaterProduction()));
+				if(element.isCoastalAccessRequired() 
+						&& !((WaterSystem.Local)getSociety().getCountry().getCity(
+								element.getOrigin()).getWaterSystem()).isCoastalAccess()) {
+					constraints.add(new LinearConstraint(productionConstraint, 
+							Relationship.LEQ, 0));
+				} else {
+					constraints.add(new LinearConstraint(productionConstraint, 
+							Relationship.LEQ, element.getMaxWaterProduction()));
+				}
 
 				// Constrain maximum throughput in each distribution element.
 				double[] throughputConstraint = new double[numVariables];
@@ -635,6 +642,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 */
 		@Override
 		public void tock() { }
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
+		 */
+		@Override
+		public boolean isCoastalAccess() {
+			for(WaterSystem.Local system : getNestedSystems()) {
+				if(system.isCoastalAccess()) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 	
 	/**

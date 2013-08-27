@@ -156,6 +156,13 @@ public interface WaterSystem extends InfrastructureSystem {
 		public double getWaterWasted();
 		
 		/**
+		 * Checks if is coastal access.
+		 *
+		 * @return true, if is coastal access
+		 */
+		public boolean isCoastalAccess();
+		
+		/**
 		 * Removes the element.
 		 *
 		 * @param element the element

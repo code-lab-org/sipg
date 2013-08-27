@@ -11,6 +11,7 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 	private double reservoirIntensityOfWaterProduction;
 	private double electricalIntensityOfWaterProduction;
 	private double variableOperationsCostOfWaterProduction;
+	private boolean coastalAccessRequired;
 
 	private double maxWaterInput;
 	private double initialWaterInput;
@@ -29,12 +30,12 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 				getMaxWaterProduction(), getInitialWaterProduction(), 
 				getElectricalIntensityOfWaterProduction(),
 				getVariableOperationsCostOfWaterProduction(),
+				isCoastalAccessRequired(),
 				getDistributionEfficiency(), getMaxWaterInput(), 
 				getInitialWaterInput(), 
 				getElectricalIntensityOfWaterDistribution(),
 				getVariableOperationsCostOfWaterDistribution());
 	}
-	
 	/**
 	 * Gets the distribution efficiency.
 	 *
@@ -123,6 +124,24 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 	 */
 	public double getVariableOperationsCostOfWaterProduction() {
 		return variableOperationsCostOfWaterProduction;
+	}
+	
+	/**
+	 * Checks if is coastal access required.
+	 *
+	 * @return true, if is coastal access required
+	 */
+	public boolean isCoastalAccessRequired() {
+		return coastalAccessRequired;
+	}
+	
+	/**
+	 * Sets the coastal access required.
+	 *
+	 * @param coastalAccessRequired the new coastal access required
+	 */
+	public void setCoastalAccessRequired(boolean coastalAccessRequired) {
+		this.coastalAccessRequired = coastalAccessRequired;
 	}
 	
 	/**

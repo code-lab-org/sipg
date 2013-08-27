@@ -29,7 +29,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private final double maxWaterReservoirVolume;
 		private final double initialWaterReservoirVolume;
 		private final double waterReservoirRechargeRate;
-		private final boolean coastal; // TODO use for desalination elements
+		private final boolean coastalAccess;
 
 		private double waterReservoirVolume;
 		private transient double nextWaterReservoirVolume;
@@ -45,13 +45,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.maxWaterReservoirVolume = 0;
 			this.initialWaterReservoirVolume = 0;
 			this.waterReservoirRechargeRate = 0;
-			this.coastal = false;
+			this.coastalAccess = false;
 		}
 		
 		/**
 		 * Instantiates a new city water system.
 		 *
-		 * @param coastal the coastal
+		 * @param coastalAccess the coastal
 		 * @param maxWaterReservoirVolume the max water reservoir volume
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
@@ -59,7 +59,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @param domesticPriceModel the domestic price model
 		 * @param importPriceModel the import price model
 		 */
-		public Local(boolean coastal, double maxWaterReservoirVolume,
+		public Local(boolean coastalAccess, double maxWaterReservoirVolume,
 				double initialWaterReservoirVolume, 
 				double waterReservoirRechargeRate,
 				Collection<? extends WaterElement> elements,
@@ -87,8 +87,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			// No need to validate recharge rate.
 			this.waterReservoirRechargeRate = waterReservoirRechargeRate;
 
-			// No need to validate coastal.
-			this.coastal = coastal;
+			// No need to validate coastal access.
+			this.coastalAccess = coastalAccess;
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
@@ -428,7 +428,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterProduction() {
 			double waterProduction = 0;
 			for(WaterElement e : getInternalElements()) {
-				waterProduction += e.getWaterProduction();
+				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
+					waterProduction += 0;
+				} else {
+					waterProduction += e.getWaterProduction();
+				}
 			}
 			return waterProduction;
 		}
@@ -470,15 +474,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			waterReservoirVolume = initialWaterReservoirVolume;
 		}
 
-		/**
-		 * Checks if is coastal.
-		 *
-		 * @return true, if is coastal
-		 */
-		public boolean isCoastal() {
-			return coastal;
-		}
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#removeElement(edu.mit.sips.core.water.WaterElement)
 		 */
@@ -508,6 +503,14 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public void tock() {
 			waterReservoirVolume = nextWaterReservoirVolume;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
+		 */
+		@Override
+		public boolean isCoastalAccess() {
+			return coastalAccess;
 		}
 	}
 

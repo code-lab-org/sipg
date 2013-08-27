@@ -146,63 +146,63 @@ public enum ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							30e6, 3e6, 6e6, true), 
-					1, 1e6, 1e6, 0.0053, 3);
+					1, 1e6, 1e6, 0.0053, 3, false);
 		case AQUIFER_PUMP_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							125e6, 12.5e6, 25e6, true), 
-					1, 5e6, 5e6, 0.0053, 2.75);
+					1, 5e6, 5e6, 0.0053, 2.75, false);
 		case AQUIFER_PUMP_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, maxOperations, 1, 
 							125e6, 12.5e6, 25e6, true), 
-					1, 25e6, 25e6, 0.0053, 2.5);
+					1, 25e6, 25e6, 0.0053, 2.5, false);
 		case TD_DESAL_1:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							4e9, 400e6, 800e6, true), 
-					0, 10e6, 10e6, 0.0533, 15);
+					0, 10e6, 10e6, 0.0533, 15, true);
 		case TD_DESAL_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							7.5e9, 750e6, 1.5e9, true), 
-					0, 25e6, 25e6, 0.048, 12);
+					0, 25e6, 25e6, 0.048, 12, true);
 		case TD_DESAL_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							10e9, 1e9, 2e9, true), 
-					0, 50e6, 50e6, 0.04, 10);
+					0, 50e6, 50e6, 0.04, 10, true);
 		case RO_DESAL_1:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							7e9, 700e6, 1.4e9, true), 
-					0, 20e6, 20e6, 0.04, 25);
+					0, 20e6, 20e6, 0.04, 25, true);
 		case RO_DESAL_2:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							12.5e9, 1.25e9, 2.5e9, true), 
-					0, 50e6, 50e6, 0.032, 20);
+					0, 50e6, 50e6, 0.032, 20, true);
 		case RO_DESAL_3:
 			return DefaultWaterElement.createProductionElement(
 					this, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, maxOperations, 2, 
 							15e9, 1.5e9, 3e9, true), 
-					0, 100e6, 100e6, 0.0267, 18);
+					0, 100e6, 100e6, 0.0267, 18, true);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					this, name + " " + ++instanceId, location, destination, 

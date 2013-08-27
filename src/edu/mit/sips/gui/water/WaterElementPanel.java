@@ -4,8 +4,11 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -26,6 +29,7 @@ public class WaterElementPanel extends ElementPanel {
 	private final JFormattedTextField reservoirIntensityOfWaterProductionText;
 	private final JFormattedTextField electricalIntensityOfWaterProductionText;
 	private final JFormattedTextField variableOperationsCostOfWaterProductionText;
+	private final JCheckBox coastalAccessRequiredCheck;
 
 	private final JFormattedTextField maxWaterInputText;
 	private final JFormattedTextField initialWaterInputText;
@@ -126,6 +130,15 @@ public class WaterElementPanel extends ElementPanel {
 						}
 					}
 				});
+		coastalAccessRequiredCheck = new JCheckBox();
+		coastalAccessRequiredCheck.setText("Coastal Access Required");
+		coastalAccessRequiredCheck.setSelected(element.isCoastalAccessRequired());
+		coastalAccessRequiredCheck.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				element.setCoastalAccessRequired(coastalAccessRequiredCheck.isSelected());
+			}
+		});
 		maxWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterInputText.setColumns(10);
 		maxWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -230,6 +243,13 @@ public class WaterElementPanel extends ElementPanel {
 					electricalIntensityOfWaterProductionText, "<html>toe/m<sup>3</sup></html>");
 			addInput(elementPanel, c, "Variable Cost of Production",
 					variableOperationsCostOfWaterProductionText, "<html>SAR/m<sup>3</sup></html>");
+			
+			c.gridwidth = 3;
+			c.anchor = GridBagConstraints.LINE_END;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			elementPanel.add(coastalAccessRequiredCheck, c);
+			c.gridwidth = 1;
+			c.gridy++;
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {

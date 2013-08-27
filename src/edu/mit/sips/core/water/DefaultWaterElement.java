@@ -32,7 +32,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
 		return new DefaultWaterElement(template, name, origin, destination, 
-				lifecycleModel, 0, 0, 0, 0, 0,
+				lifecycleModel, 0, 0, 0, 0, 0, false,
 				distributionEfficiency, maxWaterInput, initialWaterInput,
 				electricalIntensityOfWaterDistribution,
 				variableOperationsCostOfWaterDistribution);
@@ -57,12 +57,14 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			LifecycleModel lifecycleModel, double reservoirIntensityOfWaterProduction,
 			double maxWaterProduction, double initialWaterProduction, 
 			double electricalIntensityOfWaterProduction,
-			double variableOperationsCostOfWaterProduction) {
+			double variableOperationsCostOfWaterProduction,
+			boolean coastalAccessRequired) {
 		return new DefaultWaterElement(template, name, origin, 
 				destination, lifecycleModel, 
 				reservoirIntensityOfWaterProduction, maxWaterProduction, initialWaterProduction, 
 				electricalIntensityOfWaterProduction,
-				variableOperationsCostOfWaterProduction, 0, 0, 0, 0, 0);
+				variableOperationsCostOfWaterProduction, coastalAccessRequired,
+				0, 0, 0, 0, 0);
 	}
 
 	private final double maxWaterProduction;
@@ -70,6 +72,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	private final double reservoirIntensityOfWaterProduction;
 	private final double electricalIntensityOfWaterProduction;
 	private final double variableOperationsCostOfWaterProduction;
+	private final boolean coastalAccessRequired;
 
 	private final double maxWaterInput;
 	private final double initialWaterInput;
@@ -90,6 +93,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		maxWaterProduction = 0;
 		electricalIntensityOfWaterProduction = 0;
 		variableOperationsCostOfWaterProduction = 0;
+		coastalAccessRequired = false;
 
 		initialWaterProduction = 0;
 		distributionEfficiency = 0;
@@ -124,12 +128,11 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double maxWaterProduction, double initialWaterProduction, 
 			double electricalIntensityOfWaterProduction, 
 			double variableOperationsCostOfWaterProduction,
+			boolean coastalAccessRequired,
 			double distributionEfficiency, double maxWaterInput, 
 			double initialWaterInput, double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
 		super(template, name, origin, destination, lifecycleModel);
-		
-		// TODO validate origin for coastal desalination
 		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfWaterProduction < 0) {
@@ -168,6 +171,9 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 					"Variable cost of production cannot be negative.");
 		}
 		this.variableOperationsCostOfWaterProduction = variableOperationsCostOfWaterProduction;
+		
+		// No need to validate coastal access requirement.
+		this.coastalAccessRequired = coastalAccessRequired;
 		
 		// Validate distribution efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
@@ -285,6 +291,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		element.setInitialWaterProduction(initialWaterProduction);
 		element.setElectricalIntensityOfWaterProduction(electricalIntensityOfWaterProduction);
 		element.setVariableOperationsCostOfWaterProduction(variableOperationsCostOfWaterProduction);
+		element.setCoastalAccessRequired(coastalAccessRequired);
 		element.setDistributionEfficiency(distributionEfficiency);
 		element.setMaxWaterInput(maxWaterInput);
 		element.setInitialWaterInput(initialWaterInput);
@@ -425,5 +432,10 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 		this.waterProduction = waterProduction;
 		fireElementChangeEvent();
+	}
+	
+	@Override
+	public boolean isCoastalAccessRequired() {
+		return coastalAccessRequired;
 	}
 }
