@@ -10,13 +10,7 @@ public interface SocialSystem extends InfrastructureSystem {
 	 * The Interface Local.
 	 */
 	public static interface Local extends SocialSystem, InfrastructureSystem.Local {
-		
-		/**
-		 * Gets the initial domestic product per capita.
-		 *
-		 * @return the initial domestic product per capita
-		 */
-		public double getInitialDomesticProductPerCapita();
+
 	}
 	
 	/**

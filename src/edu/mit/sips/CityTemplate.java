@@ -136,7 +136,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(10000,
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1950, 50000, 0.08, 20000000),
 									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
@@ -185,7 +185,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(8000, 
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1950, 10000, 0.05, 750000),
 									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
@@ -236,7 +236,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(20000,
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1950, 100000, 0.07, 10000000),
 									new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
@@ -270,7 +270,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(10000,
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 3000000, 0.07, 17500000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
@@ -303,7 +303,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(8000, 
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 750000, 0.05, 4000000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
@@ -337,7 +337,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
 								new DefaultPetroleumSystem.Remote(),
 					assigned?
-							new DefaultSocialSystem.Local(20000,
+							new DefaultSocialSystem.Local(
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 6000000, 0.06, 20000000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),

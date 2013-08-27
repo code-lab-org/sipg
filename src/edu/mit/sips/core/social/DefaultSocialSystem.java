@@ -26,7 +26,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		private final DomesticProductionModel domesticProductionModel;
 		private final PopulationModel populationModel;
 		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel;
-		private final double initialDomesticProductPerCapita;
 		private double domesticProduct;
 		private transient double nextDomesticProduct;
 		
@@ -41,29 +40,23 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			this.electricityDemandModel = new DefaultDemandModel();
 			this.foodDemandModel = new DefaultDemandModel();
 			this.waterDemandModel = new DefaultDemandModel();
-			this.initialDomesticProductPerCapita = 0;
 		}
 		
 		/**
 		 * Instantiates a new local.
 		 *
-		 * @param initialDomesticProductPerCapita the initial domestic product per capita
 		 * @param domesticProductionModel the domestic production model
 		 * @param populationModel the population model
 		 * @param electricityDemandModel the electricity demand model
 		 * @param foodDemandModel the food demand model
 		 * @param waterDemandModel the water demand model
 		 */
-		public Local(double initialDomesticProductPerCapita, 
-				DomesticProductionModel domesticProductionModel,
+		public Local(DomesticProductionModel domesticProductionModel,
 				PopulationModel populationModel, 
 				DemandModel electricityDemandModel, 
 				DemandModel foodDemandModel,
 				DemandModel waterDemandModel) {
 			super("Society");
-
-			// No need to validate initial domestic product
-			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
 
 			// Validate domestic production model.
 			if(domesticProductionModel == null) {
@@ -197,14 +190,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Local#getInitialDomesticProductPerCapita()
-		 */
-		@Override
-		public double getInitialDomesticProductPerCapita() {
-			return initialDomesticProductPerCapita;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
 		@Override
@@ -256,12 +241,13 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public void initialize(long time) {
 			populationModel.initialize(time);
-			domesticProduct = initialDomesticProductPerCapita*populationModel.getPopulation();
 			
 			// initialize demand models after domestic product
 			electricityDemandModel.initialize(time);
 			foodDemandModel.initialize(time);
 			waterDemandModel.initialize(time);
+			
+			domesticProduct = getDomesticProduction();
 		}
 
 		/* (non-Javadoc)
