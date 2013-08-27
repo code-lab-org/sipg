@@ -51,21 +51,21 @@ public class ElectricityPopupInfoPanel extends DefaultPopupInfoPanel {
 		if(element.getTemplate() == null 
 				|| !element.getTemplate().isTransport()) {
 			addField("Electricity Production:", productionLabel, 
-					"<html>MWh</html>");
+					"<html>toe</html>");
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {
 			addField("Electricity Input:", inputLabel, 
-					"<html>MWh</html>");
+					"<html>toe</html>");
 			addField("Electricity Output:", outputLabel, 
-					"<html>MWh</html>");
+					"<html>toe</html>");
 		}
 		addField("Expenses:", expensesLabel, 
 				"<html>SAR</html>");
 		addField("Water Use:", waterLabel, 
 				"<html>m<sup>3</sup></html>");
 		addField("Petroleum Use:", petroleumLabel, 
-				"<html>bbl</html>");
+				"<html>toe</html>");
 	}
 
 	/* (non-Javadoc)

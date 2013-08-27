@@ -65,7 +65,7 @@ public class WaterPopupInfoPanel extends DefaultPopupInfoPanel {
 		addField("Expenses:", expensesLabel, 
 				"<html>SAR</html>");
 		addField("Electricity Use:", electricityLabel, 
-				"<html>MWh</html>");
+				"<html>toe</html>");
 	}
 
 	/* (non-Javadoc)

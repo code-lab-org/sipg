@@ -212,7 +212,7 @@ public class ElectricityStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "MWh";
+		return "toe";
 	}
 
 	/* (non-Javadoc)

@@ -208,28 +208,28 @@ public class ElectricityElementPanel extends ElementPanel {
 				|| !element.getTemplate().isTransport()) {
 			c.gridx = 0;
 				addInput(elementPanel, c, "Max Electricity Production", 
-						maxElectricityProductionText, "MWh/year");
+						maxElectricityProductionText, "toe/year");
 				addInput(elementPanel, c, "Initial Electricity Production",
-						initialElectricityProductionText, "MWh/year");
+						initialElectricityProductionText, "toe/year");
 				addInput(elementPanel, c, "Petroleum Intensity of Production",
-						petroleumIntensityOfElectricityProductionText, "bbl/MWh");
+						petroleumIntensityOfElectricityProductionText, "toe/toe");
 				addInput(elementPanel, c, "Water Intensity of Production",
-						waterIntensityOfElectricityProductionText, "<html>m<sup>3</sup>/MWh</html>");
+						waterIntensityOfElectricityProductionText, "<html>m<sup>3</sup>/toe</html>");
 				addInput(elementPanel, c, "Variable Cost of Production",
-						variableOperationsCostOfElectricityProductionText, "SAR/MWh");
+						variableOperationsCostOfElectricityProductionText, "SAR/toe");
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Electricity Input", 
-					maxElectricityInputText, "MWh/year");
+					maxElectricityInputText, "toe/year");
 			addInput(elementPanel, c, "Initial Electricity Input",
-					initialElectricityInputText, "MWh/year");
+					initialElectricityInputText, "toe/year");
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "MWh out/MWh in");
+					distributionEfficiencyText, "toe out/toe in");
 			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfElectricityDistributionText, " SAR/MWh");
+					variableOperationsCostOfElectricityDistributionText, " SAR/toe");
 		}
 
 		// set input enabled state

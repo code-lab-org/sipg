@@ -67,9 +67,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel {
 				createStackedAreaChart("Electricity Revenue (SAR/year)", 
 				electricityRevenue, null, electricityNetRevenue));
 		addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
-				"Electricity Source (MWh/year)", electricitySourceData));
+				"Electricity Source (toe/year)", electricitySourceData));
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
-				"Electricity Use (MWh/year)", electricityUseData));
+				"Electricity Use (toe/year)", electricityUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Electricity Use Fraction (-)", 
@@ -78,14 +78,14 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel {
 				"Renewable Electricity Fraction (-)", 
 				renewableElectricityData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Electricity Consumption per Capita (MWh/person)", 
+				"Electricity Consumption per Capita (toe/person)", 
 				electricityConsumptionPerCapita), "Consumption");
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Unit Production Cost (SAR/MWh)", 
+				"Unit Production Cost (SAR/toe)", 
 				electricityProductCostData));
 		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Unit Supply Profit (SAR/MWh)", 
+				"Unit Supply Profit (SAR/toe)", 
 				electricitySupplyProfitData));
 		*/
 	}

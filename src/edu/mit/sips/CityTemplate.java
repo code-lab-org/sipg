@@ -99,7 +99,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -172,7 +172,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_2.createElement(1975, name, name)
@@ -217,7 +217,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -259,7 +259,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -293,7 +293,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -326,7 +326,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.300,
+							new DefaultElectricitySystem.Local(0.200,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):

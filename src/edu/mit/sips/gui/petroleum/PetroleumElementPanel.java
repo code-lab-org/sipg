@@ -208,28 +208,28 @@ public class PetroleumElementPanel extends ElementPanel {
 				|| !element.getTemplate().isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Petroleum Production", 
-					maxPetroleumProductionText, "bbl/year");
+					maxPetroleumProductionText, "toe/year");
 			addInput(elementPanel, c, "Initial Petroleum Production",
-					initialPetroleumProductionText,  " bbl/year");
+					initialPetroleumProductionText,  " toe/year");
 			addInput(elementPanel, c, "Reservoir Intensity of Production",
-					reservoirIntensityOfPetroleumProductionText, "bbl/bbl");
+					reservoirIntensityOfPetroleumProductionText, "toe/toe");
 			addInput(elementPanel, c, "Variable Cost of Production",
-					variableOperationsCostOfPetroleumProductionText, "SAR/bbl");
+					variableOperationsCostOfPetroleumProductionText, "SAR/toe");
 		}
 		if(element.getTemplate() == null 
 				|| element.getTemplate().isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Petroleum Input", 
-					maxPetroleumInputText, "bbl/year");
+					maxPetroleumInputText, "toe/year");
 			addInput(elementPanel, c, "Initial Petroleum Input",
-					initialPetroleumInputText, "bbl/year");
+					initialPetroleumInputText, "toe/year");
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "bbl out/bbl in");
+					distributionEfficiencyText, "toe out/toe in");
 			addInput(elementPanel, c, "Electrical Intensity of Distribution",
-					electricalIntensityOfPetroleumDistributionText, "MWh/bbl");
+					electricalIntensityOfPetroleumDistributionText, "toe/toe");
 			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfPetroleumDistributionText, "SAR/bbl");
+					variableOperationsCostOfPetroleumDistributionText, "SAR/toe");
 		}
 		
 		// set input enabled state

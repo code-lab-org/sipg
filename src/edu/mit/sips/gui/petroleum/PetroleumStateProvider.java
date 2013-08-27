@@ -219,7 +219,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "bbl";
+		return "toe";
 	}
 
 	/* (non-Javadoc)

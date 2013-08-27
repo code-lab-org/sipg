@@ -29,7 +29,7 @@ public class BasicElectricitySystemPanel extends ElectricitySystemPanel {
 		addTab("Water Consumption", Icons.WATER_USE, createStackedAreaChart(
 				"Water Consumed (m^3/year)", waterConsumption));
 		addTab("Petroleum Consumption", Icons.PETROLEUM_USE, createStackedAreaChart(
-				"Petroleum Consumed (bbl/year)", petroleumConsumption));
+				"Petroleum Consumed (toe/year)", petroleumConsumption));
 	}
 	
 	/**

@@ -67,22 +67,22 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 				createStackedAreaChart("Petroleum Revenue (SAR/year)", 
 				petroleumRevenue, null, petroleumNetRevenue));
 		addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
-				"Petroleum Source (bbl/year)", petroleumSourceData));
+				"Petroleum Source (toe/year)", petroleumSourceData));
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
-				"Petroleum Use (bbl/year)", petroleumUseData));
+				"Petroleum Use (toe/year)", petroleumUseData));
 		
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Petroleum Use Fraction (-)", 
 				localPetroleumData));
 		addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
-				"Oil Reservoir Volume (bbl)", 
+				"Oil Reservoir Volume (toe)", 
 				petroleumReservoirDataset), "Reservoir");
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Unit Production Cost (SAR/bbl)", 
+				"Unit Production Cost (SAR/toe)", 
 				petroleumProductCostData));
 		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Unit Supply Profit (SAR/bbl)", 
+				"Unit Supply Profit (SAR/toe)", 
 				petroleumSupplyProfitData));
 		*/
 	}

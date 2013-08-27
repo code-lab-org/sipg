@@ -227,7 +227,7 @@ public class WaterElementPanel extends ElementPanel {
 			addInput(elementPanel, c, "Reservoir Intensity of Production",
 					reservoirIntensityOfWaterProductionText, "<html>m<sup>3</sup>/m<sup>3</sup></html>");
 			addInput(elementPanel, c, "Electrical Intensity of Production",
-					electricalIntensityOfWaterProductionText, "<html>MWh/m<sup>3</sup></html>");
+					electricalIntensityOfWaterProductionText, "<html>toe/m<sup>3</sup></html>");
 			addInput(elementPanel, c, "Variable Cost of Production",
 					variableOperationsCostOfWaterProductionText, "<html>SAR/m<sup>3</sup></html>");
 		}
@@ -242,7 +242,7 @@ public class WaterElementPanel extends ElementPanel {
 			addInput(elementPanel, c, "Distribution Efficiency",
 					distributionEfficiencyText, "<html>m<sup>3</sup> out/m<sup>3</sup> in</html>");
 			addInput(elementPanel, c, "Electrical Intensity of Distribution",
-					electricalIntensityOfWaterDistributionText, "<html>MWh/m<sup>3</sup></html>");
+					electricalIntensityOfWaterDistributionText, "<html>toe/m<sup>3</sup></html>");
 			addInput(elementPanel, c, "Variable Cost of Distribution",
 					variableOperationsCostOfWaterDistributionText, "<html>SAR/m<sup>3</sup></html>");
 		}

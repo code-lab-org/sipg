@@ -26,7 +26,7 @@ public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Petroleum Revenue (SAR/year)", petroleumRevenue));
 		addTab("Electricity Consumption", Icons.ELECTRICITY_USE, createStackedAreaChart(
-				"Electricity Consumed (MWh/year)", electricityConsumption));
+				"Electricity Consumed (toe/year)", electricityConsumption));
 	}
 	
 	/**

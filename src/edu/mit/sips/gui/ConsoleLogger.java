@@ -454,7 +454,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "toe", 
 					waterSystem.getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -548,14 +548,14 @@ public class ConsoleLogger implements UpdateListener {
 		if(country.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) country.getPetroleumSystem(); 
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "Reservoir Vol.", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Reservoir Vol.", "toe", 
 					energySystem.getPetroleumReservoirVolume());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", system.getPetroleumReservoirVolume());
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "toe", 
 					energySystem.getPetroleumWithdrawals());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -563,7 +563,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "Petrol. Source", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Petrol. Source", "toe", 
 					energySystem.getPetroleumProduction()
 					+ energySystem.getPetroleumInDistribution()
 					+ energySystem.getPetroleumImport());
@@ -575,7 +575,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "toe", 
 					energySystem.getPetroleumProduction());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -583,7 +583,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "toe", 
 					energySystem.getPetroleumInDistribution());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -591,7 +591,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "toe", 
 					energySystem.getPetroleumImport());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -599,7 +599,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "toe", 
 					energySystem.getPetroleumOutDistribution()
 					+ country.getElectricitySystem().getPetroleumConsumption()
 					+ energySystem.getPetroleumExport());
@@ -611,7 +611,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "toe", 
 					energySystem.getPetroleumOutDistribution());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -619,7 +619,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "toe", 
 					country.getElectricitySystem().getPetroleumConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -627,7 +627,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "toe", 
 					energySystem.getPetroleumExport());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -635,7 +635,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "toe", 
 					energySystem.getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -738,7 +738,7 @@ public class ConsoleLogger implements UpdateListener {
 		if(country.getElectricitySystem() instanceof ElectricitySystem.Local) {
 			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) country.getElectricitySystem(); 
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "Elect. Source", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Elect. Source", "toe", 
 					energySystem.getElectricityProduction()
 					+ energySystem.getElectricityInDistribution()
 					+ energySystem.getElectricityFromBurningPetroleum());
@@ -750,7 +750,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "toe", 
 					energySystem.getElectricityProduction());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -758,7 +758,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "toe", 
 					energySystem.getElectricityInDistribution());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -766,7 +766,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Direct-Burn", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Direct-Burn", "toe", 
 					energySystem.getElectricityFromBurningPetroleum());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -774,7 +774,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Electricity Use", "toe", 
 					energySystem.getElectricityOutDistribution()
 					+ country.getSocialSystem().getElectricityConsumption()
 					+ country.getPetroleumSystem().getElectricityConsumption()
@@ -790,7 +790,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "toe", 
 					energySystem.getElectricityOutDistribution());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -798,7 +798,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Society", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Society", "toe", 
 					country.getSocialSystem().getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -806,7 +806,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Energy", "toe", 
 					country.getPetroleumSystem().getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -814,7 +814,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Water", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Water", "toe", 
 					country.getWaterSystem().getElectricityConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
@@ -822,7 +822,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Wasted", "MWh", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Wasted", "toe", 
 					energySystem.getElectricityWasted());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -830,7 +830,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "bbl", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Petroleum Use", "toe", 
 					energySystem.getPetroleumConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
