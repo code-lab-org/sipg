@@ -274,7 +274,7 @@ public enum CityTemplate {
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 3000000, 0.07, 17500000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
+									new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
 		case RURAL_VALIDATED:
@@ -307,7 +307,7 @@ public enum CityTemplate {
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 750000, 0.05, 4000000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
+									new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
 		case URBAN_VALIDATED:
@@ -341,7 +341,7 @@ public enum CityTemplate {
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 6000000, 0.06, 20000000),
 									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
+									new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
 		default:

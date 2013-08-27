@@ -55,22 +55,22 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 				"Agriculture Revenue (SAR/year)", 
 				agricultureRevenue, null, agricultureNetRevenue));
 		addTab("Source", Icons.AGRICULTURE_SOURCE, createStackedAreaChart(
-				"Food Source (GJ/year)", foodSourceData));
+				"Food Source (kcal/year)", foodSourceData));
 		addTab("Use", Icons.AGRICULTURE_USE, createStackedAreaChart(
-				"Food Use (GJ/year)", foodUseData));
+				"Food Use (kcal/year)", foodUseData));
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Food Consumption Per Capita (GJ/person)", 
+				"Food Consumption Per Capita (kcal/person)", 
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset));
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Unit Production Cost (SAR/GJ)", 
+				"Unit Production Cost (SAR/kcal)", 
 						foodProductCostData));
 		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Unit Supply Profit (SAR/GJ)", 
+				"Unit Supply Profit (SAR/kcal)", 
 						foodSupplyProfitData));
 		*/
 	}
