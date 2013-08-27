@@ -34,7 +34,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public Local() {
 			super("Agriculture");
 			this.domesticProductionModel = new DefaultDomesticProductionModel();
-			domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.exportPriceModel = new DefaultPriceModel();
@@ -85,7 +84,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 						"Domestic production model cannot be null.");
 			}
 			this.domesticProductionModel = domesticProductionModel;
-			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -156,7 +154,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return domesticProductionModel.getDomesticProduction();
+			return domesticProductionModel.getDomesticProduction(this);
 		}
 
 		/* (non-Javadoc)

@@ -7,7 +7,6 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Class WaterSystemDomesticProductionModel.
  */
 public class WaterSystemDomesticProductionModel extends DefaultDomesticProductionModel {
-	private WaterSystem.Local waterSystem;
 	private final double privateConsumptionFromWaterProduction;
 	
 	/**
@@ -28,29 +27,17 @@ public class WaterSystemDomesticProductionModel extends DefaultDomesticProductio
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#getDomesticProduct()
+	 * @see edu.mit.sips.core.DefaultDomesticProductionModel#getDomesticProduction(edu.mit.sips.core.InfrastructureSystem.Local)
 	 */
 	@Override
-	public double getDomesticProduction() {
-		if(waterSystem != null) {
-			return super.getDomesticProduction() 
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem) {
+		if(infrastructureSystem instanceof WaterSystem.Local) {
+			return super.getDomesticProduction(infrastructureSystem) 
 					+ privateConsumptionFromWaterProduction
-							* (waterSystem.getWaterProduction() 
-									+ waterSystem.getWaterFromArtesianWell());
-		}
-		return super.getDomesticProduction();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#setInfrastructureSystem(edu.mit.sips.core.InfrastructureSystem.Local)
-	 */
-	@Override
-	public void setInfrastructureSystem(InfrastructureSystem.Local waterSystem) {
-		super.setInfrastructureSystem(waterSystem);
-		if(waterSystem instanceof WaterSystem.Local) {
-			this.waterSystem = (WaterSystem.Local) waterSystem;
+					* (((WaterSystem.Local)infrastructureSystem).getWaterProduction()
+							+ ((WaterSystem.Local)infrastructureSystem).getWaterFromArtesianWell());
 		} else {
-			throw new IllegalArgumentException("Infrastructure system must be a water system.");
+			return super.getDomesticProduction(infrastructureSystem);
 		}
 	}
 }

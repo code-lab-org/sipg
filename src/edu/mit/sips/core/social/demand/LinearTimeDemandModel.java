@@ -57,17 +57,10 @@ public class LinearTimeDemandModel implements DemandModel {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand()
+	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand() {
+	public double getDemand(SocialSystem socialSystem) {
 		return baselineDemand + (time - baselineTime) * demandSlope;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
 	}
 }

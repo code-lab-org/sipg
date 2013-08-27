@@ -37,7 +37,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public Local() {
 			super("Petroleum");
 			this.domesticProductionModel = new DefaultDomesticProductionModel();
-			this.domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.exportPriceModel = new DefaultPriceModel();
@@ -91,7 +90,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 						"Domestic production model cannot be null.");
 			}
 			this.domesticProductionModel = domesticProductionModel;
-			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -165,7 +163,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return domesticProductionModel.getDomesticProduction();
+			return domesticProductionModel.getDomesticProduction(this);
 		}
 
 		/* (non-Javadoc)

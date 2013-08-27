@@ -63,18 +63,11 @@ public class LogisticTimeDemandModel implements DemandModel {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand()
+	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand() {
+	public double getDemand(SocialSystem socialSystem) {
 		return minimumDemand + (maximumDemand-minimumDemand) * (baselineDemand-minimumDemand) * Math.exp(growthRate * (time - baselineTime)) 
 				/ ((maximumDemand-minimumDemand) + (baselineDemand-minimumDemand) * (Math.exp(growthRate * (time - baselineTime)) - 1));
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
 	}
 }

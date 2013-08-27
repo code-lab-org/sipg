@@ -37,7 +37,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public Local() {
 			super("Society");
 			this.domesticProductionModel = new DefaultDomesticProductionModel();
-			domesticProductionModel.setInfrastructureSystem(this);
 			this.populationModel = new DefaultPopulationModel();
 			this.electricityDemandModel = new DefaultDemandModel();
 			this.foodDemandModel = new DefaultDemandModel();
@@ -72,7 +71,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Domestic production model cannot be null.");
 			}
 			this.domesticProductionModel = domesticProductionModel;
-			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate population model.
 			if(populationModel == null) {
@@ -87,7 +85,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Electricity demand model cannot be null.");
 			}
 			this.electricityDemandModel = electricityDemandModel;
-			this.electricityDemandModel.setSocialSystem(this);
 			
 			// Validate food demand model.
 			if(foodDemandModel == null) {
@@ -95,7 +92,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Food demand model cannot be null.");
 			}
 			this.foodDemandModel = foodDemandModel;
-			this.foodDemandModel.setSocialSystem(this);
 			
 			// Validate water demand model.
 			if(waterDemandModel == null) {
@@ -103,7 +99,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Water demand model cannot be null.");
 			}
 			this.waterDemandModel = waterDemandModel;
-			this.waterDemandModel.setSocialSystem(this);
 		}
 
 		/* (non-Javadoc)
@@ -148,7 +143,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return domesticProductionModel.getDomesticProduction();
+			return domesticProductionModel.getDomesticProduction(this);
 		}
 
 		/* (non-Javadoc)
@@ -175,7 +170,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getElectricityConsumptionPerCapita() {
-			return electricityDemandModel.getDemand();
+			return electricityDemandModel.getDemand(this);
 		}
 
 		/* (non-Javadoc)
@@ -217,7 +212,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getFoodConsumptionPerCapita() {
-			return foodDemandModel.getDemand();
+			return foodDemandModel.getDemand(this);
 		}
 
 		/* (non-Javadoc)
@@ -287,7 +282,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getWaterConsumptionPerCapita() {
-			return waterDemandModel.getDemand();
+			return waterDemandModel.getDemand(this);
 		}
 
 		/* (non-Javadoc)

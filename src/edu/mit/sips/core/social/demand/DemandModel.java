@@ -11,14 +11,8 @@ public interface DemandModel extends SimEntity {
 	/**
 	 * Gets the demand.
 	 *
+	 * @param socialSystem the social system
 	 * @return the demand
 	 */
-	public double getDemand();
-	
-	/**
-	 * Sets the social system.
-	 *
-	 * @param socialSystem the new social system
-	 */
-	public void setSocialSystem(SocialSystem socialSystem);
+	public double getDemand(SocialSystem socialSystem);
 }

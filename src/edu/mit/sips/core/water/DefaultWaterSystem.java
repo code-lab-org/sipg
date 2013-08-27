@@ -40,7 +40,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		protected Local() {
 			super("Water");
 			domesticProductionModel = new DefaultDomesticProductionModel();
-			domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.maxWaterReservoirVolume = 0;
@@ -101,7 +100,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 						"Domestic production model cannot be null.");
 			}
 			this.domesticProductionModel = domesticProductionModel;
-			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -157,7 +155,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return domesticProductionModel.getDomesticProduction();
+			return domesticProductionModel.getDomesticProduction(this);
 		}
 
 		/* (non-Javadoc)

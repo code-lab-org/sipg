@@ -23,40 +23,30 @@ public class ConstantDemandModel implements DemandModel {
 	public ConstantDemandModel(double baselineDemand) {
 		this.baselineDemand = baselineDemand;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
+	 */
+	@Override
+	public double getDemand(SocialSystem socialSystem) {
+		return baselineDemand;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#initialize(long)
 	 */
 	@Override
-	public void initialize(long time) {
-	}
+	public void initialize(long time) { }
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#tick()
 	 */
 	@Override
-	public void tick() {
-	}
+	public void tick() { }
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#tock()
 	 */
 	@Override
-	public void tock() {
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand()
-	 */
-	@Override
-	public double getDemand() {
-		return baselineDemand;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
-	}
+	public void tock() { }
 }

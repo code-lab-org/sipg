@@ -5,13 +5,12 @@ package edu.mit.sips.core;
  * The Class DefaultDomesticProductionModel.
  */
 public class DefaultDomesticProductionModel implements DomesticProductionModel {
-	private InfrastructureSystem.Local infrastructureSystem;
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.DomesticProductionModel#getDomesticProduct()
 	 */
 	@Override
-	public double getDomesticProduction() {
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem) {
 		if(infrastructureSystem != null) {
 			// expense method:
 			// GDP = C + I + G + (X - M)
@@ -31,13 +30,5 @@ public class DefaultDomesticProductionModel implements DomesticProductionModel {
 		} else {
 			return 0;
 		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DomesticProductionModel#setInfrastructureSystem(edu.mit.sips.core.InfrastructureSystem.Local)
-	 */
-	@Override
-	public void setInfrastructureSystem(InfrastructureSystem.Local infrastructureSystem) { 
-		this.infrastructureSystem = infrastructureSystem;
 	}
 }

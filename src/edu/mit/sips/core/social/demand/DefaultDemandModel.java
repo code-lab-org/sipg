@@ -14,10 +14,10 @@ public class DefaultDemandModel implements DemandModel {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.DemandModel#getDemand()
+	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand() {
+	public double getDemand(SocialSystem socialSystem) {
 		return 0;
 	}
 
@@ -26,13 +26,6 @@ public class DefaultDemandModel implements DemandModel {
 	 */
 	@Override
 	public void initialize(long time) {
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.DemandModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
 	}
 
 	/* (non-Javadoc)

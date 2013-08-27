@@ -7,7 +7,6 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Class WaterSystemDomesticProductionModel.
  */
 public class AgricultureSystemDomesticProductionModel extends DefaultDomesticProductionModel {
-	private AgricultureSystem.Local agricultureSystem;
 	private final double privateConsumptionFromFoodProduction;
 	
 	/**
@@ -28,28 +27,16 @@ public class AgricultureSystemDomesticProductionModel extends DefaultDomesticPro
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#getDomesticProduct()
+	 * @see edu.mit.sips.core.DefaultDomesticProductionModel#getDomesticProduction(edu.mit.sips.core.InfrastructureSystem.Local)
 	 */
 	@Override
-	public double getDomesticProduction() {
-		if(agricultureSystem != null) {
-			return super.getDomesticProduction() 
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem) {
+		if(infrastructureSystem instanceof AgricultureSystem.Local) {
+			return super.getDomesticProduction(infrastructureSystem) 
 					+ privateConsumptionFromFoodProduction
-					* agricultureSystem.getFoodProduction();
-		}
-		return super.getDomesticProduction();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#setInfrastructureSystem(edu.mit.sips.core.InfrastructureSystem.Local)
-	 */
-	@Override
-	public void setInfrastructureSystem(InfrastructureSystem.Local agricultureSystem) {
-		super.setInfrastructureSystem(agricultureSystem);
-		if(agricultureSystem instanceof AgricultureSystem.Local) {
-			this.agricultureSystem = (AgricultureSystem.Local) agricultureSystem;
+					* ((AgricultureSystem.Local)infrastructureSystem).getFoodProduction();
 		} else {
-			throw new IllegalArgumentException("Infrastructure system must be a agriculture system.");
+			return super.getDomesticProduction(infrastructureSystem);
 		}
 	}
 }

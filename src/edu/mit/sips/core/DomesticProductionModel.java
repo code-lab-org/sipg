@@ -9,14 +9,8 @@ public interface DomesticProductionModel {
 	/**
 	 * Gets the domestic production.
 	 *
+	 * @param infrastructureSystem the infrastructure system
 	 * @return the domestic production
 	 */
-	public double getDomesticProduction();
-	
-	/**
-	 * Sets the infrastructure system.
-	 *
-	 * @param infrastructureSystem the new infrastructure system
-	 */
-	public void setInfrastructureSystem(InfrastructureSystem.Local infrastructureSystem);
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem);
 }

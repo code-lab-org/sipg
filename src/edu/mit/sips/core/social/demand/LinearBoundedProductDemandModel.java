@@ -8,9 +8,6 @@ import edu.mit.sips.core.social.SocialSystem;
 public class LinearBoundedProductDemandModel implements DemandModel {
 	private final double minDemand, maxDemand;
 	private final double minProduct, maxProduct;
-	private SocialSystem socialSystem;
-	private double indicator;
-	private transient double nextIndicator;
 	
 	/**
 	 * Instantiates a new linear bounded product demand model.
@@ -42,9 +39,10 @@ public class LinearBoundedProductDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.social.DemandModel#getDemand()
 	 */
 	@Override
-	public double getDemand() {
+	public double getDemand(SocialSystem socialSystem) {
 		double demand = minDemand + (maxDemand - minDemand) 
-				* (indicator - minProduct)/(maxProduct - minProduct);
+				* (socialSystem.getDomesticProductPerCapita() 
+						- minProduct)/(maxProduct - minProduct);
 		return Math.max(minDemand, Math.min(maxDemand, demand));
 	}
 
@@ -52,39 +50,17 @@ public class LinearBoundedProductDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.SimEntity#initialize(long)
 	 */
 	@Override
-	public void initialize(long time) {
-		if(socialSystem != null) {
-			indicator = socialSystem.getDomesticProductPerCapita();
-		} else {
-			indicator = 0;
-		}
-	}
+	public void initialize(long time) { }
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#tick()
 	 */
 	@Override
-	public void tick() {
-		if(socialSystem != null) {
-			nextIndicator = socialSystem.getDomesticProductPerCapita();
-		} else {
-			nextIndicator = 0;
-		}
-	}
+	public void tick() { }
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#tock()
 	 */
 	@Override
-	public void tock() {
-		indicator = nextIndicator;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.DemandModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setSocialSystem(SocialSystem socialSystem) {
-		this.socialSystem = socialSystem;
-	}
+	public void tock() { }
 }

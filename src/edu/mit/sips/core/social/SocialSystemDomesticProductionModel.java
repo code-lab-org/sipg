@@ -7,7 +7,6 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Class SocialSystemDomesticProductionModel.
  */
 public class SocialSystemDomesticProductionModel extends DefaultDomesticProductionModel {
-	private SocialSystem.Local socialSystem;
 	private final double privateConsumptionFromFoodConsumption;
 	private final double privateConsumptionFromWaterConsumption;
 	private final double privateConsumptionFromElectricityConsumption;
@@ -38,35 +37,23 @@ public class SocialSystemDomesticProductionModel extends DefaultDomesticProducti
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#getDomesticProduct()
+	 * @see edu.mit.sips.core.DefaultDomesticProductionModel#getDomesticProduction(edu.mit.sips.core.InfrastructureSystem.Local)
 	 */
 	@Override
-	public double getDomesticProduction() {
-		if(socialSystem != null) {
-			return super.getDomesticProduction() 
-					+ (socialSystem.getSociety().getAgricultureSystem().getFoodDomesticPrice()
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem) {
+		if(infrastructureSystem instanceof SocialSystem.Local) {
+			return super.getDomesticProduction(infrastructureSystem) 
+					+ (((SocialSystem.Local)infrastructureSystem).getSociety().getAgricultureSystem().getFoodDomesticPrice()
 					+ privateConsumptionFromFoodConsumption)
-					* socialSystem.getFoodConsumption()
-					+ (socialSystem.getSociety().getWaterSystem().getWaterDomesticPrice()
+					* ((SocialSystem.Local)infrastructureSystem).getFoodConsumption()
+					+ (((SocialSystem.Local)infrastructureSystem).getSociety().getWaterSystem().getWaterDomesticPrice()
 					+ privateConsumptionFromWaterConsumption)
-					* socialSystem.getWaterConsumption()
-					+ (socialSystem.getSociety().getElectricitySystem().getElectricityDomesticPrice() 
+					* ((SocialSystem.Local)infrastructureSystem).getWaterConsumption()
+					+ (((SocialSystem.Local)infrastructureSystem).getSociety().getElectricitySystem().getElectricityDomesticPrice() 
 					+ privateConsumptionFromElectricityConsumption)
-					* socialSystem.getElectricityConsumption();
-		}
-		return super.getDomesticProduction();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.DomesticProductionModel#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public void setInfrastructureSystem(InfrastructureSystem.Local socialSystem) {
-		super.setInfrastructureSystem(socialSystem);
-		if(socialSystem instanceof SocialSystem.Local) {
-			this.socialSystem = (SocialSystem.Local) socialSystem;
+					* ((SocialSystem.Local)infrastructureSystem).getElectricityConsumption();
 		} else {
-			throw new IllegalArgumentException("Infrastructure sysetm must be a social system.");
+			return super.getDomesticProduction(infrastructureSystem);
 		}
 	}
 }

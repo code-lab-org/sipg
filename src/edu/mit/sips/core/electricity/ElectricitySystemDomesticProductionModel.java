@@ -7,7 +7,6 @@ import edu.mit.sips.core.InfrastructureSystem;
  * The Class WaterSystemDomesticProductionModel.
  */
 public class ElectricitySystemDomesticProductionModel extends DefaultDomesticProductionModel {
-	private ElectricitySystem.Local electricitySystem;
 	private final double privateConsumptionFromElectricityProduction;
 	
 	/**
@@ -28,29 +27,17 @@ public class ElectricitySystemDomesticProductionModel extends DefaultDomesticPro
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#getDomesticProduct()
+	 * @see edu.mit.sips.core.DefaultDomesticProductionModel#getDomesticProduction(edu.mit.sips.core.InfrastructureSystem.Local)
 	 */
 	@Override
-	public double getDomesticProduction() {
-		if(electricitySystem != null) {
-			return super.getDomesticProduction() 
+	public double getDomesticProduction(InfrastructureSystem.Local infrastructureSystem) {
+		if(infrastructureSystem instanceof ElectricitySystem.Local) {
+			return super.getDomesticProduction(infrastructureSystem) 
 					+ privateConsumptionFromElectricityProduction
-					* (electricitySystem.getElectricityProduction() 
-							+ electricitySystem.getElectricityFromBurningPetroleum());
-		}
-		return super.getDomesticProduction();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.production.DefaultDomesticProductionModel#setInfrastructureSystem(edu.mit.sips.core.InfrastructureSystem.Local)
-	 */
-	@Override
-	public void setInfrastructureSystem(InfrastructureSystem.Local electricitySystem) {
-		super.setInfrastructureSystem(electricitySystem);
-		if(electricitySystem instanceof ElectricitySystem.Local) {
-			this.electricitySystem = (ElectricitySystem.Local) electricitySystem;
+					* (((ElectricitySystem.Local)infrastructureSystem).getElectricityProduction() 
+							+ ((ElectricitySystem.Local)infrastructureSystem).getElectricityFromBurningPetroleum());
 		} else {
-			throw new IllegalArgumentException("Infrastructure system must be a electricity system.");
+			return super.getDomesticProduction(infrastructureSystem);
 		}
 	}
 }

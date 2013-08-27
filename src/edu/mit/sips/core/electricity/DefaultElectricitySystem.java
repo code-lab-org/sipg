@@ -35,7 +35,6 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			super("Electricity");
 			this.electricalIntensityOfBurningPetroleum = 0;
 			this.domesticProductionModel = new DefaultDomesticProductionModel();
-			this.domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 		}
 		
@@ -70,7 +69,6 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 						"Domestic production model cannot be null.");
 			}
 			this.domesticProductionModel = domesticProductionModel;
-			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -119,7 +117,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			return domesticProductionModel.getDomesticProduction();
+			return domesticProductionModel.getDomesticProduction(this);
 		}
 
 		/* (non-Javadoc)
