@@ -19,7 +19,6 @@ import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
 import edu.mit.sips.core.social.demand.ConstantDemandModel;
 import edu.mit.sips.core.social.demand.LinearBoundedProductDemandModel;
-import edu.mit.sips.core.social.demand.LinearTimeDemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -99,7 +98,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -172,7 +171,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_2.createElement(1975, name, name)
@@ -217,7 +216,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									Arrays.asList(
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1945, name, name),
 											(ElectricityElement) ElementTemplate.POWER_PLANT_1.createElement(1955, name, name),
@@ -259,7 +258,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -274,7 +273,7 @@ public enum CityTemplate {
 							new DefaultSocialSystem.Local(10000,
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 3000000, 0.07, 17500000),
-									new LinearTimeDemandModel(1965, 3.1507, 0.0781),
+									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
 									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
@@ -293,7 +292,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -307,7 +306,7 @@ public enum CityTemplate {
 							new DefaultSocialSystem.Local(8000, 
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 750000, 0.05, 4000000),
-									new LinearTimeDemandModel(1965, 3.1507, 0.0781),
+									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
 									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
@@ -326,7 +325,7 @@ public enum CityTemplate {
 									new ConstantPriceModel(6), new ConstantPriceModel(40)):
 								new DefaultWaterSystem.Remote(),
 					sectors.contains(Sector.ELECTRICITY)?
-							new DefaultElectricitySystem.Local(0.200,
+							new DefaultElectricitySystem.Local(0.10,
 									new ArrayList<ElectricityElement>(),
 									new ElectricitySystemDomesticProductionModel(0),
 									new ConstantPriceModel(375)):
@@ -341,7 +340,7 @@ public enum CityTemplate {
 							new DefaultSocialSystem.Local(20000,
 									new SocialSystemDomesticProductionModel(5000, 100, 2000),
 									new LogisticGrowthModel(1980, 6000000, 0.06, 20000000),
-									new LinearTimeDemandModel(1965, 3.1507, 0.0781),
+									new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
 									new LogisticTimeDemandModel(1970, 1950.0/654., 0.15, 1700.0/654., 3100.0/654.),
 									new ConstantDemandModel(85.)):
 								new DefaultSocialSystem.Remote());
