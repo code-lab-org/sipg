@@ -24,10 +24,12 @@ public class Country extends DefaultSociety implements Society {
 	 * Builds the country.
 	 *
 	 * @param name the name
+	 * @param initialFunds the initial funds
 	 * @param nestedSocieties the nested societies
 	 * @return the country
 	 */
-	public static Country buildCountry(String name, List<? extends Society> nestedSocieties) {
+	public static Country buildCountry(String name, long initialFunds, 
+			List<? extends Society> nestedSocieties) {
 		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
 		// agriculture system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
@@ -67,11 +69,12 @@ public class Country extends DefaultSociety implements Society {
 		// social system is always national
 		SocialSystem socialSystem = new DefaultSocialSoS();
 		
-		return new Country(name, nestedSocieties, agricultureSystem, 
+		return new Country(name, initialFunds, nestedSocieties, agricultureSystem, 
 				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}
 	
 	private final Globals globals = new Globals();	
+	private final long initialFunds;
 	private double funds;
 	private transient double nextFunds;
 
@@ -79,13 +82,14 @@ public class Country extends DefaultSociety implements Society {
 	 * Instantiates a new country.
 	 */
 	protected Country() {
-		
+		initialFunds = 0;
 	}
 	
 	/**
 	 * Instantiates a new country.
 	 *
 	 * @param name the name
+	 * @param initialFunds the initial funds
 	 * @param nestedSocieties the nested societies
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
@@ -93,12 +97,15 @@ public class Country extends DefaultSociety implements Society {
 	 * @param petroleumSystem the petroleum system
 	 * @param socialSystem the social system
 	 */
-	private Country(String name, List<? extends Society> nestedSocieties,
+	private Country(String name, long initialFunds, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
 			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem,
 			SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+		
+		// no need to validate initial funds
+		this.initialFunds = initialFunds;
 	}
 	
 	/* (non-Javadoc)
@@ -192,7 +199,7 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.initialize(time);
 		}
-		funds = globals.getInitialFunds();
+		funds = initialFunds;
 	}
 
 	/* (non-Javadoc)

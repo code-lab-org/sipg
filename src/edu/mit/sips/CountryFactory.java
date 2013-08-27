@@ -20,7 +20,7 @@ public abstract class CountryFactory {
 	 */
 	public static Country createSaudiCountry(Collection<CityTemplate> cities,
 			List<Sector> sectors) {
-		return  Country.buildCountry("KSA", Arrays.asList(
+		return  Country.buildCountry("KSA", 10000, Arrays.asList(
 				CityTemplate.INDUSTRIAL.createCity(
 						cities.contains(CityTemplate.INDUSTRIAL), sectors),
 				CityTemplate.URBAN.createCity(
@@ -39,7 +39,7 @@ public abstract class CountryFactory {
 	 */
 	public static Country createValidatedCountry(Collection<CityTemplate> cities, 
 			List<Sector> sectors) {
-		return Country.buildCountry("KSA", Arrays.asList(
+		return Country.buildCountry("KSA", 10000, Arrays.asList(
 				CityTemplate.INDUSTRIAL_VALIDATED.createCity(
 						cities.contains(CityTemplate.INDUSTRIAL_VALIDATED), sectors),
 				CityTemplate.URBAN_VALIDATED.createCity(

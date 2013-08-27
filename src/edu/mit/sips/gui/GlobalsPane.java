@@ -19,9 +19,7 @@ public class GlobalsPane extends JPanel {
 	private static final long serialVersionUID = 4456067057386611657L;
 
 	private final Country country;
-
-	private final JTextField initialFunds = new JTextField(15);
-
+	
 	private final JTextField agricultureLaborParticipationRate = new JTextField(15);
 
 	private final JTextField electricalIntensityOfBurningPetroleum = new JTextField(15);
@@ -31,14 +29,6 @@ public class GlobalsPane extends JPanel {
 	 */
 	public GlobalsPane(final Country country) {
 		this.country = country;
-		initialFunds.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setInitialFunds(tryParse(
-						initialFunds, 
-						country.getGlobals().getInitialFunds()));
-			}
-		});
 		agricultureLaborParticipationRate.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
@@ -68,8 +58,6 @@ public class GlobalsPane extends JPanel {
 		add(nationalLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Initial Funds (SAR)", 
-				initialFunds, c);
 		c.gridwidth = 2;
 		c.gridx = 0;
 		JLabel foodLabel = new JLabel("Agriculture");
@@ -131,8 +119,6 @@ public class GlobalsPane extends JPanel {
 	 * Initialize.
 	 */
 	private void initialize() {
-		initialFunds.setText(new Double(
-				country.getGlobals().getInitialFunds()).toString());
 		
 		agricultureLaborParticipationRate.setText(new Double(
 				country.getGlobals().getAgricultureLaborParticipationRate()).toString());

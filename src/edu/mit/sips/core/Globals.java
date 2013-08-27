@@ -4,7 +4,6 @@ package edu.mit.sips.core;
  * The Class Globals.
  */
 public class Globals {
-	private double initialFunds = 10000;								// SAR
 	private double agricultureLaborParticipationRate = 0.50;			// -
 	private double electricalIntensityOfBurningPetroleum = 0.300;		// MWh/bbl
 	
@@ -34,15 +33,6 @@ public class Globals {
 	}
 
 	/**
-	 * Gets the initial funds.
-	 *
-	 * @return the initial funds
-	 */
-	public double getInitialFunds() {
-		return initialFunds;
-	}
-
-	/**
 	 * Sets the agriculture labor participation rate.
 	 *
 	 * @param agricultureLaborParticipationRate the new agriculture labor participation rate
@@ -60,15 +50,5 @@ public class Globals {
 	public void setElectricalIntensityOfBurningPetroleum(
 			double electricalIntensityOfBurningPetroleum) {
 		this.electricalIntensityOfBurningPetroleum = electricalIntensityOfBurningPetroleum;
-	}
-	
-
-	/**
-	 * Sets the initial funds.
-	 *
-	 * @param initialFunds the new initial funds
-	 */
-	public void setInitialFunds(double initialFunds) {
-		this.initialFunds = initialFunds;
 	}
 }
