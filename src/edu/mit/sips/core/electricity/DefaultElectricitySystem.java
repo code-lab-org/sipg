@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 
@@ -20,6 +22,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements ElectricitySystem.Local {
+		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel;
 		private final List<ElectricityElement> elements = 
 				Collections.synchronizedList(new ArrayList<ElectricityElement>());
@@ -29,6 +32,8 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		public Local() {
 			super("Electricity");
+			this.domesticProductionModel = new DefaultDomesticProductionModel();
+			this.domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 		}
 		
@@ -38,12 +43,21 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 * @param elements the elements
 		 */
 		public Local(Collection<? extends ElectricityElement> elements,
+				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel) {
 			super("Electricity");
 			
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+
+			// Validate domestic production model.
+			if(domesticProductionModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic production model cannot be null.");
+			}
+			this.domesticProductionModel = domesticProductionModel;
+			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -92,10 +106,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			// add private consumption to base domestic production
-			return super.getDomesticProduction() 
-					+ getSociety().getGlobals().getPrivateConsumptionFromElectricityProduction()
-					* (getElectricityProduction() + getElectricityFromBurningPetroleum());
+			return domesticProductionModel.getDomesticProduction();
 		}
 
 		/* (non-Javadoc)

@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 
@@ -19,6 +21,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
+		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final double arableLandArea;	
 		private final List<AgricultureElement> elements = 
@@ -29,6 +32,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		public Local() {
 			super("Agriculture");
+			this.domesticProductionModel = new DefaultDomesticProductionModel();
+			domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.exportPriceModel = new DefaultPriceModel();
@@ -40,12 +45,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 *
 		 * @param arableLandArea the arable land area
 		 * @param elements the elements
+		 * @param domesticProductionModel the domestic production model
 		 * @param domesticPriceModel the domestic price model
 		 * @param importPriceModel the import price model
 		 * @param exportPriceModel the export price model
 		 */
 		public Local(double arableLandArea, 
 				Collection<? extends AgricultureElement> elements, 
+				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel, 
 				PriceModel importPriceModel, 
 				PriceModel exportPriceModel) {
@@ -61,6 +68,14 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+
+			// Validate domestic production model.
+			if(domesticProductionModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic production model cannot be null.");
+			}
+			this.domesticProductionModel = domesticProductionModel;
+			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -131,10 +146,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			// add private consumption to base domestic production
-			return super.getDomesticProduction() 
-					+ getSociety().getGlobals().getPrivateConsumptionFromFoodProduction()
-					* getFoodProduction();
+			return domesticProductionModel.getDomesticProduction();
 		}
 
 		/* (non-Javadoc)

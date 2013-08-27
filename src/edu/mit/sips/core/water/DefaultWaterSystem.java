@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 
@@ -22,6 +24,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
 		private final List<WaterElement> elements = 
 				Collections.synchronizedList(new ArrayList<WaterElement>());
+		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel;
 		private final double maxWaterReservoirVolume;
 		private final double initialWaterReservoirVolume;
@@ -36,6 +39,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		protected Local() {
 			super("Water");
+			domesticProductionModel = new DefaultDomesticProductionModel();
+			domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.maxWaterReservoirVolume = 0;
@@ -59,6 +64,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				double initialWaterReservoirVolume, 
 				double waterReservoirRechargeRate,
 				Collection<? extends WaterElement> elements,
+				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel, 
 				PriceModel importPriceModel) {
 			super("Water");
@@ -88,6 +94,14 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+
+			// Validate domestic production model.
+			if(domesticProductionModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic production model cannot be null.");
+			}
+			this.domesticProductionModel = domesticProductionModel;
+			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -143,10 +157,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			// add private consumption to base domestic production
-			return super.getDomesticProduction() 
-					+ getSociety().getGlobals().getPrivateConsumptionFromWaterProduction()
-					* (getWaterProduction() + getWaterFromArtesianWell());
+			return domesticProductionModel.getDomesticProduction();
 		}
 
 		/* (non-Javadoc)

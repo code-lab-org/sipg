@@ -14,6 +14,7 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
@@ -101,6 +102,8 @@ public final class Serialization {
 				new InterfaceAdapter<ElectricityElement>());
 		gsonBuilder.registerTypeAdapter(PriceModel.class, 
 				new InterfaceAdapter<PriceModel>());
+		gsonBuilder.registerTypeAdapter(DomesticProductionModel.class, 
+				new InterfaceAdapter<DomesticProductionModel>());
 	}
 	
 	private static Gson gson = gsonBuilder.create();

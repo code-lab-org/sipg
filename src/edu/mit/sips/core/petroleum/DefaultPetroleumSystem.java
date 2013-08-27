@@ -6,7 +6,9 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 
@@ -19,6 +21,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements PetroleumSystem.Local {
+		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final List<PetroleumElement> elements = 
 				Collections.synchronizedList(new ArrayList<PetroleumElement>());
@@ -33,6 +36,8 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		public Local() {
 			super("Petroleum");
+			this.domesticProductionModel = new DefaultDomesticProductionModel();
+			this.domesticProductionModel.setInfrastructureSystem(this);
 			this.domesticPriceModel = new DefaultPriceModel();
 			this.importPriceModel = new DefaultPriceModel();
 			this.exportPriceModel = new DefaultPriceModel();
@@ -53,6 +58,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public Local(double maxPetroleumReservoirVolume,
 				double initialPetroleumReservoirVolume,
 				Collection<? extends PetroleumElement> elements,
+				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel, 
 				PriceModel importPriceModel, 
 				PriceModel exportPriceModel) {
@@ -78,6 +84,14 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			if(elements != null) {
 				this.elements.addAll(elements);
 			}
+
+			// Validate domestic production model.
+			if(domesticProductionModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic production model cannot be null.");
+			}
+			this.domesticProductionModel = domesticProductionModel;
+			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate domestic price model.
 			if(domesticPriceModel == null) {
@@ -151,19 +165,11 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public double getDomesticProduction() {
-			// add private consumption to base domestic production
-			return super.getDomesticProduction() 
-					+ getSociety().getGlobals().getPrivateConsumptionFromPetroleumProduction()
-					* getPetroleumProduction();
+			return domesticProductionModel.getDomesticProduction();
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getElectricityConsumption()
-		 */
-		/**
-		 * Gets the electricity consumption.
-		 *
-		 * @return the electricity consumption
 		 */
 		@Override
 		public double getElectricityConsumption() {
@@ -176,11 +182,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
-		 */
-		/**
-		 * Gets the elements.
-		 *
-		 * @return the elements
 		 */
 		@Override
 		public List<PetroleumElement> getElements() {
@@ -200,11 +201,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
-		 */
-		/**
-		 * Gets the external elements.
-		 *
-		 * @return the external elements
 		 */
 		@Override
 		public List<PetroleumElement> getExternalElements() {
@@ -263,20 +259,13 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getMaxPetroleumReservoirVolume()
 		 */
-		/**
-		 * Gets the max petroleum reservoir volume.
-		 *
-		 * @return the max petroleum reservoir volume
-		 */
 		@Override
 		public double getMaxPetroleumReservoirVolume() {
 			return maxPetroleumReservoirVolume;
 		}
 
-		/**
-		 * Gets the petroleum domestic price.
-		 *
-		 * @return the petroleum domestic price
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
 		 */
 		@Override
 		public double getPetroleumDomesticPrice() {
@@ -286,11 +275,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumExport()
 		 */
-		/**
-		 * Gets the petroleum export.
-		 *
-		 * @return the petroleum export
-		 */
 		@Override
 		public double getPetroleumExport() {
 			return Math.max(0, getPetroleumProduction() 
@@ -299,10 +283,8 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 					- getSociety().getTotalPetroleumDemand());
 		}
 
-		/**
-		 * Gets the petroleum export price.
-		 *
-		 * @return the petroleum export price
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
 		 */
 		@Override
 		public double getPetroleumExportPrice() {
@@ -312,11 +294,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumImport()
 		 */
-		/**
-		 * Gets the petroleum import.
-		 *
-		 * @return the petroleum import
-		 */
 		@Override
 		public double getPetroleumImport() {
 			return Math.max(0, getSociety().getTotalPetroleumDemand()
@@ -325,10 +302,8 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 					- getPetroleumProduction());
 		}
 		
-		/**
-		 * Gets the petroleum import price.
-		 *
-		 * @return the petroleum import price
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
 		 */
 		@Override
 		public double getPetroleumImportPrice() {
@@ -337,11 +312,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumInDistribution()
-		 */
-		/**
-		 * Gets the petroleum in distribution.
-		 *
-		 * @return the petroleum in distribution
 		 */
 		@Override
 		public double getPetroleumInDistribution() {
@@ -354,11 +324,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistribution()
-		 */
-		/**
-		 * Gets the petroleum out distribution.
-		 *
-		 * @return the petroleum out distribution
 		 */
 		@Override
 		public double getPetroleumOutDistribution() {
@@ -375,11 +340,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistributionLosses()
 		 */
-		/**
-		 * Gets the petroleum out distribution losses.
-		 *
-		 * @return the petroleum out distribution losses
-		 */
 		@Override
 		public double getPetroleumOutDistributionLosses() {
 			double distribution = 0;
@@ -391,11 +351,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumProduction()
-		 */
-		/**
-		 * Gets the petroleum production.
-		 *
-		 * @return the petroleum production
 		 */
 		@Override
 		public double getPetroleumProduction() {
@@ -409,11 +364,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumReservoirVolume()
 		 */
-		/**
-		 * Gets the petroleum reservoir volume.
-		 *
-		 * @return the petroleum reservoir volume
-		 */
 		@Override
 		public double getPetroleumReservoirVolume() {
 			return petroleumReservoirVolume;
@@ -421,11 +371,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
-		 */
-		/**
-		 * Gets the petroleum withdrawals.
-		 *
-		 * @return the petroleum withdrawals
 		 */
 		@Override
 		public double getPetroleumWithdrawals() {
@@ -459,11 +404,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getProductionCost()
 		 */
-		/**
-		 * Gets the unit production cost.
-		 *
-		 * @return the unit production cost
-		 */
 		@Override
 		public double getUnitProductionCost() {
 			if(getPetroleumProduction() > 0) {
@@ -476,11 +416,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getSupplyCost()
 		 */
-		/**
-		 * Gets the unit supply profit.
-		 *
-		 * @return the unit supply profit
-		 */
 		@Override
 		public double getUnitSupplyProfit() {
 			if(getTotalPetroleumSupply() > 0) {
@@ -492,11 +427,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SimEntity#initialize(long)
 		 */
-		/**
-		 * Initialize.
-		 *
-		 * @param time the time
-		 */
 		@Override
 		public void initialize(long time) {
 			petroleumReservoirVolume = initialPetroleumReservoirVolume;
@@ -504,12 +434,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#removeElement(edu.mit.sips.core.petroleum.PetroleumElement)
-		 */
-		/**
-		 * Removes the element.
-		 *
-		 * @param element the element
-		 * @return true, if successful
 		 */
 		@Override
 		public synchronized boolean removeElement(PetroleumElement element) {
@@ -519,9 +443,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SimEntity#tick()
 		 */
-		/**
-		 * Tick.
-		 */
 		@Override
 		public void tick() {
 			nextPetroleumReservoirVolume = Math.min(maxPetroleumReservoirVolume, 
@@ -530,9 +451,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SimEntity#tock()
-		 */
-		/**
-		 * Tock.
 		 */
 		@Override
 		public void tock() {

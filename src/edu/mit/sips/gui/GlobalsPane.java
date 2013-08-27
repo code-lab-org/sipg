@@ -22,17 +22,8 @@ public class GlobalsPane extends JPanel {
 
 	private final JTextField initialFunds = new JTextField(15);
 
-	private final JTextField privateConsumptionFromFoodProduction = new JTextField(15);
-	private final JTextField privateConsumptionFromFoodConsumption = new JTextField(15);
 	private final JTextField agricultureLaborParticipationRate = new JTextField(15);
 
-	private final JTextField privateConsumptionFromWaterProduction = new JTextField(15);
-	private final JTextField privateConsumptionFromWaterConsumption = new JTextField(15);
-
-	private final JTextField privateConsumptionFromPetroleumProduction = new JTextField(15);
-
-	private final JTextField privateConsumptionFromElectricityProduction = new JTextField(15);
-	private final JTextField privateConsumptionFromElectricityConsumption = new JTextField(15);
 	private final JTextField electricalIntensityOfBurningPetroleum = new JTextField(15);
 
 	/**
@@ -48,68 +39,12 @@ public class GlobalsPane extends JPanel {
 						country.getGlobals().getInitialFunds()));
 			}
 		});
-		privateConsumptionFromFoodProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfFoodProduction(tryParse(
-						privateConsumptionFromFoodProduction,
-						country.getGlobals().getPrivateConsumptionFromFoodProduction()));
-			}
-		});
-		privateConsumptionFromFoodConsumption.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfFoodConsumption(tryParse(
-						privateConsumptionFromFoodConsumption,
-						country.getGlobals().getPrivateConsumptionFromFoodConsumption()));
-			}
-		});
 		agricultureLaborParticipationRate.getDocument().addDocumentListener(new DocumentChangeListener() {
 			@Override
 			public void documentChanged() {
 				country.getGlobals().setAgricultureLaborParticipationRate(tryParse(
 						agricultureLaborParticipationRate,
 						country.getGlobals().getAgricultureLaborParticipationRate()));
-			}
-		});
-		privateConsumptionFromWaterProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfWaterProduction(tryParse(
-						privateConsumptionFromWaterProduction,
-						country.getGlobals().getPrivateConsumptionFromWaterProduction()));
-			}
-		});
-		privateConsumptionFromWaterConsumption.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfWaterConsumption(tryParse(
-						privateConsumptionFromWaterConsumption,
-						country.getGlobals().getPrivateConsumptionFromWaterConsumption()));
-			}
-		});
-		privateConsumptionFromPetroleumProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfPetroleumProduction(tryParse(
-						privateConsumptionFromPetroleumProduction,
-						country.getGlobals().getPrivateConsumptionFromPetroleumProduction()));
-			}
-		});
-		privateConsumptionFromElectricityProduction.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfElectricityProduction(tryParse(
-						privateConsumptionFromElectricityProduction, 
-						country.getGlobals().getPrivateConsumptionFromElectricityProduction()));
-			}
-		});
-		privateConsumptionFromElectricityConsumption.getDocument().addDocumentListener(new DocumentChangeListener() {
-			@Override
-			public void documentChanged() {
-				country.getGlobals().setEconomicIntensityOfElectricityConsumption(tryParse(
-						privateConsumptionFromElectricityConsumption,
-						country.getGlobals().getPrivateConsumptionFromElectricityConsumption()));
 			}
 		});
 		electricalIntensityOfBurningPetroleum.getDocument().addDocumentListener(new DocumentChangeListener() {
@@ -142,10 +77,6 @@ public class GlobalsPane extends JPanel {
 		add(foodLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "<html>Secondary Private Consumption from Food Production (SAR/GJ)</html>",
-				privateConsumptionFromFoodProduction, c);
-		addField(this, "<html>Secondary Private Consumption from Food Consumption (SAR/GJ)</html>",
-				privateConsumptionFromFoodConsumption, c);
 		addField(this, "Labor Participation Rate (-)",
 				agricultureLaborParticipationRate, c);
 		c.gridwidth = 2;
@@ -155,10 +86,6 @@ public class GlobalsPane extends JPanel {
 		add(waterLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "<html>Secondary Private Consumption from Water Production (SAR/m<sup>3</sup>)</html>",
-				privateConsumptionFromWaterProduction, c);
-		addField(this, "<html>Secondary Private Consumption from Water Consumption (SAR/m<sup>3</sup>)</html>",
-				privateConsumptionFromWaterConsumption, c);
 		c.gridwidth = 2;
 		c.gridx = 0;
 		JLabel electricityLabel = new JLabel("Electricity");
@@ -166,10 +93,6 @@ public class GlobalsPane extends JPanel {
 		add(electricityLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Secondary Private Consumption from Electricity Production (SAR/MWh)", 
-				privateConsumptionFromElectricityProduction, c);
-		addField(this, "Secondary Private Consumption from Electricity Consumption (SAR/MWh)", 
-				privateConsumptionFromElectricityConsumption, c);
 		addField(this, "Electrical Intensity of Burning Petroleum (MWh/bbl)", 
 				electricalIntensityOfBurningPetroleum, c);
 		c.gridwidth = 2;
@@ -179,8 +102,6 @@ public class GlobalsPane extends JPanel {
 		add(petroleumLabel, c);
 		c.gridwidth = 1;
 		c.gridy++;
-		addField(this, "Secondary Private Consumption from Petroleum Production (SAR/bbl)", 
-				privateConsumptionFromPetroleumProduction, c);
 		
 		initialize();
 	}
@@ -213,24 +134,9 @@ public class GlobalsPane extends JPanel {
 		initialFunds.setText(new Double(
 				country.getGlobals().getInitialFunds()).toString());
 		
-		privateConsumptionFromFoodProduction.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromFoodProduction()).toString());
-		privateConsumptionFromFoodConsumption.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromFoodConsumption()).toString());
 		agricultureLaborParticipationRate.setText(new Double(
 				country.getGlobals().getAgricultureLaborParticipationRate()).toString());
 		
-		privateConsumptionFromWaterProduction.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromWaterProduction()).toString());
-		privateConsumptionFromWaterConsumption.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromWaterConsumption()).toString());
-
-		privateConsumptionFromPetroleumProduction.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromPetroleumProduction()).toString());
-		privateConsumptionFromElectricityProduction.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromElectricityProduction()).toString());
-		privateConsumptionFromElectricityConsumption.setText(new Double(
-				country.getGlobals().getPrivateConsumptionFromElectricityConsumption()).toString());
 		electricalIntensityOfBurningPetroleum.setText(new Double(
 				country.getGlobals().getElectricalIntensityOfBurningPetroleum()).toString());
 	}

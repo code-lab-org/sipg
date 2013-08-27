@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
@@ -21,6 +23,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
+		private final DomesticProductionModel domesticProductionModel;
 		private final PopulationModel populationModel;
 		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel;
 		private final double initialDomesticProductPerCapita;
@@ -33,6 +36,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		public Local() {
 			super("Society");
+			this.domesticProductionModel = new DefaultDomesticProductionModel();
+			domesticProductionModel.setInfrastructureSystem(this);
 			this.populationModel = new DefaultPopulationModel();
 			this.electricityDemandModel = new DefaultDemandModel();
 			this.foodDemandModel = new DefaultDemandModel();
@@ -44,12 +49,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * Instantiates a new local.
 		 *
 		 * @param initialDomesticProductPerCapita the initial domestic product per capita
+		 * @param domesticProductionModel the domestic production model
 		 * @param populationModel the population model
 		 * @param electricityDemandModel the electricity demand model
 		 * @param foodDemandModel the food demand model
 		 * @param waterDemandModel the water demand model
 		 */
 		public Local(double initialDomesticProductPerCapita, 
+				DomesticProductionModel domesticProductionModel,
 				PopulationModel populationModel, 
 				DemandModel electricityDemandModel, 
 				DemandModel foodDemandModel,
@@ -58,6 +65,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 
 			// No need to validate initial domestic product
 			this.initialDomesticProductPerCapita = initialDomesticProductPerCapita;
+
+			// Validate domestic production model.
+			if(domesticProductionModel == null) {
+				throw new IllegalArgumentException(
+						"Domestic production model cannot be null.");
+			}
+			this.domesticProductionModel = domesticProductionModel;
+			domesticProductionModel.setInfrastructureSystem(this);
 			
 			// Validate population model.
 			if(populationModel == null) {
@@ -133,17 +148,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public double getDomesticProduction() {
-			// add private consumption to base domestic production
-			return super.getDomesticProduction()
-					+ (getSociety().getAgricultureSystem().getFoodDomesticPrice()
-					+ getSociety().getGlobals().getPrivateConsumptionFromFoodConsumption())
-					* getFoodConsumption()
-					+ (getSociety().getWaterSystem().getWaterDomesticPrice()
-					+ getSociety().getGlobals().getPrivateConsumptionFromWaterConsumption())
-					* getWaterConsumption()
-					+ (getSociety().getElectricitySystem().getElectricityDomesticPrice() 
-					+ getSociety().getGlobals().getPrivateConsumptionFromElectricityConsumption())
-					* getElectricityConsumption();
+			return domesticProductionModel.getDomesticProduction();
 		}
 
 		/* (non-Javadoc)
