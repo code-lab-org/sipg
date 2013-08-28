@@ -221,10 +221,10 @@ public class AgricultureElementPanel extends ElementPanel {
 			productPanel.setLayout(new GridLayout(4, 6, 2, 2));
 			productPanel.add(new JLabel("Food Output"));
 			productPanel.add(productOutputLabel);
-			productPanel.add(new JLabel("<html>kcal/km<sup>2</sup></html>"));
+			productPanel.add(new JLabel("<html>kcal/day/km<sup>2</sup></html>"));
 			productPanel.add(new JLabel("="));
 			productPanel.add(outputLabel);
-			productPanel.add(new JLabel("<html>Initial kcal</html>"));
+			productPanel.add(new JLabel("<html>Initial kcal/day</html>"));
 			productPanel.add(new JLabel("Variable Cost"));
 			productPanel.add(productVariableCostLabel);
 			productPanel.add(new JLabel("<html>SAR/km<sup>2</sup></html>"));
@@ -251,13 +251,13 @@ public class AgricultureElementPanel extends ElementPanel {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Food Input", 
-					maxFoodInput, "kcal/year");
+					maxFoodInput, "kcal/day/year");
 			addInput(elementPanel, c, "Initial Food Input", 
-					initialFoodInput, "kcal/year");
+					initialFoodInput, "kcal/day/year");
 			addInput(elementPanel, c, "Distribution Efficiency", 
-					distributionEfficiency, "kcal out/kcal in");
+					distributionEfficiency, "kcal/day out/kcal/day in");
 			addInput(elementPanel, c, "Operations Cost of Distribution", 
-					variableOperationsCostOfFoodDistribution, "SAR/kcal");
+					variableOperationsCostOfFoodDistribution, "SAR/kcal/day");
 		}
 
 		// set input enabled state

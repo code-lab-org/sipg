@@ -51,16 +51,16 @@ public class AgriculturePopupInfoPanel extends DefaultPopupInfoPanel {
 		if(element.getTemplateName() == null 
 				|| element.getMaxLandArea() > 0) {
 			addField("Food Production:", productionLabel, 
-					"<html>kcal/year</html>");
+					"<html>kcal/day/year</html>");
 			addField("Land Use:", landLabel, 
 					"<html>km<sup>2</sup></html>");
 		}
 		if(element.getTemplateName() == null 
 				|| element.getMaxFoodInput() > 0) {
 			addField("Food Input:", inputLabel, 
-					"<html>kcal/year</html>");
+					"<html>kcal/day/year</html>");
 			addField("Food Output:", outputLabel, 
-					"<html>kcal/year</html>");
+					"<html>kcal/day/year</html>");
 		}
 		addField("Expenses:", expensesLabel, 
 				"<html>SAR/year</html>");

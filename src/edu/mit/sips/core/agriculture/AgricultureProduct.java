@@ -11,7 +11,7 @@ public enum AgricultureProduct {
 	MODIFIED_GRAINS("Modified Grains", 	2000, 	140000, 15833,	20);
 	
 	private final String name;
-	private final double foodIntensityOfLandUsed; 		// kcal/km^2
+	private final double foodIntensityOfLandUsed; 		// kcal/day/km^2
 	private final double costIntensityOfLandUsed;		// SAR/km^2
 	private final double waterIntensityOfLandUsed;		// m^3/km^2
 	private final double laborIntensityOfLandUsed;		// person/km^2

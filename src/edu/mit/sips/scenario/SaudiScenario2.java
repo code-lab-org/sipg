@@ -7,6 +7,7 @@ import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystemDomesticProductionModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
@@ -17,9 +18,11 @@ import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystemDomesticProductionModel;
 import edu.mit.sips.core.price.ConstantPriceModel;
+import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
 import edu.mit.sips.core.social.demand.ConstantDemandModel;
+import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
@@ -31,6 +34,24 @@ import edu.mit.sips.core.water.WaterSystemDomesticProductionModel;
  */
 public final class SaudiScenario2 extends DefaultScenario {
 	public static final String INDUSTRIAL = "Industrial", URBAN = "Urban", RURAL = "Rural";
+	private static DomesticProductionModel agricultureSystemDomesticProductionModel = 
+			new AgricultureSystemDomesticProductionModel(0),
+			waterSystemDomesticProductionModel = new WaterSystemDomesticProductionModel(0),
+			electricitySystemDomesticProductionModel = new ElectricitySystemDomesticProductionModel(0),
+			petroleumSystemDomesticProductionModel = new PetroleumSystemDomesticProductionModel(100),
+			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
+	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
+			waterDemandModel = new ConstantDemandModel(85.), 
+			electricityDemandModel = new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84);
+	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(150), 
+			foodImportPriceModel = new ConstantPriceModel(200), 
+			foodExportPriceModel = new ConstantPriceModel(150),
+			waterDomesticPriceModel = new ConstantPriceModel(6), 
+			waterImportPriceModel = new ConstantPriceModel(40), 
+			electricityDomesticPriceModel = new ConstantPriceModel(375), 
+			petroleumDomesticPriceModel = new ConstantPriceModel(50), 
+			petroleumImportPriceModel = new ConstantPriceModel(375), 
+			petroleumExportPriceModel = new ConstantPriceModel(300);
 
 	/**
 	 * Instantiates a new saudi scenario2.
@@ -59,34 +80,32 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new DefaultAgricultureSystem.Local(3000, 0.5,
 								new ArrayList<AgricultureElement>(),
-								new AgricultureSystemDomesticProductionModel(0),
-								new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
+								agricultureSystemDomesticProductionModel,
+								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6,
 								new ArrayList<WaterElement>(),
-								new WaterSystemDomesticProductionModel(0),
-								new ConstantPriceModel(6), new ConstantPriceModel(40)):
+								waterSystemDomesticProductionModel,
+								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.10,
 								new ArrayList<ElectricityElement>(),
-								new ElectricitySystemDomesticProductionModel(0),
-								new ConstantPriceModel(375)):
+								electricitySystemDomesticProductionModel,
+								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(10e9, 10e9,
 								new ArrayList<PetroleumElement>(),
-								new PetroleumSystemDomesticProductionModel(100),
-								new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
+								petroleumSystemDomesticProductionModel,
+								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
-								new SocialSystemDomesticProductionModel(5000, 100, 2000),
+								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, 3000000, 0.07, 17500000),
-								new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-								new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
-								new ConstantDemandModel(85.)):
+								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -102,33 +121,31 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new DefaultAgricultureSystem.Local(10000, 0.5,
 								new ArrayList<AgricultureElement>(),
-								new AgricultureSystemDomesticProductionModel(0),
-								new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
+								agricultureSystemDomesticProductionModel,
+								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6,
 								new ArrayList<WaterElement>(),
-								new WaterSystemDomesticProductionModel(0),
-								new ConstantPriceModel(6), new ConstantPriceModel(40)):
+								waterSystemDomesticProductionModel,
+								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.10,
 								new ArrayList<ElectricityElement>(),
-								new ElectricitySystemDomesticProductionModel(0),
-								new ConstantPriceModel(375)):
+								electricitySystemDomesticProductionModel,
+								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
-								new PetroleumSystemDomesticProductionModel(100),
-								new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
+								petroleumSystemDomesticProductionModel,
+								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
-								new SocialSystemDomesticProductionModel(5000, 100, 2000),
+								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, 750000, 0.05, 4000000),
-								new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-								new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
-								new ConstantDemandModel(85.)):
+								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -144,34 +161,32 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new DefaultAgricultureSystem.Local(4000, 0.5,
 								new ArrayList<AgricultureElement>(),
-								new AgricultureSystemDomesticProductionModel(0),
-								new ConstantPriceModel(150), new ConstantPriceModel(200), new ConstantPriceModel(150)):
+								agricultureSystemDomesticProductionModel,
+								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6,
 								new ArrayList<WaterElement>(),
-								new WaterSystemDomesticProductionModel(0),
-								new ConstantPriceModel(6), new ConstantPriceModel(40)):
+								waterSystemDomesticProductionModel,
+								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.10,
 								new ArrayList<ElectricityElement>(),
-								new ElectricitySystemDomesticProductionModel(0),
-								new ConstantPriceModel(375)):
+								electricitySystemDomesticProductionModel,
+								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(0, 0, 
 								new ArrayList<PetroleumElement>(),
-								new PetroleumSystemDomesticProductionModel(100),
-								new ConstantPriceModel(50), new ConstantPriceModel(375), new ConstantPriceModel(300)):
+								petroleumSystemDomesticProductionModel,
+								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
-								new SocialSystemDomesticProductionModel(5000, 100, 2000),
+								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, 6000000, 0.06, 20000000),
-								new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84),
-								new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
-								new ConstantDemandModel(85.)):
+								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 }

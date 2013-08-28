@@ -219,7 +219,7 @@ public class AgricultureStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "kcal";
+		return "kcal/day";
 	}
 
 	/* (non-Javadoc)

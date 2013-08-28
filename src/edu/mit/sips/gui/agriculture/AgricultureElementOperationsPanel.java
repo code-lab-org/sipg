@@ -125,7 +125,7 @@ public class AgricultureElementOperationsPanel extends ElementOperationsPanel {
 							JLabel.RIGHT), 
 					"<html>km<sup>2</sup></html>");
 			addInput(elementPanel, c, "Food Production",
-					foodProductionLabel, "kcal/year");
+					foodProductionLabel, "kcal/day/year");
 			addInput(elementPanel, c, "Water Consumption",
 					waterConsumptionLabel, 
 					"<html>m<sup>3</sup>/year</html>");
@@ -135,13 +135,13 @@ public class AgricultureElementOperationsPanel extends ElementOperationsPanel {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Food Input", 
-					landAreaText, "kcal/year");
+					landAreaText, "kcal/day/year");
 			addInput(elementPanel, c, "Max Food Input",
 					new JLabel(format.format(element.getMaxFoodInput()), 
 							JLabel.RIGHT), 
-					"kcal/year");
+					"kcal/day/year");
 			addInput(elementPanel, c, "Food Output",
-					foodOutputLabel, "kcal/year");
+					foodOutputLabel, "kcal/day/year");
 		}
 		addInput(elementPanel, c, "Total Expense",
 				totalExpenseLabel, "SAR/year");

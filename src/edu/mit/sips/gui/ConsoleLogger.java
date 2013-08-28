@@ -177,7 +177,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "Food Source", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Food Source", "kcal/day", 
 					agricultureSystem.getFoodProduction()
 					+ agricultureSystem.getFoodInDistribution()
 					+ agricultureSystem.getFoodImport());
@@ -189,7 +189,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Production", "kcal/day", 
 					agricultureSystem.getFoodProduction());
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -197,7 +197,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.", "kcal/day", 
 					agricultureSystem.getFoodInDistribution());
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -205,7 +205,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Import", "kcal/day", 
 					agricultureSystem.getFoodImport());
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -213,7 +213,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Food Use", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "Food Use", "kcal/day", 
 					country.getSocialSystem().getFoodConsumption()
 					+ agricultureSystem.getFoodOutDistribution()
 					+ agricultureSystem.getFoodExport());
@@ -225,7 +225,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.", "kcal/day", 
 					agricultureSystem.getFoodOutDistribution());
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -233,7 +233,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Export", "kcal/day", 
 					agricultureSystem.getFoodExport());
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
@@ -241,7 +241,7 @@ public class ConsoleLogger implements UpdateListener {
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Society", "kcal", 
+			System.out.printf("%-15s %-5s %,15.0f |", "  Society", "kcal/day", 
 					country.getSocialSystem().getFoodConsumption());
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
