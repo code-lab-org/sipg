@@ -22,6 +22,9 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class DefaultAgricultureSoS.
@@ -39,7 +42,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		public Local() {
 			super("Agriculture");
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
 		 */
@@ -64,7 +67,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
@@ -89,6 +92,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				elements.removeAll(getInternalElements());
 			}
 			return Collections.unmodifiableList(elements);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDenominatorUnits()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
 		}
 
 		/* (non-Javadoc)
@@ -170,6 +181,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				value += e.getFoodOutput();
 			}
 			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodNumeratorUnits()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
 		}
 
 		/* (non-Javadoc)
@@ -673,6 +692,17 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		super("Agriculture");
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDenominatorUnits()
+	 */
+	@Override
+	public DenominatorUnits getFoodUnitsDenominator() {
+		return FoodUnits.DenominatorUnits.day;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+	 */
 	@Override
 	public double getFoodDomesticPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -684,7 +714,10 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 		return 0;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+	 */
 	@Override
 	public double getFoodExportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -696,7 +729,10 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 		return 0;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+	 */
 	@Override
 	public double getFoodImportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -707,6 +743,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			return value / getNestedSystems().size();
 		}
 		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodNumeratorUnits()
+	 */
+	@Override
+	public NumeratorUnits getFoodUnitsNumerator() {
+		return FoodUnits.NumeratorUnits.kcal;
 	}
 
 	/* (non-Javadoc)

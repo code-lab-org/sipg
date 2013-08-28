@@ -3,11 +3,12 @@ package edu.mit.sips.core.agriculture;
 import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.FoodUnitsOutput;
 
 /**
  * The Interface AgricultureSystem.
  */
-public interface AgricultureSystem extends InfrastructureSystem {
+public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */
@@ -26,13 +27,6 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		 * @return the arable land area
 		 */
 		public double getArableLandArea();
-		
-		/**
-		 * Gets the labor participation rate.
-		 *
-		 * @return the labor participation rate
-		 */
-		public double getLaborParticipationRate();
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
@@ -92,6 +86,13 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public List<? extends AgricultureElement> getInternalElements();
 		
 		/**
+		 * Gets the labor participation rate.
+		 *
+		 * @return the labor participation rate
+		 */
+		public double getLaborParticipationRate();
+		
+		/**
 		 * Gets the land area used.
 		 *
 		 * @return the land area used
@@ -148,18 +149,18 @@ public interface AgricultureSystem extends InfrastructureSystem {
 	public static interface Remote extends AgricultureSystem, InfrastructureSystem.Remote {
 		
 		/**
-		 * Sets the water consumption.
-		 *
-		 * @param waterConsumption the new water consumption
-		 */
-		public void setWaterConsumption(double waterConsumption);
-		
-		/**
 		 * Sets the food domestic price.
 		 *
 		 * @param foodDomesticPrice the new food domestic price
 		 */
 		public void setFoodDomesticPrice(double foodDomesticPrice);
+		
+		/**
+		 * Sets the food export price.
+		 *
+		 * @param foodExportPrice the new food export price
+		 */
+		public void setFoodExportPrice(double foodExportPrice);
 		
 		/**
 		 * Sets the food import price.
@@ -169,11 +170,11 @@ public interface AgricultureSystem extends InfrastructureSystem {
 		public void setFoodImportPrice(double foodImportPrice);
 		
 		/**
-		 * Sets the food export price.
+		 * Sets the water consumption.
 		 *
-		 * @param foodExportPrice the new food export price
+		 * @param waterConsumption the new water consumption
 		 */
-		public void setFoodExportPrice(double foodExportPrice);
+		public void setWaterConsumption(double waterConsumption);
 	}
 	
 	public final static String 
@@ -181,13 +182,6 @@ public interface AgricultureSystem extends InfrastructureSystem {
 	FOOD_DOMESTIC_PRICE_ATTRIBUTE = "foodDomesticPrice",
 	FOOD_IMPORT_PRICE_ATTRIBUTE = "foodImportPrice",
 	FOOD_EXPORT_PRICE_ATTRIBUTE = "foodExportPrice";
-
-	/**
-	 * Gets the water consumption.
-	 *
-	 * @return the water consumption
-	 */
-	public double getWaterConsumption();
 	
 	/**
 	 * Gets the food domestic price.
@@ -197,6 +191,13 @@ public interface AgricultureSystem extends InfrastructureSystem {
 	public double getFoodDomesticPrice();
 	
 	/**
+	 * Gets the food export price.
+	 *
+	 * @return the food export price
+	 */
+	public double getFoodExportPrice();
+	
+	/**
 	 * Gets the food import price.
 	 *
 	 * @return the food import price
@@ -204,9 +205,9 @@ public interface AgricultureSystem extends InfrastructureSystem {
 	public double getFoodImportPrice();
 	
 	/**
-	 * Gets the food export price.
+	 * Gets the water consumption.
 	 *
-	 * @return the food export price
+	 * @return the water consumption
 	 */
-	public double getFoodExportPrice();
+	public double getWaterConsumption();
 }

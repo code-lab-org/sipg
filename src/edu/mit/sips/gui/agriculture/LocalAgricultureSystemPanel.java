@@ -17,13 +17,22 @@ import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.SpatialStatePanel;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
+import edu.mit.sips.sim.util.FoodUnitsOutput;
 
-public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
+public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implements FoodUnitsOutput {
 	private static final long serialVersionUID = 569560127649283731L;
 
 	private final LinearIndicatorPanel localFoodIndicatorPanel;
 	
 	private final SpatialStatePanel agricultureStatePanel;
+	
+	private final FoodUnits.NumeratorUnits foodUnitsNumerator = 
+			FoodUnits.NumeratorUnits.GJ;
+	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
+			FoodUnits.DenominatorUnits.year;
 	
 	TimeSeriesCollection localFoodData = new TimeSeriesCollection();
 	TimeSeriesCollection foodProductCostData = new TimeSeriesCollection();
@@ -54,10 +63,14 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Agriculture Revenue (SAR/year)", 
 				agricultureRevenue, null, agricultureNetRevenue));
-		addTab("Source", Icons.AGRICULTURE_SOURCE, createStackedAreaChart(
-				"Food Source (kcal/day/year)", foodSourceData));
-		addTab("Use", Icons.AGRICULTURE_USE, createStackedAreaChart(
-				"Food Use (kcal/day/year)", foodUseData));
+		addTab("Source",
+				Icons.AGRICULTURE_SOURCE,
+				createStackedAreaChart("Food Source (" + foodUnitsNumerator
+						+ "/" + foodUnitsDenominator + ")", foodSourceData));
+		addTab("Use",
+				Icons.AGRICULTURE_USE,
+				createStackedAreaChart("Food Use (" + foodUnitsNumerator + "/"
+						+ foodUnitsDenominator + ")", foodUseData));
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
@@ -85,6 +98,51 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+	 */
+	@Override
+	public DenominatorUnits getFoodUnitsDenominator() {
+		return foodUnitsDenominator;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+	 */
+	@Override
+	public NumeratorUnits getFoodUnitsNumerator() {
+		return foodUnitsNumerator;
+	}
+
+	/**
+	 * Gets the nested agriculture systems.
+	 *
+	 * @return the nested agriculture systems
+	 */
+	private List<AgricultureSystem.Local> getNestedAgricultureSystems() {
+		List<AgricultureSystem.Local> systems = new ArrayList<AgricultureSystem.Local>();
+		for(Society nestedSociety : getSociety().getNestedSocieties()) {
+			if(nestedSociety.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				systems.add((AgricultureSystem.Local)nestedSociety.getAgricultureSystem());
+			}
+		}
+		return systems;
+	}
+
+	@Override
+	public void initialize() {
+		localFoodIndicatorPanel.initialize();
+		localFoodData.removeAllSeries();
+		foodProductCostData.removeAllSeries();
+		foodSupplyProfitData.removeAllSeries();
+		foodConsumptionPerCapita.removeAllSeries();
+		landAvailableDataset.removeAllSeries();
+		foodUseData.removeAllSeries();
+		foodSourceData.removeAllSeries();
+		agricultureRevenue.removeAllSeries();
+		agricultureNetRevenue.removeAllSeries();
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
@@ -106,35 +164,6 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		agricultureStatePanel.repaint();
-	}
-
-	@Override
-	public void initialize() {
-		localFoodIndicatorPanel.initialize();
-		localFoodData.removeAllSeries();
-		foodProductCostData.removeAllSeries();
-		foodSupplyProfitData.removeAllSeries();
-		foodConsumptionPerCapita.removeAllSeries();
-		landAvailableDataset.removeAllSeries();
-		foodUseData.removeAllSeries();
-		foodSourceData.removeAllSeries();
-		agricultureRevenue.removeAllSeries();
-		agricultureNetRevenue.removeAllSeries();
-	}
-
-	/**
-	 * Gets the nested agriculture systems.
-	 *
-	 * @return the nested agriculture systems
-	 */
-	private List<AgricultureSystem.Local> getNestedAgricultureSystems() {
-		List<AgricultureSystem.Local> systems = new ArrayList<AgricultureSystem.Local>();
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			if(nestedSociety.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				systems.add((AgricultureSystem.Local)nestedSociety.getAgricultureSystem());
-			}
-		}
-		return systems;
 	}
 
 	@Override
@@ -187,7 +216,8 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 		}
 	
 		updateSeries(foodUseData, "Society", year, 
-				getSociety().getSocialSystem().getFoodConsumption());
+				FoodUnits.convert(getSociety().getSocialSystem().getFoodConsumption(),
+						getSociety().getSocialSystem(), this));
 		updateSeries(agricultureRevenue, "Capital", year, 
 				-getAgricultureSystem().getCapitalExpense());
 		updateSeries(agricultureRevenue, "Operations", year, 
@@ -212,32 +242,39 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel {
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getMaxLandArea() > 0) {
 					updateSeries(foodSourceData, element.getName(), year, 
-							element.getFoodProduction());
+							FoodUnits.convert(element.getFoodProduction(),
+									element, this));
 				}
 				
 				if(element.getMaxFoodInput() > 0) {
 					updateSeries(foodUseData, element.getName(), year, 
-							element.getFoodInput());
+							FoodUnits.convert(element.getFoodInput(), element, this));
 				}
 			}
 			for(AgricultureElement element : getAgricultureSystem().getExternalElements()) {
 				if(element.getMaxFoodInput() > 0) {
 					updateSeries(foodSourceData, element.getName(), year, 
-							element.getFoodOutput());
+							FoodUnits.convert(element.getFoodOutput(),
+									element, this));
 				}
 			}
 		} else {
 			updateSeries(foodSourceData, "Production", year, 
-					getAgricultureSystem().getFoodProduction());
+					FoodUnits.convert(getAgricultureSystem().getFoodProduction(),
+							getAgricultureSystem(), this));
 			updateSeries(foodSourceData, "Distribution", year, 
-					getAgricultureSystem().getFoodInDistribution());
+					FoodUnits.convert(getAgricultureSystem().getFoodInDistribution(),
+							getAgricultureSystem(), this));
 			updateSeries(foodUseData, "Distribution", year, 
-					getAgricultureSystem().getFoodOutDistribution());
+					FoodUnits.convert(getAgricultureSystem().getFoodOutDistribution(),
+							getAgricultureSystem(), this));
 		}
 		updateSeries(foodUseData, "Export", year, 
-				getAgricultureSystem().getFoodExport());
+				FoodUnits.convert(getAgricultureSystem().getFoodExport(),
+						getAgricultureSystem(), this));
 		updateSeries(foodSourceData, "Import", year, 
-				getAgricultureSystem().getFoodImport());
+				FoodUnits.convert(getAgricultureSystem().getFoodImport(),
+						getAgricultureSystem(), this));
 	}
 
 }

@@ -11,6 +11,9 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -437,6 +440,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public void tock() { }
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
+		}
 	}
 	
 	/**
@@ -502,6 +521,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public void setWaterConsumption(double waterConsumption) {
 			this.waterConsumption = waterConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
 		}
 	}
 }

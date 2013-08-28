@@ -6,6 +6,9 @@ import java.util.List;
 
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class DefaultSocialSoS.
@@ -17,18 +20,6 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	public DefaultSocialSoS() {
 		super("Society");
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
-	 */
-	@Override
-	public List<SocialSystem> getNestedSystems() {
-		List<SocialSystem> systems = new ArrayList<SocialSystem>();
-		for(Society society : getSociety().getNestedSocieties()) {
-			systems.add(society.getSocialSystem());
-		}
-		return Collections.unmodifiableList(systems);
 	}
 
 	/* (non-Javadoc)
@@ -65,6 +56,34 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 			value += system.getFoodConsumption();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+	 */
+	@Override
+	public DenominatorUnits getFoodUnitsDenominator() {
+		return FoodUnits.DenominatorUnits.day;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+	 */
+	@Override
+	public NumeratorUnits getFoodUnitsNumerator() {
+		return FoodUnits.NumeratorUnits.kcal;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
+	 */
+	@Override
+	public List<SocialSystem> getNestedSystems() {
+		List<SocialSystem> systems = new ArrayList<SocialSystem>();
+		for(Society society : getSociety().getNestedSocieties()) {
+			systems.add(society.getSocialSystem());
+		}
+		return Collections.unmodifiableList(systems);
 	}
 
 	/* (non-Javadoc)

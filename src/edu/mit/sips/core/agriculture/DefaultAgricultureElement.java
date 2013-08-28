@@ -2,6 +2,9 @@ package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class AgricultureElement.
@@ -165,11 +168,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getVariableOperationsCostOfFoodDistribution()
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDenominatorFoodUnits()
 	 */
 	@Override
-	public double getVariableOperationsCostOfFoodDistribution() {
-		return variableOperationsCostOfFoodDistribution;
+	public DenominatorUnits getFoodUnitsDenominator() {
+		return FoodUnits.DenominatorUnits.day;
 	}
 	
 	/* (non-Javadoc)
@@ -258,6 +261,32 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
+	 */
+	@Override
+	public MutableAgricultureElement getMutableElement() {
+		MutableAgricultureElement element = new MutableAgricultureElement();
+		setMutableFields(element);
+		element.setMaxLandArea(maxLandArea);
+		element.setInitialLandArea(initialLandArea);
+		element.setProduct(product);
+		element.setMaxFoodInput(maxFoodInput);
+		element.setInitialFoodInput(initialFoodInput);
+		element.setDistributionEfficiency(distributionEfficiency);
+		element.setVariableOperationsCostOfFoodDistribution(
+				variableOperationsCostOfFoodDistribution);
+		return element;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
+	 */
+	@Override
+	public NumeratorUnits getFoodUnitsNumerator() {
+		return FoodUnits.NumeratorUnits.kcal;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getProduct()
 	 */
 	@Override
@@ -273,6 +302,14 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		return getFixedOperationsExpense() 
 				+ product.getCostIntensityOfLandUsed() * landArea 
 				+ variableOperationsCostOfFoodDistribution * foodInput;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getVariableOperationsCostOfFoodDistribution()
+	 */
+	@Override
+	public double getVariableOperationsCostOfFoodDistribution() {
+		return variableOperationsCostOfFoodDistribution;
 	}
 
 	/* (non-Javadoc)
@@ -334,23 +371,5 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 		this.landArea = landArea;
 		fireElementChangeEvent();
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
-	 */
-	@Override
-	public MutableAgricultureElement getMutableElement() {
-		MutableAgricultureElement element = new MutableAgricultureElement();
-		setMutableFields(element);
-		element.setMaxLandArea(maxLandArea);
-		element.setInitialLandArea(initialLandArea);
-		element.setProduct(product);
-		element.setMaxFoodInput(maxFoodInput);
-		element.setInitialFoodInput(initialFoodInput);
-		element.setDistributionEfficiency(distributionEfficiency);
-		element.setVariableOperationsCostOfFoodDistribution(
-				variableOperationsCostOfFoodDistribution);
-		return element;
 	}
 }

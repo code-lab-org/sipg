@@ -13,6 +13,9 @@ import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.PopulationModel;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class DefaultSocialSystem.
@@ -182,6 +185,22 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 		 */
 		@Override
@@ -307,6 +326,22 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public double getFoodConsumption() {
 			return foodConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
 		}
 
 		/* (non-Javadoc)
