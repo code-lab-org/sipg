@@ -18,4 +18,11 @@ public interface Units {
 	 * @return the abbreviation
 	 */
 	public String getAbbreviation();
+	
+	/**
+	 * Gets the scale.
+	 *
+	 * @return the scale
+	 */
+	public double getScale();
 }

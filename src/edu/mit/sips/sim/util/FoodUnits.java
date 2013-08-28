@@ -9,21 +9,24 @@ public abstract class FoodUnits {
 	 * The Enum NumeratorUnits.
 	 */
 	public static enum NumeratorUnits implements Units {
-		kcal("kilocalories","kcal"), 
-		GJ("gigajoules","GJ");
+		kcal("kilocalories","kcal", 238902.957619), 
+		GJ("gigajoules","GJ", 1);
 		
 		private final String name;
 		private final String abbreviation;
+		private final double scale;
 		
 		/**
 		 * Instantiates a new numerator units.
 		 *
 		 * @param name the name
 		 * @param abbreviation the abbreviation
+		 * @param scale the scale
 		 */
-		private NumeratorUnits(String name, String abbreviation) {
+		private NumeratorUnits(String name, String abbreviation, double scale) {
 			this.name = name;
 			this.abbreviation = abbreviation;
+			this.scale = scale;
 		}
 		
 		/* (non-Javadoc)
@@ -40,27 +43,35 @@ public abstract class FoodUnits {
 		 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
 		 */
 		public String getAbbreviation() { return abbreviation; }
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.Units#getScale()
+		 */
+		public double getScale() { return scale; }
 	};
 	
 	/**
 	 * The Enum DenominatorUnits.
 	 */
 	public static enum DenominatorUnits implements Units {
-		day("day","day"), 
-		year("year","yr");
+		day("day","day", 365.242), 
+		year("year","yr", 1);
 		
 		private final String name;
 		private final String abbreviation;
+		private final double scale;
 		
 		/**
 		 * Instantiates a new denominator units.
 		 *
 		 * @param name the name
 		 * @param abbreviation the abbreviation
+		 * @param scale the scale
 		 */
-		private DenominatorUnits(String name, String abbreviation) {
+		private DenominatorUnits(String name, String abbreviation, double scale) {
 			this.name = name;
 			this.abbreviation = abbreviation;
+			this.scale = scale;
 		}
 
 		/* (non-Javadoc)
@@ -77,10 +88,12 @@ public abstract class FoodUnits {
 		 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
 		 */
 		public String getAbbreviation() { return abbreviation; }
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.Units#getScale()
+		 */
+		public double getScale() { return scale; }
 	};
-	
-	private static final double day_year = 365.242;
-	private static final double kcal_GJ = 238902.957619;
 	
 	/**
 	 * Convert.
@@ -115,51 +128,9 @@ public abstract class FoodUnits {
 			DenominatorUnits sourceDenominatorUnits, 
 			NumeratorUnits targetNumeratorUnits, 
 			DenominatorUnits targetDenominatorUnits) {
-		double factor = 1;
-		switch(sourceNumeratorUnits) {
-		case GJ:
-			switch(targetNumeratorUnits) {
-			case GJ:
-				factor *= 1;
-				break;
-			case kcal:
-				factor *= kcal_GJ;
-				break;
-			}
-			break;
-		case kcal:
-			switch(targetNumeratorUnits) {
-			case GJ:
-				factor /= kcal_GJ;
-				break;
-			case kcal:
-				factor *= 1;
-				break;
-			}
-			break;
-		}
-		switch(sourceDenominatorUnits) {
-		case day:
-			switch(targetDenominatorUnits) {
-			case day:
-				factor *= 1;
-				break;
-			case year:
-				factor /= day_year;
-				break;
-			}
-			break;
-		case year:
-			switch(targetDenominatorUnits) {
-			case day:
-				factor /= day_year;
-				break;
-			case year:
-				factor *= 1;
-				break;
-			}
-			break;
-		}
-		return value * factor;
+		return value / sourceNumeratorUnits.getScale() 
+				* targetNumeratorUnits.getScale() 
+				* sourceDenominatorUnits.getScale() 
+				/ targetDenominatorUnits.getScale();
 	}
 }
