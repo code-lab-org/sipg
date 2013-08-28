@@ -1,6 +1,5 @@
 package edu.mit.sips.core;
 
-import edu.mit.sips.ElementTemplate;
 
 /**
  * The Interface MutableInfrastructureElement.
@@ -43,11 +42,11 @@ public interface MutableInfrastructureElement {
 	public String getOrigin();
 	
 	/**
-	 * Gets the template.
+	 * Gets the template name.
 	 *
-	 * @return the template
+	 * @return the template name
 	 */
-	public ElementTemplate getTemplate();
+	public String getTemplateName();
 	
 	/**
 	 * Sets the destination.
@@ -78,9 +77,9 @@ public interface MutableInfrastructureElement {
 	public void setOrigin(String origin);
 
 	/**
-	 * Sets the template.
+	 * Sets the template name.
 	 *
-	 * @param template the new template
+	 * @param templateName the new template name
 	 */
-	public void setTemplate(ElementTemplate template);
+	public void setTemplateName(String templateName);
 }

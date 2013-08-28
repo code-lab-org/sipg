@@ -14,7 +14,6 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
 
 /**
@@ -222,15 +221,15 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 	 * @see edu.mit.sips.gui.LifecycleModelPanel#setTemplateMode(boolean)
 	 */
 	@Override
-	public void setTemplateMode(ElementTemplate template) {
-		timeAvailableText.setEnabled(template == null);
-		initializationDurationText.setEnabled(template == null);
-		capitalCostText.setEnabled(template == null);
-		fixedOperationsCostText.setEnabled(template == null);
-		maxOperationsDurationText.setEnabled(template == null);
-		decommissionDurationText.setEnabled(template == null);
-		decommissionCostText.setEnabled(template == null);
-		levelizeCostsCheck.setEnabled(template == null);
+	public void setTemplateMode(String templateName) {
+		timeAvailableText.setEnabled(templateName == null);
+		initializationDurationText.setEnabled(templateName == null);
+		capitalCostText.setEnabled(templateName == null);
+		fixedOperationsCostText.setEnabled(templateName == null);
+		maxOperationsDurationText.setEnabled(templateName == null);
+		decommissionDurationText.setEnabled(templateName == null);
+		decommissionCostText.setEnabled(templateName == null);
+		levelizeCostsCheck.setEnabled(templateName == null);
 	}
 	
 	/**

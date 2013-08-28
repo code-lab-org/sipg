@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
@@ -23,12 +22,13 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.hla.FederationConnection;
 import edu.mit.sips.hla.SimAmbassador;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class Simulator.
  */
 public class Simulator implements SimulationControlListener {	
-	private final Country country;
+	private final Scenario scenario;
 	
 	private boolean autoOptimizeDistribution = true;
 	private boolean autoOptimizeProductionAndDistribution = true;
@@ -49,21 +49,21 @@ public class Simulator implements SimulationControlListener {
 	 * Instantiates a new simulator.
 	 */
 	protected Simulator() {
-		country = null;
+		scenario = null;
 		listenerList = new EventListenerList();
 	}
+	
 	/**
 	 * Instantiates a new simulator.
 	 *
-	 * @param federateName the federate name
-	 * @param country the country
+	 * @param scenario the scenario
 	 */
-	public Simulator(Country country) {
+	public Simulator(Scenario scenario) {
 		// Validate country.
-		if(country == null) {
-			throw new IllegalArgumentException("Country cannot be null.");
+		if(scenario == null) {
+			throw new IllegalArgumentException("Scenario cannot be null.");
 		}
-		this.country = country;
+		this.scenario = scenario;
 		
 		try {
 			simAmbassador = new SimAmbassador(this);
@@ -107,10 +107,10 @@ public class Simulator implements SimulationControlListener {
 			} catch(Exception ex) {
 				ex.printStackTrace();
 			}
-			country.tick();
+			scenario.getCountry().tick();
 			fireUpdateEvent(time); // final update of current year
 			time = time + 1;
-			country.tock();
+			scenario.getCountry().tock();
 			if(time <= endTime) {
 				fireUpdateEvent(time); // first update of next year
 			}
@@ -161,7 +161,7 @@ public class Simulator implements SimulationControlListener {
 		System.out.println("Firing complete event with time " + time);
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationCompleted(new UpdateEvent(this, time, country));
+			listener.simulationCompleted(new UpdateEvent(this, time, scenario.getCountry()));
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class Simulator implements SimulationControlListener {
 	private void fireInitializeEvent() {
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationInitialized(new UpdateEvent(this, time, country));
+			listener.simulationInitialized(new UpdateEvent(this, time, scenario.getCountry()));
 		}
 	}
 	
@@ -185,7 +185,7 @@ public class Simulator implements SimulationControlListener {
 		System.out.println("Firing update event with time " + time);
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationUpdated(new UpdateEvent(this, time, country));
+			listener.simulationUpdated(new UpdateEvent(this, time, scenario.getCountry()));
 		}
 	}
 	
@@ -206,14 +206,14 @@ public class Simulator implements SimulationControlListener {
 	public FederationConnection getConnection() {
 		return connection;
 	}
-	
+
 	/**
-	 * Gets the country.
+	 * Gets the scenario.
 	 *
-	 * @return the country
+	 * @return the scenario
 	 */
-	public Country getCountry() {
-		return country;
+	public Scenario getScenario() {
+		return scenario;
 	}
 	
 	/**
@@ -286,7 +286,7 @@ public class Simulator implements SimulationControlListener {
 		
 		time = startTime;
 
-		country.initialize(startTime);
+		scenario.getCountry().initialize(startTime);
 
 		if(simAmbassador.isInitialized()) {
 			try {
@@ -378,43 +378,43 @@ public class Simulator implements SimulationControlListener {
 	 */
 	private void runAutoOptimization() {
 		if(autoOptimizeProductionAndDistribution) {
-			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
-				((AgricultureSoS.Local)country.getAgricultureSystem())
+			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
+				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())
 				.optimizeFoodProductionAndDistribution(optimizationOptions);
 			}
 			
-			if(country.getWaterSystem() instanceof WaterSoS.Local) {
-				((WaterSoS.Local)country.getWaterSystem())
+			if(scenario.getCountry().getWaterSystem() instanceof WaterSoS.Local) {
+				((WaterSoS.Local)scenario.getCountry().getWaterSystem())
 				.optimizeWaterProductionAndDistribution(optimizationOptions);
 			}
 			
-			if(country.getElectricitySystem() instanceof ElectricitySoS.Local) {
-				((ElectricitySoS.Local)country.getElectricitySystem())
+			if(scenario.getCountry().getElectricitySystem() instanceof ElectricitySoS.Local) {
+				((ElectricitySoS.Local)scenario.getCountry().getElectricitySystem())
 				.optimizeElectricityProductionAndDistribution(optimizationOptions);
 			}
 			
-			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local) {
-				((PetroleumSoS.Local)country.getPetroleumSystem())
+			if(scenario.getCountry().getPetroleumSystem() instanceof PetroleumSoS.Local) {
+				((PetroleumSoS.Local)scenario.getCountry().getPetroleumSystem())
 				.optimizePetroleumProductionAndDistribution(optimizationOptions);
 			}
 		} else if(autoOptimizeDistribution) {
-			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
-				((AgricultureSoS.Local)country.getAgricultureSystem())
+			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
+				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())
 				.optimizeFoodDistribution();
 			}
 			
-			if(country.getWaterSystem() instanceof WaterSoS.Local) {
-				((WaterSoS.Local)country.getWaterSystem())
+			if(scenario.getCountry().getWaterSystem() instanceof WaterSoS.Local) {
+				((WaterSoS.Local)scenario.getCountry().getWaterSystem())
 				.optimizeWaterDistribution();
 			}
 			
-			if(country.getElectricitySystem() instanceof ElectricitySoS.Local) {
-				((ElectricitySoS.Local)country.getElectricitySystem())
+			if(scenario.getCountry().getElectricitySystem() instanceof ElectricitySoS.Local) {
+				((ElectricitySoS.Local)scenario.getCountry().getElectricitySystem())
 				.optimizeElectricityDistribution();
 			}
 			
-			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local) {
-				((PetroleumSoS.Local)country.getPetroleumSystem())
+			if(scenario.getCountry().getPetroleumSystem() instanceof PetroleumSoS.Local) {
+				((PetroleumSoS.Local)scenario.getCountry().getPetroleumSystem())
 				.optimizePetroleumDistribution();
 			}
 		}

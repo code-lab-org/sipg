@@ -1,6 +1,5 @@
 package edu.mit.sips.core.electricity;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -13,7 +12,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	/**
 	 * Creates the distribution eement.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -25,12 +24,12 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 * @return the electricity element
 	 */
 	public static ElectricityElement createDistributionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,
 			double maxElectricityInput, double initialElectricityInput,
 			double variableOperationsCostOfElectricityDistribution) {
-		return new DefaultElectricityElement(template, name, origin, 
+		return new DefaultElectricityElement(templateName, name, origin, 
 				destination, lifecycleModel, 0, 
 				0, 0, 0, 0, distributionEfficiency, maxElectricityInput, 
 				initialElectricityInput, variableOperationsCostOfElectricityDistribution);
@@ -39,7 +38,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	/**
 	 * Creates the production element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -52,14 +51,14 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 * @return the electricity element
 	 */
 	public static ElectricityElement createProductionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double maxElectricityProduction, 
 			double initialElectricityProduction, 
 			double petroleumIntensityOfElectricityProduction,
 			double waterIntensityOfElectricityProduction,
 			double variableOperationsCostOfElectricityProduction) {
-		return new DefaultElectricityElement(template, name, origin, 
+		return new DefaultElectricityElement(templateName, name, origin, 
 				destination, lifecycleModel, maxElectricityProduction, 
 				initialElectricityProduction, petroleumIntensityOfElectricityProduction,
 				waterIntensityOfElectricityProduction, 
@@ -99,7 +98,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	/**
 	 * Instantiates a new default electricity element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -114,7 +113,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 * @param initialElectricityInput the initial electricity input
 	 * @param variableOperationsCostOfElectricityDistribution the variable operations cost of electricity distribution
 	 */
-	protected DefaultElectricityElement(ElementTemplate template, String name, 
+	protected DefaultElectricityElement(String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double maxElectricityProduction, 
 			double initialElectricityProduction, 
@@ -124,7 +123,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 			double distributionEfficiency, double maxElectricityInput, 
 			double initialElectricityInput,
 			double variableOperationsCostOfElectricityDistribution) {
-		super(template, name, origin, destination, lifecycleModel);
+		super(templateName, name, origin, destination, lifecycleModel);
 		
 		// Validate maximum electricity production.
 		if(maxElectricityProduction < 0) {

@@ -2,15 +2,13 @@ package edu.mit.sips.core;
 
 import javax.swing.event.EventListenerList;
 
-import edu.mit.sips.ElementTemplate;
-
 /**
  * The Class InfrastructureElement.
  * 
  * @author Paul T. Grogan, ptgrogan@mit.edu
  */
 public abstract class DefaultInfrastructureElement implements InfrastructureElement {
-	private final ElementTemplate template;
+	private final String templateName;
 	private final String name;
 	private final String origin, destination;
 	private final LifecycleModel lifecycleModel;
@@ -19,16 +17,16 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	/**
 	 * Instantiates a new infrastructure element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public DefaultInfrastructureElement(ElementTemplate template, 
+	public DefaultInfrastructureElement(String templateName, 
 			String name, String origin, 
 			String destination, LifecycleModel lifecycleModel) {
-		this.template = template;
+		this.templateName = templateName;
 		
 		// Validate the name.
 		if(name == null) {
@@ -59,7 +57,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 * Instantiates a new default infrastructure element.
 	 */
 	protected DefaultInfrastructureElement() {
-		this.template = null;
+		this.templateName = null;
 		this.name = "";
 		this.origin = "";
 		this.destination = "";
@@ -67,8 +65,8 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	}
 	
 	@Override
-	public ElementTemplate getTemplate() {
-		return template;
+	public String getTemplateName() {
+		return templateName;
 	}
 
 	/* (non-Javadoc)
@@ -212,7 +210,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 * @param element the new mutable fields
 	 */
 	protected final void setMutableFields(DefaultMutableInfrastructureElement element) {
-		element.setTemplate(template);
+		element.setTemplateName(templateName);
 		element.setName(name);
 		element.setOrigin(origin);
 		element.setDestination(destination);

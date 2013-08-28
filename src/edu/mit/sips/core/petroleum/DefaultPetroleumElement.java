@@ -1,6 +1,5 @@
 package edu.mit.sips.core.petroleum;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -13,7 +12,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	/**
 	 * Creates the distribution element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -26,14 +25,14 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @return the petroleum element
 	 */
 	public static PetroleumElement createDistributionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,
 			double maxPetroleumInput, double initialPetroleumInput, 
 			double electricalIntensityOfPetroleumDistribution,
 			double variableOperationsCostOfPetroleumDistribution) {
 		// TODO distance-based operational expense?
-		return new DefaultPetroleumElement(template, name, origin, 
+		return new DefaultPetroleumElement(templateName, name, origin, 
 				destination, lifecycleModel, 0, 0, 0, 0, 
 				distributionEfficiency, maxPetroleumInput, initialPetroleumInput,
 				electricalIntensityOfPetroleumDistribution,
@@ -43,6 +42,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	/**
 	 * Creates the production element.
 	 *
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -54,12 +54,12 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @return the petroleum element
 	 */
 	public static PetroleumElement createProductionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfPetroleumProduction,
 			double maxPetroleumProduction, double initialPetroleumProduction,
 			double variableOperationsCostOfPetroleumProduction) {
-		return new DefaultPetroleumElement(template, name, origin, 
+		return new DefaultPetroleumElement(templateName, name, origin, 
 				destination, lifecycleModel, reservoirIntensityOfPetroleumProduction,
 				maxPetroleumProduction, initialPetroleumProduction,
 				variableOperationsCostOfPetroleumProduction, 0, 0, 0, 0, 0);
@@ -111,7 +111,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @param electricalIntensityOfPetroleumDistribution the electrical intensity of petroleum distribution
 	 * @param variableOperationsCostOfPetroleumDistribution the variable operations cost of petroleum distribution
 	 */
-	protected DefaultPetroleumElement(ElementTemplate template, String name, 
+	protected DefaultPetroleumElement(String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double reservoirIntensityOfPetroleumProduction,
 			double maxPetroleumProduction, double initialPetroleumProduction, 
@@ -120,7 +120,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			double initialPetroleumInput, 
 			double electricalIntensityOfPetroleumDistribution,
 			double variableOperationsCostOfPetroleumDistribution) {
-		super(template, name, origin, destination, lifecycleModel);
+		super(templateName, name, origin, destination, lifecycleModel);
 		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfPetroleumProduction < 0) {

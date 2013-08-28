@@ -1,6 +1,5 @@
 package edu.mit.sips.core.agriculture;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -12,7 +11,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	/**
 	 * Instantiates a new distribution agriculture element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -24,18 +23,20 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @return the default agriculture element
 	 */
 	public static DefaultAgricultureElement createDistributionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double efficiency,
 			double maxFoodInput, double initialFoodInput, 
 			double variableOperationsCostOfFoodDistribution) {
-		return new DefaultAgricultureElement(template, name, origin, destination, lifecycleModel, 0, 0,
+		return new DefaultAgricultureElement(templateName, name, origin, destination, lifecycleModel, 0, 0,
 				AgricultureProduct.NONE, efficiency, maxFoodInput, initialFoodInput, 
 				variableOperationsCostOfFoodDistribution);
 	}
+	
 	/**
 	 * Instantiates a new fixed agriculture element.
 	 *
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -46,11 +47,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @return the agriculture element
 	 */
 	public static DefaultAgricultureElement createProductionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double maxLandArea, 
 			double initialLandArea, AgricultureProduct product) {
-		return new DefaultAgricultureElement(template, name, origin, destination, lifecycleModel, maxLandArea, 
+		return new DefaultAgricultureElement(templateName, name, origin, destination, lifecycleModel, maxLandArea, 
 				initialLandArea, product, 0, 0, 0, 0);
 	}
 	
@@ -86,6 +87,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	/**
 	 * Instantiates a new agriculture element.
 	 *
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -98,13 +100,13 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @param initialFoodInput the initial food input
 	 * @param variableOperationsCostOfFoodDistribution the variable operations cost of food distribution
 	 */
-	protected DefaultAgricultureElement(ElementTemplate template, String name, 
+	protected DefaultAgricultureElement(String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double maxLandArea, 
 			double initialLandArea, AgricultureProduct product,
 			double distributionEfficiency, double maxFoodInput, 
 			double initialFoodInput, double variableOperationsCostOfFoodDistribution) {
-		super(template, name, origin, destination, lifecycleModel);
+		super(templateName, name, origin, destination, lifecycleModel);
 		
 		// Validate maximum land area.
 		if(maxLandArea < 0) {

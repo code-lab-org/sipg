@@ -13,10 +13,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class WaterElementPanel.
@@ -40,12 +40,12 @@ public class WaterElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new water element panel.
 	 *
-	 * @param country the country
+	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public WaterElementPanel(Country country, 
+	public WaterElementPanel(Scenario scenario, 
 			final MutableWaterElement element) {
-		super(country, element);
+		super(scenario, element);
 		
 		maxWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterProductionText.setColumns(10);
@@ -230,8 +230,9 @@ public class WaterElementPanel extends ElementPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Water Production", 
 					maxWaterProductionText, "<html>m<sup>3</sup>/year</html>");
@@ -251,8 +252,9 @@ public class WaterElementPanel extends ElementPanel {
 			c.gridwidth = 1;
 			c.gridy++;
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Water Input", 
@@ -268,14 +270,14 @@ public class WaterElementPanel extends ElementPanel {
 		}
 		
 		// set input enabled state
-		maxWaterProductionText.setEnabled(element.getTemplate() == null);
-		reservoirIntensityOfWaterProductionText.setEnabled(element.getTemplate() == null);
-		electricalIntensityOfWaterProductionText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfWaterProductionText.setEnabled(element.getTemplate() == null);
-		maxWaterInputText.setEnabled(element.getTemplate() == null);
-		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
-		electricalIntensityOfWaterDistributionText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfWaterDistributionText.setEnabled(element.getTemplate() == null);
+		maxWaterProductionText.setEnabled(element.getTemplateName() == null);
+		reservoirIntensityOfWaterProductionText.setEnabled(element.getTemplateName() == null);
+		electricalIntensityOfWaterProductionText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfWaterProductionText.setEnabled(element.getTemplateName() == null);
+		maxWaterInputText.setEnabled(element.getTemplateName() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplateName() == null);
+		electricalIntensityOfWaterDistributionText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfWaterDistributionText.setEnabled(element.getTemplateName() == null);
 	}
 	
 }

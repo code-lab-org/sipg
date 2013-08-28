@@ -10,10 +10,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class PetroleumElementPanel.
@@ -35,12 +35,12 @@ public class PetroleumElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new petroleum element panel.
 	 *
-	 * @param country the country
+	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public PetroleumElementPanel(Country country, 
+	public PetroleumElementPanel(Scenario scenario, 
 			final MutablePetroleumElement element) {
-		super(country, element);
+		super(scenario, element);
 		
 		maxPetroleumProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxPetroleumProductionText.setColumns(10);
@@ -204,8 +204,9 @@ public class PetroleumElementPanel extends ElementPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Petroleum Production", 
 					maxPetroleumProductionText, "toe/year");
@@ -216,8 +217,9 @@ public class PetroleumElementPanel extends ElementPanel {
 			addInput(elementPanel, c, "Variable Cost of Production",
 					variableOperationsCostOfPetroleumProductionText, "SAR/toe");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Petroleum Input", 
@@ -233,13 +235,13 @@ public class PetroleumElementPanel extends ElementPanel {
 		}
 		
 		// set input enabled state
-		maxPetroleumProductionText.setEnabled(element.getTemplate() == null);
-		reservoirIntensityOfPetroleumProductionText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfPetroleumProductionText.setEnabled(element.getTemplate() == null);
-		maxPetroleumInputText.setEnabled(element.getTemplate() == null);
-		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
-		electricalIntensityOfPetroleumDistributionText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfPetroleumDistributionText.setEnabled(element.getTemplate() == null);
+		maxPetroleumProductionText.setEnabled(element.getTemplateName() == null);
+		reservoirIntensityOfPetroleumProductionText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfPetroleumProductionText.setEnabled(element.getTemplateName() == null);
+		maxPetroleumInputText.setEnabled(element.getTemplateName() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplateName() == null);
+		electricalIntensityOfPetroleumDistributionText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfPetroleumDistributionText.setEnabled(element.getTemplateName() == null);
 	}
 	
 }

@@ -48,15 +48,15 @@ public class WaterPopupInfoPanel extends DefaultPopupInfoPanel {
 				JLabel.RIGHT);
 
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxWaterProduction() > 0) {
 			addField("Water Production:", productionLabel, 
 					"<html>m<sup>3</sup></html>");
 			addField("Aquifer Withdrawals:", withdrawalsLabel, 
 					"<html>m<sup>3</sup></html>");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxWaterInput() > 0) {
 			addField("Water Input:", inputLabel, 
 					"<html>m<sup>3</sup></html>");
 			addField("Water Output:", outputLabel, 

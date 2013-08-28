@@ -115,8 +115,8 @@ public class AgricultureElementOperationsPanel extends ElementOperationsPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxLandArea() > 0) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Land Area", 
 					landAreaText, "<html>km<sup>2</sup></html>");
@@ -130,8 +130,8 @@ public class AgricultureElementOperationsPanel extends ElementOperationsPanel {
 					waterConsumptionLabel, 
 					"<html>m<sup>3</sup>/year</html>");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxFoodInput() > 0) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Food Input", 

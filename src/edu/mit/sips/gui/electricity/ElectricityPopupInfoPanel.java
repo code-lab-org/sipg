@@ -48,13 +48,13 @@ public class ElectricityPopupInfoPanel extends DefaultPopupInfoPanel {
 				JLabel.RIGHT);
 
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxElectricityProduction() > 0) {
 			addField("Electricity Production:", productionLabel, 
 					"<html>toe</html>");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxElectricityInput() > 0) {
 			addField("Electricity Input:", inputLabel, 
 					"<html>toe</html>");
 			addField("Electricity Output:", outputLabel, 

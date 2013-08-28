@@ -23,7 +23,7 @@ public final class MutableElectricityElement extends
 	 */
 	@Override
 	public ElectricityElement createElement() {
-		return new DefaultElectricityElement(getTemplate(), getName(), 
+		return new DefaultElectricityElement(getTemplateName(), getName(), 
 				getOrigin(), getDestination(),
 				getLifecycleModel().createLifecycleModel(), getMaxElectricityProduction(), 
 				getInitialElectricityProduction(), 

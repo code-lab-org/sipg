@@ -4,8 +4,9 @@ import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.gui.DataFrame;
+import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -18,11 +19,9 @@ public class Player1 {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = CountryFactory.createSaudiCountry(
-				Arrays.asList(CityTemplate.INDUSTRIAL),
-				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM));
-
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator(new SaudiScenario2(
+				Arrays.asList(SaudiScenario2.INDUSTRIAL),
+				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM)));
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {

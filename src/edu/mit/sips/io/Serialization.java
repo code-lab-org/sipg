@@ -40,6 +40,8 @@ import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.scenario.ElementTemplate;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class Serialization.
@@ -104,6 +106,10 @@ public final class Serialization {
 				new InterfaceAdapter<PriceModel>());
 		gsonBuilder.registerTypeAdapter(DomesticProductionModel.class, 
 				new InterfaceAdapter<DomesticProductionModel>());
+		gsonBuilder.registerTypeAdapter(Scenario.class, 
+				new InterfaceAdapter<Scenario>());
+		gsonBuilder.registerTypeAdapter(ElementTemplate.class, 
+				new InterfaceAdapter<ElementTemplate>());
 	}
 	
 	private static Gson gson = gsonBuilder.create();
@@ -111,11 +117,11 @@ public final class Serialization {
 	/**
 	 * Serialize.
 	 *
-	 * @param country the country
+	 * @param scenario the scenario
 	 * @return the string
 	 */
-	public static String serialize(Country country) {
-		return getGson().toJson(country);
+	public static String serialize(Scenario scenario) {
+		return getGson().toJson(new ScenarioWrapper(scenario));
 	}
 	
 	/**
@@ -124,8 +130,9 @@ public final class Serialization {
 	 * @param json the json
 	 * @return the country
 	 */
-	public static Country deserialize(String json) {
-		Country country = getGson().fromJson(json, Country.class);
+	public static Scenario deserialize(String json) {
+		Scenario scenario = getGson().fromJson(json, ScenarioWrapper.class).scenario;
+		Country country = scenario.getCountry();
 		recursiveReplaceCircularReferences(country);
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local){
 			List<? extends AgricultureElement> elements = ((AgricultureSystem.Local)country.getAgricultureSystem()).getInternalElements();
@@ -133,7 +140,7 @@ public final class Serialization {
 				((AgricultureSystem.Local)country.getAgricultureSystem()).removeElement(element);
 				MutableAgricultureElement mutable = (MutableAgricultureElement) element.getMutableElement();
 				MutableAgricultureElement template = (MutableAgricultureElement) 
-						element.getTemplate().createElement(
+						scenario.getTemplate(element.getTemplateName()).createElement(
 								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
 								element.getOrigin(), element.getDestination()).getMutableElement();
 				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
@@ -155,7 +162,7 @@ public final class Serialization {
 				((WaterSystem.Local)country.getWaterSystem()).removeElement(element);
 				MutableWaterElement mutable = (MutableWaterElement) element.getMutableElement();
 				MutableWaterElement template = (MutableWaterElement) 
-						element.getTemplate().createElement(
+						scenario.getTemplate(element.getTemplateName()).createElement(
 								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
 								element.getOrigin(), element.getDestination()).getMutableElement();
 				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
@@ -182,7 +189,7 @@ public final class Serialization {
 
 				MutableElectricityElement mutable = (MutableElectricityElement) element.getMutableElement();
 				MutableElectricityElement template = (MutableElectricityElement) 
-						element.getTemplate().createElement(
+						scenario.getTemplate(element.getTemplateName()).createElement(
 								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
 								element.getOrigin(), element.getDestination()).getMutableElement();
 				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
@@ -207,7 +214,7 @@ public final class Serialization {
 				((PetroleumSystem.Local)country.getPetroleumSystem()).removeElement(element);
 				MutablePetroleumElement mutable = (MutablePetroleumElement) element.getMutableElement();
 				MutablePetroleumElement template = (MutablePetroleumElement) 
-						element.getTemplate().createElement(
+						scenario.getTemplate(element.getTemplateName()).createElement(
 								((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
 								element.getOrigin(), element.getDestination()).getMutableElement();
 				((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
@@ -225,7 +232,7 @@ public final class Serialization {
 				((PetroleumSystem.Local)country.getPetroleumSystem()).addElement(mutable.createElement());
 			}
 		}
-		return country;
+		return scenario;
 	}
 	
 	/**

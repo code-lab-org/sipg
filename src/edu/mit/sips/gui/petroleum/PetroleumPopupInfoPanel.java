@@ -48,15 +48,15 @@ public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel {
 				JLabel.RIGHT);
 
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxPetroleumProduction() > 0) {
 			addField("Petroleum Production:", productionLabel, 
 					"<html>m<sup>3</sup></html>");
 			addField("Land Use:", withdrawalsLabel, 
 					"<html>m<sup>3</sup></html>");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxPetroleumInput() > 0) {
 			addField("Petroleum Input:", inputLabel, 
 					"<html>m<sup>3</sup></html>");
 			addField("Petroleum Output:", outputLabel, 

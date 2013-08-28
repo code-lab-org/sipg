@@ -26,7 +26,6 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.DefaultLifecycleModel;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
@@ -39,6 +38,7 @@ import edu.mit.sips.gui.electricity.ElectricityElementPanel;
 import edu.mit.sips.gui.petroleum.PetroleumElementPanel;
 import edu.mit.sips.gui.water.WaterElementPanel;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class ElementPanel.
@@ -72,10 +72,10 @@ public class ElementPanel extends JPanel {
 	/**
 	 * Instantiates a new element panel.
 	 *
-	 * @param city the city
+	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public ElementPanel(Country country, final MutableInfrastructureElement element) {
+	public ElementPanel(final Scenario scenario, final MutableInfrastructureElement element) {
 		this.element = element;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
@@ -109,17 +109,18 @@ public class ElementPanel extends JPanel {
 		c.gridx--;
 		c.gridwidth = 1;
 		
-		originCombo = new JComboBox(country.getCities().toArray());
+		originCombo = new JComboBox(scenario.getCountry().getCities().toArray());
 		originCombo.setRenderer(cityRenderer);
-		originCombo.setSelectedItem(country.getCity(element.getOrigin()));
+		originCombo.setSelectedItem(scenario.getCountry().getCity(element.getOrigin()));
 		originCombo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if(originCombo.getSelectedItem() instanceof City) {
 					element.setOrigin(((City)originCombo.getSelectedItem()).getName());
 				}
-				if(element.getTemplate() != null 
-						&& !element.getTemplate().isTransport()) {
+				if(element.getTemplateName() != null 
+						&& scenario.getTemplate(element.getTemplateName()) != null
+						&& !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 					destinationCombo.setSelectedItem(originCombo.getSelectedItem());
 				}
 			}
@@ -128,9 +129,9 @@ public class ElementPanel extends JPanel {
 		
 		c.gridy--;
 		c.gridx = 3;
-		destinationCombo = new JComboBox(country.getCities().toArray());
+		destinationCombo = new JComboBox(scenario.getCountry().getCities().toArray());
 		destinationCombo.setRenderer(cityRenderer);
-		destinationCombo.setSelectedItem(country.getCity(element.getDestination()));
+		destinationCombo.setSelectedItem(scenario.getCountry().getCity(element.getDestination()));
 		destinationCombo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -157,10 +158,11 @@ public class ElementPanel extends JPanel {
 		defaultElementPanel.add(lifecycleModelContainer, c);
 		
 		// set input enabled state
-		destinationCombo.setEnabled(element.getTemplate() == null 
-				|| element.getTemplate().isTransport());
-		selectLifecycleModel.setEnabled(element.getTemplate()  == null);
-		lifecycleModelPanel.setTemplateMode(element.getTemplate());
+		destinationCombo.setEnabled(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| scenario.getTemplate(element.getTemplateName()).isTransport());
+		selectLifecycleModel.setEnabled(element.getTemplateName()  == null);
+		lifecycleModelPanel.setTemplateMode(element.getTemplateName());
 	}
 	
 	private final Action selectLifecycleModel = 
@@ -226,19 +228,20 @@ public class ElementPanel extends JPanel {
 	/**
 	 * Creates a new ElementPanel object.
 	 *
+	 * @param scenario the scenario
 	 * @param element the element
 	 * @return the element panel
 	 */
-	public static ElementPanel createElementPanel(Country country, 
+	public static ElementPanel createElementPanel(Scenario scenario, 
 			MutableInfrastructureElement element) {
 		if(element instanceof MutableAgricultureElement) {
-			return new AgricultureElementPanel(country, (MutableAgricultureElement)element);
+			return new AgricultureElementPanel(scenario, (MutableAgricultureElement)element);
 		} else if(element instanceof MutableWaterElement) {
-			return new WaterElementPanel(country, (MutableWaterElement)element);
+			return new WaterElementPanel(scenario, (MutableWaterElement)element);
 		} else if(element instanceof MutablePetroleumElement) {
-			return new PetroleumElementPanel(country, (MutablePetroleumElement)element);
+			return new PetroleumElementPanel(scenario, (MutablePetroleumElement)element);
 		} else if(element instanceof MutableElectricityElement) {
-			return new ElectricityElementPanel(country, (MutableElectricityElement)element);
+			return new ElectricityElementPanel(scenario, (MutableElectricityElement)element);
 		} else {
 			throw new IllegalArgumentException("Element panel not implemented.");
 		}

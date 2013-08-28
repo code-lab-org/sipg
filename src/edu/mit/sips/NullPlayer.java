@@ -4,8 +4,9 @@ import java.util.ArrayList;
 
 import javax.swing.SwingUtilities;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.gui.DataFrame;
+import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -18,10 +19,8 @@ public class NullPlayer {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Country ksa = CountryFactory.createSaudiCountry(
-				new ArrayList<CityTemplate>(), new ArrayList<Sector>());
-
-		final Simulator simulator = new Simulator(ksa);
+		final Simulator simulator = new Simulator(new SaudiScenario2(new ArrayList<String>(), 
+				new ArrayList<Sector>()));
 		//simulator.addUpdateListener(new ConsoleLogger());
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {

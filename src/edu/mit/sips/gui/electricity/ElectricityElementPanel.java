@@ -10,10 +10,10 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.electricity.MutableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class ElectricityElementPanel.
@@ -35,12 +35,12 @@ public class ElectricityElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new electricity element panel.
 	 *
-	 * @param country the country
+	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public ElectricityElementPanel(Country country, 
+	public ElectricityElementPanel(Scenario scenario, 
 			final MutableElectricityElement element) {
-		super(country, element);
+		super(scenario, element);
 		
 		maxElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityProductionText.setColumns(10);
@@ -204,8 +204,9 @@ public class ElectricityElementPanel extends ElementPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 				addInput(elementPanel, c, "Max Electricity Production", 
 						maxElectricityProductionText, "toe/year");
@@ -218,8 +219,9 @@ public class ElectricityElementPanel extends ElementPanel {
 				addInput(elementPanel, c, "Variable Cost of Production",
 						variableOperationsCostOfElectricityProductionText, "SAR/toe");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Electricity Input", 
@@ -233,13 +235,13 @@ public class ElectricityElementPanel extends ElementPanel {
 		}
 
 		// set input enabled state
-		maxElectricityProductionText.setEnabled(element.getTemplate() == null);
-		petroleumIntensityOfElectricityProductionText.setEnabled(element.getTemplate() == null);
-		waterIntensityOfElectricityProductionText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfElectricityProductionText.setEnabled(element.getTemplate() == null);
-		maxElectricityInputText.setEnabled(element.getTemplate() == null);
-		distributionEfficiencyText.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfElectricityDistributionText.setEnabled(element.getTemplate() == null);
+		maxElectricityProductionText.setEnabled(element.getTemplateName() == null);
+		petroleumIntensityOfElectricityProductionText.setEnabled(element.getTemplateName() == null);
+		waterIntensityOfElectricityProductionText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfElectricityProductionText.setEnabled(element.getTemplateName() == null);
+		maxElectricityInputText.setEnabled(element.getTemplateName() == null);
+		distributionEfficiencyText.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfElectricityDistributionText.setEnabled(element.getTemplateName() == null);
 	}
 	
 }

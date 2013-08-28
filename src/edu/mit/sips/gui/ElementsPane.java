@@ -30,7 +30,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureElement;
@@ -53,6 +52,7 @@ import edu.mit.sips.gui.comp.ElementTreeNode;
 import edu.mit.sips.gui.comp.NetworkTreeModel;
 import edu.mit.sips.gui.comp.SocietyTreeNode;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.scenario.ElementTemplate;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -325,8 +325,8 @@ public class ElementsPane extends JPanel {
 	 * Adds the element template dialog.
 	 */
 	private void addElementTemplateDialog() {
-		JList templateList = new JList(ElementTemplate.getTemplates(
-				simulator.getCountry().getLocalSectors()).toArray(new ElementTemplate[0]));
+		JList templateList = new JList(simulator.getScenario().getTemplates(
+				simulator.getScenario().getCountry().getLocalSectors()).toArray(new ElementTemplate[0]));
 		templateList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		templateList.setCellRenderer(templateRenderer);
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, new JScrollPane(templateList), 
@@ -336,7 +336,7 @@ public class ElementsPane extends JPanel {
 				City selectedCity = (City)elementsTreeModel.getSociety(
 						elementsTree.getSelectionPath());
 				if(selectedCity == null) {
-					selectedCity = simulator.getCountry().getCities().get(0);
+					selectedCity = simulator.getScenario().getCountry().getCities().get(0);
 				}
 				MutableInfrastructureElement element = template.createElement(
 						template.getTimeAvailable(), selectedCity.getName(), 
@@ -379,7 +379,7 @@ public class ElementsPane extends JPanel {
 	 * Initialize.
 	 */
 	public void initialize() {
-		elementsTreeModel.setState(simulator.getCountry());
+		elementsTreeModel.setState(simulator.getScenario().getCountry());
 		editElement.setEnabled(false);
 		editElementOperations.setEnabled(false);
 		removeElement.setEnabled(false);
@@ -393,7 +393,7 @@ public class ElementsPane extends JPanel {
 	 */
 	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementPanel.createElementPanel(simulator.getCountry(), mutableElement), 
+				ElementPanel.createElementPanel(simulator.getScenario(), mutableElement), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 			try {
 				return mutableElement.createElement();
@@ -458,7 +458,7 @@ public class ElementsPane extends JPanel {
 						"Element was not a known element type.");
 			}
 			elementsTreeModel.elementRemoved(element);
-			if(simulator.getCountry().getInternalElements().contains(newElement)) {
+			if(simulator.getScenario().getCountry().getInternalElements().contains(newElement)) {
 				elementsTreeModel.elementAdded(newElement);
 				elementsTree.setSelectionPath(elementsTreeModel.getPath(newElement));
 			}

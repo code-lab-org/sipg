@@ -1,6 +1,5 @@
 package edu.mit.sips.core.water;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 
@@ -12,7 +11,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	/**
 	 * Instantiates a new distribution water element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -25,21 +24,23 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @return the water element
 	 */
 	public static DefaultWaterElement createDistributionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double distributionEfficiency,
 			double maxWaterInput, double initialWaterInput, 
 			double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
-		return new DefaultWaterElement(template, name, origin, destination, 
+		return new DefaultWaterElement(templateName, name, origin, destination, 
 				lifecycleModel, 0, 0, 0, 0, 0, false,
 				distributionEfficiency, maxWaterInput, initialWaterInput,
 				electricalIntensityOfWaterDistribution,
 				variableOperationsCostOfWaterDistribution);
 	}
+	
 	/**
 	 * Instantiates a new fixed water element.
 	 *
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -49,17 +50,18 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @param initialWaterProduction the initial water production
 	 * @param electricalIntensityOfWaterProduction the electrical intensity of water production
 	 * @param variableOperationsCostOfWaterProduction the variable operations cost of water production
+	 * @param coastalAccessRequired the coastal access required
 	 * @return the water element
 	 */
 	public static DefaultWaterElement createProductionElement(
-			ElementTemplate template, String name, 
+			String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfWaterProduction,
 			double maxWaterProduction, double initialWaterProduction, 
 			double electricalIntensityOfWaterProduction,
 			double variableOperationsCostOfWaterProduction,
 			boolean coastalAccessRequired) {
-		return new DefaultWaterElement(template, name, origin, 
+		return new DefaultWaterElement(templateName, name, origin, 
 				destination, lifecycleModel, 
 				reservoirIntensityOfWaterProduction, maxWaterProduction, initialWaterProduction, 
 				electricalIntensityOfWaterProduction,
@@ -106,7 +108,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	/**
 	 * Instantiates a new water element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -116,13 +118,14 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @param initialWaterProduction the initial water production
 	 * @param electricalIntensityOfWaterProduction the electrical intensity of water production
 	 * @param variableOperationsCostOfWaterProduction the variable operations cost of water production
+	 * @param coastalAccessRequired the coastal access required
 	 * @param distributionEfficiency the distribution efficiency
 	 * @param maxWaterInput the max water input
 	 * @param initialWaterInput the initial water input
 	 * @param electricalIntensityOfWaterDistribution the electrical intensity of water distribution
 	 * @param variableOperationsCostOfWaterDistribution the variable operations cost of water distribution
 	 */
-	protected DefaultWaterElement(ElementTemplate template, String name, 
+	protected DefaultWaterElement(String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double reservoirIntensityOfWaterProduction,
 			double maxWaterProduction, double initialWaterProduction, 
@@ -132,7 +135,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double distributionEfficiency, double maxWaterInput, 
 			double initialWaterInput, double electricalIntensityOfWaterDistribution,
 			double variableOperationsCostOfWaterDistribution) {
-		super(template, name, origin, destination, lifecycleModel);
+		super(templateName, name, origin, destination, lifecycleModel);
 		
 		// Validate reservoir efficiency.
 		if(reservoirIntensityOfWaterProduction < 0) {

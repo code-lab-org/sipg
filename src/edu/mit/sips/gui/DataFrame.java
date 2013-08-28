@@ -137,7 +137,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					FileWriter fw = new FileWriter(fileChooser.getSelectedFile());
 					BufferedWriter bw = new BufferedWriter(fw);
 					// write the JSON-ified experiment to file
-					bw.write(Serialization.serialize(simulator.getCountry()));
+					bw.write(Serialization.serialize(simulator.getScenario()));
 					// flush and close writers
 					bw.flush();
 					bw.close();
@@ -302,7 +302,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			simulator.getConnection().addConnectionListener(connectionToolbar);
 			
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			societyPane = new SocietyPane(this.simulator.getCountry());
+			societyPane = new SocietyPane(this.simulator.getScenario().getCountry());
 			societyPane.initialize();
 			this.simulator.addUpdateListener(societyPane);
 			elementsPane = new ElementsPane(simulator);

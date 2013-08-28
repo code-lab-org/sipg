@@ -48,15 +48,15 @@ public class AgriculturePopupInfoPanel extends DefaultPopupInfoPanel {
 				JLabel.RIGHT);
 
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxLandArea() > 0) {
 			addField("Food Production:", productionLabel, 
 					"<html>kcal/year</html>");
 			addField("Land Use:", landLabel, 
 					"<html>km<sup>2</sup></html>");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| element.getMaxFoodInput() > 0) {
 			addField("Food Input:", inputLabel, 
 					"<html>kcal/year</html>");
 			addField("Food Output:", outputLabel, 

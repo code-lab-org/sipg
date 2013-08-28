@@ -80,7 +80,7 @@ public class Country extends DefaultSociety implements Society {
 	/**
 	 * Instantiates a new country.
 	 */
-	protected Country() {
+	public Country() {
 		initialFunds = 0;
 	}
 	

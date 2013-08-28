@@ -1,4 +1,4 @@
-package edu.mit.sips;
+package edu.mit.sips.scenario;
 
 /**
  * The Enum Sector.

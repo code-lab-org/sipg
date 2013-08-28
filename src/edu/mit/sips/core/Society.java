@@ -3,12 +3,12 @@ package edu.mit.sips.core;
 import java.util.Collection;
 import java.util.List;
 
-import edu.mit.sips.Sector;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.scenario.Sector;
 
 /**
  * The Interface Society.

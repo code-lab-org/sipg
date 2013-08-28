@@ -2,7 +2,6 @@ package edu.mit.sips.gui;
 
 import javax.swing.JPanel;
 
-import edu.mit.sips.ElementTemplate;
 import edu.mit.sips.core.DefaultLifecycleModel;
 import edu.mit.sips.core.MutableLifecycleModel;
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
@@ -22,9 +21,9 @@ public class LifecycleModelPanel extends JPanel {
 	/**
 	 * Sets the template mode.
 	 *
-	 * @param template the new template mode
+	 * @param templateName the new template mode
 	 */
-	public void setTemplateMode(ElementTemplate template) {
+	public void setTemplateMode(String templateName) {
 		
 	}
 	

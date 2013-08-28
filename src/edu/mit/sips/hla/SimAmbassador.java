@@ -161,7 +161,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			AttributeNotDefined, ObjectInstanceNotKnown, 
 			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
 		for(int i = 0; i < numberIterations; i++) {
-			for(City city : simulator.getCountry().getCities()) {
+			for(City city : simulator.getScenario().getCountry().getCities()) {
 				// fire attribute change events to manually update hla data objects
 				if(city.getSocialSystem() instanceof SocialSystem.Local) {
 					city.getSocialSystem().fireAttributeChangeEvent(
@@ -485,11 +485,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		syncAnnounced.set(false);
 		
-		if(simulator.getCountry().getAgricultureSystem() instanceof AgricultureSystem.Local) {
+		if(simulator.getScenario().getCountry().getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			// if country includes a local national agriculture system
 			// publish its attributes
 			HLAagricultureSystem.publishAll(rtiAmbassador);
-			for(City city : simulator.getCountry().getCities()) {
+			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 					AgricultureSystem.Local localSystem = 
 							(AgricultureSystem.Local) city.getAgricultureSystem();
@@ -504,11 +504,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAagricultureSystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getCountry().getWaterSystem() instanceof WaterSystem.Local) {
+		if(simulator.getScenario().getCountry().getWaterSystem() instanceof WaterSystem.Local) {
 			// if country includes a local national water system
 			// publish its attributes
 			HLAwaterSystem.publishAll(rtiAmbassador);
-			for(City city : simulator.getCountry().getCities()) {
+			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getWaterSystem() instanceof WaterSystem.Local) {
 					WaterSystem.Local localSystem = 
 							(WaterSystem.Local) city.getWaterSystem();
@@ -523,11 +523,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAwaterSystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getCountry().getElectricitySystem() instanceof ElectricitySystem.Local) {
+		if(simulator.getScenario().getCountry().getElectricitySystem() instanceof ElectricitySystem.Local) {
 			// if country includes a local national electricity system
 			// publish its attributes
 			HLAelectricitySystem.publishAll(rtiAmbassador);
-			for(City city : simulator.getCountry().getCities()) {
+			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
 					ElectricitySystem.Local localSystem = 
 							(ElectricitySystem.Local) city.getElectricitySystem();
@@ -542,11 +542,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		HLAelectricitySystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getCountry().getPetroleumSystem() instanceof PetroleumSystem.Local) {
+		if(simulator.getScenario().getCountry().getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			// if country includes a local national petroleum system
 			// publish its attributes
 			HLApetroleumSystem.publishAll(rtiAmbassador);
-			for(City city : simulator.getCountry().getCities()) {
+			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 					PetroleumSystem.Local localSystem = 
 							(PetroleumSystem.Local) city.getPetroleumSystem();
@@ -563,7 +563,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 
 		// always publish city social system attributes
 		HLAsocialSystem.publishAll(rtiAmbassador);
-		for(City city : simulator.getCountry().getCities()) {
+		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getSocialSystem() instanceof SocialSystem.Local) {
 				SocialSystem.Local localSystem = 
 						(SocialSystem.Local) city.getSocialSystem();
@@ -806,7 +806,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
 							system.setAgricultureSystem((AgricultureSystem.Remote)
-									simulator.getCountry().getSociety(
+									simulator.getScenario().getCountry().getSociety(
 											system.getSocietyName()).getAgricultureSystem());
 						}
 						// simulator.fireUpdateEvent(time);
@@ -816,7 +816,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
 							system.setWaterSystem((WaterSystem.Remote)
-									simulator.getCountry().getSociety(
+									simulator.getScenario().getCountry().getSociety(
 											system.getSocietyName()).getWaterSystem());
 						}
 						// simulator.fireUpdateEvent(time);
@@ -826,7 +826,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
 							system.setElectricitySystem((ElectricitySystem.Remote)
-									simulator.getCountry().getSociety(
+									simulator.getScenario().getCountry().getSociety(
 											system.getSocietyName()).getElectricitySystem());
 						}
 						// simulator.fireUpdateEvent(time);
@@ -836,7 +836,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
 							system.setPetroleumSystem((PetroleumSystem.Remote)
-									simulator.getCountry().getSociety(
+									simulator.getScenario().getCountry().getSociety(
 											system.getSocietyName()).getPetroleumSystem());
 						}
 						// simulator.fireUpdateEvent(time);
@@ -846,7 +846,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 						if(system.getInfrastructureSystem().getSociety() == null
 								&& !system.getSocietyName().isEmpty()) {
 							system.setSocialSystem((SocialSystem.Remote)
-									simulator.getCountry().getSociety(
+									simulator.getScenario().getCountry().getSociety(
 											system.getSocietyName()).getSocialSystem());
 						}
 						// simulator.fireUpdateEvent(time);

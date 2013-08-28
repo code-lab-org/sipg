@@ -23,7 +23,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	 */
 	@Override
 	public PetroleumElement createElement() {
-		return new DefaultPetroleumElement(getTemplate(), getName(), 
+		return new DefaultPetroleumElement(getTemplateName(), getName(), 
 				getOrigin(), getDestination(),
 				getLifecycleModel().createLifecycleModel(), getReservoirIntensityOfPetroleumProduction(),
 				getMaxPetroleumProduction(), getInitialPetroleumProduction(), 

@@ -15,11 +15,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class AgricultureElementPanel.
@@ -43,12 +43,12 @@ public class AgricultureElementPanel extends ElementPanel {
 	/**
 	 * Instantiates a new agriculture element panel.
 	 *
-	 * @param country the country
+	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public AgricultureElementPanel(Country country, 
+	public AgricultureElementPanel(Scenario scenario, 
 			final MutableAgricultureElement element) {
-		super(country, element);
+		super(scenario, element);
 		
 		maxLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxLandAreaText.setColumns(10);
@@ -208,8 +208,9 @@ public class AgricultureElementPanel extends ElementPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 
-		if(element.getTemplate() == null 
-				|| !element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Land Area", 
 					maxLandAreaText, "<html>km<sup>2</sup></html>");
@@ -244,8 +245,9 @@ public class AgricultureElementPanel extends ElementPanel {
 			productPanel.add(new JLabel("<html>Initial people</html>"));
 			addInput(elementPanel, c, "", productPanel, "");
 		}
-		if(element.getTemplate() == null 
-				|| element.getTemplate().isTransport()) {
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()) == null
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Food Input", 
@@ -259,10 +261,10 @@ public class AgricultureElementPanel extends ElementPanel {
 		}
 
 		// set input enabled state
-		maxLandAreaText.setEnabled(element.getTemplate() == null);
-		maxFoodInput.setEnabled(element.getTemplate() == null);
-		productCombo.setEnabled(element.getTemplate() == null);
-		distributionEfficiency.setEnabled(element.getTemplate() == null);
-		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplate() == null);
+		maxLandAreaText.setEnabled(element.getTemplateName() == null);
+		maxFoodInput.setEnabled(element.getTemplateName() == null);
+		productCombo.setEnabled(element.getTemplateName() == null);
+		distributionEfficiency.setEnabled(element.getTemplateName() == null);
+		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplateName() == null);
 	}
 }

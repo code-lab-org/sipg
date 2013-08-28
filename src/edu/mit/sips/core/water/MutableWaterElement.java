@@ -24,7 +24,7 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 	 */
 	@Override
 	public WaterElement createElement() {
-		return new DefaultWaterElement(getTemplate(), getName(), getOrigin(), 
+		return new DefaultWaterElement(getTemplateName(), getName(), getOrigin(), 
 				getDestination(), getLifecycleModel().createLifecycleModel(), 
 				getReservoirIntensityOfWaterProduction(),
 				getMaxWaterProduction(), getInitialWaterProduction(), 
