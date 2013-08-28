@@ -87,7 +87,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Electricity consumed (MWh) by the water system.</semantics>
+                        <semantics>Electricity consumed (toe) by the water system.</semantics>
                     </attribute>
                     <attribute>
                         <name>WaterDomesticPrice</name>
@@ -140,7 +140,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic food (SAR/GJ).</semantics>
+                        <semantics>Unit price of domestic food (SAR/kcal).</semantics>
                     </attribute>
                     <attribute>
                         <name>FoodImportPrice</name>
@@ -152,7 +152,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of import food (SAR/GJ).</semantics>
+                        <semantics>Unit price of import food (SAR/kcal).</semantics>
                     </attribute>
                     <attribute>
                         <name>FoodExportPrice</name>
@@ -164,7 +164,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of export food (SAR/GJ).</semantics>
+                        <semantics>Unit price of export food (SAR/kcal).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -193,7 +193,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Petroleum consumed (bbl) by the electricity system.</semantics>
+                        <semantics>Petroleum consumed (toe) by the electricity system.</semantics>
                     </attribute>
                     <attribute>
                         <name>ElectricityDomesticPrice</name>
@@ -205,7 +205,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic electricity (SAR/MWh).</semantics>
+                        <semantics>Unit price of domestic electricity (SAR/toe).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -234,7 +234,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic petroleum (SAR/bbl).</semantics>
+                        <semantics>Unit price of domestic petroleum (SAR/toe).</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumImportPrice</name>
@@ -246,7 +246,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of import petroleum (SAR/bbl).</semantics>
+                        <semantics>Unit price of import petroleum (SAR/toe).</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumExportPrice</name>
@@ -258,7 +258,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of export petroleum (SAR/bbl).</semantics>
+                        <semantics>Unit price of export petroleum (SAR/toe).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -287,7 +287,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Electricity consumed (MWh) by the social system.</semantics>
+                        <semantics>Electricity consumed (toe) by the social system.</semantics>
                     </attribute>
                     <attribute>
                         <name>FoodConsumption</name>
