@@ -11,6 +11,7 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
@@ -136,13 +137,29 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 		
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+		 */
+		@Override
+		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+			return CurrencyUnits.DenominatorUnits.year;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+		 */
+		@Override
+		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+			return CurrencyUnits.NumeratorUnits.sim;
+		}
+		
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
 		@Override
 		public double getDistributionExpense() {
 			return getFoodDomesticPrice() * getFoodInDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
 		 */
@@ -159,7 +176,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getDomesticProduction() {
 			return domesticProductionModel.getDomesticProduction(this);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
@@ -170,7 +187,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			elements.addAll(getExternalElements());
 			return Collections.unmodifiableList(elements);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
 		 */
@@ -178,7 +195,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getExportRevenue() {
 			return getFoodExportPrice() * getFoodExport();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
 		 */
@@ -226,7 +243,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					- getFoodOutDistribution()
 					- getSociety().getTotalFoodDemand());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
 		 */
@@ -245,7 +262,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					- getFoodInDistribution()
 					- getFoodProduction());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
 		 */
@@ -281,6 +298,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return distribution;
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 		 */
@@ -292,7 +310,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodProduction()
 		 */
@@ -304,8 +322,23 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return foodProduction;
 		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
+		 */
+		@Override
+		public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
 
-
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+		 */
+		@Override
+		public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 		 */
@@ -313,7 +346,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getImportExpense() {
 			return getFoodImportPrice() * getFoodImport();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
@@ -341,7 +374,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return landAreaUsed;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
 		 */
@@ -402,7 +435,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 		 */
@@ -440,22 +473,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public void tock() { }
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
-		 */
-		@Override
-		public DenominatorUnits getFoodUnitsDenominator() {
-			return FoodUnits.DenominatorUnits.day;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
-		 */
-		@Override
-		public NumeratorUnits getFoodUnitsNumerator() {
-			return FoodUnits.NumeratorUnits.kcal;
-		}
 	}
 	
 	/**
@@ -465,6 +482,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		private double waterConsumption;
 		private double domesticPrice, importPrice, exportPrice;
 		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+		 */
+		@Override
+		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+			return CurrencyUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+		 */
+		@Override
+		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+			return CurrencyUnits.NumeratorUnits.sim;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
 		 */
@@ -484,6 +517,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		public double getFoodImportPrice() {
 			return importPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
+		 */
+		@Override
+		public DenominatorUnits getFoodUnitsDenominator() {
+			return FoodUnits.DenominatorUnits.day;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+		 */
+		@Override
+		public NumeratorUnits getFoodUnitsNumerator() {
+			return FoodUnits.NumeratorUnits.kcal;
 		}
 
 		/* (non-Javadoc)
@@ -521,22 +570,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public void setWaterConsumption(double waterConsumption) {
 			this.waterConsumption = waterConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getDenominatorUnits()
-		 */
-		@Override
-		public DenominatorUnits getFoodUnitsDenominator() {
-			return FoodUnits.DenominatorUnits.day;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
-		 */
-		@Override
-		public NumeratorUnits getFoodUnitsNumerator() {
-			return FoodUnits.NumeratorUnits.kcal;
 		}
 	}
 }

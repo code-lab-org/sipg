@@ -17,12 +17,17 @@ import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.SpatialStatePanel;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 
-public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implements FoodUnitsOutput {
+/**
+ * The Class LocalAgricultureSystemPanel.
+ */
+public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implements FoodUnitsOutput, CurrencyUnitsOutput {
 	private static final long serialVersionUID = 569560127649283731L;
 
 	private final LinearIndicatorPanel localFoodIndicatorPanel;
@@ -33,6 +38,11 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 			FoodUnits.NumeratorUnits.GJ;
 	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
 			FoodUnits.DenominatorUnits.year;
+	
+	private final CurrencyUnits.NumeratorUnits currencyUnitsNumerator = 
+			CurrencyUnits.NumeratorUnits.Bsim;
+	private final CurrencyUnits.DenominatorUnits currencyUnitsDenominator = 
+			CurrencyUnits.DenominatorUnits.year;
 	
 	TimeSeriesCollection localFoodData = new TimeSeriesCollection();
 	TimeSeriesCollection foodProductCostData = new TimeSeriesCollection();
@@ -45,6 +55,11 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
 
+	/**
+	 * Instantiates a new local agriculture system panel.
+	 *
+	 * @param agricultureSystem the agriculture system
+	 */
 	public LocalAgricultureSystemPanel(AgricultureSystem.Local agricultureSystem) {
 		super(agricultureSystem);
 		
@@ -60,9 +75,12 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
 		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
 		
-		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Agriculture Revenue (SAR/year)", 
-				agricultureRevenue, null, agricultureNetRevenue));
+		addTab("Revenue",
+				Icons.REVENUE,
+				createStackedAreaChart("Agriculture Revenue ("
+						+ currencyUnitsNumerator.getAbbreviation() + "/"
+						+ currencyUnitsDenominator.getAbbreviation() + ")",
+						agricultureRevenue, null, agricultureNetRevenue));
 		addTab("Source",
 				Icons.AGRICULTURE_SOURCE,
 				createStackedAreaChart("Food Source (" + foodUnitsNumerator
@@ -74,7 +92,8 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Food Consumption Per Capita (kcal/day/person)", 
+				"Food Consumption Per Capita (" + agricultureSystem.getFoodUnitsNumerator() 
+				+ "/" + agricultureSystem.getFoodUnitsDenominator() + "/person)", 
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset));
@@ -128,6 +147,9 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		return systems;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
+	 */
 	@Override
 	public void initialize() {
 		localFoodIndicatorPanel.initialize();
@@ -166,6 +188,9 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		agricultureStatePanel.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
+	 */
 	@Override
 	public void update(int year) {
 		updateSeriesCollection(localFoodData, getSociety().getName(), 
@@ -219,25 +244,35 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 				FoodUnits.convert(getSociety().getSocialSystem().getFoodConsumption(),
 						getSociety().getSocialSystem(), this));
 		updateSeries(agricultureRevenue, "Capital", year, 
-				-getAgricultureSystem().getCapitalExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getCapitalExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Operations", year, 
-				-getAgricultureSystem().getOperationsExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getOperationsExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Decommission", year, 
-				-getAgricultureSystem().getDecommissionExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getDecommissionExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Consumption", year, 
-				-getAgricultureSystem().getConsumptionExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getConsumptionExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "In-Distribution", year, 
-				-getAgricultureSystem().getDistributionExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getDistributionExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Import", year, 
-				-getAgricultureSystem().getImportExpense());
+				CurrencyUnits.convert(-getAgricultureSystem().getImportExpense(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Out-Distribution", year, 
-				getAgricultureSystem().getDistributionRevenue());
+				CurrencyUnits.convert(getAgricultureSystem().getDistributionRevenue(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Export", year, 
-				getAgricultureSystem().getExportRevenue());
+				CurrencyUnits.convert(getAgricultureSystem().getExportRevenue(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Sales", year, 
-				getAgricultureSystem().getSalesRevenue());
+				CurrencyUnits.convert(getAgricultureSystem().getSalesRevenue(),
+						getAgricultureSystem(), this));
 		updateSeries(agricultureNetRevenue, "Net Revenue", year, 
-				getAgricultureSystem().getCashFlow());
+				CurrencyUnits.convert(getAgricultureSystem().getCashFlow(),
+						getAgricultureSystem(), this));
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getMaxLandArea() > 0) {
@@ -275,6 +310,22 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		updateSeries(foodSourceData, "Import", year, 
 				FoodUnits.convert(getAgricultureSystem().getFoodImport(),
 						getAgricultureSystem(), this));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+		return currencyUnitsNumerator;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+		return currencyUnitsDenominator;
 	}
 
 }

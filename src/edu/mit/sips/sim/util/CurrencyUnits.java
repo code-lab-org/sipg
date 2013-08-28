@@ -1,22 +1,26 @@
 package edu.mit.sips.sim.util;
 
+
 /**
- * The Class AgricultureUnits.
+ * The Class CurrencyUnits.
  */
-public abstract class FoodUnits {
-	
+public class CurrencyUnits {
+
 	/**
 	 * The Enum NumeratorUnits.
 	 */
 	public static enum NumeratorUnits implements Units {
-		kcal("kilocalories","kcal"), 
-		GJ("gigajoules","GJ");
+		sim("Simoleon","\u00A7"), 
+		ksim("thousand Simoleon","\u00A7k"), 
+		Msim("million Simoleon","\u00A7M"),
+		Bsim("billion Simoleon","\u00A7B"),
+		Tsim("trillion Simoleon", "\u00A7T");
 		
 		private final String name;
 		private final String abbreviation;
 		
 		/**
-		 * Instantiates a new numerator units.
+		 * Instantiates a new denominator units.
 		 *
 		 * @param name the name
 		 * @param abbreviation the abbreviation
@@ -25,7 +29,7 @@ public abstract class FoodUnits {
 			this.name = name;
 			this.abbreviation = abbreviation;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see java.lang.Enum#toString()
 		 */
@@ -40,7 +44,7 @@ public abstract class FoodUnits {
 		 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
 		 */
 		public String getAbbreviation() { return abbreviation; }
-	};
+	}
 	
 	/**
 	 * The Enum DenominatorUnits.
@@ -80,7 +84,16 @@ public abstract class FoodUnits {
 	};
 	
 	private static final double day_year = 365.242;
-	private static final double kcal_GJ = 238902.957619;
+	private static final double sim_ksim = 1e3;
+	private static final double sim_Msim = 1e6;
+	private static final double sim_Bsim = 1e9;
+	private static final double sim_Tsim = 1e12;
+	private static final double ksim_Msim = 1e3;
+	private static final double ksim_Bsim = 1e6;
+	private static final double ksim_Tsim = 1e9;
+	private static final double Msim_Bsim = 1e3;
+	private static final double Msim_Tsim = 1e6;
+	private static final double Bsim_Tsim = 1e3;
 	
 	/**
 	 * Convert.
@@ -91,13 +104,13 @@ public abstract class FoodUnits {
 	 * @return the double
 	 */
 	public static double convert(double value, 
-			FoodUnitsOutput source, 
-			FoodUnitsOutput target) {
+			CurrencyUnitsOutput source, 
+			CurrencyUnitsOutput target) {
 		return convert(value, 
-				source.getFoodUnitsNumerator(), 
-				source.getFoodUnitsDenominator(), 
-				target.getFoodUnitsNumerator(), 
-				target.getFoodUnitsDenominator());
+				source.getCurrencyUnitsNumerator(), 
+				source.getCurrencyUnitsDenominator(), 
+				target.getCurrencyUnitsNumerator(), 
+				target.getCurrencyUnitsDenominator());
 	}
 	
 	/**
@@ -117,22 +130,97 @@ public abstract class FoodUnits {
 			DenominatorUnits targetDenominatorUnits) {
 		double factor = 1;
 		switch(sourceNumeratorUnits) {
-		case GJ:
+		case sim:
 			switch(targetNumeratorUnits) {
-			case GJ:
+			case sim:
 				factor *= 1;
 				break;
-			case kcal:
-				factor *= kcal_GJ;
+			case ksim:
+				factor /= sim_ksim;
+				break;
+			case Msim:
+				factor /= sim_Msim;
+				break;
+			case Bsim:
+				factor /= sim_Bsim;
+				break;
+			case Tsim:
+				factor /= sim_Tsim;
 				break;
 			}
 			break;
-		case kcal:
+		case ksim:
 			switch(targetNumeratorUnits) {
-			case GJ:
-				factor /= kcal_GJ;
+			case sim:
+				factor *= sim_ksim;
 				break;
-			case kcal:
+			case ksim:
+				factor *= 1;
+				break;
+			case Msim:
+				factor /= ksim_Msim;
+				break;
+			case Bsim:
+				factor /= ksim_Bsim;
+				break;
+			case Tsim:
+				factor /= ksim_Tsim;
+				break;
+			}
+			break;
+		case Msim:
+			switch(targetNumeratorUnits) {
+			case sim:
+				factor *= sim_Msim;
+				break;
+			case ksim:
+				factor *= ksim_Msim;
+				break;
+			case Msim:
+				factor *= 1;
+				break;
+			case Bsim:
+				factor /= Msim_Bsim;
+				break;
+			case Tsim:
+				factor /= Msim_Tsim;
+				break;
+			}
+			break;
+		case Bsim:
+			switch(targetNumeratorUnits) {
+			case sim:
+				factor *= sim_Bsim;
+				break;
+			case ksim:
+				factor *= ksim_Bsim;
+				break;
+			case Msim:
+				factor *= Msim_Bsim;
+				break;
+			case Bsim:
+				factor *= 1;
+				break;
+			case Tsim:
+				factor /= Bsim_Tsim;
+				break;
+			}
+			break;
+		case Tsim:
+			switch(targetNumeratorUnits) {
+			case sim:
+				factor *= sim_Tsim;
+				break;
+			case ksim:
+				factor *= ksim_Tsim;
+				break;
+			case Msim:
+				factor *= Msim_Tsim;
+				break;
+			case Bsim:
+				factor *= Bsim_Tsim;
+				break;
+			case Tsim:
 				factor *= 1;
 				break;
 			}

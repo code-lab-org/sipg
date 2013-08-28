@@ -2,9 +2,8 @@ package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
 /**
  * The Class AgricultureElement.
@@ -168,13 +167,22 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDenominatorFoodUnits()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 	 */
 	@Override
-	public DenominatorUnits getFoodUnitsDenominator() {
-		return FoodUnits.DenominatorUnits.day;
+	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+		return CurrencyUnits.DenominatorUnits.year;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+		return CurrencyUnits.NumeratorUnits.sim;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDistributionEfficiency()
 	 */
@@ -186,7 +194,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodInput()
@@ -225,6 +232,22 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDenominatorFoodUnits()
+	 */
+	@Override
+	public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
+		return FoodUnits.DenominatorUnits.day;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
+	 */
+	@Override
+	public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
+		return FoodUnits.NumeratorUnits.kcal;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLandArea()
 	 */
 	@Override
@@ -235,7 +258,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodInput()
 	 */
@@ -259,7 +282,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
@@ -277,14 +300,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 				variableOperationsCostOfFoodDistribution);
 		return element;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
-	 */
-	@Override
-	public NumeratorUnits getFoodUnitsNumerator() {
-		return FoodUnits.NumeratorUnits.kcal;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getProduct()
@@ -293,7 +308,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	public AgricultureProduct getProduct() {
 		return product;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
 	 */
@@ -303,7 +318,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 				+ product.getCostIntensityOfLandUsed() * landArea 
 				+ variableOperationsCostOfFoodDistribution * foodInput;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getVariableOperationsCostOfFoodDistribution()
 	 */
@@ -323,7 +338,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
 	 */

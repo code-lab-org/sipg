@@ -3,12 +3,13 @@ package edu.mit.sips.core.agriculture;
 import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 
 /**
  * The Interface AgricultureSystem.
  */
-public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput {
+public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput, CurrencyUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */
