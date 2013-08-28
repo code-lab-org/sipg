@@ -6,7 +6,7 @@ import javax.swing.SwingUtilities;
 
 import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
-import edu.mit.sips.scenario.SaudiScenario1;
+import edu.mit.sips.scenario.SaudiScenario2;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
 
@@ -20,10 +20,10 @@ public class SuperPlayer {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Simulator simulator = new Simulator(new SaudiScenario1(
-				Arrays.asList(SaudiScenario1.INDUSTRIAL, 
-						SaudiScenario1.URBAN, 
-						SaudiScenario1.RURAL),
+		final Simulator simulator = new Simulator(new SaudiScenario2(
+				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
+						SaudiScenario2.URBAN, 
+						SaudiScenario2.RURAL),
 				Arrays.asList(Sector.AGRICULTURE,
 						Sector.WATER,
 						Sector.ELECTRICITY,
