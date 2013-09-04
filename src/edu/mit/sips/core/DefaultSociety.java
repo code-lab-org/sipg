@@ -21,7 +21,9 @@ import edu.mit.sips.scenario.Sector;
 /**
  * The Class DefaultSociety.
  */
-public abstract class DefaultSociety extends DefaultInfrastructureSystem implements Society {
+public abstract class DefaultSociety implements Society {
+	private String name;
+	private transient Society society;
 	private final List<? extends Society> nestedSocieties;
 	
 	private AgricultureSystem agricultureSystem;
@@ -34,7 +36,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 * Instantiates a new default society.
 	 */
 	protected DefaultSociety() {
-		super("Society");
+		this.name = "Society";
 		this.nestedSocieties = Collections.unmodifiableList(
 				new ArrayList<Society>());
 		this.agricultureSystem = new DefaultAgricultureSystem.Remote();
@@ -56,14 +58,19 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	 * @param nestedSocieties the nested societies
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
-	 * @param energySystem the energy system
+	 * @param electricitySystem the electricity system
+	 * @param petroleumSystem the petroleum system
 	 * @param socialSystem the social system
 	 */
 	public DefaultSociety(String name, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
 			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem, 
 			SocialSystem socialSystem) {
-		super(name);
+		// Validate name.
+		if(name == null) {
+			throw new IllegalArgumentException("Name cannot be null.");
+		}
+		this.name = name;
 		
 		// Validate cities.
 		if(nestedSocieties == null) {
@@ -119,6 +126,52 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+	 */
+	@Override
+	public double getDomesticProduction() {
+		double value = 0;
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			value += system.getDomesticProduction();
+		}
+		return value;
+	}
+
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getElectricitySystem()
+	 */
+	@Override
+	public ElectricitySystem getElectricitySystem() {
+		return electricitySystem;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getInfrastructureSystems()
+	 */
+	@Override
+	public List<? extends InfrastructureSystem> getInfrastructureSystems() {
+		return Arrays.asList(getAgricultureSystem(), getWaterSystem(), 
+				getElectricitySystem(), getPetroleumSystem(), getSocialSystem());
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getInternalElements()
+	 */
+	@Override
+	public List<InfrastructureElement> getInternalElements() {
+		List<InfrastructureElement> elements = 
+				new ArrayList<InfrastructureElement>();
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				elements.addAll(((InfrastructureSystem.Local)system)
+						.getInternalElements());
+			}
+		}
+		return Collections.unmodifiableList(elements);
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getLocalSectors()
 	 */
 	@Override
@@ -140,56 +193,11 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+	 * @see edu.mit.sips.core.Society#getName()
 	 */
 	@Override
-	public double getDomesticProduction() {
-		double value = 0;
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			value += system.getDomesticProduction();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getElectricitySystem()
-	 */
-	@Override
-	public ElectricitySystem getElectricitySystem() {
-		return electricitySystem;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getInfrastructureSystems()
-	 */
-	@Override
-	public List<? extends InfrastructureSystem> getInfrastructureSystems() {
-		return Arrays.asList(getAgricultureSystem(), getWaterSystem(), 
-				getElectricitySystem(), getPetroleumSystem(), getSocialSystem());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getPetroleumSystem()
-	 */
-	@Override
-	public PetroleumSystem getPetroleumSystem() {
-		return petroleumSystem;
-	}	
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getInternalElements()
-	 */
-	@Override
-	public List<InfrastructureElement> getInternalElements() {
-		List<InfrastructureElement> elements = 
-				new ArrayList<InfrastructureElement>();
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				elements.addAll(((InfrastructureSystem.Local)system)
-						.getInternalElements());
-			}
-		}
-		return Collections.unmodifiableList(elements);
+	public String getName() {
+		return name;
 	}
 
 	/* (non-Javadoc)
@@ -198,6 +206,14 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	@Override
 	public List<? extends Society> getNestedSocieties() {
 		return nestedSocieties;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getPetroleumSystem()
+	 */
+	@Override
+	public PetroleumSystem getPetroleumSystem() {
+		return petroleumSystem;
 	}
 
 	/* (non-Javadoc)
@@ -207,7 +223,7 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	public SocialSystem getSocialSystem() {
 		return socialSystem;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getSocieties()
 	 */
@@ -219,6 +235,14 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 			societies.addAll(society.getSocieties());
 		}
 		return societies;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getSociety()
+	 */
+	@Override
+	public final Society getSociety() {
+		return society;
 	}
 
 	/* (non-Javadoc)
@@ -281,36 +305,6 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() {
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				((InfrastructureSystem.Local)system).tick();
-			}
-		}
-		for(Society society : getNestedSocieties()) {
-			society.tick();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() {
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				((InfrastructureSystem.Local)system).tock();
-			}
-		}
-		for(Society society : getNestedSocieties()) {
-			society.tock();
-		}
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#setAgricultureSystem(edu.mit.sips.core.agriculture.AgricultureSystem)
 	 */
 	@Override
@@ -347,11 +341,49 @@ public abstract class DefaultSociety extends DefaultInfrastructureSystem impleme
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
+	 */
+	@Override
+	public void setSociety(Society society) {
+		this.society = society;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#setWaterSystem(edu.mit.sips.core.water.WaterSystem)
 	 */
 	@Override
 	public void setWaterSystem(WaterSystem.Remote waterSystem) {
 		waterSystem.setSociety(this);
 		this.waterSystem = waterSystem;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
+	@Override
+	public void tick() {
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				((InfrastructureSystem.Local)system).tick();
+			}
+		}
+		for(Society society : getNestedSocieties()) {
+			society.tick();
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			if(system instanceof InfrastructureSystem.Local) {
+				((InfrastructureSystem.Local)system).tock();
+			}
+		}
+		for(Society society : getNestedSocieties()) {
+			society.tock();
+		}
 	}
 }
