@@ -13,7 +13,7 @@ import edu.mit.sips.scenario.Sector;
 /**
  * The Interface Society.
  */
-public interface Society extends InfrastructureSystem, SimEntity {
+public interface Society extends SimEntity {
 	
 	/**
 	 * Gets the agriculture system.
@@ -23,26 +23,32 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	public AgricultureSystem getAgricultureSystem();
 	
 	/**
+	 * Gets the cash flow.
+	 *
+	 * @return the cash flow
+	 */
+	public double getCashFlow();
+	
+	/**
 	 * Gets the cities.
 	 *
 	 * @return the cities
 	 */
 	public List<City> getCities();
-	
+
 	/**
 	 * Gets the country.
 	 *
 	 * @return the country
 	 */
 	public Country getCountry();
-
+	
 	/**
 	 * Gets the electricity system.
 	 *
 	 * @return the electricity system
 	 */
 	public ElectricitySystem getElectricitySystem();
-	
 
 	/**
 	 * Gets the infrastructure systems.
@@ -64,6 +70,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the local sectors
 	 */
 	public Collection<Sector> getLocalSectors();
+	
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName();
 	
 	/**
 	 * Gets the nested societies.
@@ -92,6 +105,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @return the societies
 	 */
 	public List<? extends Society> getSocieties();
+	
+	/**
+	 * Gets the society.
+	 *
+	 * @return the society
+	 */
+	public Society getSociety();
 	
 	/**
 	 * Gets the total electricity demand.
@@ -155,6 +175,13 @@ public interface Society extends InfrastructureSystem, SimEntity {
 	 * @param socialSystem the new social system
 	 */
 	public void setSocialSystem(SocialSystem.Remote socialSystem);
+	
+	/**
+	 * Sets the society.
+	 *
+	 * @param society the new society
+	 */
+	public void setSociety(Society society);
 	
 	/**
 	 * Sets the water system.
