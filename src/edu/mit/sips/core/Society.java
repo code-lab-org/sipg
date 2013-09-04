@@ -189,11 +189,4 @@ public interface Society extends SimEntity {
 	 * @param waterSystem the new water system
 	 */
 	public void setWaterSystem(WaterSystem.Remote waterSystem);
-
-	/**
-	 * Gets the domestic production.
-	 *
-	 * @return the domestic production
-	 */
-	double getDomesticProduction();
 }

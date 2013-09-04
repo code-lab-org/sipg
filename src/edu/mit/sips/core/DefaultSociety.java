@@ -126,19 +126,6 @@ public abstract class DefaultSociety implements Society {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		double value = 0;
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			value += system.getDomesticProduction();
-		}
-		return value;
-	}
-
-	
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getElectricitySystem()
 	 */
 	@Override
