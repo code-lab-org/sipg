@@ -64,7 +64,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
-				new ArrayList<ElementTemplate>());
+				Arrays.asList(SaudiElementTemplate2.values()));
 	}
 
 	/**
@@ -77,8 +77,16 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createIndustrialCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(INDUSTRIAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(40e3, 0.5,
-								new ArrayList<AgricultureElement>(),
+						new DefaultAgricultureSystem.Local(8e3, 0.04,
+								Arrays.asList(
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1976, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996, INDUSTRIAL, INDUSTRIAL)
+										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
@@ -118,8 +126,23 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createRuralCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(RURAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(60e3, 0.5,
-								new ArrayList<AgricultureElement>(),
+						new DefaultAgricultureSystem.Local(15e3, 0.40,
+								Arrays.asList(
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1962, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1982, RURAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1982, RURAL, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, 2008, RURAL, RURAL)
+										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
@@ -158,8 +181,18 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createUrbanCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(URBAN, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(100e3, 0.5,
-								new ArrayList<AgricultureElement>(),
+						new DefaultAgricultureSystem.Local(10e3, 0.04,
+								Arrays.asList(
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1974, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, 1996, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, 1996, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, URBAN, URBAN)
+										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),

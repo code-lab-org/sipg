@@ -94,7 +94,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		costIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		costIntensityText.setColumns(10);
 		costIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		costIntensityText.setValue(element.getInitialLandArea());
+		costIntensityText.setValue(element.getCostIntensityOfLandUsed());
 		costIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -113,7 +113,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		foodIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		foodIntensityText.setColumns(10);
 		foodIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		foodIntensityText.setValue(element.getInitialLandArea());
+		foodIntensityText.setValue(element.getFoodIntensityOfLandUsed());
 		foodIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -132,7 +132,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		laborIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		laborIntensityText.setColumns(10);
 		laborIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		laborIntensityText.setValue(element.getInitialLandArea());
+		laborIntensityText.setValue(element.getLaborIntensityOfLandUsed());
 		laborIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -151,7 +151,7 @@ public class AgricultureElementPanel extends ElementPanel {
 		waterIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		waterIntensityText.setColumns(10);
 		waterIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		waterIntensityText.setValue(element.getInitialLandArea());
+		waterIntensityText.setValue(element.getWaterIntensityOfLandUsed());
 		waterIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
