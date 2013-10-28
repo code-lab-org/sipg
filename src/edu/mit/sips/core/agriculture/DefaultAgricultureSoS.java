@@ -274,6 +274,18 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborUsed()
+		 */
+		@Override
+		public long getLaborUsed() {
+			long value = 0;
+			for(AgricultureSystem.Local system : getNestedSystems()) {
+				value += system.getLaborUsed();
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLandAreaUsed()
 		 */
 		@Override
@@ -322,7 +334,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return Collections.unmodifiableList(systems);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getTotalFoodSupply()
 		 */
@@ -334,7 +346,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
 		 */

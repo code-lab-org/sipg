@@ -364,6 +364,18 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborUsed()
+		 */
+		@Override
+		public long getLaborUsed() {
+			long value = 0;
+			for(AgricultureElement e : getInternalElements()) {
+				value += e.getLaborIntensityOfLandUsed() * e.getLandArea();
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
 		 */
 		@Override
@@ -386,7 +398,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			} 
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -396,7 +408,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 					+ getFoodInDistribution() 
 					- getFoodOutDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */

@@ -101,6 +101,13 @@ public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput
 		public double getLandAreaUsed();
 		
 		/**
+		 * Gets the labor used.
+		 *
+		 * @return the labor used
+		 */
+		public long getLaborUsed();
+		
+		/**
 		 * Gets the local food fraction.
 		 *
 		 * @return the local food fraction

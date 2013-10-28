@@ -50,6 +50,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	TimeSeriesCollection foodConsumptionPerCapita = new TimeSeriesCollection();
 
 	DefaultTableXYDataset landAvailableDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset laborAvailableDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodSourceData = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
@@ -97,6 +98,8 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset));
+		addTab("Labor", Icons.LABOR, createStackedAreaChart(
+				"Available Labor (people)", laborAvailableDataset));
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/kcal/day)", 
@@ -158,6 +161,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		foodSupplyProfitData.removeAllSeries();
 		foodConsumptionPerCapita.removeAllSeries();
 		landAvailableDataset.removeAllSeries();
+		laborAvailableDataset.removeAllSeries();
 		foodUseData.removeAllSeries();
 		foodSourceData.removeAllSeries();
 		agricultureRevenue.removeAllSeries();
@@ -237,6 +241,21 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName(), 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
+			}
+		}
+		
+		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
+			updateSeries(laborAvailableDataset, "Labor", year, 
+					getAgricultureSystem().getLaborParticipationRate() 
+					* getAgricultureSystem().getSociety().getSocialSystem().getPopulation()
+					- getAgricultureSystem().getLaborUsed());
+
+		} else {
+			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
+				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName(), year,
+						nestedSystem.getLaborParticipationRate() 
+						* nestedSystem.getSociety().getSocialSystem().getPopulation()
+						- nestedSystem.getLaborUsed());
 			}
 		}
 	

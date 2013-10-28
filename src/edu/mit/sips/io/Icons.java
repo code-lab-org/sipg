@@ -36,6 +36,7 @@ public abstract class Icons {
 	public static final Icon COST_PRODUCTION = loadIcon("resources/fugue/tag-export.png");
 	public static final Icon COST_SUPPLY = loadIcon("resources/fugue/tag-import.png");
 	public static final Icon ARABLE_LAND = loadIcon("resources/fugue/microformats.png");
+	public static final Icon LABOR = loadIcon("resources/silk/group.png");
 	public static final Icon WATER_RESERVOIR = loadIcon("resources/fugue/water-reservoir.png");
 	public static final Icon PETROLEUM_RESERVOIR = loadIcon("resources/fugue/petroleum-reservoir.png");
 
