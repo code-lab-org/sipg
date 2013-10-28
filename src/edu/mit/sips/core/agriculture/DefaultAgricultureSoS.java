@@ -514,8 +514,8 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				// Minimize costs - most obvious cost is importing, though also 
 				// minimize transportation even if free.
 				costCoefficients[elements.indexOf(element)] = 
-						element.getProduct().getCostIntensityOfLandUsed() 
-						+ element.getProduct().getWaterIntensityOfLandUsed()
+						element.getCostIntensityOfLandUsed() 
+						+ element.getWaterIntensityOfLandUsed()
 						* (getSociety().getWaterSystem().getWaterDomesticPrice()
 								+ optimizationOptions.getDeltaDomesticWaterPrice());
 				initialValues[elements.indexOf(element)] = element.getLandArea();
@@ -542,7 +542,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 					if(city.getName().equals(element.getOrigin())) {
 						resourceConstraint[elements.indexOf(element)] = 1.0;
 						laborConstraint[elements.indexOf(element)] = 
-								element.getProduct().getLaborIntensityOfLandUsed();
+								element.getLaborIntensityOfLandUsed();
 					}
 				}
 				constraints.add(new LinearConstraint(resourceConstraint, 
@@ -556,7 +556,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				for(AgricultureElement element : elements) {
 					if(city.getName().equals(element.getOrigin())) {
 						flowCoefficients[elements.indexOf(element)] 
-								= element.getProduct().getFoodIntensityOfLandUsed();
+								= element.getFoodIntensityOfLandUsed();
 					}
 					
 					if(city.getName().equals(element.getOrigin())) {

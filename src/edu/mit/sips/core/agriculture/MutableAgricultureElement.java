@@ -8,7 +8,10 @@ import edu.mit.sips.core.DefaultMutableInfrastructureElement;
 public final class MutableAgricultureElement extends DefaultMutableInfrastructureElement {
 	private double maxLandArea;
 	private double initialLandArea;
-	private AgricultureProduct product = AgricultureProduct.NONE;
+	private double foodIntensityOfLandUsed;
+	private double costIntensityOfLandUsed;
+	private double waterIntensityOfLandUsed;
+	private double laborIntensityOfLandUsed;
 
 	private double maxFoodInput;
 	private double initialFoodInput;
@@ -18,16 +21,26 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	/**
 	 * Creates the element.
 	 *
-	 * @param element the element
 	 * @return the agriculture element
 	 */
 	public AgricultureElement createElement() {
 		return new DefaultAgricultureElement(getTemplateName(), getName(), getOrigin(), 
 				getDestination(), getLifecycleModel().createLifecycleModel(), 
 				getMaxLandArea(),  getInitialLandArea(), 
-				getProduct(), getDistributionEfficiency(), 
+				getFoodIntensityOfLandUsed(), getCostIntensityOfLandUsed(), 
+				getWaterIntensityOfLandUsed(), getLaborIntensityOfLandUsed(), 
+				getDistributionEfficiency(), 
 				getMaxFoodInput(), getInitialFoodInput(), 
 				getVariableOperationsCostOfFoodDistribution());
+	}
+	
+	/**
+	 * Gets the cost intensity of land used.
+	 *
+	 * @return the cost intensity of land used
+	 */
+	public double getCostIntensityOfLandUsed() {
+		return costIntensityOfLandUsed;
 	}
 	
 	/**
@@ -37,6 +50,15 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	 */
 	public double getDistributionEfficiency() {
 		return distributionEfficiency;
+	}
+	
+	/**
+	 * Gets the food intensity of land used.
+	 *
+	 * @return the food intensity of land used
+	 */
+	public double getFoodIntensityOfLandUsed() {
+		return foodIntensityOfLandUsed;
 	}
 	
 	/**
@@ -58,6 +80,15 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	}
 	
 	/**
+	 * Gets the labor intensity of land used.
+	 *
+	 * @return the labor intensity of land used
+	 */
+	public double getLaborIntensityOfLandUsed() {
+		return laborIntensityOfLandUsed;
+	}
+	
+	/**
 	 * Gets the max food input.
 	 *
 	 * @return the max food input
@@ -76,21 +107,30 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	}
 	
 	/**
-	 * Gets the product.
-	 *
-	 * @return the product
-	 */
-	public AgricultureProduct getProduct() {
-		return product;
-	}
-	
-	/**
 	 * Gets the variable operations cost of food distribution.
 	 *
 	 * @return the variable operations cost of food distribution
 	 */
 	public double getVariableOperationsCostOfFoodDistribution() {
 		return variableOperationsCostOfFoodDistribution;
+	}
+	
+	/**
+	 * Gets the water intensity of land used.
+	 *
+	 * @return the water intensity of land used
+	 */
+	public double getWaterIntensityOfLandUsed() {
+		return waterIntensityOfLandUsed;
+	}
+	
+	/**
+	 * Sets the cost intensity of land used.
+	 *
+	 * @param costIntensityOfLandUsed the new cost intensity of land used
+	 */
+	public void setCostIntensityOfLandUsed(double costIntensityOfLandUsed) {
+		this.costIntensityOfLandUsed = costIntensityOfLandUsed;
 	}
 	
 	/**
@@ -101,7 +141,16 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setDistributionEfficiency(double distributionEfficiency) {
 		this.distributionEfficiency = distributionEfficiency;
 	}
-	
+
+	/**
+	 * Sets the food intensity of land used.
+	 *
+	 * @param foodIntensityOfLandUsed the new food intensity of land used
+	 */
+	public void setFoodIntensityOfLandUsed(double foodIntensityOfLandUsed) {
+		this.foodIntensityOfLandUsed = foodIntensityOfLandUsed;
+	}
+
 	/**
 	 * Sets the initial food input.
 	 *
@@ -110,7 +159,7 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setInitialFoodInput(double initialFoodInput) {
 		this.initialFoodInput = initialFoodInput;
 	}
-	
+
 	/**
 	 * Sets the initial land area.
 	 *
@@ -119,7 +168,16 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setInitialLandArea(double initialLandArea) {
 		this.initialLandArea = initialLandArea;
 	}
-	
+
+	/**
+	 * Sets the labor intensity of land used.
+	 *
+	 * @param laborIntensityOfLandUsed the new labor intensity of land used
+	 */
+	public void setLaborIntensityOfLandUsed(double laborIntensityOfLandUsed) {
+		this.laborIntensityOfLandUsed = laborIntensityOfLandUsed;
+	}
+
 	/**
 	 * Sets the max food input.
 	 *
@@ -128,7 +186,7 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setMaxFoodInput(double maxFoodInput) {
 		this.maxFoodInput = maxFoodInput;
 	}
-	
+
 	/**
 	 * Sets the max land area.
 	 *
@@ -137,16 +195,7 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setMaxLandArea(double maxLandArea) {
 		this.maxLandArea = maxLandArea;
 	}
-	
-	/**
-	 * Sets the product.
-	 *
-	 * @param product the new product
-	 */
-	public void setProduct(AgricultureProduct product) {
-		this.product = product;
-	}
-	
+
 	/**
 	 * Sets the variable operations cost of food distribution.
 	 *
@@ -155,5 +204,14 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	public void setVariableOperationsCostOfFoodDistribution(
 			double variableOperationsCostOfFoodDistribution) {
 		this.variableOperationsCostOfFoodDistribution = variableOperationsCostOfFoodDistribution;
+	}
+
+	/**
+	 * Sets the water intensity of land used.
+	 *
+	 * @param waterIntensityOfLandUsed the new water intensity of land used
+	 */
+	public void setWaterIntensityOfLandUsed(double waterIntensityOfLandUsed) {
+		this.waterIntensityOfLandUsed = waterIntensityOfLandUsed;
 	}
 }

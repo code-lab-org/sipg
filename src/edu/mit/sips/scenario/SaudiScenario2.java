@@ -21,7 +21,6 @@ import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
-import edu.mit.sips.core.social.demand.ConstantDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
@@ -40,9 +39,9 @@ public final class SaudiScenario2 extends DefaultScenario {
 			electricitySystemDomesticProductionModel = new ElectricitySystemDomesticProductionModel(0),
 			petroleumSystemDomesticProductionModel = new PetroleumSystemDomesticProductionModel(100),
 			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
-	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950.0, 0.15, 1700.0, 3100.0),
-			waterDemandModel = new ConstantDemandModel(85.), 
-			electricityDemandModel = new LogisticTimeDemandModel(1990, 0.346, 0.095, 0, 0.84);
+	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950, 0.15, 1700, 3100),
+			waterDemandModel = new LogisticTimeDemandModel(1965, 175*365*1e-3, 0.08, 25*365*1e-3, 325*365*1e-3), 
+			electricityDemandModel = new LogisticTimeDemandModel(1950, 0.25*365*1e-3, 0.09, 0*365*1e-3, 40*365*1e-3);
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(150), 
 			foodImportPriceModel = new ConstantPriceModel(200), 
 			foodExportPriceModel = new ConstantPriceModel(150),
@@ -78,7 +77,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createIndustrialCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(INDUSTRIAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(3000, 0.5,
+						new DefaultAgricultureSystem.Local(40e3, 0.5,
 								new ArrayList<AgricultureElement>(),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
@@ -104,7 +103,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
-								new LogisticGrowthModel(1980, 3000000, 0.07, 17500000),
+								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
@@ -119,7 +118,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createRuralCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(RURAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(10000, 0.5,
+						new DefaultAgricultureSystem.Local(60e3, 0.5,
 								new ArrayList<AgricultureElement>(),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
@@ -144,7 +143,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
-								new LogisticGrowthModel(1980, 750000, 0.05, 4000000),
+								new LogisticGrowthModel(1980, (long) 0.75e6, 0.05, (long) 4e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
@@ -159,7 +158,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createUrbanCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(URBAN, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(4000, 0.5,
+						new DefaultAgricultureSystem.Local(100e3, 0.5,
 								new ArrayList<AgricultureElement>(),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
@@ -185,7 +184,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
-								new LogisticGrowthModel(1980, 6000000, 0.06, 20000000),
+								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel):
 							new DefaultSocialSystem.Remote());
 	}

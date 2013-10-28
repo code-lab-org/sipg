@@ -2,7 +2,6 @@ package edu.mit.sips.scenario;
 
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
-import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
 import edu.mit.sips.core.electricity.DefaultElectricityElement;
 import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
@@ -86,42 +85,42 @@ public enum SaudiElementTemplate implements ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							62.5e3, 6.25e3, 12.5e3, true), 
-					500, 500, AgricultureProduct.LIVESTOCK);
+					500, 500, 150, 15000, 500, 15);
 		case LIVESTOCK_2:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							220.0e3, 22.0e3, 44.0e3, true), 
-					2000, 2000, AgricultureProduct.LIVESTOCK);
+					2000, 2000, 150, 15000, 500, 15);
 		case DATES_1:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							25e6, 2.5e6, 5e6, true), 
-					500, 500, AgricultureProduct.DATES);
+					500, 500, 150, 15000, 500, 15);
 		case DATES_2:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							98e6, 9.8e6, 19.6e6, true), 
-					2000, 2000, AgricultureProduct.DATES);
+					2000, 2000, 400, 42000, 1000, 50);
 		case GRAINS_1:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							50e6, 5e6, 10e6, true), 
-					500, 500, AgricultureProduct.GRAINS);
+					500, 500, 2000, 140000, 16666, 20);
 		case GRAINS_2:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + ++instanceId, location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, maxOperations, 1, 
 							190e6, 19e6, 38e6, true), 
-					2000, 2000, AgricultureProduct.GRAINS);
+					2000, 2000, 2000, 140000, 16666, 20);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
 					name, name + " " + ++instanceId, location, destination, 

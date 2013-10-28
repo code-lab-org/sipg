@@ -31,7 +31,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			double maxFoodInput, double initialFoodInput, 
 			double variableOperationsCostOfFoodDistribution) {
 		return new DefaultAgricultureElement(templateName, name, origin, destination, lifecycleModel, 0, 0,
-				AgricultureProduct.NONE, efficiency, maxFoodInput, initialFoodInput, 
+				0, 0, 0, 0, efficiency, maxFoodInput, initialFoodInput, 
 				variableOperationsCostOfFoodDistribution);
 	}
 	
@@ -45,21 +45,31 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @param lifecycleModel the lifecycle model
 	 * @param maxLandArea the max land area
 	 * @param initialLandArea the initial land area
-	 * @param product the product
+	 * @param foodIntensityOfLandUsed the food intensity of land used
+	 * @param costIntensityOfLandUsed the cost intensity of land used
+	 * @param waterIntensityOfLandUsed the water intensity of land used
+	 * @param laborIntensityOfLandUsed the labor intensity of land used
 	 * @return the agriculture element
 	 */
 	public static DefaultAgricultureElement createProductionElement(
 			String templateName, String name, 
 			String origin, String destination, 
 			LifecycleModel lifecycleModel, double maxLandArea, 
-			double initialLandArea, AgricultureProduct product) {
-		return new DefaultAgricultureElement(templateName, name, origin, destination, lifecycleModel, maxLandArea, 
-				initialLandArea, product, 0, 0, 0, 0);
+			double initialLandArea, double foodIntensityOfLandUsed, 
+			double costIntensityOfLandUsed, double waterIntensityOfLandUsed,
+			double laborIntensityOfLandUsed) {
+		return new DefaultAgricultureElement(templateName, name, origin, destination, 
+				lifecycleModel, maxLandArea, 
+				initialLandArea, foodIntensityOfLandUsed, costIntensityOfLandUsed, 
+				waterIntensityOfLandUsed, laborIntensityOfLandUsed, 0, 0, 0, 0);
 	}
 	
 	private final double maxLandArea;
 	private final double initialLandArea;
-	private final AgricultureProduct product;
+	private final double foodIntensityOfLandUsed;
+	private final double costIntensityOfLandUsed;
+	private final double waterIntensityOfLandUsed;
+	private final double laborIntensityOfLandUsed;
 
 	private final double maxFoodInput;
 	private final double initialFoodInput;
@@ -77,7 +87,10 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		
 		this.maxLandArea = 0;
 		this.initialLandArea = 0;
-		this.product = AgricultureProduct.NONE;
+		this.foodIntensityOfLandUsed = 0;
+		this.costIntensityOfLandUsed = 0;
+		this.waterIntensityOfLandUsed = 0;
+		this.laborIntensityOfLandUsed = 0;
 		
 		this.distributionEfficiency = 0;
 		this.variableOperationsCostOfFoodDistribution = 0;
@@ -96,7 +109,10 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @param lifecycleModel the lifecycle model
 	 * @param maxLandArea the max land area
 	 * @param initialLandArea the initial land area
-	 * @param product the product
+	 * @param foodIntensityOfLandUsed the food intensity of land used
+	 * @param costIntensityOfLandUsed the cost intensity of land used
+	 * @param waterIntensityOfLandUsed the water intensity of land used
+	 * @param laborIntensityOfLandUsed the labor intensity of land used
 	 * @param distributionEfficiency the distribution efficiency
 	 * @param maxFoodInput the max food input
 	 * @param initialFoodInput the initial food input
@@ -105,9 +121,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	protected DefaultAgricultureElement(String templateName, String name, 
 			String origin, String destination,
 			LifecycleModel lifecycleModel, double maxLandArea, 
-			double initialLandArea, AgricultureProduct product,
-			double distributionEfficiency, double maxFoodInput, 
-			double initialFoodInput, double variableOperationsCostOfFoodDistribution) {
+			double initialLandArea, double foodIntensityOfLandUsed, 
+			double costIntensityOfLandUsed, double waterIntensityOfLandUsed,
+			double laborIntensityOfLandUsed, double distributionEfficiency, 
+			double maxFoodInput, double initialFoodInput, 
+			double variableOperationsCostOfFoodDistribution) {
 		super(templateName, name, origin, destination, lifecycleModel);
 		
 		// Validate maximum land area.
@@ -126,13 +144,34 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 					"Initial land area cannot be negative.");
 		}
 		this.initialLandArea = initialLandArea;
-		
-		// Validate agriculture product.
-		if(product == null) {
+
+		// Validate food intensity of land used.
+		if(foodIntensityOfLandUsed < 0) {
 			throw new IllegalArgumentException(
-					"Agriculture product cannot be null.");
+					"Food intensity cannot be negative.");
 		}
-		this.product = product;
+		this.foodIntensityOfLandUsed = foodIntensityOfLandUsed;
+
+		// Validate cost intensity of land used.
+		if(costIntensityOfLandUsed < 0) {
+			throw new IllegalArgumentException(
+					"Cost intensity cannot be negative.");
+		}
+		this.costIntensityOfLandUsed = costIntensityOfLandUsed;
+
+		// Validate water intensity of land used.
+		if(waterIntensityOfLandUsed < 0) {
+			throw new IllegalArgumentException(
+					"Water intensity cannot be negative.");
+		}
+		this.waterIntensityOfLandUsed = waterIntensityOfLandUsed;
+
+		// Validate labor intensity of land used.
+		if(laborIntensityOfLandUsed < 0) {
+			throw new IllegalArgumentException(
+					"Labor intensity cannot be negative.");
+		}
+		this.laborIntensityOfLandUsed = laborIntensityOfLandUsed;
 		
 		// Validate efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
@@ -167,13 +206,22 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getCostIntensityOfLandUsed()
+	 */
+	@Override
+	public double getCostIntensityOfLandUsed() {
+		return costIntensityOfLandUsed;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 	 */
 	@Override
 	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
 		return CurrencyUnits.DenominatorUnits.year;
 	}
-	
+
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 	 */
@@ -181,7 +229,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
 		return CurrencyUnits.NumeratorUnits.sim;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDistributionEfficiency()
@@ -208,6 +255,14 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodIntensityOfLandUsed()
+	 */
+	@Override
+	public double getFoodIntensityOfLandUsed() {
+		return foodIntensityOfLandUsed;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodOutput()
 	 */
 	@Override
@@ -225,7 +280,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	@Override
 	public double getFoodProduction() {
 		if(isOperational()) {
-			return product.getFoodIntensityOfLandUsed() * landArea;
+			return foodIntensityOfLandUsed * landArea;
 		} else {
 			return 0;
 		}
@@ -238,7 +293,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
 		return FoodUnits.DenominatorUnits.day;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
 	 */
@@ -247,6 +302,14 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		return FoodUnits.NumeratorUnits.kcal;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLaborIntensityOfLandUsed()
+	 */
+	@Override
+	public double getLaborIntensityOfLandUsed() {
+		return laborIntensityOfLandUsed;
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLandArea()
 	 */
@@ -258,7 +321,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodInput()
 	 */
@@ -270,7 +333,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxLandArea()
 	 */
@@ -282,7 +345,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
@@ -292,7 +355,10 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		setMutableFields(element);
 		element.setMaxLandArea(maxLandArea);
 		element.setInitialLandArea(initialLandArea);
-		element.setProduct(product);
+		element.setCostIntensityOfLandUsed(costIntensityOfLandUsed);
+		element.setFoodIntensityOfLandUsed(foodIntensityOfLandUsed);
+		element.setWaterIntensityOfLandUsed(waterIntensityOfLandUsed);
+		element.setLaborIntensityOfLandUsed(laborIntensityOfLandUsed);
 		element.setMaxFoodInput(maxFoodInput);
 		element.setInitialFoodInput(initialFoodInput);
 		element.setDistributionEfficiency(distributionEfficiency);
@@ -302,23 +368,15 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getProduct()
-	 */
-	@Override
-	public AgricultureProduct getProduct() {
-		return product;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
 	 */
 	@Override
 	public double getTotalOperationsExpense() {
 		return getFixedOperationsExpense() 
-				+ product.getCostIntensityOfLandUsed() * landArea 
+				+ costIntensityOfLandUsed * landArea 
 				+ variableOperationsCostOfFoodDistribution * foodInput;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getVariableOperationsCostOfFoodDistribution()
 	 */
@@ -333,10 +391,18 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	@Override
 	public double getWaterConsumption() {
 		if(isOperational()) {
-			return product.getWaterIntensityOfLandUsed() * landArea;
+			return waterIntensityOfLandUsed * landArea;
 		} else {
 			return 0;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getWaterIntensityOfLandUsed()
+	 */
+	@Override
+	public double getWaterIntensityOfLandUsed() {
+		return waterIntensityOfLandUsed;
 	}
 
 	/* (non-Javadoc)

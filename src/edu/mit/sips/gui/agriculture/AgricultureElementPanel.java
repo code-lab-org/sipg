@@ -5,17 +5,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
-import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.agriculture.AgricultureProduct;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
@@ -29,9 +25,10 @@ public class AgricultureElementPanel extends ElementPanel {
 	
 	private final JFormattedTextField maxLandAreaText;
 	private final JFormattedTextField initialLandAreaText;
-	private final JComboBox productCombo;
-	private final JLabel productOutputLabel, productVariableCostLabel, 
-			productWaterUseLabel, productLaborUseLabel;
+	private final JFormattedTextField costIntensityText;
+	private final JFormattedTextField laborIntensityText;
+	private final JFormattedTextField foodIntensityText;
+	private final JFormattedTextField waterIntensityText;
 	private final JLabel outputLabel, variableCostLabel, 
 			waterUseLabel, laborUseLabel;
 
@@ -77,16 +74,16 @@ public class AgricultureElementPanel extends ElementPanel {
 							element.setInitialLandArea(
 									((Number) initialLandAreaText.getValue()).doubleValue());
 							outputLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getProduct().getFoodIntensityOfLandUsed()
+									element.getFoodIntensityOfLandUsed()
 									*element.getInitialLandArea()));
 							variableCostLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getProduct().getCostIntensityOfLandUsed()
+									element.getCostIntensityOfLandUsed()
 									*element.getInitialLandArea()));
 							waterUseLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getProduct().getWaterIntensityOfLandUsed()
+									element.getWaterIntensityOfLandUsed()
 									*element.getInitialLandArea()));
 							laborUseLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getProduct().getLaborIntensityOfLandUsed()
+									element.getLaborIntensityOfLandUsed()
 									*element.getInitialLandArea()));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
@@ -94,43 +91,93 @@ public class AgricultureElementPanel extends ElementPanel {
 						}
 					}
 				});
-		productCombo = new JComboBox(AgricultureProduct.values());
-		productCombo.setSelectedItem(element.getProduct());
-		productCombo.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if(productCombo.getSelectedItem() instanceof AgricultureProduct) {
-					element.setProduct((AgricultureProduct)productCombo.getSelectedItem());
-				}
-				productOutputLabel.setText(NumberFormat.getNumberInstance().format(
-						element.getProduct().getFoodIntensityOfLandUsed()));
-				productVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
-						element.getProduct().getCostIntensityOfLandUsed()));
-				productWaterUseLabel.setText(NumberFormat.getNumberInstance().format(
-						element.getProduct().getWaterIntensityOfLandUsed()));
-				productLaborUseLabel.setText(NumberFormat.getNumberInstance().format(
-						element.getProduct().getLaborIntensityOfLandUsed()));
-			}
-		});
-		productOutputLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getFoodIntensityOfLandUsed()), JLabel.RIGHT);
-		productVariableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getCostIntensityOfLandUsed()), JLabel.RIGHT);
-		productWaterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getWaterIntensityOfLandUsed()), JLabel.RIGHT);
-		productLaborUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getLaborIntensityOfLandUsed()), JLabel.RIGHT);
+		costIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		costIntensityText.setColumns(10);
+		costIntensityText.setHorizontalAlignment(JTextField.RIGHT);
+		costIntensityText.setValue(element.getInitialLandArea());
+		costIntensityText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							element.setCostIntensityOfLandUsed(
+									((Number) costIntensityText.getValue()).doubleValue());
+							variableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getCostIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							initialLandAreaText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							initialLandAreaText.setForeground(Color.red);
+						}
+					}
+				});
+		foodIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		foodIntensityText.setColumns(10);
+		foodIntensityText.setHorizontalAlignment(JTextField.RIGHT);
+		foodIntensityText.setValue(element.getInitialLandArea());
+		foodIntensityText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							element.setFoodIntensityOfLandUsed(
+									((Number) foodIntensityText.getValue()).doubleValue());
+							outputLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getFoodIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							initialLandAreaText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							initialLandAreaText.setForeground(Color.red);
+						}
+					}
+				});
+		laborIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		laborIntensityText.setColumns(10);
+		laborIntensityText.setHorizontalAlignment(JTextField.RIGHT);
+		laborIntensityText.setValue(element.getInitialLandArea());
+		laborIntensityText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							element.setLaborIntensityOfLandUsed(
+									((Number) laborIntensityText.getValue()).doubleValue());
+							laborUseLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getLaborIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							initialLandAreaText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							initialLandAreaText.setForeground(Color.red);
+						}
+					}
+				});
+		waterIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
+		waterIntensityText.setColumns(10);
+		waterIntensityText.setHorizontalAlignment(JTextField.RIGHT);
+		waterIntensityText.setValue(element.getInitialLandArea());
+		waterIntensityText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							element.setWaterIntensityOfLandUsed(
+									((Number) waterIntensityText.getValue()).doubleValue());
+							waterUseLabel.setText(NumberFormat.getNumberInstance().format(
+									element.getWaterIntensityOfLandUsed()
+									*element.getInitialLandArea()));
+							initialLandAreaText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							initialLandAreaText.setForeground(Color.red);
+						}
+					}
+				});
 		outputLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getFoodIntensityOfLandUsed()
+				element.getFoodIntensityOfLandUsed()
 				*element.getInitialLandArea()), JLabel.RIGHT);
 		variableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getCostIntensityOfLandUsed()
+				element.getCostIntensityOfLandUsed()
 				*element.getInitialLandArea()), JLabel.RIGHT);
 		waterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getWaterIntensityOfLandUsed()
+				element.getWaterIntensityOfLandUsed()
 				*element.getInitialLandArea()), JLabel.RIGHT);
 		laborUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getProduct().getLaborIntensityOfLandUsed()
+				element.getLaborIntensityOfLandUsed()
 				*element.getInitialLandArea()), JLabel.RIGHT);
 
 		maxFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
@@ -216,33 +263,28 @@ public class AgricultureElementPanel extends ElementPanel {
 					maxLandAreaText, "<html>km<sup>2</sup></html>");
 			addInput(elementPanel, c, "Initial Land Area",
 					initialLandAreaText, "<html>km<sup>2</sup></html>");
-			addInput(elementPanel, c, "Product", productCombo, "");
+			addInput(elementPanel, c, "Food Yield", foodIntensityText, 
+					"<html>kcal/day/km<sup>2</sup></html>");
+			addInput(elementPanel, c, "Cost Intensity", costIntensityText, 
+					"<html>SAR/km<sup>2</sup></html>");
+			addInput(elementPanel, c, "Water Intensity", waterIntensityText, 
+					"<html>m<sup>3</sup>/km<sup>2</sup></html>");
+			addInput(elementPanel, c, "Labor Intensity", laborIntensityText, 
+					"<html>people/km<sup>2</sup></html>");
 			JPanel productPanel = new JPanel();
-			productPanel.setLayout(new GridLayout(4, 6, 2, 2));
-			productPanel.add(new JLabel("Food Output"));
-			productPanel.add(productOutputLabel);
-			productPanel.add(new JLabel("<html>kcal/day/km<sup>2</sup></html>"));
-			productPanel.add(new JLabel("="));
+			productPanel.setLayout(new GridLayout(4, 3, 2, 2));
+			productPanel.add(new JLabel("Initial Food Output"));
 			productPanel.add(outputLabel);
-			productPanel.add(new JLabel("<html>Initial kcal/day</html>"));
-			productPanel.add(new JLabel("Variable Cost"));
-			productPanel.add(productVariableCostLabel);
-			productPanel.add(new JLabel("<html>SAR/km<sup>2</sup></html>"));
-			productPanel.add(new JLabel("="));
+			productPanel.add(new JLabel("<html>kcal/day</html>"));
+			productPanel.add(new JLabel("Initial Variable Cost"));
 			productPanel.add(variableCostLabel);
-			productPanel.add(new JLabel("<html>Initial SAR</html>"));
-			productPanel.add(new JLabel("Water Use"));
-			productPanel.add(productWaterUseLabel);
-			productPanel.add(new JLabel("<html>m<sup>3</sup>/km<sup>2</sup></html>"));
-			productPanel.add(new JLabel("="));
+			productPanel.add(new JLabel("<html>SAR</html>"));
+			productPanel.add(new JLabel("Initial Water Use"));
 			productPanel.add(waterUseLabel);
-			productPanel.add(new JLabel("<html>Initial m<sup>3</sup></html>"));
-			productPanel.add(new JLabel("Labor Use"));
-			productPanel.add(productLaborUseLabel);
-			productPanel.add(new JLabel("<html>people/km<sup>2</sup></html>"));
-			productPanel.add(new JLabel("="));
+			productPanel.add(new JLabel("<html>m<sup>3</sup></html>"));
+			productPanel.add(new JLabel("Initial Labor Use"));
 			productPanel.add(laborUseLabel);
-			productPanel.add(new JLabel("<html>Initial people</html>"));
+			productPanel.add(new JLabel("<html>people</html>"));
 			addInput(elementPanel, c, "", productPanel, "");
 		}
 		if(element.getTemplateName() == null 
@@ -263,7 +305,10 @@ public class AgricultureElementPanel extends ElementPanel {
 		// set input enabled state
 		maxLandAreaText.setEnabled(element.getTemplateName() == null);
 		maxFoodInput.setEnabled(element.getTemplateName() == null);
-		productCombo.setEnabled(element.getTemplateName() == null);
+		costIntensityText.setEnabled(element.getTemplateName() == null);
+		foodIntensityText.setEnabled(element.getTemplateName() == null);
+		laborIntensityText.setEnabled(element.getTemplateName() == null);
+		waterIntensityText.setEnabled(element.getTemplateName() == null);
 		distributionEfficiency.setEnabled(element.getTemplateName() == null);
 		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplateName() == null);
 	}

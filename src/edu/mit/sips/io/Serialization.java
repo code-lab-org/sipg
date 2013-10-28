@@ -151,7 +151,10 @@ public final class Serialization {
 				mutable.setLifecycleModel(template.getLifecycleModel());
 				mutable.setMaxFoodInput(template.getMaxFoodInput());
 				mutable.setMaxLandArea(template.getMaxLandArea());
-				mutable.setProduct(template.getProduct());
+				mutable.setCostIntensityOfLandUsed(template.getCostIntensityOfLandUsed());
+				mutable.setLaborIntensityOfLandUsed(template.getLaborIntensityOfLandUsed());
+				mutable.setFoodIntensityOfLandUsed(template.getFoodIntensityOfLandUsed());
+				mutable.setWaterIntensityOfLandUsed(template.getWaterIntensityOfLandUsed());
 				mutable.setVariableOperationsCostOfFoodDistribution(template.getVariableOperationsCostOfFoodDistribution());
 				((AgricultureSystem.Local)country.getAgricultureSystem()).addElement(mutable.createElement());
 			}

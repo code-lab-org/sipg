@@ -10,11 +10,11 @@ import edu.mit.sips.sim.util.FoodUnitsOutput;
 public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutput, CurrencyUnitsOutput {
 	
 	/**
-	 * Gets the variable operations cost of food distribution.
+	 * Gets the cost intensity of land used.
 	 *
-	 * @return the variable operations cost of food distribution
+	 * @return the cost intensity of land used
 	 */
-	public double getVariableOperationsCostOfFoodDistribution();
+	public double getCostIntensityOfLandUsed();
 	
 	/**
 	 * Gets the distribution efficiency.
@@ -31,6 +31,13 @@ public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutp
 	public double getFoodInput();
 
 	/**
+	 * Gets the food intensity of land used.
+	 *
+	 * @return the food intensity of land used
+	 */
+	public double getFoodIntensityOfLandUsed();
+	
+	/**
 	 * Gets the food output.
 	 *
 	 * @return the food output
@@ -43,6 +50,13 @@ public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutp
 	 * @return the food production
 	 */
 	public double getFoodProduction();
+	
+	/**
+	 * Gets the labor intensity of land used.
+	 *
+	 * @return the labor intensity of land used
+	 */
+	public double getLaborIntensityOfLandUsed();
 	
 	/**
 	 * Gets the land area.
@@ -64,13 +78,13 @@ public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutp
 	 * @return the max land area
 	 */
 	public double getMaxLandArea();
-	
+
 	/**
-	 * Gets the product.
+	 * Gets the variable operations cost of food distribution.
 	 *
-	 * @return the product
+	 * @return the variable operations cost of food distribution
 	 */
-	public AgricultureProduct getProduct();
+	public double getVariableOperationsCostOfFoodDistribution();
 	
 	/**
 	 * Gets the water consumption.
@@ -80,12 +94,19 @@ public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutp
 	public double getWaterConsumption();
 	
 	/**
+	 * Gets the water intensity of land used.
+	 *
+	 * @return the water intensity of land used
+	 */
+	public double getWaterIntensityOfLandUsed();
+	
+	/**
 	 * Sets the food input.
 	 *
 	 * @param foodInput the new food input
 	 */
 	public void setFoodInput(double foodInput);
-
+	
 	/**
 	 * Sets the land area.
 	 *
