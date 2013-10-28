@@ -5,10 +5,10 @@ import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
 
 public enum SaudiElementTemplate2 implements ElementTemplate {
-	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Livestock Field", 			0,	9999),
-	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Livestock Field", 			0,	9999),
-	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 		0,	9999),
-	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 		0,	9999);
+	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			0,	9999),
+	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			0,	9999),
+	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 	0,	9999),
+	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	0,	9999);
 	
 	private final Sector sector;
 	private final boolean transport;
