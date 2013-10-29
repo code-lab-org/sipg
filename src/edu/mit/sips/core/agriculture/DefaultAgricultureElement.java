@@ -4,6 +4,9 @@ import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.WaterUnits.NumeratorUnits;
 
 /**
  * The Class AgricultureElement.
@@ -403,6 +406,22 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	@Override
 	public double getWaterIntensityOfLandUsed() {
 		return waterIntensityOfLandUsed;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public DenominatorUnits getWaterUnitsDenominator() {
+		return WaterUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public NumeratorUnits getWaterUnitsNumerator() {
+		return WaterUnits.NumeratorUnits.m3;
 	}
 
 	/* (non-Javadoc)

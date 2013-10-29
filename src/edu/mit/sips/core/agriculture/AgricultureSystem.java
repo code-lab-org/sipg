@@ -5,11 +5,12 @@ import java.util.List;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface AgricultureSystem.
  */
-public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput, CurrencyUnitsOutput {
+public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

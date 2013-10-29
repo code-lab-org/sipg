@@ -24,6 +24,7 @@ import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultAgricultureSoS.
@@ -66,7 +67,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 		 */
@@ -82,7 +83,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
 			return CurrencyUnits.NumeratorUnits.sim;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
@@ -334,7 +335,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return Collections.unmodifiableList(systems);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getTotalFoodSupply()
 		 */
@@ -358,7 +359,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitSupplyProfit()
 		 */
@@ -380,6 +381,22 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				value += system.getWaterConsumption();
 			}
 			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+			return WaterUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+			return WaterUnits.NumeratorUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -818,5 +835,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			value += system.getWaterConsumption();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+		return WaterUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+		return WaterUnits.NumeratorUnits.m3;
 	}
 }

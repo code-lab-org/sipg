@@ -23,11 +23,14 @@ import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class LocalAgricultureSystemPanel.
  */
-public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implements FoodUnitsOutput, CurrencyUnitsOutput {
+public class LocalAgricultureSystemPanel extends AgricultureSystemPanel 
+implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	private static final long serialVersionUID = 569560127649283731L;
 
 	private final LinearIndicatorPanel localFoodIndicatorPanel;
@@ -38,6 +41,11 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 			FoodUnits.NumeratorUnits.EJ;
 	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
 			FoodUnits.DenominatorUnits.year;
+	
+	private final WaterUnits.NumeratorUnits waterUnitsNumerator = 
+			WaterUnits.NumeratorUnits.m3;
+	private final WaterUnits.DenominatorUnits waterUnitsDenominator = 
+			WaterUnits.DenominatorUnits.year;
 	
 	private final CurrencyUnits.NumeratorUnits currencyUnitsNumerator = 
 			CurrencyUnits.NumeratorUnits.Bsim;
@@ -53,6 +61,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	DefaultTableXYDataset laborAvailableDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodSourceData = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
+	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
 	
@@ -76,20 +85,20 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
 		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
 		
-		addTab("Revenue",
-				Icons.REVENUE,
+		addTab("Revenue", Icons.REVENUE,
 				createStackedAreaChart("Agriculture Revenue ("
 						+ currencyUnitsNumerator.getAbbreviation() + "/"
 						+ currencyUnitsDenominator.getAbbreviation() + ")",
 						agricultureRevenue, null, agricultureNetRevenue));
-		addTab("Source",
-				Icons.AGRICULTURE_SOURCE,
+		addTab("Source", Icons.AGRICULTURE_SOURCE,
 				createStackedAreaChart("Food Source (" + foodUnitsNumerator
 						+ "/" + foodUnitsDenominator + ")", foodSourceData));
-		addTab("Use",
-				Icons.AGRICULTURE_USE,
+		addTab("Use", Icons.AGRICULTURE_USE,
 				createStackedAreaChart("Food Use (" + foodUnitsNumerator + "/"
 						+ foodUnitsDenominator + ")", foodUseData));
+		addTab("Use", Icons.WATER_USE,
+				createStackedAreaChart("Water Use (" + waterUnitsNumerator + "/"
+						+ waterUnitsDenominator + ")", waterUseData));
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
@@ -163,6 +172,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 		landAvailableDataset.removeAllSeries();
 		laborAvailableDataset.removeAllSeries();
 		foodUseData.removeAllSeries();
+		waterUseData.removeAllSeries();
 		foodSourceData.removeAllSeries();
 		agricultureRevenue.removeAllSeries();
 		agricultureNetRevenue.removeAllSeries();
@@ -259,9 +269,23 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 			}
 		}
 	
-		updateSeries(foodUseData, "Society", year, 
-				FoodUnits.convert(getSociety().getSocialSystem().getFoodConsumption(),
-						getSociety().getSocialSystem(), this));
+		if(getNestedAgricultureSystems().isEmpty()) {
+			updateSeries(foodUseData, "Society", year, 
+					FoodUnits.convert(getSociety().getSocialSystem().getFoodConsumption(),
+							getSociety().getSocialSystem(), this));
+			updateSeries(waterUseData, getAgricultureSystem().getName(), year, 
+					WaterUnits.convert(getAgricultureSystem().getWaterConsumption(),
+							getAgricultureSystem(), this));
+		} else {
+			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
+				updateSeries(foodUseData, nestedSystem.getSociety().getName() + " Society", year,
+						FoodUnits.convert(nestedSystem.getSociety().getSocialSystem().getFoodConsumption(), 
+								nestedSystem.getSociety().getSocialSystem(), this));
+				updateSeries(waterUseData, nestedSystem.getName(), year, 
+						WaterUnits.convert(nestedSystem.getWaterConsumption(),
+								nestedSystem, this));
+			}
+		}
 		updateSeries(agricultureRevenue, "Capital", year, 
 				CurrencyUnits.convert(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
@@ -313,9 +337,13 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 				}
 			}
 		} else {
-			updateSeries(foodSourceData, "Production", year, 
+			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
+				updateSeries(foodSourceData, nestedSystem.getSociety().getName() + " Production", year,
+						FoodUnits.convert(nestedSystem.getFoodProduction(), nestedSystem, this));
+			}
+			/*updateSeries(foodSourceData, "Production", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodProduction(),
-							getAgricultureSystem(), this));
+							getAgricultureSystem(), this));*/
 			updateSeries(foodSourceData, "Distribution", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodInDistribution(),
 							getAgricultureSystem(), this));
@@ -348,5 +376,21 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	@Override
 	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
 		return currencyUnitsDenominator;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+		return waterUnitsNumerator;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+		return waterUnitsDenominator;
 	}
 }

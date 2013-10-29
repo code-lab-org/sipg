@@ -91,7 +91,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6,
+						new DefaultWaterSystem.Local(true, 300e9, 300e9, 0.5e9,
 								new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
@@ -147,7 +147,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6,
+						new DefaultWaterSystem.Local(false, 200e9, 200e9, 1e9,
 								new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
@@ -196,7 +196,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6,
+						new DefaultWaterSystem.Local(true, 100e9, 100e9, 2e9,
 								new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):

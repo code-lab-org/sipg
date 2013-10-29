@@ -15,6 +15,7 @@ import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -338,7 +339,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
 			return FoodUnits.NumeratorUnits.kcal;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 		 */
@@ -374,7 +375,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
 		 */
@@ -398,7 +399,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			} 
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -416,7 +417,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getSalesRevenue() {
 			return getFoodDomesticPrice() * getSociety().getTotalFoodDemand();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getTotalFoodSupply()
 		 */
@@ -458,6 +459,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 				waterConsumption += e.getWaterConsumption();
 			}
 			return waterConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+			return WaterUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+			return WaterUnits.NumeratorUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -553,6 +570,22 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public double getWaterConsumption() {
 			return waterConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+			return WaterUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+			return WaterUnits.NumeratorUnits.m3;
 		}
 
 		/* (non-Javadoc)
