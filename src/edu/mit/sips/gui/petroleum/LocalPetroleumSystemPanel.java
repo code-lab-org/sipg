@@ -240,6 +240,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel {
 					getPetroleumSystem().getPetroleumInDistribution());
 			updateSeries(petroleumUseData, "Distribution", year, 
 					getPetroleumSystem().getPetroleumOutDistribution());
+			updateSeries(petroleumUseData, "Distribution Losses", year, 
+					getPetroleumSystem().getPetroleumOutDistributionLosses());
 		}
 		
 		updateSeries(petroleumRevenue, "Capital", year, 

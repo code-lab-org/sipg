@@ -185,7 +185,6 @@ public final class SaudiScenario2 extends DefaultScenario {
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1974, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, 1996, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, 1996, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996, URBAN, URBAN),

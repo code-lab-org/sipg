@@ -254,6 +254,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel {
 					getElectricitySystem().getElectricityInDistribution());
 			updateSeries(electricityUseData, "Distribution", year, 
 					getElectricitySystem().getElectricityOutDistribution());
+			updateSeries(electricityUseData, "Distribution Losses", year, 
+					getElectricitySystem().getElectricityOutDistributionLosses());
 		}
 		
 		updateSeries(electricityRevenue, "Capital", year, 

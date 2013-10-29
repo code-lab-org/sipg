@@ -35,7 +35,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	private final SpatialStatePanel agricultureStatePanel;
 	
 	private final FoodUnits.NumeratorUnits foodUnitsNumerator = 
-			FoodUnits.NumeratorUnits.GJ;
+			FoodUnits.NumeratorUnits.EJ;
 	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
 			FoodUnits.DenominatorUnits.year;
 	
@@ -55,7 +55,7 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
-
+	
 	/**
 	 * Instantiates a new local agriculture system panel.
 	 *
@@ -322,6 +322,9 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 			updateSeries(foodUseData, "Distribution", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodOutDistribution(),
 							getAgricultureSystem(), this));
+			updateSeries(foodUseData, "Distribution Losses", year, 
+					FoodUnits.convert(getAgricultureSystem().getFoodOutDistributionLosses(),
+							getAgricultureSystem(), this));
 		}
 		updateSeries(foodUseData, "Export", year, 
 				FoodUnits.convert(getAgricultureSystem().getFoodExport(),
@@ -346,5 +349,4 @@ public class LocalAgricultureSystemPanel extends AgricultureSystemPanel implemen
 	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
 		return currencyUnitsDenominator;
 	}
-
 }

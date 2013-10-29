@@ -259,6 +259,8 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 					getWaterSystem().getWaterInDistribution());
 			updateSeries(waterUseData, "Distribution", year,
 					getWaterSystem().getWaterOutDistribution());
+			updateSeries(waterUseData, "Distribution Losses", year, 
+					getWaterSystem().getWaterOutDistributionLosses());
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName(), 
 						year, nestedSystem.getWaterReservoirVolume());

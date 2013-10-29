@@ -9,8 +9,13 @@ public abstract class FoodUnits {
 	 * The Enum NumeratorUnits.
 	 */
 	public static enum NumeratorUnits implements Units {
-		kcal("kilocalories","kcal", 238902.957619), 
-		GJ("gigajoules","GJ", 1);
+		kcal("kilocalories","kcal", 238902.957619),  
+		J("joules","J", 1e9),
+		kJ("kilojoules","kJ", 1e6),
+		MJ("megajoules","MJ", 1e3),
+		GJ("gigajoules","GJ", 1),
+		TJ("terajoules","TJ",1e-3),
+		EJ("exajoules","EJ",1e-6);
 		
 		private final String name;
 		private final String abbreviation;
