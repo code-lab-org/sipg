@@ -8,7 +8,8 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
 /**
  * The Interface SocialSystem.
  */
-public interface SocialSystem extends InfrastructureSystem, FoodUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
+public interface SocialSystem extends InfrastructureSystem, 
+		FoodUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

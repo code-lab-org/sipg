@@ -9,11 +9,12 @@ import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
 /**
  * The Interface Society.
  */
-public interface Society extends SimEntity {
+public interface Society extends SimEntity, CurrencyUnitsOutput {
 	
 	/**
 	 * Gets the agriculture system.

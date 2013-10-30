@@ -3,11 +3,12 @@ package edu.mit.sips.core;
 import java.util.List;
 
 import edu.mit.sips.hla.AttributeChangeListener;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
 /**
  * The Interface InfrastructureSystem.
  */
-public interface InfrastructureSystem {
+public interface InfrastructureSystem extends CurrencyUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

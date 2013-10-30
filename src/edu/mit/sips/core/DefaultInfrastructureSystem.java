@@ -7,6 +7,7 @@ import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.hla.AttributeChangeEvent;
 import edu.mit.sips.hla.AttributeChangeListener;
+import edu.mit.sips.sim.util.CurrencyUnits;
 
 /**
  * The Class DefaultInfrastructureSystem.
@@ -259,5 +260,21 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	public void setSociety(Society society) {
 		this.society = society;
 		fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+		return CurrencyUnits.DenominatorUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+		return CurrencyUnits.NumeratorUnits.sim;
 	}
 }

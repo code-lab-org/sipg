@@ -17,6 +17,7 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
+import edu.mit.sips.sim.util.CurrencyUnits;
 
 /**
  * The Class DefaultSociety.
@@ -372,5 +373,16 @@ public abstract class DefaultSociety implements Society {
 		for(Society society : getNestedSocieties()) {
 			society.tock();
 		}
+	}
+
+
+	@Override
+	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+		return CurrencyUnits.NumeratorUnits.sim;
+	}
+
+	@Override
+	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+		return CurrencyUnits.DenominatorUnits.year;
 	}
 }

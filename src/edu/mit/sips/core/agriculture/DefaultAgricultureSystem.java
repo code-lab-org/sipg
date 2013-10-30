@@ -11,7 +11,6 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
-import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
@@ -135,22 +134,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getConsumptionExpense() {
 			return getSociety().getWaterSystem().getWaterDomesticPrice()
 					* getWaterConsumption();
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-		 */
-		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-		 */
-		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
 		}
 		
 		/* (non-Javadoc)
@@ -510,22 +493,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
 		private double waterConsumption;
 		private double domesticPrice, importPrice, exportPrice;
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-		 */
-		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-		 */
-		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
-		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()

@@ -8,9 +8,9 @@ import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultSocialSoS.

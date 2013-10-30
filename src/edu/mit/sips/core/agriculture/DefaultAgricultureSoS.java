@@ -22,7 +22,6 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
@@ -66,22 +65,6 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				value += system.getArableLandArea();
 			}
 			return value;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-		 */
-		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-		 */
-		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
 		}
 		
 		/* (non-Javadoc)
@@ -734,22 +717,6 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	public DefaultAgricultureSoS() {
 		super("Agriculture");
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
-	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
-	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
 	}
 	
 	/* (non-Javadoc)

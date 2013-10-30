@@ -143,7 +143,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public double getDomesticProduction() {
 			return domesticProductionModel.getDomesticProduction(this);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SocialSystem#getSocietyElectricityConsumption()
 		 */
@@ -159,7 +159,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
 			return ElectricityUnits.DenominatorUnits.year;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 		 */
@@ -337,7 +337,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		private double electricityConsumption;
 		private double foodConsumption;
 		private double waterConsumption;
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
 		 */

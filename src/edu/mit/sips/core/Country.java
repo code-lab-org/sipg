@@ -14,6 +14,8 @@ import edu.mit.sips.core.social.DefaultSocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.DefaultWaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.sim.util.CurrencyUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.CurrencyUnits.NumeratorUnits;
 
 /**
  * The Class Country.
