@@ -6,16 +6,16 @@ package edu.mit.sips.sim.util;
 public interface ElectricityUnitsOutput {
 	
 	/**
-	 * Gets the electricity units numerator.
+	 * Gets the electricity units.
 	 *
-	 * @return the electricity units numerator
+	 * @return the electricity units
 	 */
-	public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator();
+	public ElectricityUnits getElectricityUnits();
 	
 	/**
-	 * Gets the electricity units denominator.
+	 * Gets the electricity time units.
 	 *
-	 * @return the electricity units denominator
+	 * @return the electricity time units
 	 */
-	public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator();
+	public TimeUnits getElectricityTimeUnits();
 }

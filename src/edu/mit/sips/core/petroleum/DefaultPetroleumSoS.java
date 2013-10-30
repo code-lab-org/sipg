@@ -24,12 +24,15 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultPetroleumSoS.
  */
 public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements PetroleumSoS {
-	
+
 	/**
 	 * The Class Local.
 	 */
@@ -54,7 +57,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			}
 			return false;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.PetroleumSystem#getElectricityConsumption()
 		 */
@@ -68,6 +71,22 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
 		@Override
@@ -77,7 +96,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			elements.addAll(getExternalElements());
 			return Collections.unmodifiableList(elements);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
 		 */
@@ -141,6 +160,22 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				}
 			}
 			return Collections.unmodifiableList(systems);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
 		}
 
 		/* (non-Javadoc)
@@ -594,7 +629,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		@Override
 		public void tock() { }
 	}
-	
+
 	/**
 	 * Instantiates a new default petroleum so s.
 	 */
@@ -613,6 +648,22 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 		return value;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
+	}
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
@@ -624,6 +675,22 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			systems.add(society.getPetroleumSystem());
 		}
 		return Collections.unmodifiableList(systems);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return OilUnits.toe;
 	}
 
 	/* (non-Javadoc)

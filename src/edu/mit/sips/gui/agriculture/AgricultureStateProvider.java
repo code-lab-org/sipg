@@ -9,20 +9,19 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.gui.SpatialStateProvider;
-import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class AgricultureStateProvider.
  */
 public class AgricultureStateProvider implements SpatialStateProvider, FoodUnitsOutput {
 	
-	private final FoodUnits.NumeratorUnits foodUnitsNumerator = 
-			FoodUnits.NumeratorUnits.GJ;
-	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
-			FoodUnits.DenominatorUnits.year;
+	private final FoodUnits foodUnits = 
+			FoodUnits.EJ;
+	private final TimeUnits foodTimeUnits = 
+			TimeUnits.year;
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
@@ -44,7 +43,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 			for(AgricultureElement e : agricultureSystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(origin.getCities().contains(origCity)) {
-					distribution += FoodUnits.convert(e.getFoodOutput(), e, this);
+					distribution += FoodUnits.convertFlow(e.getFoodOutput(), e, this);
 				}
 			}
 		}
@@ -65,9 +64,9 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 				if(destination.getCities().contains(destCity)) {
 					if(society.getCities().contains(destCity)) {
 						// if a self-loop, only add distribution losses
-						distribution += FoodUnits.convert(e.getFoodInput() - e.getFoodOutput(), e, this);
+						distribution += FoodUnits.convertFlow(e.getFoodInput() - e.getFoodOutput(), e, this);
 					} else {
-						distribution += FoodUnits.convert(e.getFoodInput(), e, this);
+						distribution += FoodUnits.convertFlow(e.getFoodInput(), e, this);
 					}
 				}
 			}
@@ -108,16 +107,16 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
 	 */
 	@Override
-	public DenominatorUnits getFoodUnitsDenominator() {
-		return foodUnitsDenominator;
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
 	 */
 	@Override
-	public NumeratorUnits getFoodUnitsNumerator() {
-		return foodUnitsNumerator;
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
 	}
 
 	/* (non-Javadoc)
@@ -128,7 +127,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
 					society.getAgricultureSystem(); 
-			return FoodUnits.convert(agricultureSystem.getFoodImport(), agricultureSystem, this);
+			return FoodUnits.convertFlow(agricultureSystem.getFoodImport(), agricultureSystem, this);
 		}
 		return 0;
 	}
@@ -140,7 +139,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 	public double getInput(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
 			AgricultureElement agElement = (AgricultureElement) element;
-			return FoodUnits.convert(agElement.getFoodInput(), agElement, this);
+			return FoodUnits.convertFlow(agElement.getFoodInput(), agElement, this);
 		} else {
 			return 0;
 		}
@@ -154,7 +153,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
 					society.getAgricultureSystem(); 
-			return FoodUnits.convert(agricultureSystem.getFoodExport()
+			return FoodUnits.convertFlow(agricultureSystem.getFoodExport()
 					- agricultureSystem.getFoodImport()
 					+ agricultureSystem.getFoodOutDistribution()
 					- agricultureSystem.getFoodInDistribution(), agricultureSystem, this);
@@ -174,7 +173,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 			for(AgricultureElement e : agricultureSystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(!society.getCities().contains(origCity)) {
-					distribution += FoodUnits.convert(e.getFoodOutput(), e, this);
+					distribution += FoodUnits.convertFlow(e.getFoodOutput(), e, this);
 				}
 			}
 		}
@@ -193,7 +192,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 			for(AgricultureElement e : agricultureSystem.getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(!society.getCities().contains(destCity)) {
-					distribution += FoodUnits.convert(e.getFoodInput(), e, this);
+					distribution += FoodUnits.convertFlow(e.getFoodInput(), e, this);
 				}
 			}
 		}
@@ -223,7 +222,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 	public double getOutput(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
 			AgricultureElement agElement = (AgricultureElement)element;
-			return FoodUnits.convert(agElement.getFoodOutput(), agElement, this);
+			return FoodUnits.convertFlow(agElement.getFoodOutput(), agElement, this);
 		} else {
 			return 0;
 		}
@@ -236,7 +235,7 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 	public double getProduction(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
 			AgricultureElement agElement = (AgricultureElement)element;
-			return FoodUnits.convert(agElement.getFoodProduction(), agElement, this);
+			return FoodUnits.convertFlow(agElement.getFoodProduction(), agElement, this);
 		} else {
 			return 0;
 		}
@@ -247,8 +246,8 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 	 */
 	@Override
 	public String getUnits() {
-		return foodUnitsNumerator.getAbbreviation() + "/"
-				+ foodUnitsDenominator.getAbbreviation();
+		return foodUnits.getAbbreviation() + "/"
+				+ foodTimeUnits.getAbbreviation();
 	}
 
 	/* (non-Javadoc)

@@ -3,11 +3,15 @@ package edu.mit.sips.core.electricity;
 import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface ElectricitySystem.
  */
-public interface ElectricitySystem extends InfrastructureSystem {
+public interface ElectricitySystem extends InfrastructureSystem, 
+		WaterUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput {
 	
 	/**
 	 * The Interface Local.

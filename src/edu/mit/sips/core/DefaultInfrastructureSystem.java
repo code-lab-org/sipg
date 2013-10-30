@@ -8,15 +8,18 @@ import javax.swing.event.EventListenerList;
 import edu.mit.sips.hla.AttributeChangeEvent;
 import edu.mit.sips.hla.AttributeChangeListener;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultInfrastructureSystem.
  */
 public abstract class DefaultInfrastructureSystem implements InfrastructureSystem {
+	
 	/**
 	 * The Class Local.
 	 */
 	public abstract static class Local extends DefaultInfrastructureSystem implements InfrastructureSystem.Local {
+		
 		/**
 		 * Instantiates a new local.
 		 */
@@ -220,6 +223,15 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
+	}
+
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
 	 */
 	@Override
@@ -227,13 +239,20 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		return name;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
 	 */
 	@Override
 	public final Society getSociety() {
 		return society;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
@@ -252,7 +271,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		this.name = name;
 		fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
 	 */
@@ -260,21 +279,5 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	public void setSociety(Society society) {
 		this.society = society;
 		fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
-	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
-	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
 	}
 }

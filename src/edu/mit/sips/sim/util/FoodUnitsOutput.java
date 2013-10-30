@@ -6,16 +6,16 @@ package edu.mit.sips.sim.util;
 public interface FoodUnitsOutput {
 	
 	/**
-	 * Gets the food units numerator.
+	 * Gets the food units.
 	 *
-	 * @return the food units numerator
+	 * @return the food units
 	 */
-	public FoodUnits.NumeratorUnits getFoodUnitsNumerator();
+	public FoodUnits getFoodUnits();
 	
 	/**
-	 * Gets the food units denominator.
+	 * Gets the food time units.
 	 *
-	 * @return the food units denominator
+	 * @return the food time units
 	 */
-	public FoodUnits.DenominatorUnits getFoodUnitsDenominator();
+	public TimeUnits getFoodTimeUnits();
 }

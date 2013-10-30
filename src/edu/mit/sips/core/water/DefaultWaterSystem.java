@@ -14,10 +14,11 @@ import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultAgricultureSystem.
+ * The Class DefaultWaterSystem.
  */
 public abstract class DefaultWaterSystem implements WaterSystem {
 
@@ -40,7 +41,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private transient double nextWaterReservoirVolume;
 		
 		/**
-		 * Instantiates a new city agriculture system.
+		 * Instantiates a new local.
 		 */
 		protected Local() {
 			super("Water");
@@ -56,9 +57,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 		
 		/**
-		 * Instantiates a new city water system.
+		 * Instantiates a new local.
 		 *
-		 * @param coastalAccess the coastal
+		 * @param coastalAccess the coastal access
 		 * @param maxWaterReservoirVolume the max water reservoir volume
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
@@ -163,16 +164,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 		 */
 		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
+		public TimeUnits getCurrencyTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 		 */
 		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
+		public CurrencyUnits getCurrencyUnits() {
+			return CurrencyUnits.sim;
 		}
 
 		/* (non-Javadoc)
@@ -216,16 +217,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
 		@Override
-		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-			return ElectricityUnits.DenominatorUnits.year;
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 		 */
 		@Override
-		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-			return ElectricityUnits.NumeratorUnits.MWh;
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -515,16 +516,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -599,16 +600,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 		 */
 		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
+		public TimeUnits getCurrencyTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 		 */
 		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
+		public CurrencyUnits getCurrencyUnits() {
+			return CurrencyUnits.sim;
 		}
 		
 		/* (non-Javadoc)
@@ -623,16 +624,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
 		@Override
-		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-			return ElectricityUnits.DenominatorUnits.year;
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 		 */
 		@Override
-		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-			return ElectricityUnits.NumeratorUnits.MWh;
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -653,16 +654,16 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)

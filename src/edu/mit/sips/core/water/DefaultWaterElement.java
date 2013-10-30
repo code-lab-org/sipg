@@ -2,9 +2,8 @@ package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.WaterUnits.NumeratorUnits;
 
 /**
  * The Class DefaultWaterElement.
@@ -384,16 +383,16 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 	 */
 	@Override
-	public DenominatorUnits getWaterUnitsDenominator() {
-		return WaterUnits.DenominatorUnits.year;
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 	 */
 	@Override
-	public NumeratorUnits getWaterUnitsNumerator() {
-		return WaterUnits.NumeratorUnits.m3;
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 
 	/* (non-Javadoc)

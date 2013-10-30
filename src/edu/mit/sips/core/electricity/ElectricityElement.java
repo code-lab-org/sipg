@@ -1,11 +1,15 @@
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface ElectricityElement.
  */
-public interface ElectricityElement extends InfrastructureElement {
+public interface ElectricityElement extends InfrastructureElement, 
+		WaterUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput {
 	
 	/**
 	 * Gets the distribution efficiency.

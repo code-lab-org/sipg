@@ -18,6 +18,7 @@ import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultSociety.
@@ -127,6 +128,14 @@ public abstract class DefaultSociety implements Society {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getElectricitySystem()
 	 */
 	@Override
@@ -186,16 +195,16 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public String getName() {
 		return name;
-	}
-
+	}	
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getNestedSocieties()
 	 */
 	@Override
 	public List<? extends Society> getNestedSocieties() {
 		return nestedSocieties;
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getPetroleumSystem()
 	 */
@@ -211,7 +220,7 @@ public abstract class DefaultSociety implements Society {
 	public SocialSystem getSocialSystem() {
 		return socialSystem;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getSocieties()
 	 */
@@ -224,13 +233,21 @@ public abstract class DefaultSociety implements Society {
 		}
 		return societies;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getSociety()
 	 */
 	@Override
 	public final Society getSociety() {
 		return society;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
@@ -373,16 +390,5 @@ public abstract class DefaultSociety implements Society {
 		for(Society society : getNestedSocieties()) {
 			society.tock();
 		}
-	}
-
-
-	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
-	}
-
-	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
 	}
 }

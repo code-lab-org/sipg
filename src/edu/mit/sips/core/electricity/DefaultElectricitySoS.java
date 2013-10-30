@@ -21,19 +21,23 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultElectricitySoS.
  */
 public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements ElectricitySoS {
-	
+
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSoS.Local implements ElectricitySoS.Local {
 		
 		/**
-		 * Instantiates a new default electricity so s.
+		 * Instantiates a new local.
 		 */
 		public Local() {
 			super("Electricity");
@@ -150,6 +154,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityWasted()
 		 */
 		@Override
@@ -223,6 +243,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				}
 			}
 			return Collections.unmodifiableList(systems);
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
 		}
 
 		/* (non-Javadoc)
@@ -319,6 +355,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			}
 			return value;
 		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
+		}
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
@@ -326,8 +378,8 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		@Override
 		public void initialize(long time) { }
 
-		/**
-		 * Optimize electricity distribution.
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityDistribution()
 		 */
 		@Override
 		public void optimizeElectricityDistribution() {
@@ -426,10 +478,8 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			}
 		}
 
-		/**
-		 * Optimize electricity production and distribution.
-		 *
-		 * @param optimizationOptions the optimization options
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityProductionAndDistribution(edu.mit.sips.core.OptimizationOptions)
 		 */
 		@Override
 		public void optimizeElectricityProductionAndDistribution(OptimizationOptions optimizationOptions) {
@@ -579,7 +629,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	public DefaultElectricitySoS() {
 		super("Electricity");
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
 	 */
@@ -596,6 +646,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
 	 */
 	@Override
@@ -605,6 +671,22 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			systems.add(society.getElectricitySystem());
 		}
 		return Collections.unmodifiableList(systems);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return OilUnits.toe;
 	}
 
 	/* (non-Javadoc)
@@ -629,5 +711,21 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			value += system.getWaterConsumption();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 }

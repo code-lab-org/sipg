@@ -19,13 +19,15 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class WaterSystemPanel.
+ * The Class LocalWaterSystemPanel.
  */
 public class LocalWaterSystemPanel extends WaterSystemPanel
 implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {	
@@ -50,7 +52,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	TimeSeriesCollection waterConsumptionPerCapita = new TimeSeriesCollection();
 
 	/**
-	 * Instantiates a new water system panel.
+	 * Instantiates a new local water system panel.
 	 *
 	 * @param waterSystem the water system
 	 */
@@ -77,20 +79,20 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		addTab("Network Flow", Icons.NETWORK, waterStatePanel);
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Water Revenue (" + getCurrencyUnitsNumerator() 
-				+ "/" + getCurrencyUnitsDenominator() + ")", 
+				"Water Revenue (" + getCurrencyUnits() 
+				+ "/" + getCurrencyTimeUnits() + ")", 
 				waterRevenue, null, waterNetRevenue));
 		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
-				"Water Source (" + getWaterUnitsNumerator() 
-				+ "/" + getWaterUnitsDenominator() + ")", 
+				"Water Source (" + getWaterUnits() 
+				+ "/" + getWaterTimeUnits() + ")", 
 				waterSourceData));
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
-				"Water Use (" + getWaterUnitsNumerator() 
-				+ "/" + getWaterUnitsDenominator() + ")", 
+				"Water Use (" + getWaterUnits() 
+				+ "/" + getWaterTimeUnits() + ")", 
 				waterUseData));
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
-				"Electricity Use (" + getElectricityUnitsNumerator() 
-				+ "/" + getElectricityUnitsDenominator() + ")",
+				"Electricity Use (" + getElectricityUnits() 
+				+ "/" + getElectricityTimeUnits() + ")",
 				electricityUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -99,10 +101,12 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				"Renewable Water Fraction (-)", 
 				renewableWaterData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Water Consumption per Capita (m^3/person)", 
+				"Water Consumption per Capita (" + WaterUnits.L 
+				+ "/" + TimeUnits.day + ")", 
 				waterConsumptionPerCapita));
 		addTab("Reservoir", Icons.WATER_RESERVOIR, createStackedAreaChart(
-				"Water Reservoir Volume (m^3)", waterReservoirDataset));
+				"Water Reservoir Volume (" + getWaterUnits() + ")", 
+				waterReservoirDataset));
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/m^3)", 
@@ -111,6 +115,22 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				"Unit Supply Profit (SAR/m^3)", 
 				waterSupplyProfitData));
 		*/
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
 	}
 	
 	/**
@@ -128,6 +148,14 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		return systems;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
+	}
+
 	/**
 	 * Gets the water system.
 	 *
@@ -137,6 +165,14 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		return (WaterSystem.Local) getInfrastructureSystem();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
 	 */
@@ -171,7 +207,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	public void simulationInitialized(UpdateEvent event) {
 		waterStatePanel.repaint();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
 	 */
@@ -216,14 +252,22 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		}
 
 		if(getSociety().getSocialSystem().getPopulation() > 0) {
-			updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), 
-					year, getSociety().getSocialSystem().getWaterConsumption() 
-					/ getSociety().getSocialSystem().getPopulation());
+			updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), year, 
+					DefaultUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
+							getSociety().getSocialSystem().getWaterUnits(),
+							getSociety().getSocialSystem().getWaterTimeUnits(),
+							WaterUnits.L,
+							TimeUnits.day)
+							/ getSociety().getSocialSystem().getPopulation());
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
-					updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), 
-							year, nestedSociety.getSocialSystem().getWaterConsumption() 
-							/ nestedSociety.getSocialSystem().getPopulation());
+					updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), year, 
+							DefaultUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
+									nestedSociety.getSocialSystem().getWaterUnits(),
+									nestedSociety.getSocialSystem().getWaterTimeUnits(),
+									WaterUnits.L,
+									TimeUnits.day)
+									/ nestedSociety.getSocialSystem().getPopulation());
 				}
 			}
 		}
@@ -252,38 +296,40 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 
 		if(getNestedWaterSystems().isEmpty()) {
 			updateSeries(waterUseData, "Society", year, 
-					WaterUnits.convert(getSociety().getSocialSystem().getWaterConsumption(),
+					WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem(), this));
 			updateSeries(electricityUseData, getWaterSystem().getName(), year, 
-					ElectricityUnits.convert(getWaterSystem().getElectricityConsumption(),
+					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumption(),
 							getWaterSystem(), this));
 		} else {
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Society", year,
-						WaterUnits.convert(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
+						WaterUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
 				updateSeries(electricityUseData, nestedSystem.getName(), year, 
-						ElectricityUnits.convert(nestedSystem.getElectricityConsumption(),
+						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
 								nestedSystem, this));
 			}
 		}
 		updateSeries(waterUseData, "Agriculture", year, 
-				getSociety().getAgricultureSystem().getWaterConsumption());
+				WaterUnits.convertFlow(getSociety().getAgricultureSystem().getWaterConsumption(), 
+						getSociety().getAgricultureSystem(), this));
 		updateSeries(waterUseData, "Electricity", year, 
-				getSociety().getElectricitySystem().getWaterConsumption());
+				WaterUnits.convertFlow(getSociety().getElectricitySystem().getWaterConsumption(), 
+						getSociety().getElectricitySystem(), this));
 		updateSeries(waterUseData, "Wasted", year, 
-				getWaterSystem().getWaterWasted());
+				WaterUnits.convertFlow(getWaterSystem().getWaterWasted(), getWaterSystem(), this));
 		
 		if(getWaterSystem() instanceof DefaultWaterSystem.Local) {
 			for(WaterElement element : getWaterSystem().getInternalElements()) {
 				if(element.getMaxWaterProduction() > 0) {
 					updateSeries(waterSourceData, element.getName(), year, 
-							element.getWaterProduction());
+							WaterUnits.convertFlow(element.getWaterProduction(), element, this));
 				}
 				
 				if(element.getMaxWaterInput() > 0) {
 					updateSeries(waterUseData, element.getName(), year, 
-							element.getWaterInput());
+							WaterUnits.convertFlow(element.getWaterInput(), element, this));
 				}
 			}
 			for(WaterElement element : getWaterSystem().getExternalElements()) {
@@ -291,79 +337,52 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 						&& element.getMaxWaterInput() > 0)
 					|| element.getMaxWaterProduction() > 0) {
 					updateSeries(waterSourceData, element.getName(), year, 
-							element.getWaterOutput());
+							WaterUnits.convertFlow(element.getWaterOutput(), element, this));
 				}
 			}
-			updateSeries(waterReservoirDataset, "Reservoir", 
-					year, getWaterSystem().getWaterReservoirVolume());
+			updateSeries(waterReservoirDataset, "Reservoir", year, 
+					WaterUnits.convertStock(getWaterSystem().getWaterReservoirVolume(), 
+							getWaterSystem(), this));
 		} else {
 			updateSeries(waterSourceData, "Production", year, 
-					getWaterSystem().getWaterProduction());
+					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
+							getWaterSystem(), this));
 			updateSeries(waterSourceData, "Distribution", year, 
-					getWaterSystem().getWaterInDistribution());
+					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
+							getWaterSystem(), this));
 			updateSeries(waterUseData, "Distribution", year,
-					getWaterSystem().getWaterOutDistribution());
+					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
+							getWaterSystem(), this));
 			updateSeries(waterUseData, "Distribution Losses", year, 
-					getWaterSystem().getWaterOutDistributionLosses());
+					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistributionLosses(), 
+							getWaterSystem(), this));
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName(), 
-						year, nestedSystem.getWaterReservoirVolume());
+				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName(), year, 
+						WaterUnits.convertFlow(nestedSystem.getWaterReservoirVolume(), 
+								getWaterSystem(), this));
 			}
 		}
 		updateSeries(waterSourceData, "Artesian Well", year, 
-				getWaterSystem().getWaterFromArtesianWell());
+				WaterUnits.convertFlow(getWaterSystem().getWaterFromArtesianWell(), 
+						getWaterSystem(), this));
 		updateSeries(waterSourceData, "Import", year, 
-				getWaterSystem().getWaterImport());
-
-
-		
+				WaterUnits.convertFlow(getWaterSystem().getWaterImport(), 
+						getWaterSystem(), this));
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 	 */
 	@Override
-	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-		return WaterUnits.NumeratorUnits.m3;
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
 	@Override
-	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-		return WaterUnits.DenominatorUnits.year;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
-	 */
-	@Override
-	public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-		return ElectricityUnits.NumeratorUnits.MWh;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
-	 */
-	@Override
-	public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-		return ElectricityUnits.DenominatorUnits.year;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
-	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
-	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
 }

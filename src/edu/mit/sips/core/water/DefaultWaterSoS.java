@@ -23,6 +23,7 @@ import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
@@ -57,20 +58,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 		 */
 		@Override
-		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-			return CurrencyUnits.DenominatorUnits.year;
+		public TimeUnits getCurrencyTimeUnits() {
+			return TimeUnits.year;
 		}
 
-
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 		 */
 		@Override
-		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-			return CurrencyUnits.NumeratorUnits.sim;
+		public CurrencyUnits getCurrencyUnits() {
+			return CurrencyUnits.sim;
 		}
 
 
@@ -88,19 +88,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 		 */
 		@Override
-		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-			return ElectricityUnits.DenominatorUnits.year;
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
 		 */
 		@Override
-		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-			return ElectricityUnits.NumeratorUnits.MWh;
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -382,19 +382,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -716,19 +716,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
 	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
 	}
 
 	/* (non-Javadoc)
@@ -744,19 +744,19 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 	 */
 	@Override
-	public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-		return ElectricityUnits.DenominatorUnits.year;
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
 	 */
 	@Override
-	public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-		return ElectricityUnits.NumeratorUnits.MWh;
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
 	}
 
 	/* (non-Javadoc)
@@ -802,18 +802,18 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
-	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-		return WaterUnits.DenominatorUnits.year;
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 	 */
 	@Override
-	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-		return WaterUnits.NumeratorUnits.m3;
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 }

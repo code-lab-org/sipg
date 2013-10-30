@@ -1,139 +1,56 @@
 package edu.mit.sips.sim.util;
 
-
 /**
  * The Class CurrencyUnits.
  */
-public class CurrencyUnits {
-
+public class CurrencyUnits extends DefaultUnits {
+	public static final CurrencyUnits 
+			sim = new CurrencyUnits("Simoleon","\u00A7", 1e12), 
+			ksim = new CurrencyUnits("thousand Simoleon","\u00A7k", 1e9), 
+			Msim = new CurrencyUnits("million Simoleon","\u00A7M", 1e6),
+			Bsim = new CurrencyUnits("billion Simoleon","\u00A7B", 1e3),
+			Tsim = new CurrencyUnits("trillion Simoleon", "\u00A7T", 1);
+	
 	/**
-	 * The Enum NumeratorUnits.
+	 * Instantiates a new currency units.
+	 *
+	 * @param name the name
+	 * @param abbreviation the abbreviation
+	 * @param scale the scale
 	 */
-	public static enum NumeratorUnits implements Units {
-		sim("Simoleon","\u00A7", 1e12), 
-		ksim("thousand Simoleon","\u00A7k", 1e9), 
-		Msim("million Simoleon","\u00A7M", 1e6),
-		Bsim("billion Simoleon","\u00A7B", 1e3),
-		Tsim("trillion Simoleon", "\u00A7T", 1);
-		
-		private final String name;
-		private final String abbreviation;
-		private final double scale;
-		
-		/**
-		 * Instantiates a new denominator units.
-		 *
-		 * @param name the name
-		 * @param abbreviation the abbreviation
-		 */
-		private NumeratorUnits(String name, String abbreviation, double scale) {
-			this.name = name;
-			this.abbreviation = abbreviation;
-			this.scale = scale;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		public String toString() { return abbreviation; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getName()
-		 */
-		public String getName() { return name; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
-		 */
-		public String getAbbreviation() { return abbreviation; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getScale()
-		 */
-		public double getScale() { return scale; }
+	private CurrencyUnits(String name, String abbreviation, double scale) {
+		super(name, abbreviation, scale);
 	}
 	
 	/**
-	 * The Enum DenominatorUnits.
-	 */
-	public static enum DenominatorUnits implements Units {
-		day("day","day", 365.242), 
-		year("year","yr", 1);
-		
-		private final String name;
-		private final String abbreviation;
-		private final double scale;
-		
-		/**
-		 * Instantiates a new denominator units.
-		 *
-		 * @param name the name
-		 * @param abbreviation the abbreviation
-		 * @param scale the scale
-		 */
-		private DenominatorUnits(String name, String abbreviation, double scale) {
-			this.name = name;
-			this.abbreviation = abbreviation;
-			this.scale = scale;
-		}
-
-		/* (non-Javadoc)
-		 * @see java.lang.Enum#toString()
-		 */
-		public String toString() { return abbreviation; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getName()
-		 */
-		public String getName() { return name; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
-		 */
-		public String getAbbreviation() { return abbreviation; }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.Units#getScale()
-		 */
-		public double getScale() { return scale; }
-	};
-	
-	/**
-	 * Convert.
+	 * Convert flow.
 	 *
 	 * @param value the value
 	 * @param source the source
 	 * @param target the target
 	 * @return the double
 	 */
-	public static double convert(double value, 
+	public static double convertFlow(double value, 
 			CurrencyUnitsOutput source, 
 			CurrencyUnitsOutput target) {
-		return convert(value, 
-				source.getCurrencyUnitsNumerator(), 
-				source.getCurrencyUnitsDenominator(), 
-				target.getCurrencyUnitsNumerator(), 
-				target.getCurrencyUnitsDenominator());
+		return DefaultUnits.convertFlow(value, 
+				source.getCurrencyUnits(), source.getCurrencyTimeUnits(), 
+				target.getCurrencyUnits(), target.getCurrencyTimeUnits());
 	}
 	
 	/**
-	 * Convert.
+	 * Convert stock.
 	 *
 	 * @param value the value
-	 * @param sourceNumeratorUnits the source numerator units
-	 * @param sourceDenominatorUnits the source denominator units
-	 * @param targetNumeratorUnits the target numerator units
-	 * @param targetDenominatorUnits the target denominator units
+	 * @param source the source
+	 * @param target the target
 	 * @return the double
 	 */
-	public static double convert(double value, 
-			NumeratorUnits sourceNumeratorUnits, 
-			DenominatorUnits sourceDenominatorUnits, 
-			NumeratorUnits targetNumeratorUnits, 
-			DenominatorUnits targetDenominatorUnits) {
-		return value / sourceNumeratorUnits.getScale() 
-				* targetNumeratorUnits.getScale() 
-				* sourceDenominatorUnits.getScale() 
-				/ targetDenominatorUnits.getScale();
+	public static double convertStock(double value, 
+			CurrencyUnitsOutput source, 
+			CurrencyUnitsOutput target) {
+		return DefaultUnits.convertStock(value, 
+				source.getCurrencyUnits(), 
+				target.getCurrencyUnits());
 	}
 }

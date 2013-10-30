@@ -14,6 +14,8 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class SocialSystemPanel.
@@ -50,43 +52,43 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 
 		if(getSociety() instanceof Country) {
 			addTab("Funds", Icons.FUNDS, createTimeSeriesChart(
-					"Funds (" + getCurrencyUnitsNumerator() + ")", fundsData));
+					"Funds (" + getCurrencyUnits() + ")", fundsData));
 		}
 
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Revenue (" + getCurrencyUnitsNumerator() 
-				+ "/" + getCurrencyUnitsDenominator() + ")", 
+				"Revenue (" + getCurrencyUnits() 
+				+ "/" + getCurrencyTimeUnits() + ")", 
 				infrastructureSystemRevenue, null, infrastructureSystemNetRevenue));
 		if(getSocialSystem() instanceof SocialSoS) {
 			addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-					"Revenue (" + getCurrencyUnitsNumerator() 
-					+ "/" + getCurrencyUnitsDenominator() + ")", 
+					"Revenue (" + getCurrencyUnits() 
+					+ "/" + getCurrencyTimeUnits() + ")", 
 					societyRevenue, null, societyNetRevenue));
 		}
 		addTab("Domestic Product", Icons.PRODUCT, createStackedAreaChart(
-				"Domestic Product (" + getCurrencyUnitsNumerator() 
-				+ "/" + getCurrencyUnitsDenominator() + ")", domesticProduct, 
-				"Domestic Product per Capita (" + CurrencyUnits.NumeratorUnits.sim 
-				+ "/" + CurrencyUnits.DenominatorUnits.year + ")", domesticProductPerCapita));
+				"Domestic Product (" + getCurrencyUnits() 
+				+ "/" + getCurrencyTimeUnits() + ")", domesticProduct, 
+				"Domestic Product per Capita (" + CurrencyUnits.sim 
+				+ "/" + TimeUnits.year + ")", domesticProductPerCapita));
 		addTab("Population", Icons.POPULATION, createStackedAreaChart(
 				"Population", populationDataset));
 
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
 	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.Tsim;
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.Tsim;
 	}
 
 	/**
@@ -145,34 +147,34 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	public void update(int year) {
 		if(getSociety() instanceof Country) {
 			updateSeriesCollection(fundsData, getSociety().getName(), year, 
-					CurrencyUnits.convert(((Country)getSociety()).getFunds(), 
+					CurrencyUnits.convertStock(((Country)getSociety()).getFunds(), 
 							getSociety(), this));
 		}
 		updateSeries(infrastructureSystemNetRevenue, "Net Revenue", year, 
-				CurrencyUnits.convert(getSociety().getCashFlow(), 
+				CurrencyUnits.convertFlow(getSociety().getCashFlow(), 
 						getSociety(), this));
 
 		
 		for(InfrastructureSystem nestedSociety : getSociety().getInfrastructureSystems()) {
 			updateSeries(infrastructureSystemRevenue, nestedSociety.getName(), year, 
-					CurrencyUnits.convert(nestedSociety.getCashFlow(), 
+					CurrencyUnits.convertFlow(nestedSociety.getCashFlow(), 
 							nestedSociety, this));
 		}
 		
 		if(getSocialSystem().getPopulation() > 0) {
 			updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
-					year, CurrencyUnits.convert(getSocialSystem().getDomesticProduct(), 
-							getSociety().getCurrencyUnitsNumerator(), 
-							getSociety().getCurrencyUnitsDenominator(), 
-							CurrencyUnits.NumeratorUnits.sim,
-							CurrencyUnits.DenominatorUnits.year) 
+					year, DefaultUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
+							getSociety().getCurrencyUnits(), 
+							getSociety().getCurrencyTimeUnits(), 
+							CurrencyUnits.sim,
+							TimeUnits.year) 
 					/ getSocialSystem().getPopulation());
 			domesticProductIndicatorPanel.setValue(
-					CurrencyUnits.convert(getSocialSystem().getDomesticProduct(), 
-							getSociety().getCurrencyUnitsNumerator(), 
-							getSociety().getCurrencyUnitsDenominator(), 
-							CurrencyUnits.NumeratorUnits.sim,
-							CurrencyUnits.DenominatorUnits.year) 
+					DefaultUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
+							getSociety().getCurrencyUnits(), 
+							getSociety().getCurrencyTimeUnits(), 
+							CurrencyUnits.sim,
+							TimeUnits.year) 
 					/ getSocialSystem().getPopulation());
 		}
 		
@@ -184,24 +186,24 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(domesticProduct, nestedSociety.getName(), year, 
-						CurrencyUnits.convert(nestedSociety.getSocialSystem().getDomesticProduct(), 
+						CurrencyUnits.convertFlow(nestedSociety.getSocialSystem().getDomesticProduct(), 
 								nestedSociety, this));
 			}
 
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(societyRevenue, nestedSociety.getName(), year, 
-						CurrencyUnits.convert(nestedSociety.getCashFlow(), 
+						CurrencyUnits.convertFlow(nestedSociety.getCashFlow(), 
 								nestedSociety, this));
 			}
 			updateSeries(societyNetRevenue, "Net Revenue", year, 
-					CurrencyUnits.convert(getSociety().getCashFlow(), 
+					CurrencyUnits.convertFlow(getSociety().getCashFlow(), 
 							getSociety(), this));
 		} else {
 			updateSeries(populationDataset, getSociety().getName(), year, 
 					getSocialSystem().getPopulation());
 			
 			updateSeries(domesticProduct, getSociety().getName(), year, 
-					CurrencyUnits.convert(getSocialSystem().getDomesticProduct(), 
+					CurrencyUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
 							getSocialSystem(), this));
 		}
 	}

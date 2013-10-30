@@ -9,7 +9,8 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
 /**
  * The Interface AgricultureSystem.
  */
-public interface AgricultureSystem extends InfrastructureSystem, FoodUnitsOutput, WaterUnitsOutput {
+public interface AgricultureSystem extends InfrastructureSystem, 
+		FoodUnitsOutput, WaterUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

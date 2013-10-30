@@ -1,11 +1,13 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+
 
 
 /**
  * The Interface InfrastructureElement.
  */
-public interface InfrastructureElement extends SimEntity {
+public interface InfrastructureElement extends SimEntity, CurrencyUnitsOutput {
 	
 	/**
 	 * Adds the element change listener.

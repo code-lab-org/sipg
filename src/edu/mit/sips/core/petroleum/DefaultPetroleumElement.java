@@ -2,6 +2,9 @@ package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultPetroleumElement.
@@ -96,7 +99,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	/**
 	 * Instantiates a new default petroleum element.
 	 *
-	 * @param template the template
+	 * @param templateName the template name
 	 * @param name the name
 	 * @param origin the origin
 	 * @param destination the destination
@@ -225,6 +228,22 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getMaxPetroleumInput()
 	 */
 	@Override
@@ -235,7 +254,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getMaxPetroleumProduction()
 	 */
@@ -274,6 +293,22 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return OilUnits.toe;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumInput()
 	 */
 	@Override
@@ -284,7 +319,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumOutput()
 	 */
@@ -296,7 +331,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumProduction()
 	 */
@@ -320,7 +355,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getReservoirIntensityOfPetroleumProduction()
 	 */
@@ -332,7 +367,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
 	 */
@@ -342,7 +377,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 				+ variableOperationsCostOfPetroleumProduction * petroleumProduction 
 				+ variableOperationsCostOfPetroleumDistribution * petroleumInput;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getVariableOperationsCostOfPetroleumDistribution()
 	 */

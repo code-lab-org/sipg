@@ -13,54 +13,53 @@ import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class ConsoleLogger.
  */
 public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyUnitsOutput {
 
-	private final FoodUnits.NumeratorUnits foodUnitsNumerator = 
-			FoodUnits.NumeratorUnits.GJ;
-	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
-			FoodUnits.DenominatorUnits.year;
+	private final FoodUnits foodUnits = 
+			FoodUnits.GJ;
+	private final TimeUnits foodTimeUnits = 
+			TimeUnits.year;
 	
-	private final CurrencyUnits.NumeratorUnits currencyUnitsNumerator = 
-			CurrencyUnits.NumeratorUnits.Bsim;
-	private final CurrencyUnits.DenominatorUnits currencyUnitsDenominator = 
-			CurrencyUnits.DenominatorUnits.year;
+	private final CurrencyUnits currencyUnits = 
+			CurrencyUnits.Bsim;
+	private final TimeUnits currencyTimeUnits = 
+			TimeUnits.year;
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
 	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return currencyUnitsDenominator;
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return currencyUnitsNumerator;
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 	 */
 	@Override
-	public DenominatorUnits getFoodUnitsDenominator() {
-		return foodUnitsDenominator;
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
 	 */
 	@Override
-	public NumeratorUnits getFoodUnitsNumerator() {
-		return foodUnitsNumerator;
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
 	}
 
 	/**
@@ -226,82 +225,82 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "Food Source", 
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodProduction() + 
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodProduction() + 
 							agricultureSystem.getFoodInDistribution() + 
 							agricultureSystem.getFoodImport(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodProduction()
+						FoodUnits.convertFlow(system.getFoodProduction()
 						+ system.getFoodInDistribution()
 						+ system.getFoodImport(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Production",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodProduction(), agricultureSystem, this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodProduction(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodProduction(), system, this));
+						FoodUnits.convertFlow(system.getFoodProduction(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  In-Distrib.",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodInDistribution(), agricultureSystem, this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodInDistribution(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodInDistribution(), system, this));
+						FoodUnits.convertFlow(system.getFoodInDistribution(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Import",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodImport(), agricultureSystem, this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodImport(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodImport(), system, this));
+						FoodUnits.convertFlow(system.getFoodImport(), system, this));
 			}
 			System.out.println();
 
 			System.out.printf("%-15s %-5s %,15.0f |", "Food Use",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(country.getSocialSystem().getFoodConsumption()
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(country.getSocialSystem().getFoodConsumption()
 					+ agricultureSystem.getFoodOutDistribution()
 					+ agricultureSystem.getFoodExport(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getSociety().getSocialSystem().getFoodConsumption()
+						FoodUnits.convertFlow(system.getSociety().getSocialSystem().getFoodConsumption()
 						+ system.getFoodOutDistribution()
 						+ system.getFoodExport(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Out-Distrib.",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodOutDistribution(), agricultureSystem, this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodOutDistribution(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodOutDistribution(), system, this));
+						FoodUnits.convertFlow(system.getFoodOutDistribution(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Export",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(agricultureSystem.getFoodExport(), agricultureSystem, this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(agricultureSystem.getFoodExport(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(system.getFoodExport(), system, this));
+						FoodUnits.convertFlow(system.getFoodExport(), system, this));
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Society",
-					foodUnitsNumerator.getAbbreviation() + "/" + foodUnitsDenominator.getAbbreviation(), 
-					FoodUnits.convert(country.getSocialSystem().getFoodConsumption(), country.getSocialSystem(), this));
+					foodUnits.getAbbreviation() + "/" + foodTimeUnits.getAbbreviation(), 
+					FoodUnits.convertFlow(country.getSocialSystem().getFoodConsumption(), country.getSocialSystem(), this));
 			for(City city : country.getCities()) {
 				System.out.printf(" %,15.0f", 
-						FoodUnits.convert(city.getSocialSystem().getFoodConsumption(), city.getSocialSystem(), this));
+						FoodUnits.convertFlow(city.getSocialSystem().getFoodConsumption(), city.getSocialSystem(), this));
 			}
 			System.out.println();
 
@@ -313,91 +312,91 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Total Revenue", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getTotalRevenue(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "Total Revenue", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getTotalRevenue(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getTotalRevenue(), system, this));
+						CurrencyUnits.convertFlow(system.getTotalRevenue(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Sales", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getSalesRevenue(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Sales", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getSalesRevenue(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getSalesRevenue(), system, this));
+						CurrencyUnits.convertFlow(system.getSalesRevenue(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getDistributionRevenue(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getDistributionRevenue(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getDistributionRevenue(), system, this));
+						CurrencyUnits.convertFlow(system.getDistributionRevenue(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Export", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getExportRevenue(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Export", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getExportRevenue(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getExportRevenue(), system, this));
+						CurrencyUnits.convertFlow(system.getExportRevenue(), system, this));
 			}
 			System.out.println();
 
-			System.out.printf("%-15s %-5s %,15.0f |", "Total Expenses", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getTotalExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "Total Expenses", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getTotalExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getTotalExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getTotalExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Capital", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getCapitalExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Capital", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getCapitalExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getCapitalExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getCapitalExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Operations", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getOperationsExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Operations", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getOperationsExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getOperationsExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getOperationsExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Resources", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getConsumptionExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Resources", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getConsumptionExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getConsumptionExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getConsumptionExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Decommission", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getDecommissionExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Decommission", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getDecommissionExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getDecommissionExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getDecommissionExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getDistributionExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Distribution", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getDistributionExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getDistributionExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getDistributionExpense(), system, this));
 			}
 			System.out.println();
 			
-			System.out.printf("%-15s %-5s %,15.0f |", "  Import", currencyUnitsNumerator.getAbbreviation(), 
-					CurrencyUnits.convert(agricultureSystem.getImportExpense(), agricultureSystem, this));
+			System.out.printf("%-15s %-5s %,15.0f |", "  Import", currencyUnits.getAbbreviation(), 
+					CurrencyUnits.convertFlow(agricultureSystem.getImportExpense(), agricultureSystem, this));
 			for(AgricultureSystem.Local system : getLocalAgricultureSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						CurrencyUnits.convert(system.getImportExpense(), system, this));
+						CurrencyUnits.convertFlow(system.getImportExpense(), system, this));
 			}
 			System.out.println();
 		}

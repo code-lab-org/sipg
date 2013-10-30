@@ -3,11 +3,14 @@ package edu.mit.sips.core.petroleum;
 import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnitsOutput;
 
 /**
  * The Interface PetroleumSystem.
  */
-public interface PetroleumSystem extends InfrastructureSystem {
+public interface PetroleumSystem extends InfrastructureSystem, 
+		ElectricityUnitsOutput, OilUnitsOutput {
 	
 	/**
 	 * The Interface Local.

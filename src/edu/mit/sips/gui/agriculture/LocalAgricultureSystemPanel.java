@@ -19,10 +19,10 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
@@ -37,20 +37,20 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	
 	private final SpatialStatePanel agricultureStatePanel;
 	
-	private final FoodUnits.NumeratorUnits foodUnitsNumerator = 
-			FoodUnits.NumeratorUnits.EJ;
-	private final FoodUnits.DenominatorUnits foodUnitsDenominator = 
-			FoodUnits.DenominatorUnits.year;
+	private final FoodUnits foodUnits = 
+			FoodUnits.EJ;
+	private final TimeUnits foodTimeUnits = 
+			TimeUnits.year;
 	
-	private final WaterUnits.NumeratorUnits waterUnitsNumerator = 
-			WaterUnits.NumeratorUnits.m3;
-	private final WaterUnits.DenominatorUnits waterUnitsDenominator = 
-			WaterUnits.DenominatorUnits.year;
+	private final WaterUnits waterUnits = 
+			WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = 
+			TimeUnits.year;
 	
-	private final CurrencyUnits.NumeratorUnits currencyUnitsNumerator = 
-			CurrencyUnits.NumeratorUnits.Bsim;
-	private final CurrencyUnits.DenominatorUnits currencyUnitsDenominator = 
-			CurrencyUnits.DenominatorUnits.year;
+	private final CurrencyUnits currencyUnits = 
+			CurrencyUnits.Bsim;
+	private final TimeUnits currencyTimeUnits = 
+			TimeUnits.year;
 	
 	TimeSeriesCollection localFoodData = new TimeSeriesCollection();
 	TimeSeriesCollection foodProductCostData = new TimeSeriesCollection();
@@ -87,23 +87,23 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		
 		addTab("Revenue", Icons.REVENUE,
 				createStackedAreaChart("Agriculture Revenue ("
-						+ currencyUnitsNumerator.getAbbreviation() + "/"
-						+ currencyUnitsDenominator.getAbbreviation() + ")",
+						+ currencyUnits.getAbbreviation() + "/"
+						+ currencyTimeUnits.getAbbreviation() + ")",
 						agricultureRevenue, null, agricultureNetRevenue));
 		addTab("Source", Icons.AGRICULTURE_SOURCE,
-				createStackedAreaChart("Food Source (" + foodUnitsNumerator
-						+ "/" + foodUnitsDenominator + ")", foodSourceData));
+				createStackedAreaChart("Food Source (" + foodUnits
+						+ "/" + foodTimeUnits + ")", foodSourceData));
 		addTab("Use", Icons.AGRICULTURE_USE,
-				createStackedAreaChart("Food Use (" + foodUnitsNumerator + "/"
-						+ foodUnitsDenominator + ")", foodUseData));
+				createStackedAreaChart("Food Use (" + foodUnits + "/"
+						+ foodTimeUnits + ")", foodUseData));
 		addTab("Use", Icons.WATER_USE,
-				createStackedAreaChart("Water Use (" + waterUnitsNumerator + "/"
-						+ waterUnitsDenominator + ")", waterUseData));
+				createStackedAreaChart("Water Use (" + waterUnits + "/"
+						+ waterTimeUnits + ")", waterUseData));
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Food Consumption Per Capita (" + agricultureSystem.getFoodUnitsNumerator() 
-				+ "/" + agricultureSystem.getFoodUnitsDenominator() + "/person)", 
+				"Food Consumption Per Capita (" + FoodUnits.kcal 
+				+ "/" + TimeUnits.day + ")", 
 						foodConsumptionPerCapita));
 		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset));
@@ -129,19 +129,19 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 	 */
 	@Override
-	public DenominatorUnits getFoodUnitsDenominator() {
-		return foodUnitsDenominator;
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
 	 */
 	@Override
-	public NumeratorUnits getFoodUnitsNumerator() {
-		return foodUnitsNumerator;
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
 	}
 
 	/**
@@ -232,13 +232,21 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		
 		if(getSociety().getSocialSystem().getPopulation() > 0) {
 			updateSeriesCollection(foodConsumptionPerCapita, getSociety().getName(), 
-					year, getSociety().getSocialSystem().getFoodConsumption() 
-					/ getSociety().getSocialSystem().getPopulation());
+					year, DefaultUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(), 
+							getSociety().getSocialSystem().getFoodUnits(), 
+							getSociety().getSocialSystem().getFoodTimeUnits(), 
+							FoodUnits.kcal,
+							TimeUnits.day)
+							/ getSociety().getSocialSystem().getPopulation());
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
 					updateSeriesCollection(foodConsumptionPerCapita, nestedSociety.getName(), 
-							year, nestedSociety.getSocialSystem().getFoodConsumption() 
-							/ nestedSociety.getSocialSystem().getPopulation());
+							year, DefaultUnits.convertFlow(nestedSociety.getSocialSystem().getFoodConsumption(), 
+									nestedSociety.getSocialSystem().getFoodUnits(), 
+									nestedSociety.getSocialSystem().getFoodTimeUnits(), 
+									FoodUnits.kcal,
+									TimeUnits.day)
+									/ nestedSociety.getSocialSystem().getPopulation());
 				}
 			}
 		}
@@ -271,126 +279,126 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	
 		if(getNestedAgricultureSystems().isEmpty()) {
 			updateSeries(foodUseData, "Society", year, 
-					FoodUnits.convert(getSociety().getSocialSystem().getFoodConsumption(),
+					FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
 							getSociety().getSocialSystem(), this));
 			updateSeries(waterUseData, getAgricultureSystem().getName(), year, 
-					WaterUnits.convert(getAgricultureSystem().getWaterConsumption(),
+					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
 							getAgricultureSystem(), this));
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 				updateSeries(foodUseData, nestedSystem.getSociety().getName() + " Society", year,
-						FoodUnits.convert(nestedSystem.getSociety().getSocialSystem().getFoodConsumption(), 
+						FoodUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getFoodConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
 				updateSeries(waterUseData, nestedSystem.getName(), year, 
-						WaterUnits.convert(nestedSystem.getWaterConsumption(),
+						WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
 								nestedSystem, this));
 			}
 		}
 		updateSeries(agricultureRevenue, "Capital", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getCapitalExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Operations", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getOperationsExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getOperationsExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Decommission", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getDecommissionExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getDecommissionExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Consumption", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getConsumptionExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "In-Distribution", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getDistributionExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Import", year, 
-				CurrencyUnits.convert(-getAgricultureSystem().getImportExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getImportExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convert(getAgricultureSystem().getDistributionRevenue(),
+				CurrencyUnits.convertFlow(getAgricultureSystem().getDistributionRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Export", year, 
-				CurrencyUnits.convert(getAgricultureSystem().getExportRevenue(),
+				CurrencyUnits.convertFlow(getAgricultureSystem().getExportRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Sales", year, 
-				CurrencyUnits.convert(getAgricultureSystem().getSalesRevenue(),
+				CurrencyUnits.convertFlow(getAgricultureSystem().getSalesRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureNetRevenue, "Net Revenue", year, 
-				CurrencyUnits.convert(getAgricultureSystem().getCashFlow(),
+				CurrencyUnits.convertFlow(getAgricultureSystem().getCashFlow(),
 						getAgricultureSystem(), this));
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getMaxLandArea() > 0) {
 					updateSeries(foodSourceData, element.getName(), year, 
-							FoodUnits.convert(element.getFoodProduction(),
+							FoodUnits.convertFlow(element.getFoodProduction(),
 									element, this));
 				}
 				
 				if(element.getMaxFoodInput() > 0) {
 					updateSeries(foodUseData, element.getName(), year, 
-							FoodUnits.convert(element.getFoodInput(), element, this));
+							FoodUnits.convertFlow(element.getFoodInput(), element, this));
 				}
 			}
 			for(AgricultureElement element : getAgricultureSystem().getExternalElements()) {
 				if(element.getMaxFoodInput() > 0) {
 					updateSeries(foodSourceData, element.getName(), year, 
-							FoodUnits.convert(element.getFoodOutput(),
+							FoodUnits.convertFlow(element.getFoodOutput(),
 									element, this));
 				}
 			}
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 				updateSeries(foodSourceData, nestedSystem.getSociety().getName() + " Production", year,
-						FoodUnits.convert(nestedSystem.getFoodProduction(), nestedSystem, this));
+						FoodUnits.convertFlow(nestedSystem.getFoodProduction(), nestedSystem, this));
 			}
 			/*updateSeries(foodSourceData, "Production", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodProduction(),
 							getAgricultureSystem(), this));*/
 			updateSeries(foodSourceData, "Distribution", year, 
-					FoodUnits.convert(getAgricultureSystem().getFoodInDistribution(),
+					FoodUnits.convertFlow(getAgricultureSystem().getFoodInDistribution(),
 							getAgricultureSystem(), this));
 			updateSeries(foodUseData, "Distribution", year, 
-					FoodUnits.convert(getAgricultureSystem().getFoodOutDistribution(),
+					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(),
 							getAgricultureSystem(), this));
 			updateSeries(foodUseData, "Distribution Losses", year, 
-					FoodUnits.convert(getAgricultureSystem().getFoodOutDistributionLosses(),
+					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistributionLosses(),
 							getAgricultureSystem(), this));
 		}
 		updateSeries(foodUseData, "Export", year, 
-				FoodUnits.convert(getAgricultureSystem().getFoodExport(),
+				FoodUnits.convertFlow(getAgricultureSystem().getFoodExport(),
 						getAgricultureSystem(), this));
 		updateSeries(foodSourceData, "Import", year, 
-				FoodUnits.convert(getAgricultureSystem().getFoodImport(),
+				FoodUnits.convertFlow(getAgricultureSystem().getFoodImport(),
 						getAgricultureSystem(), this));
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return currencyUnitsNumerator;
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
 	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return currencyUnitsDenominator;
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 	 */
 	@Override
-	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-		return waterUnitsNumerator;
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
-	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-		return waterUnitsDenominator;
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
 	}
 }

@@ -15,8 +15,7 @@ import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.PopulationModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
@@ -36,7 +35,6 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		
 		/**
 		 * Instantiates a new local.
-		 *
 		 */
 		public Local() {
 			super("Society");
@@ -156,16 +154,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
 		@Override
-		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-			return ElectricityUnits.DenominatorUnits.year;
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 		 */
 		@Override
-		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-			return ElectricityUnits.NumeratorUnits.MWh;
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -206,16 +204,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
 		 */
 		@Override
-		public DenominatorUnits getFoodUnitsDenominator() {
-			return FoodUnits.DenominatorUnits.day;
+		public TimeUnits getFoodTimeUnits() {
+			return TimeUnits.day;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
 		 */
 		@Override
-		public NumeratorUnits getFoodUnitsNumerator() {
-			return FoodUnits.NumeratorUnits.kcal;
+		public FoodUnits getFoodUnits() {
+			return FoodUnits.kcal;
 		}
 
 		/* (non-Javadoc)
@@ -276,16 +274,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -358,16 +356,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
 		@Override
-		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
-			return ElectricityUnits.DenominatorUnits.year;
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 		 */
 		@Override
-		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
-			return ElectricityUnits.NumeratorUnits.MWh;
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -382,16 +380,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
 		 */
 		@Override
-		public DenominatorUnits getFoodUnitsDenominator() {
-			return FoodUnits.DenominatorUnits.day;
+		public TimeUnits getFoodTimeUnits() {
+			return TimeUnits.day;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
 		 */
 		@Override
-		public NumeratorUnits getFoodUnitsNumerator() {
-			return FoodUnits.NumeratorUnits.kcal;
+		public FoodUnits getFoodUnits() {
+			return FoodUnits.kcal;
 		}
 
 		/* (non-Javadoc)
@@ -414,16 +412,16 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)

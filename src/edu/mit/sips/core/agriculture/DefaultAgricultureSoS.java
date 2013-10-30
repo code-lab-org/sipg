@@ -23,6 +23,7 @@ import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
@@ -67,6 +68,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			return value;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
+		 */
+		@Override
+		public TimeUnits getCurrencyTimeUnits() {
+			return TimeUnits.year;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
@@ -212,21 +221,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDenominatorUnits()
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 		 */
 		@Override
-		public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
-			return FoodUnits.DenominatorUnits.day;
+		public TimeUnits getFoodTimeUnits() {
+			return TimeUnits.day;
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodNumeratorUnits()
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodUnits()
 		 */
 		@Override
-		public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
-			return FoodUnits.NumeratorUnits.kcal;
+		public FoodUnits getFoodUnits() {
+			return FoodUnits.kcal;
 		}
 
 		/* (non-Javadoc)
@@ -342,7 +351,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitSupplyProfit()
 		 */
@@ -353,7 +362,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 		 */
@@ -367,19 +376,19 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 		 */
 		@Override
-		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-			return WaterUnits.DenominatorUnits.year;
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 		 */
 		@Override
-		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-			return WaterUnits.NumeratorUnits.m3;
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
 		}
 
 		/* (non-Javadoc)
@@ -720,6 +729,14 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
 	 */
 	@Override
@@ -765,21 +782,21 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDenominatorUnits()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 	 */
 	@Override
-	public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
-		return FoodUnits.DenominatorUnits.day;
+	public TimeUnits getFoodTimeUnits() {
+		return TimeUnits.day;
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodNumeratorUnits()
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodUnits()
 	 */
 	@Override
-	public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
-		return FoodUnits.NumeratorUnits.kcal;
+	public FoodUnits getFoodUnits() {
+		return FoodUnits.kcal;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
 	 */
@@ -805,18 +822,18 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
-	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
-		return WaterUnits.DenominatorUnits.year;
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 	 */
 	@Override
-	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
-		return WaterUnits.NumeratorUnits.m3;
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 }

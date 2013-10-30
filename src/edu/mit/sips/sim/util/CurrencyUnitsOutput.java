@@ -6,16 +6,16 @@ package edu.mit.sips.sim.util;
 public interface CurrencyUnitsOutput {
 	
 	/**
-	 * Gets the currency units numerator.
+	 * Gets the currency units.
 	 *
-	 * @return the currency units numerator
+	 * @return the currency units
 	 */
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator();
+	public CurrencyUnits getCurrencyUnits();
 	
 	/**
-	 * Gets the currency units denominator.
+	 * Gets the currency time units.
 	 *
-	 * @return the currency units denominator
+	 * @return the currency time units
 	 */
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator();
+	public TimeUnits getCurrencyTimeUnits();
 }

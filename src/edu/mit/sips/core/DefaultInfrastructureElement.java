@@ -2,10 +2,11 @@ package edu.mit.sips.core;
 
 import javax.swing.event.EventListenerList;
 
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+
 /**
- * The Class InfrastructureElement.
- * 
- * @author Paul T. Grogan, ptgrogan@mit.edu
+ * The Class DefaultInfrastructureElement.
  */
 public abstract class DefaultInfrastructureElement implements InfrastructureElement {
 	private final String templateName;
@@ -15,7 +16,18 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	protected transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
-	 * Instantiates a new infrastructure element.
+	 * Instantiates a new default infrastructure element.
+	 */
+	protected DefaultInfrastructureElement() {
+		this.templateName = null;
+		this.name = "";
+		this.origin = "";
+		this.destination = "";
+		this.lifecycleModel = new DefaultLifecycleModel();
+	}
+	
+	/**
+	 * Instantiates a new default infrastructure element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -53,22 +65,6 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		this.lifecycleModel = lifecycleModel;
 	}
 	
-	/**
-	 * Instantiates a new default infrastructure element.
-	 */
-	protected DefaultInfrastructureElement() {
-		this.templateName = null;
-		this.name = "";
-		this.origin = "";
-		this.destination = "";
-		this.lifecycleModel = new DefaultLifecycleModel();
-	}
-	
-	@Override
-	public String getTemplateName() {
-		return templateName;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureElement#addElementChangeListener(edu.mit.sips.core.ElementChangeListener)
 	 */
@@ -89,13 +85,21 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 			listeners[i].elementChanged(evt);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getCapitalExpense()
 	 */
 	@Override
 	public final double getCapitalExpense() { 
 		return lifecycleModel.getCapitalExpense();
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
 	}
 	
 	/* (non-Javadoc)
@@ -139,6 +143,22 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureElement#getTemplateName()
+	 */
+	@Override
+	public String getTemplateName() {
+		return templateName;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getTotalExpense()
 	 */
 	@Override
@@ -147,7 +167,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 				+ getTotalOperationsExpense() 
 				+ getDecommissionExpense();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#initialize(int)
 	 */
@@ -155,7 +175,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	public void initialize(long time) {
 		lifecycleModel.initialize(time);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#isExists()
 	 */
@@ -179,7 +199,20 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	public final void removeElementChangeListener(ElementChangeListener listener) {
 		listenerList.remove(ElementChangeListener.class, listener);
 	}
-
+	
+	/**
+	 * Sets the mutable fields.
+	 *
+	 * @param element the new mutable fields
+	 */
+	protected final void setMutableFields(DefaultMutableInfrastructureElement element) {
+		element.setTemplateName(templateName);
+		element.setName(name);
+		element.setOrigin(origin);
+		element.setDestination(destination);
+		element.setLifecycleModel(lifecycleModel.getMutableLifecycleModel());
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#tick()
 	 */
@@ -187,7 +220,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	public void tick() {
 		lifecycleModel.tick();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#tock()
 	 */
@@ -202,18 +235,5 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	@Override
 	public final String toString() {
 		return name;
-	}
-	
-	/**
-	 * Sets the mutable fields.
-	 *
-	 * @param element the new mutable fields
-	 */
-	protected final void setMutableFields(DefaultMutableInfrastructureElement element) {
-		element.setTemplateName(templateName);
-		element.setName(name);
-		element.setOrigin(origin);
-		element.setDestination(destination);
-		element.setLifecycleModel(lifecycleModel.getMutableLifecycleModel());
 	}
 }

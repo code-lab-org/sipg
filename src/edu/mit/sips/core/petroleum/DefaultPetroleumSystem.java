@@ -11,6 +11,9 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultPetroleumSystem.
@@ -29,7 +32,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		private final double initialPetroleumReservoirVolume;
 		private double petroleumReservoirVolume;
 		private transient double nextPetroleumReservoirVolume;
-		
+
 		/**
 		 * Instantiates a new default petroleum system.
 		 *
@@ -43,7 +46,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			this.maxPetroleumReservoirVolume = 0;
 			this.initialPetroleumReservoirVolume = 0;
 		}
-		
+
 		/**
 		 * Instantiates a new default petroleum system.
 		 *
@@ -140,7 +143,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
 					* getElectricityConsumption();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
@@ -176,6 +179,22 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 				consumption += e.getElectricityConsumption();
 			}
 			return consumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -260,6 +279,22 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		@Override
 		public double getMaxPetroleumReservoirVolume() {
 			return maxPetroleumReservoirVolume;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
 		}
 
 		/* (non-Javadoc)
@@ -462,13 +497,45 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements PetroleumSystem.Remote {
 		private double electricityConsumption;
 		private double domesticPrice, importPrice, exportPrice;
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getElectricityConsumption()
 		 */
 		@Override
 		public double getElectricityConsumption() {
 			return electricityConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
 		}
 		
 		/* (non-Javadoc)

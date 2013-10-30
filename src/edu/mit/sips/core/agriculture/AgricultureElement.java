@@ -1,14 +1,14 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface AgricultureElement.
  */
-public interface AgricultureElement extends InfrastructureElement, FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
+public interface AgricultureElement extends InfrastructureElement, 
+		FoodUnitsOutput, WaterUnitsOutput {
 	
 	/**
 	 * Gets the cost intensity of land used.

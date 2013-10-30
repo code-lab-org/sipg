@@ -6,16 +6,16 @@ package edu.mit.sips.sim.util;
 public interface WaterUnitsOutput {
 	
 	/**
-	 * Gets the food units numerator.
+	 * Gets the water units.
 	 *
-	 * @return the food units numerator
+	 * @return the water units
 	 */
-	public WaterUnits.NumeratorUnits getWaterUnitsNumerator();
+	public WaterUnits getWaterUnits();
 	
 	/**
-	 * Gets the food units denominator.
+	 * Gets the water time units.
 	 *
-	 * @return the food units denominator
+	 * @return the water time units
 	 */
-	public WaterUnits.DenominatorUnits getWaterUnitsDenominator();
+	public TimeUnits getWaterTimeUnits();
 }

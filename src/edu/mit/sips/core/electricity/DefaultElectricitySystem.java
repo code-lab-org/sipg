@@ -11,6 +11,10 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 
 /**
@@ -121,13 +125,21 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
+		 */
+		@Override
+		public double getElectricalIntensityOfBurningPetroleum() {
+			return electricalIntensityOfBurningPetroleum;
+		}
+		
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
 		 */
 		@Override
 		public double getElectricityDomesticPrice() {
 			return domesticPriceModel.getUnitPrice();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
 		 */
@@ -138,7 +150,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 					- getElectricityInDistribution()
 					- getElectricityProduction());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
 		 */
@@ -150,7 +162,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistribution()
 		 */
@@ -165,7 +177,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistributionLosses()
 		 */
@@ -177,7 +189,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getEnergyProduction()
 		 */
@@ -188,6 +200,22 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 				energyProduction += e.getElectricityProduction();
 			}
 			return energyProduction;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -265,7 +293,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public List<ElectricityElement> getInternalElements() {
 			return Collections.unmodifiableList(elements);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
 		 */
@@ -279,6 +307,22 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
+		}
+		
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.ElectricitySystem#getPetroleumBurned()
 		 */
 		@Override
@@ -287,7 +331,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			return getElectricityFromBurningPetroleum()
 					/ getElectricalIntensityOfBurningPetroleum();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getPetroleumConsumed()
 		 */
@@ -299,7 +343,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return petroleumConsumption;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
 		 */
@@ -311,7 +355,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.ElectricitySystem#getRenewableEnergyProduction()
 		 */
@@ -325,7 +369,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return production;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -334,7 +378,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			return getElectricityDomesticPrice() * (getSociety().getTotalElectricityDemand() 
 					- getElectricityFromBurningPetroleum());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getNetEnergySupply()
 		 */
@@ -344,7 +388,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 					+ getElectricityInDistribution()
 					- getElectricityOutDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
 		 */
@@ -381,6 +425,22 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
@@ -405,14 +465,6 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public void tock() { }
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
-		 */
-		@Override
-		public double getElectricalIntensityOfBurningPetroleum() {
-			return electricalIntensityOfBurningPetroleum;
-		}
 	}
 	
 	/**
@@ -432,13 +484,45 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+		 */
+		@Override
+		public TimeUnits getElectricityTimeUnits() {
+			return TimeUnits.year;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+		 */
+		@Override
+		public ElectricityUnits getElectricityUnits() {
+			return ElectricityUnits.MWh;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return OilUnits.toe;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getPetroleumConsumption()
 		 */
 		@Override
 		public double getPetroleumConsumption() {
 			return petroleumConsumption;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 		 */
@@ -446,7 +530,23 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getWaterConsumption() {
 			return waterConsumption;
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public TimeUnits getWaterTimeUnits() {
+			return TimeUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits getWaterUnits() {
+			return WaterUnits.m3;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Remote#setElectricityDomesticPrice(double)
 		 */

@@ -2,6 +2,10 @@ package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultElectricityElement.
@@ -10,7 +14,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		implements ElectricityElement {
 
 	/**
-	 * Creates the distribution eement.
+	 * Creates the distribution element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -244,6 +248,22 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricityElement#getMaxElectricityInput()
 	 */
 	@Override
@@ -266,7 +286,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
@@ -292,6 +312,22 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		return element;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return TimeUnits.year;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnitsNumerator()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return OilUnits.toe;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricityElement#getPetroleumConsumption()
 	 */
@@ -329,7 +365,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	public double getVariableOperationsCostOfElectricityDistribution() {
 		return variableOperationsCostOfElectricityDistribution;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricityElement#getVariableOperationsCostOfElectricityProduction()
 	 */
@@ -349,7 +385,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricityElement#getWaterIntensityOfElectricityProduction()
 	 */
@@ -357,7 +393,23 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	public double getWaterIntensityOfElectricityProduction() {
 		return waterIntensityOfElectricityProduction;
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
 	 */
@@ -371,7 +423,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		// Use mutator method to validate electricity production.
 		setElectricityProduction(initialElectricityProduction);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.ElectricityElement#isRenewableElectricity()
 	 */

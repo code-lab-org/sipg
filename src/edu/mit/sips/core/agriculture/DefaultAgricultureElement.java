@@ -4,17 +4,16 @@ import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnits.DenominatorUnits;
-import edu.mit.sips.sim.util.WaterUnits.NumeratorUnits;
 
 /**
- * The Class AgricultureElement.
+ * The Class DefaultAgricultureElement.
  */
 public final class DefaultAgricultureElement extends DefaultInfrastructureElement implements AgricultureElement {
 	
 	/**
-	 * Instantiates a new distribution agriculture element.
+	 * Creates the distribution element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -39,7 +38,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 	
 	/**
-	 * Instantiates a new fixed agriculture element.
+	 * Creates the production element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -52,7 +51,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 * @param costIntensityOfLandUsed the cost intensity of land used
 	 * @param waterIntensityOfLandUsed the water intensity of land used
 	 * @param laborIntensityOfLandUsed the labor intensity of land used
-	 * @return the agriculture element
+	 * @return the default agriculture element
 	 */
 	public static DefaultAgricultureElement createProductionElement(
 			String templateName, String name, 
@@ -83,7 +82,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	private double foodInput;
 	
 	/**
-	 * Instantiates a new agriculture element.
+	 * Instantiates a new default agriculture element.
 	 */
 	protected DefaultAgricultureElement() {
 		super();
@@ -103,7 +102,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 	
 	/**
-	 * Instantiates a new agriculture element.
+	 * Instantiates a new default agriculture element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -217,20 +216,19 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
 	 */
 	@Override
-	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
-		return CurrencyUnits.DenominatorUnits.year;
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
 	}
-
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 	 */
 	@Override
-	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
-		return CurrencyUnits.NumeratorUnits.sim;
+	public CurrencyUnits getCurrencyUnits() {
+		return CurrencyUnits.sim;
 	}
 
 	/* (non-Javadoc)
@@ -244,6 +242,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodInput()
@@ -290,21 +289,21 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDenominatorFoodUnits()
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 	 */
 	@Override
-	public FoodUnits.DenominatorUnits getFoodUnitsDenominator() {
-		return FoodUnits.DenominatorUnits.day;
+	public TimeUnits getFoodTimeUnits() {
+		return TimeUnits.day;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
 	 */
 	@Override
-	public FoodUnits.NumeratorUnits getFoodUnitsNumerator() {
-		return FoodUnits.NumeratorUnits.kcal;
+	public FoodUnits getFoodUnits() {
+		return FoodUnits.kcal;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLaborIntensityOfLandUsed()
 	 */
@@ -312,7 +311,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	public double getLaborIntensityOfLandUsed() {
 		return laborIntensityOfLandUsed;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLandArea()
 	 */
@@ -324,7 +323,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodInput()
 	 */
@@ -336,7 +335,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxLandArea()
 	 */
@@ -348,7 +347,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
@@ -409,19 +408,19 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
-	public DenominatorUnits getWaterUnitsDenominator() {
-		return WaterUnits.DenominatorUnits.year;
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 	 */
 	@Override
-	public NumeratorUnits getWaterUnitsNumerator() {
-		return WaterUnits.NumeratorUnits.m3;
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 
 	/* (non-Javadoc)
