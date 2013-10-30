@@ -17,11 +17,18 @@ import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.SpatialStatePanel;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class WaterSystemPanel.
  */
-public class LocalWaterSystemPanel extends WaterSystemPanel {	
+public class LocalWaterSystemPanel extends WaterSystemPanel
+implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {	
 	private static final long serialVersionUID = -3665986046863585665L;
 	
 	private final LinearIndicatorPanel localWaterIndicatorPanel, 
@@ -34,6 +41,7 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 	DefaultTableXYDataset waterRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset waterNetRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset waterReservoirDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
 	
 	TimeSeriesCollection localWaterData = new TimeSeriesCollection();
 	TimeSeriesCollection waterProductCostData = new TimeSeriesCollection();
@@ -68,13 +76,22 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 				waterSystem.getSociety(), new WaterStateProvider());
 		addTab("Network Flow", Icons.NETWORK, waterStatePanel);
 		
-		addTab("Revenue", Icons.REVENUE, 
-				createStackedAreaChart("Water Revenue (SAR/year)", 
+		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
+				"Water Revenue (" + getCurrencyUnitsNumerator() 
+				+ "/" + getCurrencyUnitsDenominator() + ")", 
 				waterRevenue, null, waterNetRevenue));
 		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
-				"Water Source (m^3/year)", waterSourceData));
+				"Water Source (" + getWaterUnitsNumerator() 
+				+ "/" + getWaterUnitsDenominator() + ")", 
+				waterSourceData));
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
-				"Water Use (m^3/year)", waterUseData));
+				"Water Use (" + getWaterUnitsNumerator() 
+				+ "/" + getWaterUnitsDenominator() + ")", 
+				waterUseData));
+		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				"Electricity Use (" + getElectricityUnitsNumerator() 
+				+ "/" + getElectricityUnitsDenominator() + ")",
+				electricityUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Water Use Fraction (-)", localWaterData));
@@ -96,6 +113,11 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		*/
 	}
 	
+	/**
+	 * Gets the nested water systems.
+	 *
+	 * @return the nested water systems
+	 */
 	private List<WaterSystem.Local> getNestedWaterSystems() {
 		List<WaterSystem.Local> systems = new ArrayList<WaterSystem.Local>();
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
@@ -115,6 +137,9 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		return (WaterSystem.Local) getInfrastructureSystem();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
+	 */
 	@Override
 	public void initialize() {
 		localWaterData.removeAllSeries();
@@ -128,6 +153,7 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		waterSourceData.removeAllSeries();
 		waterRevenue.removeAllSeries();
 		waterNetRevenue.removeAllSeries();
+		electricityUseData.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -154,6 +180,9 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		waterStatePanel.repaint();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
+	 */
 	@Override
 	public void update(int year) {
 		updateSeriesCollection(localWaterData, getWaterSystem().getSociety().getName(),
@@ -221,8 +250,23 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 		updateSeries(waterNetRevenue, "Net Revenue", year, 
 				getWaterSystem().getCashFlow());	
 
-		updateSeries(waterUseData, "Society", year, 
-				getSociety().getSocialSystem().getWaterConsumption());
+		if(getNestedWaterSystems().isEmpty()) {
+			updateSeries(waterUseData, "Society", year, 
+					WaterUnits.convert(getSociety().getSocialSystem().getWaterConsumption(),
+							getSociety().getSocialSystem(), this));
+			updateSeries(electricityUseData, getWaterSystem().getName(), year, 
+					ElectricityUnits.convert(getWaterSystem().getElectricityConsumption(),
+							getWaterSystem(), this));
+		} else {
+			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
+				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Society", year,
+						WaterUnits.convert(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
+								nestedSystem.getSociety().getSocialSystem(), this));
+				updateSeries(electricityUseData, nestedSystem.getName(), year, 
+						ElectricityUnits.convert(nestedSystem.getElectricityConsumption(),
+								nestedSystem, this));
+			}
+		}
 		updateSeries(waterUseData, "Agriculture", year, 
 				getSociety().getAgricultureSystem().getWaterConsumption());
 		updateSeries(waterUseData, "Electricity", year, 
@@ -273,5 +317,53 @@ public class LocalWaterSystemPanel extends WaterSystemPanel {
 
 
 		
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+		return WaterUnits.NumeratorUnits.m3;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+		return WaterUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+	 */
+	@Override
+	public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
+		return ElectricityUnits.NumeratorUnits.MWh;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+	 */
+	@Override
+	public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
+		return ElectricityUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+	 */
+	@Override
+	public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+		return CurrencyUnits.NumeratorUnits.sim;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+		return CurrencyUnits.DenominatorUnits.year;
 	}
 }

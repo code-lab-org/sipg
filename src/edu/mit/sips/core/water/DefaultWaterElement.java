@@ -2,6 +2,9 @@ package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnits.DenominatorUnits;
+import edu.mit.sips.sim.util.WaterUnits.NumeratorUnits;
 
 /**
  * The Class DefaultWaterElement.
@@ -378,6 +381,22 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public DenominatorUnits getWaterUnitsDenominator() {
+		return WaterUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public NumeratorUnits getWaterUnitsNumerator() {
+		return WaterUnits.NumeratorUnits.m3;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterElement#getWaterWithdrawals()
 	 */
 	@Override
@@ -401,6 +420,14 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		
 		// Use mutator method to validate water input.
 		setWaterInput(initialWaterInput);
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterElement#isCoastalAccessRequired()
+	 */
+	@Override
+	public boolean isCoastalAccessRequired() {
+		return coastalAccessRequired;
 	}
 
 	/* (non-Javadoc)
@@ -435,10 +462,5 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 		this.waterProduction = waterProduction;
 		fireElementChangeEvent();
-	}
-	
-	@Override
-	public boolean isCoastalAccessRequired() {
-		return coastalAccessRequired;
 	}
 }

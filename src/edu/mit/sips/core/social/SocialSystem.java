@@ -1,12 +1,14 @@
 package edu.mit.sips.core.social;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface SocialSystem.
  */
-public interface SocialSystem extends InfrastructureSystem, FoodUnitsOutput {
+public interface SocialSystem extends InfrastructureSystem, FoodUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

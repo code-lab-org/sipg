@@ -12,6 +12,9 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultAgricultureSystem.
@@ -30,6 +33,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private final double initialWaterReservoirVolume;
 		private final double waterReservoirRechargeRate;
 		private final boolean coastalAccess;
+		private final double electricalIntensityOfProduction;
+		private final double reservoirIntensityOfProduction;
 
 		private double waterReservoirVolume;
 		private transient double nextWaterReservoirVolume;
@@ -46,6 +51,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.initialWaterReservoirVolume = 0;
 			this.waterReservoirRechargeRate = 0;
 			this.coastalAccess = false;
+			this.electricalIntensityOfProduction = 0;
+			this.reservoirIntensityOfProduction = 1;
 		}
 		
 		/**
@@ -55,13 +62,18 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @param maxWaterReservoirVolume the max water reservoir volume
 		 * @param initialWaterReservoirVolume the initial water reservoir volume
 		 * @param waterReservoirRechargeRate the water reservoir recharge rate
+		 * @param electricalIntensityOfProduction the electrical intensity of production
+		 * @param aquiferIntensityOfProduction the aquifer intensity of production
 		 * @param elements the elements
+		 * @param domesticProductionModel the domestic production model
 		 * @param domesticPriceModel the domestic price model
 		 * @param importPriceModel the import price model
 		 */
 		public Local(boolean coastalAccess, double maxWaterReservoirVolume,
 				double initialWaterReservoirVolume, 
 				double waterReservoirRechargeRate,
+				double electricalIntensityOfProduction, 
+				double aquiferIntensityOfProduction,
 				Collection<? extends WaterElement> elements,
 				DomesticProductionModel domesticProductionModel,
 				PriceModel domesticPriceModel, 
@@ -86,6 +98,20 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 
 			// No need to validate recharge rate.
 			this.waterReservoirRechargeRate = waterReservoirRechargeRate;
+
+			// Validate electrical intensity of production.
+			if(electricalIntensityOfProduction < 0) {
+				throw new IllegalArgumentException(
+						"Electrical intensity of production cannot be negative.");
+			}
+			this.electricalIntensityOfProduction = electricalIntensityOfProduction;
+
+			// Validate aquifer intensity of production.
+			if(aquiferIntensityOfProduction < 0) {
+				throw new IllegalArgumentException(
+						"Aquifer intensity of production cannot be negative.");
+			}
+			this.reservoirIntensityOfProduction = aquiferIntensityOfProduction;
 
 			// No need to validate coastal access.
 			this.coastalAccess = coastalAccess;
@@ -134,6 +160,22 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+		 */
+		@Override
+		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+			return CurrencyUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+		 */
+		@Override
+		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+			return CurrencyUnits.NumeratorUnits.sim;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
 		@Override
@@ -163,11 +205,27 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getElectricityConsumption() {
-			double energyConsumption = 0;
+			double energyConsumption = getWaterFromArtesianWell() * electricalIntensityOfProduction;
 			for(WaterElement e : getInternalElements()) {
 				energyConsumption += e.getElectricityConsumption();
 			}
 			return energyConsumption;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+		 */
+		@Override
+		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
+			return ElectricityUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+		 */
+		@Override
+		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
+			return ElectricityUnits.NumeratorUnits.MWh;
 		}
 
 		/* (non-Javadoc)
@@ -180,7 +238,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			elements.addAll(getExternalElements());
 			return Collections.unmodifiableList(elements);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
 		 */
@@ -188,6 +246,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getExportRevenue() {
 			return 0;
 		}
+
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
@@ -233,7 +292,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public List<WaterElement> getInternalElements() {
 			return Collections.unmodifiableList(elements);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getLocalWaterFraction()
 		 */
@@ -245,7 +304,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			} 
 			return 0;
 		}
-
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getMaxWaterReservoirVolume()
@@ -381,7 +439,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterImportPrice() {
 			return importPriceModel.getUnitPrice();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
 		 */
@@ -408,7 +466,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistributionLosses()
 		 */
@@ -420,7 +478,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterProduction()
 		 */
@@ -436,7 +494,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return waterProduction;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
 		 */
@@ -452,7 +510,23 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterReservoirVolume() {
 			return waterReservoirVolume;
 		}
-		
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+			return WaterUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+			return WaterUnits.NumeratorUnits.m3;
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
@@ -465,13 +539,21 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterOutDistribution()
 					- getSociety().getTotalWaterDemand());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.SimEntity#initialize(long)
 		 */
 		@Override
 		public void initialize(long time) {
 			waterReservoirVolume = initialWaterReservoirVolume;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
+		 */
+		@Override
+		public boolean isCoastalAccess() {
+			return coastalAccess;
 		}
 
 		/* (non-Javadoc)
@@ -490,7 +572,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 					waterReservoirVolume + waterReservoirRechargeRate 
 					- getReservoirWaterWithdrawals() 
-					- getWaterFromArtesianWell());
+					- getWaterFromArtesianWell()*reservoirIntensityOfProduction);
 			if(nextWaterReservoirVolume < 0) {
 				throw new IllegalStateException(
 						"Water reservoir volume cannot be negative.");
@@ -504,14 +586,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void tock() {
 			waterReservoirVolume = nextWaterReservoirVolume;
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
-		 */
-		@Override
-		public boolean isCoastalAccess() {
-			return coastalAccess;
-		}
 	}
 
 	/**
@@ -522,6 +596,22 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private double domesticPrice, importPrice;
 		
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+		 */
+		@Override
+		public CurrencyUnits.DenominatorUnits getCurrencyUnitsDenominator() {
+			return CurrencyUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
+		 */
+		@Override
+		public CurrencyUnits.NumeratorUnits getCurrencyUnitsNumerator() {
+			return CurrencyUnits.NumeratorUnits.sim;
+		}
+		
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 		 */
 		@Override
@@ -530,17 +620,49 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+		 */
+		@Override
+		public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
+			return ElectricityUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+		 */
+		@Override
+		public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
+			return ElectricityUnits.NumeratorUnits.MWh;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 		 */
 		public double getWaterDomesticPrice() {
 			return domesticPrice;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
 		 */
 		public double getWaterImportPrice() {
 			return importPrice;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+		 */
+		@Override
+		public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+			return WaterUnits.DenominatorUnits.year;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+		 */
+		@Override
+		public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+			return WaterUnits.NumeratorUnits.m3;
 		}
 
 		/* (non-Javadoc)

@@ -3,11 +3,14 @@ package edu.mit.sips.core.water;
 import java.util.List;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface EnergySystem.
  */
-public interface WaterSystem extends InfrastructureSystem {
+public interface WaterSystem extends InfrastructureSystem, CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */

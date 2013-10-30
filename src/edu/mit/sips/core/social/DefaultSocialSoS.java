@@ -6,7 +6,9 @@ import java.util.List;
 
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.FoodUnits.DenominatorUnits;
 import edu.mit.sips.sim.util.FoodUnits.NumeratorUnits;
 
@@ -44,6 +46,22 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 			value += system.getElectricityConsumption();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
+	 */
+	@Override
+	public ElectricityUnits.DenominatorUnits getElectricityUnitsDenominator() {
+		return ElectricityUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
+	 */
+	@Override
+	public ElectricityUnits.NumeratorUnits getElectricityUnitsNumerator() {
+		return ElectricityUnits.NumeratorUnits.MWh;
 	}
 
 	/* (non-Javadoc)
@@ -86,6 +104,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 		return Collections.unmodifiableList(systems);
 	}
 
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
 	 */
@@ -108,5 +127,21 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 			value += system.getWaterConsumption();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public WaterUnits.DenominatorUnits getWaterUnitsDenominator() {
+		return WaterUnits.DenominatorUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits.NumeratorUnits getWaterUnitsNumerator() {
+		return WaterUnits.NumeratorUnits.m3;
 	}
 }

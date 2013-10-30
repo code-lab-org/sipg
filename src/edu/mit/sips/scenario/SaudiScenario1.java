@@ -87,7 +87,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6,
+						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_1.createElement(1945, INDUSTRIAL, INDUSTRIAL),
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_2.createElement(1958, INDUSTRIAL, INDUSTRIAL),
@@ -168,7 +168,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6,
+						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_1.createElement(1955, RURAL, RURAL),
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_2.createElement(1973, RURAL, RURAL),
@@ -219,7 +219,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6,
+						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_1.createElement(1920, URBAN, URBAN),
 										(WaterElement) SaudiElementTemplate.AQUIFER_PUMP_1.createElement(1940, URBAN, URBAN),
