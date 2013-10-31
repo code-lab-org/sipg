@@ -411,7 +411,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 						getElectricitySystem(), this));
 		updateSeries(electricitySourceData, "Petroleum Burn", year, 
 				ElectricityUnits.convertFlow(
-						getElectricitySystem().getElectricityFromBurningPetroleum(),
+						getElectricitySystem().getElectricityFromPrivateProduction(),
 						getElectricitySystem(), this));
 	}
 }

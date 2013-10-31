@@ -201,7 +201,7 @@ public class ElectricityStateProvider implements SpatialStateProvider, Electrici
 			ElectricitySystem.Local energySystem = (ElectricitySystem.Local) 
 					society.getElectricitySystem(); 
 			return ElectricityUnits.convertFlow(
-					energySystem.getElectricityFromBurningPetroleum(), 
+					energySystem.getElectricityFromPrivateProduction(), 
 					energySystem, this);
 		} 
 		return 0;

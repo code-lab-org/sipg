@@ -802,12 +802,12 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.printf("%-15s %-5s %,15.0f |", "Elect. Source", "toe", 
 					energySystem.getElectricityProduction()
 					+ energySystem.getElectricityInDistribution()
-					+ energySystem.getElectricityFromBurningPetroleum());
+					+ energySystem.getElectricityFromPrivateProduction());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
 						system.getElectricityProduction()
 						+ system.getElectricityInDistribution()
-						+ system.getElectricityFromBurningPetroleum());
+						+ system.getElectricityFromPrivateProduction());
 			}
 			System.out.println();
 			
@@ -828,10 +828,10 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Direct-Burn", "toe", 
-					energySystem.getElectricityFromBurningPetroleum());
+					energySystem.getElectricityFromPrivateProduction());
 			for(ElectricitySystem.Local system : getLocalElectricitySystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getElectricityFromBurningPetroleum());
+						system.getElectricityFromPrivateProduction());
 			}
 			System.out.println();
 

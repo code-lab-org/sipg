@@ -34,11 +34,11 @@ public interface ElectricitySystem extends InfrastructureSystem,
 		public double getElectricalIntensityOfBurningPetroleum();
 		
 		/**
-		 * Gets the electricity from burning petroleum.
+		 * Gets the electricity from private production.
 		 *
-		 * @return the electricity from burning petroleum
+		 * @return the electricity from private production
 		 */
-		public double getElectricityFromBurningPetroleum();
+		public double getElectricityFromPrivateProduction();
 		
 		/**
 		 * Gets the electricity in distribution.
@@ -98,11 +98,18 @@ public interface ElectricitySystem extends InfrastructureSystem,
 		public double getLocalElectricityFraction();
 		
 		/**
-		 * Gets the petroleum burned.
+		 * Gets the petroleum consumption from private production.
 		 *
-		 * @return the petroleum burned
+		 * @return the petroleum consumption from private production
 		 */
-		public double getPetroleumBurned();
+		public double getPetroleumConsumptionFromPrivateProduction();
+
+		/**
+		 * Gets the petroleum consumption from public production.
+		 *
+		 * @return the petroleum consumption from public production
+		 */
+		public double getPetroleumConsumptionFromPublicProduction();
 		
 		/**
 		 * Gets the renewable electricity fraction.

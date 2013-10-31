@@ -91,10 +91,10 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityFromBurningPetroleum()
 		 */
 		@Override
-		public double getElectricityFromBurningPetroleum() {
+		public double getElectricityFromPrivateProduction() {
 			double value = 0;
 			for(ElectricitySystem.Local system : getNestedSystems()) {
-				value += system.getElectricityFromBurningPetroleum();
+				value += system.getElectricityFromPrivateProduction();
 			}
 			return value;
 		}
@@ -262,18 +262,6 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumBurned()
-		 */
-		@Override
-		public double getPetroleumBurned() {
-			double value = 0;
-			for(ElectricitySystem.Local system : getNestedSystems()) {
-				value += system.getPetroleumBurned();
-			}
-			return value;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumConsumption()
 		 */
 		@Override
@@ -281,6 +269,30 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			double value = 0;
 			for(ElectricitySystem system : getNestedSystems()) {
 				value += system.getPetroleumConsumption();
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumBurned()
+		 */
+		@Override
+		public double getPetroleumConsumptionFromPrivateProduction() {
+			double value = 0;
+			for(ElectricitySystem.Local system : getNestedSystems()) {
+				value += system.getPetroleumConsumptionFromPrivateProduction();
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getPetroleumConsumptionFromPublicProduction()
+		 */
+		@Override
+		public double getPetroleumConsumptionFromPublicProduction() {
+			double value = 0;
+			for(ElectricitySystem.Local system : getNestedSystems()) {
+				value += system.getPetroleumConsumptionFromPublicProduction();
 			}
 			return value;
 		}
@@ -448,7 +460,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				costCoefficients[elements.size() + cities.indexOf(city)] = 
 						city.getPetroleumSystem().getPetroleumDomesticPrice();
 				initialValues[elements.size() + cities.indexOf(city)] = 
-						Math.max(0,electricitySystem.getPetroleumBurned());
+						Math.max(0,electricitySystem.getPetroleumConsumptionFromPrivateProduction());
 			}
 			
 			try {
@@ -566,7 +578,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 						city.getPetroleumSystem().getPetroleumDomesticPrice()
 						+ optimizationOptions.getDeltaDomesticOilPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] = 
-						Math.max(0,electricitySystem.getPetroleumBurned());
+						Math.max(0,electricitySystem.getPetroleumConsumptionFromPrivateProduction());
 			}
 			
 			try {

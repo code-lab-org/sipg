@@ -35,7 +35,7 @@ public class ElectricitySystemDomesticProductionModel extends DefaultDomesticPro
 			return super.getDomesticProduction(infrastructureSystem) 
 					+ privateConsumptionFromElectricityProduction
 					* (((ElectricitySystem.Local)infrastructureSystem).getElectricityProduction() 
-							+ ((ElectricitySystem.Local)infrastructureSystem).getElectricityFromBurningPetroleum());
+							+ ((ElectricitySystem.Local)infrastructureSystem).getElectricityFromPrivateProduction());
 		} else {
 			return super.getDomesticProduction(infrastructureSystem);
 		}

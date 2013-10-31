@@ -96,7 +96,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		@Override
 		public double getConsumptionExpense() {
 			return getSociety().getPetroleumSystem().getPetroleumDomesticPrice()
-					* getPetroleumConsumption();
+					* getPetroleumConsumptionFromPublicProduction();
 		}
 
 		/* (non-Javadoc)
@@ -144,7 +144,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
 		 */
 		@Override
-		public double getElectricityFromBurningPetroleum() {
+		public double getElectricityFromPrivateProduction() {
 			return Math.max(0, getSociety().getTotalElectricityDemand()  
 					+ getElectricityOutDistribution()
 					- getElectricityInDistribution()
@@ -323,21 +323,30 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		}
 		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.ElectricitySystem#getPetroleumBurned()
-		 */
-		@Override
-		public double getPetroleumBurned() {
-			// Petroleum is burned to meet shortfall in energy demand.
-			return getElectricityFromBurningPetroleum()
-					/ getElectricalIntensityOfBurningPetroleum();
-		}
-		
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getPetroleumConsumed()
 		 */
 		@Override
 		public double getPetroleumConsumption() {
-			double petroleumConsumption = getPetroleumBurned();
+			return getPetroleumConsumptionFromPrivateProduction() 
+					+ getPetroleumConsumptionFromPublicProduction();
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.ElectricitySystem#getPetroleumBurned()
+		 */
+		@Override
+		public double getPetroleumConsumptionFromPrivateProduction() {
+			// Petroleum is burned to meet shortfall in energy demand.
+			return getElectricityFromPrivateProduction()
+					/ getElectricalIntensityOfBurningPetroleum();
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getPetroleumConsumptionFromPublicProduction()
+		 */
+		@Override
+		public double getPetroleumConsumptionFromPublicProduction() {
+			double petroleumConsumption = 0;
 			for(ElectricityElement e : getInternalElements()) {
 				petroleumConsumption += e.getPetroleumConsumption();
 			}
@@ -376,7 +385,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		@Override
 		public double getSalesRevenue() {
 			return getElectricityDomesticPrice() * (getSociety().getTotalElectricityDemand() 
-					- getElectricityFromBurningPetroleum());
+					- getElectricityFromPrivateProduction());
 		}
 
 		/* (non-Javadoc)
