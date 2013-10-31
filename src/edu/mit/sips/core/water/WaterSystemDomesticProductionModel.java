@@ -35,7 +35,7 @@ public class WaterSystemDomesticProductionModel extends DefaultDomesticProductio
 			return super.getDomesticProduction(infrastructureSystem) 
 					+ privateConsumptionFromWaterProduction
 					* (((WaterSystem.Local)infrastructureSystem).getWaterProduction()
-							+ ((WaterSystem.Local)infrastructureSystem).getWaterFromArtesianWell());
+							+ ((WaterSystem.Local)infrastructureSystem).getWaterFromPrivateProduction());
 		} else {
 			return super.getDomesticProduction(infrastructureSystem);
 		}

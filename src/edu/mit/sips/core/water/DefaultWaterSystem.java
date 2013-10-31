@@ -34,8 +34,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private final double initialWaterReservoirVolume;
 		private final double waterReservoirRechargeRate;
 		private final boolean coastalAccess;
-		private final double electricalIntensityOfProduction;
-		private final double reservoirIntensityOfProduction;
+		private final double electricalIntensityOfPrivateProduction;
+		private final double reservoirIntensityOfPrivateProduction;
 
 		private double waterReservoirVolume;
 		private transient double nextWaterReservoirVolume;
@@ -52,8 +52,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.initialWaterReservoirVolume = 0;
 			this.waterReservoirRechargeRate = 0;
 			this.coastalAccess = false;
-			this.electricalIntensityOfProduction = 0;
-			this.reservoirIntensityOfProduction = 1;
+			this.electricalIntensityOfPrivateProduction = 0;
+			this.reservoirIntensityOfPrivateProduction = 1;
 		}
 		
 		/**
@@ -105,14 +105,14 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				throw new IllegalArgumentException(
 						"Electrical intensity of production cannot be negative.");
 			}
-			this.electricalIntensityOfProduction = electricalIntensityOfProduction;
+			this.electricalIntensityOfPrivateProduction = electricalIntensityOfProduction;
 
 			// Validate aquifer intensity of production.
 			if(aquiferIntensityOfProduction < 0) {
 				throw new IllegalArgumentException(
 						"Aquifer intensity of production cannot be negative.");
 			}
-			this.reservoirIntensityOfProduction = aquiferIntensityOfProduction;
+			this.reservoirIntensityOfPrivateProduction = aquiferIntensityOfProduction;
 
 			// No need to validate coastal access.
 			this.coastalAccess = coastalAccess;
@@ -157,7 +157,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getConsumptionExpense() {
 			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
-					* getElectricityConsumption();
+					* getElectricityConsumptionFromPublicProduction();
 		}
 
 		/* (non-Javadoc)
@@ -206,7 +206,24 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getElectricityConsumption() {
-			double energyConsumption = getWaterFromArtesianWell() * electricalIntensityOfProduction;
+			return getElectricityConsumptionFromPrivateProduction() + 
+					getElectricityConsumptionFromPublicProduction();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPrivateProduction()
+		 */
+		@Override
+		public double getElectricityConsumptionFromPrivateProduction() {
+			return getWaterFromPrivateProduction() * electricalIntensityOfPrivateProduction;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPublicProduction()
+		 */
+		@Override
+		public double getElectricityConsumptionFromPublicProduction() {
+			double energyConsumption = 0;
 			for(WaterElement e : getInternalElements()) {
 				energyConsumption += e.getElectricityConsumption();
 			}
@@ -300,7 +317,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getLocalWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
-				return Math.min(1, (getWaterProduction() + getWaterFromArtesianWell())
+				return Math.min(1, (getWaterProduction() + getWaterFromPrivateProduction())
 						/ getSociety().getTotalWaterDemand());
 			} 
 			return 0;
@@ -339,7 +356,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				}
 			}
 			renewableProduction += Math.min(getWaterReservoirRechargeRate(), 
-					getWaterProduction() + getWaterFromArtesianWell() 
+					getWaterProduction() + getWaterFromPrivateProduction() 
 					- renewableProduction);
 			return renewableProduction;
 		}
@@ -362,7 +379,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getSalesRevenue() {
 			return getWaterDomesticPrice() * (getSociety().getTotalWaterDemand() 
-					- getWaterFromArtesianWell());
+					- getWaterFromPrivateProduction());
 		}
 
 		/* (non-Javadoc)
@@ -410,7 +427,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
 		 */
 		@Override
-		public double getWaterFromArtesianWell() {
+		public double getWaterFromPrivateProduction() {
 			// Artesian water used to meet shortfall in reaching minimum demand.
 			return Math.min(getWaterReservoirVolume() - getReservoirWaterWithdrawals(), 
 					Math.max(0, getSociety().getTotalWaterDemand()
@@ -430,7 +447,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					+ getWaterOutDistribution()
 					- getWaterInDistribution()
 					- getWaterProduction()
-					- getWaterFromArtesianWell());
+					- getWaterFromPrivateProduction());
 		}
 
 		/* (non-Javadoc)
@@ -535,7 +552,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterWasted() {
 			// Water is wasted if supply exceeds maximum demand.
 			return Math.max(0, getWaterProduction() 
-					+ getWaterFromArtesianWell()
+					+ getWaterFromPrivateProduction()
 					+ getWaterInDistribution()
 					- getWaterOutDistribution()
 					- getSociety().getTotalWaterDemand());
@@ -573,7 +590,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 					waterReservoirVolume + waterReservoirRechargeRate 
 					- getReservoirWaterWithdrawals() 
-					- getWaterFromArtesianWell()*reservoirIntensityOfProduction);
+					- getWaterFromPrivateProduction()*reservoirIntensityOfPrivateProduction);
 			if(nextWaterReservoirVolume < 0) {
 				throw new IllegalStateException(
 						"Water reservoir volume cannot be negative.");

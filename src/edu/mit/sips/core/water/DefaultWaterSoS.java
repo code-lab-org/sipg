@@ -73,7 +73,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return CurrencyUnits.sim;
 		}
 
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 		 */
@@ -85,8 +84,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			}
 			return value;
 		}
-
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 		 */
@@ -147,7 +145,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		@Override
 		public double getLocalWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
-				return Math.min(1, (getWaterProduction() + getWaterFromArtesianWell())
+				return Math.min(1, (getWaterProduction() + getWaterFromPrivateProduction())
 						/ getSociety().getTotalWaterDemand());
 			} 
 			return 0;
@@ -269,10 +267,10 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterFromArtesianWell()
 		 */
 		@Override
-		public double getWaterFromArtesianWell() {
+		public double getWaterFromPrivateProduction() {
 			double value = 0;
 			for(WaterSystem.Local system : getNestedSystems()) {
-				value += system.getWaterFromArtesianWell();
+				value += system.getWaterFromPrivateProduction();
 			}
 			return value;
 		}
@@ -706,6 +704,30 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 */
 		@Override
 		public void tock() { }
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPrivateProduction()
+		 */
+		@Override
+		public double getElectricityConsumptionFromPrivateProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getElectricityConsumptionFromPrivateProduction();
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPublicProduction()
+		 */
+		@Override
+		public double getElectricityConsumptionFromPublicProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getElectricityConsumptionFromPublicProduction();
+			}
+			return value;
+		}
 	}
 	
 	/**

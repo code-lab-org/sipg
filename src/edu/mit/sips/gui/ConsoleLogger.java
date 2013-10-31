@@ -415,24 +415,24 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "m^3", 
 					waterSystem.getReservoirWaterWithdrawals()
-					+ waterSystem.getWaterFromArtesianWell());
+					+ waterSystem.getWaterFromPrivateProduction());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
 						system.getReservoirWaterWithdrawals()
-						+ waterSystem.getWaterFromArtesianWell());
+						+ waterSystem.getWaterFromPrivateProduction());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "Water Source", "m^3", 
 					waterSystem.getWaterProduction()
 					+ waterSystem.getWaterInDistribution()
-					+ waterSystem.getWaterFromArtesianWell()
+					+ waterSystem.getWaterFromPrivateProduction()
 					+ waterSystem.getWaterImport());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
 						system.getWaterProduction()
 						+ system.getWaterInDistribution()
-						+ system.getWaterFromArtesianWell()
+						+ system.getWaterFromPrivateProduction()
 						+ system.getWaterImport());
 			}
 			System.out.println();
@@ -454,10 +454,10 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Direct-Other", "m^3", 
-					waterSystem.getWaterFromArtesianWell());
+					waterSystem.getWaterFromPrivateProduction());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getWaterFromArtesianWell());
+						system.getWaterFromPrivateProduction());
 			}
 			System.out.println();
 			

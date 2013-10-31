@@ -182,7 +182,7 @@ public class WaterStateProvider implements SpatialStateProvider, WaterUnitsOutpu
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			WaterSystem.Local waterSystem = (WaterSystem.Local) 
 					society.getWaterSystem(); 
-			return WaterUnits.convertFlow(waterSystem.getWaterFromArtesianWell(), waterSystem, this);
+			return WaterUnits.convertFlow(waterSystem.getWaterFromPrivateProduction(), waterSystem, this);
 		} 
 		return 0;
 	}

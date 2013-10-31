@@ -23,6 +23,20 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		 */
 		public boolean addElement(WaterElement element);
 		
+		/**
+		 * Gets the electricity consumption from private production.
+		 *
+		 * @return the electricity consumption from private production
+		 */
+		public double getElectricityConsumptionFromPrivateProduction();
+		
+		/**
+		 * Gets the electricity consumption from public production.
+		 *
+		 * @return the electricity consumption from public production
+		 */
+		public double getElectricityConsumptionFromPublicProduction();
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
@@ -95,11 +109,11 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		public double getUnitSupplyProfit();
 		
 		/**
-		 * Gets the water from artesian well.
+		 * Gets the water from private production.
 		 *
-		 * @return the water from artesian well
+		 * @return the water from private production
 		 */
-		public double getWaterFromArtesianWell();
+		public double getWaterFromPrivateProduction();
 		
 		/**
 		 * Gets the water import.
