@@ -5,7 +5,9 @@ package edu.mit.sips.sim.util;
  */
 public class OilUnits extends DefaultUnits {
 	public static final OilUnits 
-			toe = new OilUnits("tonne of oil equivalent","toe", 1);
+			toe = new OilUnits("tonnes of oil equivalent","toe", 1),
+			ktoe = new OilUnits("thousand tonnes of oil equivalent","ktoe", 1e-3),
+			Mtoe = new OilUnits("million tonnes of oil equivalent","Mtoe", 1e-6);
 
 	/**
 	 * Instantiates a new oil units.
