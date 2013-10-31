@@ -7,7 +7,8 @@ public class OilUnits extends DefaultUnits {
 	public static final OilUnits 
 			toe = new OilUnits("tonnes of oil equivalent","toe", 1),
 			ktoe = new OilUnits("thousand tonnes of oil equivalent","ktoe", 1e-3),
-			Mtoe = new OilUnits("million tonnes of oil equivalent","Mtoe", 1e-6);
+			Mtoe = new OilUnits("million tonnes of oil equivalent","Mtoe", 1e-6),
+			Btoe = new OilUnits("billion tonnes of oil equivalent","Btoe", 1e-9);
 
 	/**
 	 * Instantiates a new oil units.

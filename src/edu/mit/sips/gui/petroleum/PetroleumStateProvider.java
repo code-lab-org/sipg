@@ -9,18 +9,24 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.gui.SpatialStateProvider;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class PetroleumStateProvider.
  */
-public class PetroleumStateProvider implements SpatialStateProvider {
+public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOutput {
+	private final OilUnits oilUnits = OilUnits.Btoe;
+	private final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getConsumption(Society society) {
-		return society.getTotalPetroleumDemand();
+		return OilUnits.convertFlow(
+				society.getTotalPetroleumDemand(), society, this);
 	}
 
 	/* (non-Javadoc)
@@ -35,7 +41,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 			for(PetroleumElement e : energySystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(origin.getCities().contains(origCity)) {
-					distribution += e.getPetroleumOutput();
+					distribution += OilUnits.convertFlow(
+							e.getPetroleumOutput(), e, this);
 				}
 			}
 		}
@@ -56,9 +63,11 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 				if(destination.getCities().contains(destCity)) {
 					if(society.getCities().contains(destCity)) {
 						// if a self-loop, only add distribution losses
-						distribution += e.getPetroleumInput() - e.getPetroleumOutput();
+						distribution += OilUnits.convertFlow(
+								e.getPetroleumInput() - e.getPetroleumOutput(), e, this);
 					} else {
-						distribution += e.getPetroleumInput();
+						distribution += OilUnits.convertFlow(
+								e.getPetroleumInput(), e, this);
 					}
 				}
 			}
@@ -90,7 +99,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) 
 					society.getPetroleumSystem(); 
-		return energySystem.getPetroleumExport();
+		return OilUnits.convertFlow(
+				energySystem.getPetroleumExport(), energySystem, this);
 		} 
 		return 0;
 	}
@@ -103,7 +113,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) 
 					society.getPetroleumSystem(); 
-		return energySystem.getPetroleumImport();
+		return OilUnits.convertFlow(
+				energySystem.getPetroleumImport(), energySystem, this);
 		} 
 		return 0;
 	}
@@ -114,7 +125,9 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getInput(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumInput();
+			return OilUnits.convertFlow(
+					((PetroleumElement)element).getPetroleumInput(), 
+					(PetroleumElement) element, this);
 		} else {
 			return 0;
 		}
@@ -128,10 +141,11 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) 
 					society.getPetroleumSystem(); 
-		return energySystem.getPetroleumExport()
+		return OilUnits.convertFlow(energySystem.getPetroleumExport()
 				- energySystem.getPetroleumImport()
 				+ energySystem.getPetroleumOutDistribution()
-				- energySystem.getPetroleumInDistribution();
+				- energySystem.getPetroleumInDistribution(),
+				energySystem, this);
 		} 
 		return 0;
 	}
@@ -148,7 +162,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 			for(PetroleumElement e : energySystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(!society.getCities().contains(origCity)) {
-					distribution += e.getPetroleumOutput();
+					distribution += OilUnits.convertFlow(
+							e.getPetroleumOutput(), e, this);
 				}
 			}
 		}
@@ -167,7 +182,8 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 			for(PetroleumElement e : energySystem.getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(!society.getCities().contains(destCity)) {
-					distribution += e.getPetroleumInput();
+					distribution += OilUnits.convertFlow(
+							e.getPetroleumInput(), e, this);
 				}
 			}
 		}
@@ -196,7 +212,9 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOutput(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumOutput();
+			return OilUnits.convertFlow(
+					((PetroleumElement) element).getPetroleumOutput(),
+					(PetroleumElement) element, this);
 		} else {
 			return 0;
 		}
@@ -208,7 +226,9 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	@Override
 	public double getProduction(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
-			return ((PetroleumElement)element).getPetroleumProduction();
+			return OilUnits.convertFlow(
+					((PetroleumElement) element).getPetroleumProduction(),
+					(PetroleumElement) element, this);
 		} else {
 			return 0;
 		}
@@ -219,7 +239,7 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "toe";
+		return oilUnits.getAbbreviation();
 	}
 
 	/* (non-Javadoc)
@@ -268,5 +288,21 @@ public class PetroleumStateProvider implements SpatialStateProvider {
 		} else {
 			return false;
 		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
 	}
 }

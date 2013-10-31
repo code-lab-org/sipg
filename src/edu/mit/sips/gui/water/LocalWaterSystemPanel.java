@@ -73,8 +73,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				"Water Independence", 0, 1);
 		indicatorsPanel.add(localWaterIndicatorPanel);
 		waterReservoirIndicatorPanel = new LinearIndicatorPanel(
-				"Water Reservoir", 0, 
-				waterSystem.getMaxWaterReservoirVolume());
+				"Water Reservoir", 0, WaterUnits.convertStock(
+						waterSystem.getMaxWaterReservoirVolume(), 
+						waterSystem, this));
 		indicatorsPanel.add(waterReservoirIndicatorPanel);
 		renewableWaterIndicatorPanel = new LinearIndicatorPanel(
 				"Renewable Water", 0, 1);
@@ -293,35 +294,44 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			}
 		}
 
-		waterReservoirIndicatorPanel.setValue(
-				getWaterSystem().getWaterReservoirVolume());
+		waterReservoirIndicatorPanel.setValue(WaterUnits.convertStock(
+				getWaterSystem().getWaterReservoirVolume(), getWaterSystem(), this));
 
 		updateSeries(waterRevenue, "Capital", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getCapitalExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getCapitalExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Operations", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getOperationsExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getOperationsExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Decommission", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getDecommissionExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getDecommissionExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Consumption", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getConsumptionExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getConsumptionExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "In-Distribution", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getDistributionExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getDistributionExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Import", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getImportExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getImportExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Out-Distribution", year, 
-				WaterUnits.convertFlow(-getWaterSystem().getDistributionExpense(), 
+				WaterUnits.convertFlow(
+						-getWaterSystem().getDistributionExpense(), 
 						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Sales", year, 
-				WaterUnits.convertFlow(getWaterSystem().getSalesRevenue(), 
+				WaterUnits.convertFlow(
+						getWaterSystem().getSalesRevenue(), 
 						getWaterSystem(), this));
 		updateSeries(waterNetRevenue, "Net Revenue", year, 
-				WaterUnits.convertFlow(getWaterSystem().getCashFlow(), 
+				WaterUnits.convertFlow(
+						getWaterSystem().getCashFlow(), 
 						getWaterSystem(), this));
 
 		if(getNestedWaterSystems().isEmpty()) {
