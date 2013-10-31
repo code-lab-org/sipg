@@ -97,7 +97,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -153,7 +153,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -202,7 +202,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):

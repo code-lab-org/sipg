@@ -99,7 +99,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1945, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
@@ -179,7 +179,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1945, RURAL, RURAL),
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1975, RURAL, RURAL)
@@ -231,7 +231,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.10,
+						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1945, URBAN, URBAN),
 										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1955, URBAN, URBAN),

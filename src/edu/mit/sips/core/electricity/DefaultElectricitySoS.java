@@ -60,11 +60,11 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
 		 */
 		@Override
-		public double getElectricalIntensityOfBurningPetroleum() {
+		public double getPetroleumIntensityOfPrivateProduction() {
 			if(getNestedSystems().size() > 0) {
 				double value = 0;
 				for(ElectricitySystem.Local system : getNestedSystems()) {
-					value += system.getElectricalIntensityOfBurningPetroleum();
+					value += system.getPetroleumIntensityOfPrivateProduction();
 				}
 				return value / getNestedSystems().size();
 			} else {
@@ -225,7 +225,8 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		@Override
 		public double getLocalElectricityFraction() {
 			if(getSociety().getTotalElectricityDemand() > 0) {
-				return Math.min(1, getElectricityProduction()
+				return Math.min(1, (getElectricityProduction()
+						+ getElectricityFromPrivateProduction())
 						/ getSociety().getTotalElectricityDemand());
 			}
 			return 0;
@@ -450,7 +451,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				}
 				// Allow petroleum burning in this city.
 				flowCoefficients[elements.size() + cities.indexOf(city)] 
-						= electricitySystem.getElectricalIntensityOfBurningPetroleum();
+						= electricitySystem.getPetroleumIntensityOfPrivateProduction();
 				// Constrain in-flow to meet net demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
 						city.getTotalElectricityDemand() 
@@ -567,7 +568,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				}
 				// Allow burning of petroleum in this city.
 				flowCoefficients[2*elements.size() + cities.indexOf(city)] 
-						= electricitySystem.getElectricalIntensityOfBurningPetroleum();
+						= electricitySystem.getPetroleumIntensityOfPrivateProduction();
 				
 				// Constrain in-flow and production to meet demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 

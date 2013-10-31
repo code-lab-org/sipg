@@ -27,11 +27,11 @@ public interface ElectricitySystem extends InfrastructureSystem,
 		public boolean addElement(ElectricityElement element);
 		
 		/**
-		 * Gets the electrical intensity of burning petroleum.
+		 * Gets the petroleum intensity of private production.
 		 *
-		 * @return the electrical intensity of burning petroleum
+		 * @return the petroleum intensity of private production
 		 */
-		public double getElectricalIntensityOfBurningPetroleum();
+		public double getPetroleumIntensityOfPrivateProduction();
 		
 		/**
 		 * Gets the electricity from private production.
