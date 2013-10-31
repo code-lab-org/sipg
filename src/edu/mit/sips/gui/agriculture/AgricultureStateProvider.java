@@ -17,18 +17,15 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class AgricultureStateProvider.
  */
 public class AgricultureStateProvider implements SpatialStateProvider, FoodUnitsOutput {
-	
-	private final FoodUnits foodUnits = 
-			FoodUnits.EJ;
-	private final TimeUnits foodTimeUnits = 
-			TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.EJ;
+	private final TimeUnits foodTimeUnits = TimeUnits.year;
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getConsumption(Society society) {
-		return society.getTotalFoodDemand();
+		return FoodUnits.convertFlow(society.getTotalFoodDemand(), society, this);
 	}
 
 	/* (non-Javadoc)

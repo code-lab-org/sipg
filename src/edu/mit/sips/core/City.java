@@ -10,6 +10,11 @@ import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 public class City extends DefaultSociety implements Society {
 	/**

@@ -18,7 +18,11 @@ import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class DefaultSociety.
@@ -128,6 +132,14 @@ public abstract class DefaultSociety implements Society {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
@@ -141,6 +153,38 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public ElectricitySystem getElectricitySystem() {
 		return electricitySystem;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return ElectricityUnits.MWh;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return TimeUnits.day;
+	}	
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return FoodUnits.kcal;
 	}
 
 	/* (non-Javadoc)
@@ -167,7 +211,7 @@ public abstract class DefaultSociety implements Society {
 		}
 		return Collections.unmodifiableList(elements);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getLocalSectors()
 	 */
@@ -195,14 +239,30 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public String getName() {
 		return name;
-	}	
-	
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getNestedSocieties()
 	 */
 	@Override
 	public List<? extends Society> getNestedSocieties() {
 		return nestedSocieties;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return OilUnits.toe;
 	}
 
 	/* (non-Javadoc)
@@ -220,7 +280,7 @@ public abstract class DefaultSociety implements Society {
 	public SocialSystem getSocialSystem() {
 		return socialSystem;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getSocieties()
 	 */
@@ -240,14 +300,6 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public final Society getSociety() {
 		return society;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
@@ -292,6 +344,22 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public WaterSystem getWaterSystem() {
 		return waterSystem;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return TimeUnits.year;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return WaterUnits.m3;
 	}
 
 	/* (non-Javadoc)

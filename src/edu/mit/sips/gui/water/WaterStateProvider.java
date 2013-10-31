@@ -9,18 +9,23 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.SpatialStateProvider;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class WaterStateProvider.
  */
-public class WaterStateProvider implements SpatialStateProvider {
+public class WaterStateProvider implements SpatialStateProvider, WaterUnitsOutput {
+	private final WaterUnits waterUnits = WaterUnits.MCM;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
 	 */
 	@Override
 	public double getConsumption(Society society) {
-		return society.getTotalWaterDemand();
+		return WaterUnits.convertFlow(society.getTotalWaterDemand(), society, this);
 	}
 
 	/* (non-Javadoc)
@@ -35,7 +40,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 			for(WaterElement e : waterSystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(origin.getCities().contains(origCity)) {
-					distribution += e.getWaterOutput();
+					distribution += WaterUnits.convertFlow(e.getWaterOutput(), e, this);
 				}
 			}
 		}
@@ -56,9 +61,9 @@ public class WaterStateProvider implements SpatialStateProvider {
 				if(destination.getCities().contains(destCity)) {
 					if(society.getCities().contains(destCity)) {
 						// if a self-loop, only add distribution losses
-						distribution += e.getWaterInput() - e.getWaterOutput();
+						distribution += WaterUnits.convertFlow(e.getWaterInput() - e.getWaterOutput(), e, this);
 					} else {
-						distribution += e.getWaterInput();
+						distribution += WaterUnits.convertFlow(e.getWaterInput(), e, this);
 					}
 				}
 			}
@@ -98,7 +103,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			WaterSystem.Local waterSystem = (WaterSystem.Local) 
 					society.getWaterSystem(); 
-			return waterSystem.getWaterImport();
+			return WaterUnits.convertFlow(waterSystem.getWaterImport(), waterSystem, this);
 		} 
 		return 0;
 	}
@@ -109,7 +114,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getInput(InfrastructureElement element) {
 		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterInput();
+			return WaterUnits.convertFlow(((WaterElement)element).getWaterInput(), 
+					(WaterElement)element, this);
 		} else {
 			return 0;
 		}
@@ -123,9 +129,9 @@ public class WaterStateProvider implements SpatialStateProvider {
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			WaterSystem.Local waterSystem = (WaterSystem.Local) 
 					society.getWaterSystem(); 
-			return - waterSystem.getWaterImport()
+			return WaterUnits.convertFlow(- waterSystem.getWaterImport()
 					+ waterSystem.getWaterOutDistribution()
-					- waterSystem.getWaterInDistribution();
+					- waterSystem.getWaterInDistribution(), waterSystem, this);
 		} 
 		return 0;
 	}
@@ -142,7 +148,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 			for(WaterElement e : waterSystem.getExternalElements()) {
 				City origCity = society.getCountry().getCity(e.getOrigin());
 				if(!society.getCities().contains(origCity)) {
-					distribution += e.getWaterOutput();
+					distribution += WaterUnits.convertFlow(e.getWaterOutput(), e, this);
 				}
 			}
 		}
@@ -161,7 +167,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 			for(WaterElement e : waterSystem.getInternalElements()) {
 				City destCity = society.getCountry().getCity(e.getDestination());
 				if(!society.getCities().contains(destCity)) {
-					distribution += e.getWaterInput();
+					distribution += WaterUnits.convertFlow(e.getWaterInput(), e, this);
 				}
 			}
 		}
@@ -176,7 +182,7 @@ public class WaterStateProvider implements SpatialStateProvider {
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			WaterSystem.Local waterSystem = (WaterSystem.Local) 
 					society.getWaterSystem(); 
-			return waterSystem.getWaterFromArtesianWell();
+			return WaterUnits.convertFlow(waterSystem.getWaterFromArtesianWell(), waterSystem, this);
 		} 
 		return 0;
 	}
@@ -195,7 +201,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getOutput(InfrastructureElement element) {
 		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterOutput();
+			return WaterUnits.convertFlow(((WaterElement)element).getWaterOutput(), 
+					((WaterElement)element), this);
 		} else {
 			return 0;
 		}
@@ -207,7 +214,8 @@ public class WaterStateProvider implements SpatialStateProvider {
 	@Override
 	public double getProduction(InfrastructureElement element) {
 		if(element instanceof WaterElement) {
-			return ((WaterElement)element).getWaterProduction();
+			return WaterUnits.convertFlow(((WaterElement)element).getWaterProduction(), 
+					((WaterElement)element), this);
 		} else {
 			return 0;
 		}
@@ -218,7 +226,23 @@ public class WaterStateProvider implements SpatialStateProvider {
 	 */
 	@Override
 	public String getUnits() {
-		return "m^3";
+		return waterUnits.getAbbreviation();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)

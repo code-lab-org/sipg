@@ -37,20 +37,14 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	
 	private final SpatialStatePanel agricultureStatePanel;
 	
-	private final FoodUnits foodUnits = 
-			FoodUnits.EJ;
-	private final TimeUnits foodTimeUnits = 
-			TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.EJ;
+	private final TimeUnits foodTimeUnits = TimeUnits.year;
 	
-	private final WaterUnits waterUnits = 
-			WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = 
-			TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.km3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
-	private final CurrencyUnits currencyUnits = 
-			CurrencyUnits.Bsim;
-	private final TimeUnits currencyTimeUnits = 
-			TimeUnits.year;
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
 	
 	TimeSeriesCollection localFoodData = new TimeSeriesCollection();
 	TimeSeriesCollection foodProductCostData = new TimeSeriesCollection();

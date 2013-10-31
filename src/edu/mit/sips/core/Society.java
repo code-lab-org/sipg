@@ -10,11 +10,17 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface Society.
  */
-public interface Society extends SimEntity, CurrencyUnitsOutput {
+public interface Society extends SimEntity, CurrencyUnitsOutput, 
+		FoodUnitsOutput, ElectricityUnitsOutput, WaterUnitsOutput, 
+		OilUnitsOutput {
 	
 	/**
 	 * Gets the agriculture system.

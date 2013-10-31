@@ -50,6 +50,13 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	TimeSeriesCollection waterSupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection renewableWaterData = new TimeSeriesCollection();
 	TimeSeriesCollection waterConsumptionPerCapita = new TimeSeriesCollection();
+	
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.km3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new local water system panel.
@@ -118,11 +125,27 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.sim;
+		return currencyUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -130,9 +153,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
-	
+
 	/**
 	 * Gets the nested water systems.
 	 *
@@ -147,15 +170,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		}
 		return systems;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
-	@Override
-	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
-	}
-
+	
 	/**
 	 * Gets the water system.
 	 *
@@ -164,13 +179,21 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	public WaterSystem.Local getWaterSystem() {
 		return (WaterSystem.Local) getInfrastructureSystem();
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)
@@ -256,17 +279,15 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 					DefaultUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem().getWaterUnits(),
 							getSociety().getSocialSystem().getWaterTimeUnits(),
-							WaterUnits.L,
-							TimeUnits.day)
+							WaterUnits.L, TimeUnits.day)
 							/ getSociety().getSocialSystem().getPopulation());
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
 					updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), year, 
-							DefaultUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
+							DefaultUnits.convertFlow(nestedSociety.getSocialSystem().getWaterConsumption(),
 									nestedSociety.getSocialSystem().getWaterUnits(),
 									nestedSociety.getSocialSystem().getWaterTimeUnits(),
-									WaterUnits.L,
-									TimeUnits.day)
+									WaterUnits.L, TimeUnits.day)
 									/ nestedSociety.getSocialSystem().getPopulation());
 				}
 			}
@@ -276,23 +297,32 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				getWaterSystem().getWaterReservoirVolume());
 
 		updateSeries(waterRevenue, "Capital", year, 
-				-getWaterSystem().getCapitalExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getCapitalExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Operations", year, 
-				-getWaterSystem().getOperationsExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getOperationsExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Decommission", year, 
-				-getWaterSystem().getDecommissionExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getDecommissionExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Consumption", year, 
-				-getWaterSystem().getConsumptionExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getConsumptionExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "In-Distribution", year, 
-				-getWaterSystem().getDistributionExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getDistributionExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Import", year, 
-				-getWaterSystem().getImportExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getImportExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Out-Distribution", year, 
-				-getWaterSystem().getDistributionExpense());
+				WaterUnits.convertFlow(-getWaterSystem().getDistributionExpense(), 
+						getWaterSystem(), this));
 		updateSeries(waterRevenue, "Sales", year, 
-				getWaterSystem().getSalesRevenue());
+				WaterUnits.convertFlow(getWaterSystem().getSalesRevenue(), 
+						getWaterSystem(), this));
 		updateSeries(waterNetRevenue, "Net Revenue", year, 
-				getWaterSystem().getCashFlow());	
+				WaterUnits.convertFlow(getWaterSystem().getCashFlow(), 
+						getWaterSystem(), this));
 
 		if(getNestedWaterSystems().isEmpty()) {
 			updateSeries(waterUseData, "Society", year, 
@@ -368,21 +398,5 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		updateSeries(waterSourceData, "Import", year, 
 				WaterUnits.convertFlow(getWaterSystem().getWaterImport(), 
 						getWaterSystem(), this));
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
-	@Override
-	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
 	}
 }

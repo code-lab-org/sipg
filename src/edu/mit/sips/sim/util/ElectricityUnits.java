@@ -6,8 +6,11 @@ package edu.mit.sips.sim.util;
  */
 public class ElectricityUnits extends DefaultUnits {
 	public static final ElectricityUnits 
-			kWh = new ElectricityUnits("kilowatt-hour","kWh", 1),  
-			MWh = new ElectricityUnits("megawatt-hour","MWh", 1e6);
+			Wh = new ElectricityUnits("watt-hours","kWh", 1),  
+			kWh = new ElectricityUnits("kilowatt-hours","kWh", 1e-3),  
+			MWh = new ElectricityUnits("megawatt-hours","MWh", 1e-6),  
+			GWh = new ElectricityUnits("gigawatt-hours","GWh", 1e-9),  
+			TWh = new ElectricityUnits("terawatt-hours","TWh", 1e-12);
 
 	/**
 	 * Instantiates a new numerator units.

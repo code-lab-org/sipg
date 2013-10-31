@@ -6,10 +6,10 @@ package edu.mit.sips.sim.util;
  */
 public class LandAreaUnits extends DefaultUnits {
 	public static final LandAreaUnits 
-			ha = new LandAreaUnits("hectares","ha", 1e-2),  
+			ha = new LandAreaUnits("hectares","ha", 1e2),  
 			km2 = new LandAreaUnits("square kilometers","km^2", 1),
-			kkm2 = new LandAreaUnits("thousand square kilometers","thousand km^2", 1e3),
-			Mkm2 = new LandAreaUnits("million people","million km^2", 1e6);
+			kkm2 = new LandAreaUnits("thousand square kilometers","thousand km^2", 1e-3),
+			Mkm2 = new LandAreaUnits("million people","million km^2", 1e-6);
 
 	/**
 	 * Instantiates a new land area units.

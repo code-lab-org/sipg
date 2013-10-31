@@ -7,8 +7,8 @@ package edu.mit.sips.sim.util;
 public class PeopleUnits extends DefaultUnits {
 	public static final PeopleUnits 
 			p = new PeopleUnits("people","-", 1),  
-			kP = new PeopleUnits("thousand people","thousands", 1e3),
-			MP = new PeopleUnits("million people","millions", 1e6);
+			kP = new PeopleUnits("thousand people","thousands", 1e-3),
+			MP = new PeopleUnits("million people","millions", 1e-6);
 
 	/**
 	 * Instantiates a new people units.

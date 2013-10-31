@@ -5,10 +5,10 @@ package edu.mit.sips.sim.util;
  */
 public class WaterUnits extends DefaultUnits {
 		public static final WaterUnits 
-				L = new WaterUnits("liters","L", 1e-3),  
+				L = new WaterUnits("liters","L", 1e3),  
 				m3 = new WaterUnits("cubic meters","m^3", 1),  
-				MCM = new WaterUnits("million cubic meters","MCM", 1e6),
-				km3 = new WaterUnits("cubic kilometers","kJ", 1e9);
+				MCM = new WaterUnits("million cubic meters","MCM", 1e-6),
+				km3 = new WaterUnits("cubic kilometers","km^3", 1e-9);
 		
 		/**
 		 * Instantiates a new water units.
