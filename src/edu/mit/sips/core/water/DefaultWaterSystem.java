@@ -366,7 +366,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getReservoirWaterWithdrawals() {
-			double waterWithdrawals = 0;
+			double waterWithdrawals = getWaterFromPrivateProduction() *
+					reservoirIntensityOfPrivateProduction;
 			for(WaterElement e : getInternalElements()) {
 				waterWithdrawals += e.getWaterWithdrawals();
 			}
@@ -589,8 +590,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void tick() {
 			nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 					waterReservoirVolume + waterReservoirRechargeRate 
-					- getReservoirWaterWithdrawals() 
-					- getWaterFromPrivateProduction()*reservoirIntensityOfPrivateProduction);
+					- getReservoirWaterWithdrawals());
 			if(nextWaterReservoirVolume < 0) {
 				throw new IllegalStateException(
 						"Water reservoir volume cannot be negative.");
