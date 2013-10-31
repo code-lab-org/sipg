@@ -353,10 +353,11 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 								new SimulationControlEvent.Initialize(
 										panel, input.getStartTime(), 
 										input.getEndTime()));
-					} catch(IllegalArgumentException ex) {
+					} catch(Exception ex) {
 						JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 								ex.getMessage(), "Error", 
 								JOptionPane.ERROR_MESSAGE);
+						ex.printStackTrace();
 						fireSimulationInitialize();
 					}
 					return null;

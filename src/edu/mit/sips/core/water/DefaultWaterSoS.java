@@ -31,9 +31,6 @@ import edu.mit.sips.sim.util.WaterUnits;
  */
 public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSoS {
 	
-	/**
-	 * The Class Local.
-	 */
 	public static class Local extends DefaultInfrastructureSoS.Local implements WaterSoS.Local {
 		
 		/**
@@ -43,9 +40,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			super("Water");
 		}
 		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#addElement(edu.mit.sips.core.water.WaterElement)
-		 */
 		@Override
 		public boolean addElement(WaterElement element) {
 			for(WaterSystem.Local system : getNestedSystems()) {
@@ -56,26 +50,16 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return false;
 		}
 
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-		 */
 		@Override
 		public TimeUnits getCurrencyTimeUnits() {
 			return TimeUnits.year;
 		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-		 */
+		
 		@Override
 		public CurrencyUnits getCurrencyUnits() {
 			return CurrencyUnits.sim;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
-		 */
 		@Override
 		public double getElectricityConsumption() {
 			double value = 0;
@@ -85,25 +69,34 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-		 */
+		@Override
+		public double getElectricityConsumptionFromPrivateProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getElectricityConsumptionFromPrivateProduction();
+			}
+			return value;
+		}
+
+		@Override
+		public double getElectricityConsumptionFromPublicProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getElectricityConsumptionFromPublicProduction();
+			}
+			return value;
+		}
+
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
 			return TimeUnits.year;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
 			return ElectricityUnits.MWh;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
-		 */
 		@Override
 		public List<? extends WaterElement> getElements() {
 			List<WaterElement> elements = new ArrayList<WaterElement>();
@@ -112,9 +105,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return Collections.unmodifiableList(elements);
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
-		 */
 		@Override
 		public List<? extends WaterElement> getExternalElements() {
 			List<WaterElement> elements = new ArrayList<WaterElement>();
@@ -127,9 +117,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return Collections.unmodifiableList(elements);
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getInternalElements()
-		 */
 		@Override
 		public List<? extends WaterElement> getInternalElements() {
 			List<WaterElement> elements = new ArrayList<WaterElement>();
@@ -139,9 +126,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return Collections.unmodifiableList(elements);
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getLocalWaterFraction()
-		 */
 		@Override
 		public double getLocalWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
@@ -151,9 +135,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getMaxWaterReservoirVolume()
-		 */
 		@Override
 		public double getMaxWaterReservoirVolume() {
 			double value = 0;
@@ -163,9 +144,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.DefaultInfrastructureSoS.Local#getNestedSystems()
-		 */
 		@Override
 		public List<WaterSystem.Local> getNestedSystems() {
 			List<WaterSystem.Local> systems = new ArrayList<WaterSystem.Local>();
@@ -177,9 +155,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return Collections.unmodifiableList(systems);
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getRenewableWaterFraction()
-		 */
 		@Override
 		public double getRenewableWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
@@ -189,9 +164,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getRenewableWaterProduction()
-		 */
 		@Override
 		public double getRenewableWaterProduction() {
 			double value = 0;
@@ -201,21 +173,33 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWaterWithdrawals()
-		 */
 		@Override
-		public double getReservoirWaterWithdrawals() {
+		public double getReservoirWithdrawals() {
 			double value = 0;
 			for(WaterSystem.Local system : getNestedSystems()) {
-				value += system.getReservoirWaterWithdrawals();
+				value += system.getReservoirWithdrawals();
 			}
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getTotalWaterSupply()
-		 */
+		@Override
+		public double getReservoirWithdrawalsFromPrivateProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getReservoirWithdrawalsFromPrivateProduction();
+			}
+			return value;
+		}
+
+		@Override
+		public double getReservoirWithdrawalsFromPublicProduction() {
+			double value = 0;
+			for(WaterSystem.Local system : getNestedSystems()) {
+				value += system.getReservoirWithdrawalsFromPublicProduction();
+			}
+			return value;
+		}
+
 		@Override
 		public double getTotalWaterSupply() {
 			double value = 0;
@@ -225,9 +209,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getUnitProductionCost()
-		 */
 		@Override
 		public double getUnitProductionCost() {
 			if(getWaterProduction() > 0) {
@@ -237,9 +218,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getUnitSupplyProfit()
-		 */
 		@Override
 		public double getUnitSupplyProfit() {
 			if(getTotalWaterSupply() > 0) {
@@ -248,9 +226,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
-		 */
 		@Override
 		public double getWaterDomesticPrice() {
 			if(!getNestedSystems().isEmpty()) {
@@ -263,9 +238,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterFromArtesianWell()
-		 */
 		@Override
 		public double getWaterFromPrivateProduction() {
 			double value = 0;
@@ -275,9 +247,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterImport()
-		 */
 		@Override
 		public double getWaterImport() {
 			double value = 0;
@@ -287,9 +256,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
-		 */
 		@Override
 		public double getWaterImportPrice() {
 			if(!getNestedSystems().isEmpty()) {
@@ -302,9 +268,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 0;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterInDistribution()
-		 */
 		@Override
 		public double getWaterInDistribution() {
 			double value = 0;
@@ -314,9 +277,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterOutDistribution()
-		 */
 		@Override
 		public double getWaterOutDistribution() {
 			double value = 0;
@@ -329,10 +289,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterOutDistributionLosses()
-		 */
 		@Override
 		public double getWaterOutDistributionLosses() {
 			double value = 0;
@@ -342,10 +298,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterProduction()
-		 */
 		@Override
 		public double getWaterProduction() {
 			double value = 0;
@@ -355,9 +307,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
-		 */
 		@Override
 		public double getWaterReservoirRechargeRate() {
 			double value = 0;
@@ -367,9 +316,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirVolume()
-		 */
 		@Override
 		public double getWaterReservoirVolume() {
 			double value = 0;
@@ -379,25 +325,16 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
 			return TimeUnits.year;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-		 */
 		@Override
 		public WaterUnits getWaterUnits() {
 			return WaterUnits.m3;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterWasted()
-		 */
 		@Override
 		public double getWaterWasted() {
 			double value = 0;
@@ -407,15 +344,9 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return value;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#initialize(long)
-		 */
 		@Override
 		public void initialize(long time) { }
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
-		 */
 		@Override
 		public boolean isCoastalAccess() {
 			for(WaterSystem.Local system : getNestedSystems()) {
@@ -426,9 +357,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return false;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterDistribution()
-		 */
 		@Override
 		public void optimizeWaterDistribution() {
 			// Make a list of cities and infrastructure elements. The vector
@@ -526,9 +454,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#optimizeWaterProductionAndDistribution(double)
-		 */
 		@Override
 		public void optimizeWaterProductionAndDistribution(OptimizationOptions optimizationOptions) {
 			List<City> cities = getSociety().getCities();
@@ -680,9 +605,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			}
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#removeElement(edu.mit.sips.core.water.WaterElement)
-		 */
 		@Override
 		public boolean removeElement(WaterElement element) {
 			for(WaterSystem.Local system : getNestedSystems()) {
@@ -693,43 +615,13 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return false;
 		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tick()
-		 */
 		@Override
 		public void tick() { }
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.SimEntity#tock()
-		 */
 		@Override
 		public void tock() { }
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPrivateProduction()
-		 */
-		@Override
-		public double getElectricityConsumptionFromPrivateProduction() {
-			double value = 0;
-			for(WaterSystem.Local system : getNestedSystems()) {
-				value += system.getElectricityConsumptionFromPrivateProduction();
-			}
-			return value;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPublicProduction()
-		 */
-		@Override
-		public double getElectricityConsumptionFromPublicProduction() {
-			double value = 0;
-			for(WaterSystem.Local system : getNestedSystems()) {
-				value += system.getElectricityConsumptionFromPublicProduction();
-			}
-			return value;
-		}
 	}
-	
+
 	/**
 	 * Instantiates a new default water so s.
 	 */
@@ -738,7 +630,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCurrencyTimeUnits()
 	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {

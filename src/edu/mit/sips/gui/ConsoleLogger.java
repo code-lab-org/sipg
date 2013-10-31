@@ -414,11 +414,11 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "m^3", 
-					waterSystem.getReservoirWaterWithdrawals()
+					waterSystem.getReservoirWithdrawals()
 					+ waterSystem.getWaterFromPrivateProduction());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getReservoirWaterWithdrawals()
+						system.getReservoirWithdrawals()
 						+ waterSystem.getWaterFromPrivateProduction());
 			}
 			System.out.println();

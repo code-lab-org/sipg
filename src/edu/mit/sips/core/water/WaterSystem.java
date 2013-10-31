@@ -81,11 +81,25 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		public double getRenewableWaterProduction();
 		
 		/**
-		 * Gets the reservoir water withdrawals.
+		 * Gets the reservoir withdrawals.
 		 *
-		 * @return the reservoir water withdrawals
+		 * @return the reservoir withdrawals
 		 */
-		public double getReservoirWaterWithdrawals();
+		public double getReservoirWithdrawals();
+		
+		/**
+		 * Gets the reservoir withdrawals from private production.
+		 *
+		 * @return the reservoir withdrawals from private production
+		 */
+		public double getReservoirWithdrawalsFromPrivateProduction();
+		
+		/**
+		 * Gets the reservoir withdrawals from public production.
+		 *
+		 * @return the reservoir withdrawals from public production
+		 */
+		public double getReservoirWithdrawalsFromPublicProduction();
 		
 		/**
 		 * Gets the total water supply.

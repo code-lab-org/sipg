@@ -365,13 +365,30 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 * @see edu.mit.sips.WaterSystem#getWaterWithdrawals()
 		 */
 		@Override
-		public double getReservoirWaterWithdrawals() {
-			double waterWithdrawals = getWaterFromPrivateProduction() *
-					reservoirIntensityOfPrivateProduction;
+		public double getReservoirWithdrawals() {
+			return getReservoirWithdrawalsFromPublicProduction() + 
+					getReservoirWithdrawalsFromPrivateProduction();
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
+		 */
+		@Override
+		public double getReservoirWithdrawalsFromPublicProduction() {
+			double waterWithdrawals = 0;
 			for(WaterElement e : getInternalElements()) {
 				waterWithdrawals += e.getWaterWithdrawals();
 			}
 			return waterWithdrawals;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPrivateProduction()
+		 */
+		@Override
+		public double getReservoirWithdrawalsFromPrivateProduction() {
+			return getWaterFromPrivateProduction() *
+					reservoirIntensityOfPrivateProduction;
 		}
 
 		/* (non-Javadoc)
@@ -430,7 +447,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		@Override
 		public double getWaterFromPrivateProduction() {
 			// Artesian water used to meet shortfall in reaching minimum demand.
-			return Math.min(getWaterReservoirVolume() - getReservoirWaterWithdrawals(), 
+			return Math.min(getWaterReservoirVolume() - getReservoirWithdrawalsFromPublicProduction(), 
 					Math.max(0, getSociety().getTotalWaterDemand()
 							+ getWaterOutDistribution()
 							- getWaterInDistribution()
@@ -590,7 +607,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void tick() {
 			nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 					waterReservoirVolume + waterReservoirRechargeRate 
-					- getReservoirWaterWithdrawals());
+					- getReservoirWithdrawals());
 			if(nextWaterReservoirVolume < 0) {
 				throw new IllegalStateException(
 						"Water reservoir volume cannot be negative.");
