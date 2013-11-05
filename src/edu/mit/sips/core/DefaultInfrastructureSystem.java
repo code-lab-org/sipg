@@ -43,7 +43,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public double getCapitalExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
-				value += e.getCapitalExpense();
+				value += CurrencyUnits.convertFlow(e.getCapitalExpense(), e, this);
 			}
 			return value;
 		}
@@ -64,7 +64,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public double getDecommissionExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
-				value += e.getDecommissionExpense();
+				value += CurrencyUnits.convertFlow(e.getDecommissionExpense(), e, this);
 			}
 			return value;
 		}
@@ -97,7 +97,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		public double getOperationsExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
-				value += e.getTotalOperationsExpense();
+				value += CurrencyUnits.convertFlow(e.getTotalOperationsExpense(), e, this);
 			}
 			return value;
 		}
@@ -175,6 +175,9 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		}
 	}
 
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	
 	private String name;
 	private transient Society society;
 	private transient EventListenerList listenerList = new EventListenerList();
@@ -226,7 +229,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.sim;
+		return currencyUnits;
 	}
 
 
@@ -251,7 +254,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)

@@ -28,8 +28,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
 		private final WaterUnits waterUnits = WaterUnits.m3;
 		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-		private final TimeUnits currencyTimeUnits = TimeUnits.year;
 		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 		private final TimeUnits electricityTimeUnits = TimeUnits.year;
 		
@@ -163,24 +161,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
+			return CurrencyUnits.convertStock(
+					getSociety().getElectricitySystem().getElectricityDomesticPrice(), getSociety(), this)
 					* getElectricityConsumptionFromPublicProduction();
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getCurrencyTimeUnits() {
-			return currencyTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-		 */
-		@Override
-		public CurrencyUnits getCurrencyUnits() {
-			return currencyUnits;
 		}
 
 		/* (non-Javadoc)
@@ -235,28 +218,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
 					energyConsumption += 0;
 				} else {
-					energyConsumption += e.getElectricityConsumption();
+					energyConsumption += ElectricityUnits.convertFlow(
+							e.getElectricityConsumption(), e, this);
 				}
 			}
 			return energyConsumption;
 		}
 		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
-		 */
-		@Override
-		public double getOperationsExpense() {
-			double value = 0;
-			for(WaterElement e : getInternalElements()) {
-				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
-					value += e.getFixedOperationsExpense();
-				} else {
-					value += e.getTotalOperationsExpense();
-				}
-			}
-			return value;
-		}
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
@@ -283,7 +251,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			elements.addAll(getExternalElements());
 			return Collections.unmodifiableList(elements);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
 		 */
@@ -291,8 +259,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getExportRevenue() {
 			return 0;
 		}
-
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
 		 */
@@ -322,6 +289,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			return Collections.unmodifiableList(elements);
 		}
 
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 		 */
@@ -345,7 +313,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getLocalWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
 				return Math.min(1, (getWaterProduction() + getWaterFromPrivateProduction())
-						/ getSociety().getTotalWaterDemand());
+						/ WaterUnits.convertFlow(getSociety().getTotalWaterDemand(), getSociety(), this));
 			} 
 			return 0;
 		}
@@ -359,13 +327,30 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
+		 */
+		@Override
+		public double getOperationsExpense() {
+			double value = 0;
+			for(WaterElement e : getInternalElements()) {
+				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
+					value += CurrencyUnits.convertFlow(e.getFixedOperationsExpense(), e, this);
+				} else {
+					value += CurrencyUnits.convertFlow(e.getTotalOperationsExpense(), e, this);
+				}
+			}
+			return value;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getRenewableWaterFraction()
 		 */
 		@Override
 		public double getRenewableWaterFraction() {
 			if(getSociety().getTotalWaterDemand() > 0) {
 				return getRenewableWaterProduction() 
-						/ getSociety().getTotalWaterDemand();
+						/ WaterUnits.convertFlow(getSociety().getTotalWaterDemand(), 
+								getSociety(), this);
 			}
 			return 0;
 		}
@@ -378,7 +363,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			double renewableProduction = 0;
 			for(WaterElement e : getInternalElements()) {
 				if(e.getReservoirIntensityOfWaterProduction() < 1) {
-					renewableProduction += e.getWaterProduction() 
+					renewableProduction += WaterUnits.convertFlow(e.getWaterProduction(), e, this)
 							* (1 - e.getReservoirIntensityOfWaterProduction());
 				}
 			}
@@ -398,18 +383,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
-		 */
-		@Override
-		public double getReservoirWithdrawalsFromPublicProduction() {
-			double waterWithdrawals = 0;
-			for(WaterElement e : getInternalElements()) {
-				waterWithdrawals += e.getWaterWithdrawals();
-			}
-			return waterWithdrawals;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPrivateProduction()
 		 */
 		@Override
@@ -419,11 +392,24 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
+		 */
+		@Override
+		public double getReservoirWithdrawalsFromPublicProduction() {
+			double waterWithdrawals = 0;
+			for(WaterElement e : getInternalElements()) {
+				waterWithdrawals += WaterUnits.convertFlow(e.getWaterWithdrawals(), e, this);
+			}
+			return waterWithdrawals;
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getWaterDomesticPrice() * (getSociety().getTotalWaterDemand() 
+			return getWaterDomesticPrice() * (WaterUnits.convertFlow(
+					getSociety().getTotalWaterDemand(), getSociety(), this)
 					- getWaterFromPrivateProduction());
 		}
 
@@ -475,7 +461,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterFromPrivateProduction() {
 			// Artesian water used to meet shortfall in reaching minimum demand.
 			return Math.min(getWaterReservoirVolume() - getReservoirWithdrawalsFromPublicProduction(), 
-					Math.max(0, getSociety().getTotalWaterDemand()
+					Math.max(0, WaterUnits.convertFlow(
+								getSociety().getTotalWaterDemand(), 
+								getSociety(), this)
 							+ getWaterOutDistribution()
 							- getWaterInDistribution()
 							- getWaterProduction()));
@@ -488,7 +476,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterImport() {
 			// Water is imported to meet shortfall in reaching minimum demand.
 			// Note that water cannot be exported, and is wasted if excess.
-			return Math.max(0, getSociety().getTotalWaterDemand()
+			return Math.max(0, WaterUnits.convertFlow(
+						getSociety().getTotalWaterDemand(), 
+						getSociety(), this)
 					+ getWaterOutDistribution()
 					- getWaterInDistribution()
 					- getWaterProduction()
@@ -510,7 +500,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterInDistribution() {
 			double distribution = 0;
 			for(WaterElement e : getExternalElements()) {
-				distribution += e.getWaterOutput();
+				distribution += WaterUnits.convertFlow(e.getWaterOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -524,7 +514,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			for(WaterElement e : getInternalElements()) {
 				if(!getSociety().getCities().contains(
 						getSociety().getCountry().getCity(e.getDestination()))) {
-					distribution += e.getWaterInput();
+					distribution += WaterUnits.convertFlow(e.getWaterInput(), e, this);
 				}
 			}
 			return distribution;
@@ -537,7 +527,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterOutDistributionLosses() {
 			double distribution = 0;
 			for(WaterElement e : getInternalElements()) {
-				distribution += e.getWaterInput() - e.getWaterOutput();
+				distribution += WaterUnits.convertFlow(e.getWaterInput() - e.getWaterOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -552,7 +542,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
 					waterProduction += 0;
 				} else {
-					waterProduction += e.getWaterProduction();
+					waterProduction += WaterUnits.convertFlow(e.getWaterProduction(), e, this);
 				}
 			}
 			return waterProduction;

@@ -24,6 +24,11 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final FoodUnits foodUnits = FoodUnits.kcal;
+		private final TimeUnits foodTimeUnits = TimeUnits.day;
+		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final double arableLandArea;	
@@ -133,14 +138,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getConsumptionExpense() {
 			return getSociety().getWaterSystem().getWaterDomesticPrice()
 					* getWaterConsumption();
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
-		 */
-		@Override
-		public TimeUnits getCurrencyTimeUnits() {
-			return TimeUnits.year;
 		}
 
 		/* (non-Javadoc)
@@ -269,7 +266,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodInDistribution() {
 			double distribution = 0;
 			for(AgricultureElement e : getExternalElements()) {
-				distribution += e.getFoodOutput();
+				distribution += FoodUnits.convertFlow(e.getFoodOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -284,7 +281,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			for(AgricultureElement e : getInternalElements()) {
 				if(!getSociety().getCities().contains(
 						getSociety().getCountry().getCity(e.getDestination()))) {
-					distribution += e.getFoodInput();
+					distribution += FoodUnits.convertFlow(e.getFoodInput(), e, this);
 				}
 			}
 			return distribution;
@@ -297,7 +294,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodOutDistributionLosses() {
 			double distribution = 0;
 			for(AgricultureElement e : getInternalElements()) {
-				distribution += e.getFoodInput() - e.getFoodOutput();
+				distribution += FoodUnits.convertFlow(e.getFoodInput() - e.getFoodOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -309,7 +306,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodProduction() {
 			double foodProduction = 0;
 			for(AgricultureElement e : getInternalElements()) {
-				foodProduction += e.getFoodProduction();
+				foodProduction += FoodUnits.convertFlow(e.getFoodProduction(), e, this);
 			}
 			return foodProduction;
 		}
@@ -319,7 +316,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public TimeUnits getFoodTimeUnits() {
-			return TimeUnits.day;
+			return foodTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -327,7 +324,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public FoodUnits getFoodUnits() {
-			return FoodUnits.kcal;
+			return foodUnits;
 		}
 
 		/* (non-Javadoc)
@@ -446,7 +443,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getWaterConsumption() {
 			double waterConsumption = 0;
 			for(AgricultureElement e : getInternalElements()) {
-				waterConsumption += e.getWaterConsumption();
+				waterConsumption += WaterUnits.convertFlow(e.getWaterConsumption(), e, this);
 			}
 			return waterConsumption;
 		}
@@ -456,7 +453,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -464,7 +461,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)
@@ -498,6 +495,11 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final FoodUnits foodUnits = FoodUnits.kcal;
+		private final TimeUnits foodTimeUnits = TimeUnits.day;
+		
 		private double waterConsumption;
 		private double domesticPrice, importPrice, exportPrice;
 
@@ -515,27 +517,27 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodDomesticPrice() {
 			return domesticPrice;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
 		 */
 		public double getFoodExportPrice() {
 			return exportPrice;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
 		 */
 		public double getFoodImportPrice() {
 			return importPrice;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 		 */
 		@Override
 		public TimeUnits getFoodTimeUnits() {
-			return TimeUnits.day;
+			return foodTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -543,7 +545,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public FoodUnits getFoodUnits() {
-			return FoodUnits.kcal;
+			return foodUnits;
 		}
 
 		/* (non-Javadoc)
@@ -553,13 +555,13 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getWaterConsumption() {
 			return waterConsumption;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -567,7 +569,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)
