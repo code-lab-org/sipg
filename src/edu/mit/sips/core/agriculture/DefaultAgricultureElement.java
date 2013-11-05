@@ -3,6 +3,7 @@ package edu.mit.sips.core.agriculture;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
@@ -65,6 +66,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 				initialLandArea, foodIntensityOfLandUsed, costIntensityOfLandUsed, 
 				waterIntensityOfLandUsed, laborIntensityOfLandUsed, 0, 0, 0, 0);
 	}
+	
+	private final TimeUnits foodTimeUnits = TimeUnits.day;
+	private final FoodUnits foodUnits = FoodUnits.kcal;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
 	
 	private final double maxLandArea;
 	private final double initialLandArea;
@@ -214,22 +220,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	public double getCostIntensityOfLandUsed() {
 		return costIntensityOfLandUsed;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.sim;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDistributionEfficiency()
@@ -242,7 +232,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodInput()
@@ -293,7 +282,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
-		return TimeUnits.day;
+		return foodTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -301,7 +290,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public FoodUnits getFoodUnits() {
-		return FoodUnits.kcal;
+		return foodUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -357,15 +346,22 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		setMutableFields(element);
 		element.setMaxLandArea(maxLandArea);
 		element.setInitialLandArea(initialLandArea);
-		element.setCostIntensityOfLandUsed(costIntensityOfLandUsed);
-		element.setFoodIntensityOfLandUsed(foodIntensityOfLandUsed);
-		element.setWaterIntensityOfLandUsed(waterIntensityOfLandUsed);
+		element.setCostIntensityOfLandUsed(CurrencyUnits.convertFlow(
+				costIntensityOfLandUsed, this, element));
+		element.setFoodIntensityOfLandUsed(FoodUnits.convertFlow(
+				foodIntensityOfLandUsed, this, element));
+		element.setWaterIntensityOfLandUsed(WaterUnits.convertFlow(
+				waterIntensityOfLandUsed, this, element));
 		element.setLaborIntensityOfLandUsed(laborIntensityOfLandUsed);
-		element.setMaxFoodInput(maxFoodInput);
-		element.setInitialFoodInput(initialFoodInput);
+		element.setMaxFoodInput(FoodUnits.convertFlow(
+				maxFoodInput, this, element));
+		element.setInitialFoodInput(FoodUnits.convertFlow(
+				initialFoodInput, this, element));
 		element.setDistributionEfficiency(distributionEfficiency);
-		element.setVariableOperationsCostOfFoodDistribution(
-				variableOperationsCostOfFoodDistribution);
+		element.setVariableOperationsCostOfFoodDistribution(DefaultUnits.convert(
+				variableOperationsCostOfFoodDistribution, 
+				getCurrencyUnits(), getFoodUnits(), 
+				element.getCurrencyUnits(), element.getFoodUnits()));
 		return element;
 	}
 
@@ -412,7 +408,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -420,7 +416,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)

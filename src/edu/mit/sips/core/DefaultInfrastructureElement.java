@@ -14,6 +14,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	private final String origin, destination;
 	private final LifecycleModel lifecycleModel;
 	protected transient EventListenerList listenerList = new EventListenerList();
+
 	
 	/**
 	 * Instantiates a new default infrastructure element.
@@ -99,7 +100,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.sim;
+		return lifecycleModel.getCurrencyUnits();
 	}
 	
 	/* (non-Javadoc)
@@ -155,7 +156,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
+		return lifecycleModel.getCurrencyTimeUnits();
 	}
 	
 	/* (non-Javadoc)

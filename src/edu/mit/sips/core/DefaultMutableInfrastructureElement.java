@@ -1,5 +1,8 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+
 
 /**
  * The Class DefaultMutableElement.
@@ -9,6 +12,22 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	private String name = "";
 	private String origin = "", destination = "";
 	private MutableLifecycleModel lifecycleModel = new DefaultLifecycleModel();
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return lifecycleModel.getCurrencyTimeUnits();
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return lifecycleModel.getCurrencyUnits();
+	}
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.MutableInfrastructureElement#getDestination()
@@ -73,7 +92,7 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	public final void setName(String name) {
 		this.name = name;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.MutableInfrastructureElement#setOrigin(int)
 	 */
@@ -81,7 +100,7 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	public final void setOrigin(String origin) {
 		this.origin = origin;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.MutableInfrastructureElement#setTemplateName(java.lang.String)
 	 */

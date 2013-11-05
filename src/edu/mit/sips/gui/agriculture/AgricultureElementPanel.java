@@ -16,11 +16,20 @@ import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.FoodUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class AgricultureElementPanel.
  */
-public class AgricultureElementPanel extends ElementPanel {
+public class AgricultureElementPanel extends ElementPanel 
+		implements WaterUnitsOutput, CurrencyUnitsOutput, FoodUnitsOutput {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
 	private final JFormattedTextField maxLandAreaText;
@@ -36,6 +45,13 @@ public class AgricultureElementPanel extends ElementPanel {
 	private final JFormattedTextField initialFoodInput;
 	private final JFormattedTextField distributionEfficiency;
 	private final JFormattedTextField variableOperationsCostOfFoodDistribution;
+
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.TJ;
+	private final TimeUnits foodTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.MCM;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
 	 * Instantiates a new agriculture element panel.
@@ -46,6 +62,8 @@ public class AgricultureElementPanel extends ElementPanel {
 	public AgricultureElementPanel(Scenario scenario, 
 			final MutableAgricultureElement element) {
 		super(scenario, element);
+		
+		final AgricultureElementPanel thisPanel = this;
 		
 		maxLandAreaText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxLandAreaText.setColumns(10);
@@ -74,17 +92,20 @@ public class AgricultureElementPanel extends ElementPanel {
 							element.setInitialLandArea(
 									((Number) initialLandAreaText.getValue()).doubleValue());
 							outputLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getFoodIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * FoodUnits.convertFlow(
+											element.getFoodIntensityOfLandUsed(), 
+											element, thisPanel)));
 							variableCostLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getCostIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * CurrencyUnits.convertFlow(
+											element.getCostIntensityOfLandUsed(),
+											element, thisPanel)));
 							waterUseLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getWaterIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * WaterUnits.convertFlow(
+											element.getWaterIntensityOfLandUsed(), 
+											element, thisPanel)));
 							laborUseLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getLaborIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * 
+									element.getLaborIntensityOfLandUsed()));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -94,16 +115,19 @@ public class AgricultureElementPanel extends ElementPanel {
 		costIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		costIntensityText.setColumns(10);
 		costIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		costIntensityText.setValue(element.getCostIntensityOfLandUsed());
+		costIntensityText.setValue(CurrencyUnits.convertFlow(
+				element.getCostIntensityOfLandUsed(), element, this));
 		costIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setCostIntensityOfLandUsed(
-									((Number) costIntensityText.getValue()).doubleValue());
+							element.setCostIntensityOfLandUsed(CurrencyUnits.convertFlow(
+									((Number) costIntensityText.getValue()).doubleValue(), 
+									thisPanel, element));
 							variableCostLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getCostIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * CurrencyUnits.convertFlow(
+											element.getCostIntensityOfLandUsed(), 
+											element, thisPanel)));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -113,16 +137,19 @@ public class AgricultureElementPanel extends ElementPanel {
 		foodIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		foodIntensityText.setColumns(10);
 		foodIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		foodIntensityText.setValue(element.getFoodIntensityOfLandUsed());
+		foodIntensityText.setValue(FoodUnits.convertFlow(
+				element.getFoodIntensityOfLandUsed(), element, this));
 		foodIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setFoodIntensityOfLandUsed(
-									((Number) foodIntensityText.getValue()).doubleValue());
+							element.setFoodIntensityOfLandUsed(FoodUnits.convertFlow(
+									((Number) foodIntensityText.getValue()).doubleValue(),
+									thisPanel, element));
 							outputLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getFoodIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * FoodUnits.convertFlow(
+											element.getFoodIntensityOfLandUsed(),
+											element, thisPanel)));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -151,16 +178,19 @@ public class AgricultureElementPanel extends ElementPanel {
 		waterIntensityText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		waterIntensityText.setColumns(10);
 		waterIntensityText.setHorizontalAlignment(JTextField.RIGHT);
-		waterIntensityText.setValue(element.getWaterIntensityOfLandUsed());
+		waterIntensityText.setValue(WaterUnits.convertFlow(
+				element.getWaterIntensityOfLandUsed(), element, this));
 		waterIntensityText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setWaterIntensityOfLandUsed(
-									((Number) waterIntensityText.getValue()).doubleValue());
+							element.setWaterIntensityOfLandUsed(WaterUnits.convertFlow(
+									((Number) waterIntensityText.getValue()).doubleValue(),
+									thisPanel, element));
 							waterUseLabel.setText(NumberFormat.getNumberInstance().format(
-									element.getWaterIntensityOfLandUsed()
-									*element.getInitialLandArea()));
+									element.getInitialLandArea() * WaterUnits.convertFlow(
+											element.getWaterIntensityOfLandUsed(), 
+											element, thisPanel)));
 							initialLandAreaText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialLandAreaText.setForeground(Color.red);
@@ -168,14 +198,17 @@ public class AgricultureElementPanel extends ElementPanel {
 					}
 				});
 		outputLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getFoodIntensityOfLandUsed()
-				*element.getInitialLandArea()), JLabel.RIGHT);
+				element.getInitialLandArea() * FoodUnits.convertFlow(
+						element.getFoodIntensityOfLandUsed(), 
+						element, this)), JLabel.RIGHT);
 		variableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getCostIntensityOfLandUsed()
-				*element.getInitialLandArea()), JLabel.RIGHT);
+				element.getInitialLandArea() * CurrencyUnits.convertFlow(
+				element.getCostIntensityOfLandUsed(),
+				element, this)), JLabel.RIGHT);
 		waterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
-				element.getWaterIntensityOfLandUsed()
-				*element.getInitialLandArea()), JLabel.RIGHT);
+				element.getInitialLandArea() * WaterUnits.convertFlow(
+						element.getWaterIntensityOfLandUsed(),
+						element, this)), JLabel.RIGHT);
 		laborUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
 				element.getLaborIntensityOfLandUsed()
 				*element.getInitialLandArea()), JLabel.RIGHT);
@@ -183,13 +216,15 @@ public class AgricultureElementPanel extends ElementPanel {
 		maxFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxFoodInput.setColumns(10);
 		maxFoodInput.setHorizontalAlignment(JTextField.RIGHT);
-		maxFoodInput.setValue(element.getMaxFoodInput());
+		maxFoodInput.setValue(FoodUnits.convertFlow(
+				element.getMaxFoodInput(), element, this));
 		maxFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxFoodInput(
-									((Number) maxFoodInput.getValue()).doubleValue());
+							element.setMaxFoodInput(FoodUnits.convertFlow(
+									((Number) maxFoodInput.getValue()).doubleValue(),
+									thisPanel, element));
 							maxFoodInput.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxFoodInput.setForeground(Color.red);
@@ -199,13 +234,15 @@ public class AgricultureElementPanel extends ElementPanel {
 		initialFoodInput = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialFoodInput.setColumns(10);
 		initialFoodInput.setHorizontalAlignment(JTextField.RIGHT);
-		initialFoodInput.setValue(element.getInitialFoodInput());
+		initialFoodInput.setValue(FoodUnits.convertFlow(
+				element.getInitialFoodInput(), element, this));
 		initialFoodInput.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialFoodInput(
-									((Number) initialFoodInput.getValue()).doubleValue());
+							element.setInitialFoodInput(FoodUnits.convertFlow(
+									((Number) initialFoodInput.getValue()).doubleValue(),
+									thisPanel, element));
 							initialFoodInput.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialFoodInput.setForeground(Color.red);
@@ -232,14 +269,18 @@ public class AgricultureElementPanel extends ElementPanel {
 				NumberFormat.getNumberInstance());
 		variableOperationsCostOfFoodDistribution.setColumns(10);
 		variableOperationsCostOfFoodDistribution.setHorizontalAlignment(JTextField.RIGHT);
-		variableOperationsCostOfFoodDistribution.setValue(
-				element.getVariableOperationsCostOfFoodDistribution());
+		variableOperationsCostOfFoodDistribution.setValue(DefaultUnits.convert(
+				element.getVariableOperationsCostOfFoodDistribution(),
+				element.getCurrencyUnits(), element.getFoodUnits(),
+				getCurrencyUnits(), getFoodUnits()));
 		variableOperationsCostOfFoodDistribution.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfFoodDistribution(
-									((Number) variableOperationsCostOfFoodDistribution.getValue()).doubleValue());
+							element.setVariableOperationsCostOfFoodDistribution(DefaultUnits.convert(
+									((Number) variableOperationsCostOfFoodDistribution.getValue()).doubleValue(),
+									getCurrencyUnits(), getFoodUnits(),
+									element.getCurrencyUnits(), element.getFoodUnits()));
 							variableOperationsCostOfFoodDistribution.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfFoodDistribution.setForeground(Color.red);
@@ -260,31 +301,31 @@ public class AgricultureElementPanel extends ElementPanel {
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Land Area", 
-					maxLandAreaText, "<html>km<sup>2</sup></html>");
+					maxLandAreaText, "km^2");
 			addInput(elementPanel, c, "Initial Land Area",
-					initialLandAreaText, "<html>km<sup>2</sup></html>");
+					initialLandAreaText, "km^2");
 			addInput(elementPanel, c, "Food Yield", foodIntensityText, 
-					"<html>kcal/day/km<sup>2</sup></html>");
+					foodUnits + "/" + foodTimeUnits + "/km^2");
 			addInput(elementPanel, c, "Cost Intensity", costIntensityText, 
-					"<html>SAR/km<sup>2</sup></html>");
+					currencyUnits + "/km^2");
 			addInput(elementPanel, c, "Water Intensity", waterIntensityText, 
-					"<html>m<sup>3</sup>/km<sup>2</sup></html>");
+					waterUnits + "/km^2");
 			addInput(elementPanel, c, "Labor Intensity", laborIntensityText, 
-					"<html>people/km<sup>2</sup></html>");
+					"people/km^2");
 			JPanel productPanel = new JPanel();
 			productPanel.setLayout(new GridLayout(4, 3, 2, 2));
 			productPanel.add(new JLabel("Initial Food Output"));
 			productPanel.add(outputLabel);
-			productPanel.add(new JLabel("<html>kcal/day</html>"));
+			productPanel.add(new JLabel(foodUnits + "/" + foodTimeUnits));
 			productPanel.add(new JLabel("Initial Variable Cost"));
 			productPanel.add(variableCostLabel);
-			productPanel.add(new JLabel("<html>SAR</html>"));
+			productPanel.add(new JLabel(currencyUnits.toString()));
 			productPanel.add(new JLabel("Initial Water Use"));
 			productPanel.add(waterUseLabel);
-			productPanel.add(new JLabel("<html>m<sup>3</sup></html>"));
+			productPanel.add(new JLabel(waterUnits.toString()));
 			productPanel.add(new JLabel("Initial Labor Use"));
 			productPanel.add(laborUseLabel);
-			productPanel.add(new JLabel("<html>people</html>"));
+			productPanel.add(new JLabel("people"));
 			addInput(elementPanel, c, "", productPanel, "");
 		}
 		if(element.getTemplateName() == null 
@@ -293,13 +334,13 @@ public class AgricultureElementPanel extends ElementPanel {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Food Input", 
-					maxFoodInput, "kcal/day/year");
+					maxFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Initial Food Input", 
-					initialFoodInput, "kcal/day/year");
+					initialFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency", 
-					distributionEfficiency, "kcal/day out/kcal/day in");
+					distributionEfficiency, "-");
 			addInput(elementPanel, c, "Operations Cost of Distribution", 
-					variableOperationsCostOfFoodDistribution, "SAR/kcal/day");
+					variableOperationsCostOfFoodDistribution, currencyUnits + "/" + foodUnits);
 		}
 
 		// set input enabled state
@@ -311,5 +352,53 @@ public class AgricultureElementPanel extends ElementPanel {
 		waterIntensityText.setEnabled(element.getTemplateName() == null);
 		distributionEfficiency.setEnabled(element.getTemplateName() == null);
 		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplateName() == null);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 }

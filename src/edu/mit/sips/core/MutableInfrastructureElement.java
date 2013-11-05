@@ -1,10 +1,12 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+
 
 /**
  * The Interface MutableInfrastructureElement.
  */
-public interface MutableInfrastructureElement {
+public interface MutableInfrastructureElement extends CurrencyUnitsOutput {
 	
 	/**
 	 * Creates the element.
