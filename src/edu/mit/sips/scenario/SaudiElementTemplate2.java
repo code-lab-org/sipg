@@ -155,28 +155,28 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, endYear-year, 1, 
 							0, 0, 0, true), 
-					0.0, 25e6, 25e6, 5.5e-3, 0, true);
+					0.0, 50e6, 50e6, 5.5e-3, 0, true);
 		case RO_PLANT_2:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_2), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 5, 
 							maxOperations, endYear-year, 1, 
 							0, 0, 0, true), 
-					0.0, 100e6, 100e6, 4.5e-3, 0, true);
+					0.0, 150e6, 150e6, 4.5e-3, 0, true);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_1), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
-					0.85, 25e6, 25e6, 2.0e-3, 0);
+					0.85, 50e6, 50e6, 2.0e-3, 0);
 		case WATER_PIPELINE_2:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_2), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
-					0.90, 100e6, 100e6, 2.0e-3, 0);
+					0.90, 150e6, 150e6, 2.0e-3, 0);
 		default:
 			throw new IllegalArgumentException(
 					"Unknown element template.");

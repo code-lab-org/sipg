@@ -92,7 +92,13 @@ public final class SaudiScenario2 extends DefaultScenario {
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
-								new ArrayList<WaterElement>(),
+								Arrays.asList(
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1976, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1994, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)
+										),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
@@ -197,7 +203,13 @@ public final class SaudiScenario2 extends DefaultScenario {
 							new DefaultAgricultureSystem.Remote(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
-								new ArrayList<WaterElement>(),
+								Arrays.asList(
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1980, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1982, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1990, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, URBAN, URBAN)
+										),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
