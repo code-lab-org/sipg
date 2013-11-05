@@ -3,12 +3,15 @@
  */
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnitsOutput;
+
 /**
  * The Interface LifecycleModel.
  * 
  * @author Paul T. Grogan
  */
-public interface LifecycleModel extends SimEntity {
+public interface LifecycleModel extends SimEntity, TimeUnitsOutput, CurrencyUnitsOutput {
 	
 	/**
 	 * Checks if is operational.

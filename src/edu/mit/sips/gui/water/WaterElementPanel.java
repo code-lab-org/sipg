@@ -17,11 +17,20 @@ import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class WaterElementPanel.
  */
-public class WaterElementPanel extends ElementPanel {
+public class WaterElementPanel extends ElementPanel 
+		implements WaterUnitsOutput, CurrencyUnitsOutput, ElectricityUnitsOutput {
 	private static final long serialVersionUID = -9048149807650177253L;
 	
 	private final JFormattedTextField maxWaterProductionText;
@@ -36,6 +45,13 @@ public class WaterElementPanel extends ElementPanel {
 	private final JFormattedTextField distributionEfficiencyText;
 	private final JFormattedTextField electricalIntensityOfWaterDistributionText;
 	private final JFormattedTextField variableOperationsCostOfWaterDistributionText;
+
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.kWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
 	 * Instantiates a new water element panel.
@@ -47,16 +63,20 @@ public class WaterElementPanel extends ElementPanel {
 			final MutableWaterElement element) {
 		super(scenario, element);
 		
+		final WaterElementPanel thisPanel = this;
+		
 		maxWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterProductionText.setColumns(10);
 		maxWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		maxWaterProductionText.setValue(element.getMaxWaterProduction());
+		maxWaterProductionText.setValue(WaterUnits.convertFlow(
+				element.getMaxWaterProduction(), element, this));
 		maxWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxWaterProduction(
-									((Number) maxWaterProductionText.getValue()).doubleValue());
+							element.setMaxWaterProduction(WaterUnits.convertFlow(
+									((Number) maxWaterProductionText.getValue()).doubleValue(),
+									thisPanel, element));
 							maxWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterProductionText.setForeground(Color.red);
@@ -66,13 +86,15 @@ public class WaterElementPanel extends ElementPanel {
 		initialWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialWaterProductionText.setColumns(10);
 		initialWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		initialWaterProductionText.setValue(element.getInitialWaterProduction());
+		initialWaterProductionText.setValue(WaterUnits.convertFlow(
+				element.getInitialWaterProduction(), element, this));
 		initialWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialWaterProduction(
-									((Number) initialWaterProductionText.getValue()).doubleValue());
+							element.setInitialWaterProduction(WaterUnits.convertFlow(
+									((Number) initialWaterProductionText.getValue()).doubleValue(),
+									thisPanel, element));
 							initialWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialWaterProductionText.setForeground(Color.red);
@@ -99,14 +121,18 @@ public class WaterElementPanel extends ElementPanel {
 		electricalIntensityOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		electricalIntensityOfWaterProductionText.setColumns(10);
 		electricalIntensityOfWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		electricalIntensityOfWaterProductionText.setValue(
-				element.getElectricalIntensityOfWaterProduction());
+		electricalIntensityOfWaterProductionText.setValue(DefaultUnits.convert(
+				element.getElectricalIntensityOfWaterProduction(), 
+				element.getElectricityUnits(), element.getWaterUnits(), 
+				getElectricityUnits(), getWaterUnits()));
 		electricalIntensityOfWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setElectricalIntensityOfWaterProduction(
-									((Number) electricalIntensityOfWaterProductionText.getValue()).doubleValue());
+							element.setElectricalIntensityOfWaterProduction(DefaultUnits.convert(
+									((Number) electricalIntensityOfWaterProductionText.getValue()).doubleValue(),
+									getElectricityUnits(), getWaterUnits(), 
+									element.getElectricityUnits(), element.getWaterUnits()));
 							electricalIntensityOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterProductionText.setForeground(Color.red);
@@ -116,14 +142,18 @@ public class WaterElementPanel extends ElementPanel {
 		variableOperationsCostOfWaterProductionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		variableOperationsCostOfWaterProductionText.setColumns(10);
 		variableOperationsCostOfWaterProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		variableOperationsCostOfWaterProductionText.setValue(
-				element.getVariableOperationsCostOfWaterProduction());
+		variableOperationsCostOfWaterProductionText.setValue(DefaultUnits.convert(
+				element.getVariableOperationsCostOfWaterProduction(), 
+				element.getCurrencyUnits(), element.getWaterUnits(), 
+				getCurrencyUnits(), getWaterUnits()));
 		variableOperationsCostOfWaterProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfWaterProduction(
-									((Number) variableOperationsCostOfWaterProductionText.getValue()).doubleValue());
+							element.setVariableOperationsCostOfWaterProduction(DefaultUnits.convert(
+									((Number) variableOperationsCostOfWaterProductionText.getValue()).doubleValue(),
+									getCurrencyUnits(), getWaterUnits(), 
+									element.getCurrencyUnits(), element.getWaterUnits()));
 							variableOperationsCostOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterProductionText.setForeground(Color.red);
@@ -142,13 +172,15 @@ public class WaterElementPanel extends ElementPanel {
 		maxWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterInputText.setColumns(10);
 		maxWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
-		maxWaterInputText.setValue(element.getMaxWaterInput());
+		maxWaterInputText.setValue(WaterUnits.convertFlow(
+				element.getMaxWaterInput(), element, this));
 		maxWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxWaterInput(
-									((Number) maxWaterInputText.getValue()).doubleValue());
+							element.setMaxWaterInput(WaterUnits.convertFlow(
+									((Number) maxWaterInputText.getValue()).doubleValue(),
+									thisPanel, element));
 							maxWaterInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterInputText.setForeground(Color.red);
@@ -158,13 +190,15 @@ public class WaterElementPanel extends ElementPanel {
 		initialWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		initialWaterInputText.setColumns(10);
 		initialWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
-		initialWaterInputText.setValue(element.getInitialWaterInput());
+		initialWaterInputText.setValue(WaterUnits.convertFlow(
+				element.getInitialWaterInput(), element, this));
 		initialWaterInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialWaterInput(
-									((Number) initialWaterInputText.getValue()).doubleValue());
+							element.setInitialWaterInput(WaterUnits.convertFlow(
+									((Number) initialWaterInputText.getValue()).doubleValue(),
+									thisPanel, element));
 							initialWaterInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialWaterInputText.setForeground(Color.red);
@@ -190,14 +224,18 @@ public class WaterElementPanel extends ElementPanel {
 		electricalIntensityOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		electricalIntensityOfWaterDistributionText.setColumns(10);
 		electricalIntensityOfWaterDistributionText.setHorizontalAlignment(JTextField.RIGHT);
-		electricalIntensityOfWaterDistributionText.setValue(
-				element.getElectricalIntensityOfWaterDistribution());
+		electricalIntensityOfWaterDistributionText.setValue(DefaultUnits.convert(
+				element.getElectricalIntensityOfWaterDistribution(), 
+				element.getElectricityUnits(), element.getWaterUnits(), 
+				getElectricityUnits(), getWaterUnits()));
 		electricalIntensityOfWaterDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setElectricalIntensityOfWaterDistribution(
-									((Number) electricalIntensityOfWaterDistributionText.getValue()).doubleValue());
+							element.setElectricalIntensityOfWaterDistribution(DefaultUnits.convert(
+									((Number) electricalIntensityOfWaterDistributionText.getValue()).doubleValue(),
+									getElectricityUnits(), getWaterUnits(), 
+									element.getElectricityUnits(), element.getWaterUnits()));
 							electricalIntensityOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterDistributionText.setForeground(Color.red);
@@ -207,14 +245,18 @@ public class WaterElementPanel extends ElementPanel {
 		variableOperationsCostOfWaterDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		variableOperationsCostOfWaterDistributionText.setColumns(10);
 		variableOperationsCostOfWaterDistributionText.setHorizontalAlignment(JTextField.RIGHT);
-		variableOperationsCostOfWaterDistributionText.setValue(
-				element.getVariableOperationsCostOfWaterDistribution());
+		variableOperationsCostOfWaterDistributionText.setValue(DefaultUnits.convert(
+				element.getVariableOperationsCostOfWaterDistribution(), 
+				element.getCurrencyUnits(), element.getWaterUnits(), 
+				getCurrencyUnits(), getWaterUnits()));
 		variableOperationsCostOfWaterDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfWaterDistribution(
-									((Number) variableOperationsCostOfWaterDistributionText.getValue()).doubleValue());
+							element.setVariableOperationsCostOfWaterDistribution(DefaultUnits.convert(
+									((Number) variableOperationsCostOfWaterDistributionText.getValue()).doubleValue(),
+									getCurrencyUnits(), getWaterUnits(), 
+									element.getCurrencyUnits(), element.getWaterUnits()));
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.red);
@@ -235,15 +277,15 @@ public class WaterElementPanel extends ElementPanel {
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 			addInput(elementPanel, c, "Max Water Production", 
-					maxWaterProductionText, "<html>m<sup>3</sup>/year</html>");
+					maxWaterProductionText, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Initial Water Production",
-					initialWaterProductionText, "<html>m<sup>3</sup>/year</html>");
+					initialWaterProductionText, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Reservoir Intensity of Production",
-					reservoirIntensityOfWaterProductionText, "<html>m<sup>3</sup>/m<sup>3</sup></html>");
+					reservoirIntensityOfWaterProductionText, waterUnits + "/" + waterUnits);
 			addInput(elementPanel, c, "Electrical Intensity of Production",
-					electricalIntensityOfWaterProductionText, "<html>toe/m<sup>3</sup></html>");
+					electricalIntensityOfWaterProductionText, electricityUnits + "/" + waterUnits);
 			addInput(elementPanel, c, "Variable Cost of Production",
-					variableOperationsCostOfWaterProductionText, "<html>SAR/m<sup>3</sup></html>");
+					variableOperationsCostOfWaterProductionText, currencyUnits + "/" + waterUnits);
 			
 			c.gridwidth = 3;
 			c.anchor = GridBagConstraints.LINE_END;
@@ -258,15 +300,15 @@ public class WaterElementPanel extends ElementPanel {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Water Input", 
-					maxWaterInputText, "<html>m<sup>3</sup>/year</html>");
+					maxWaterInputText, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Initial Water Input",
-					initialWaterInputText, "<html>m<sup>3</sup>/year</html>");
+					initialWaterInputText, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "<html>m<sup>3</sup> out/m<sup>3</sup> in</html>");
+					distributionEfficiencyText, waterUnits + "/" + waterUnits);
 			addInput(elementPanel, c, "Electrical Intensity of Distribution",
-					electricalIntensityOfWaterDistributionText, "<html>toe/m<sup>3</sup></html>");
+					electricalIntensityOfWaterDistributionText, electricityUnits + "/" + waterUnits);
 			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfWaterDistributionText, "<html>SAR/m<sup>3</sup></html>");
+					variableOperationsCostOfWaterDistributionText, currencyUnits + "/" + waterUnits);
 		}
 		
 		// set input enabled state
@@ -278,6 +320,55 @@ public class WaterElementPanel extends ElementPanel {
 		distributionEfficiencyText.setEnabled(element.getTemplateName() == null);
 		electricalIntensityOfWaterDistributionText.setEnabled(element.getTemplateName() == null);
 		variableOperationsCostOfWaterDistributionText.setEnabled(element.getTemplateName() == null);
+		coastalAccessRequiredCheck.setEnabled(element.getTemplateName() == null);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
 	}
 	
 }

@@ -1,12 +1,13 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Interface WaterElement.
  */
-public interface WaterElement extends InfrastructureElement, WaterUnitsOutput {
+public interface WaterElement extends InfrastructureElement, WaterUnitsOutput, ElectricityUnitsOutput {
 
 	/**
 	 * Gets the distribution efficiency.

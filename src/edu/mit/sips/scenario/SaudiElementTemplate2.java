@@ -1,21 +1,38 @@
 package edu.mit.sips.scenario;
 
+import java.util.Arrays;
+
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
+import edu.mit.sips.core.water.DefaultWaterElement;
 
 public enum SaudiElementTemplate2 implements ElementTemplate {
-	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			0,	9999),
-	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			0,	9999),
-	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 	0,	9999),
-	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	0,	9999);
+	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			0,		9999),
+	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			0,		9999),
+	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 	0,		9999),
+	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	0,		9999),
+	RO_PLANT_1		(Sector.WATER,			false,	"Small RO Plant",				1970,	50),
+	RO_PLANT_2		(Sector.WATER,			false,	"Large RO Plant",				1980,	50),
+	WATER_PIPELINE_1(Sector.WATER,			true, 	"Low-volume Water Pipeline", 	1950,	100),
+	WATER_PIPELINE_2(Sector.WATER,			true, 	"High-volume Water Pipeline", 	1950,	100);
 	
 	private final Sector sector;
 	private final boolean transport;
 	private final String name;
 	private final long timeAvailable;
 	private final long maxOperations;
-	private static int instanceId = 0;
+	private static int[] instanceId = new int[SaudiElementTemplate2.values().length];
+	
+	/**
+	 * Gets the instance id.
+	 *
+	 * @param template the template
+	 * @return the instance id
+	 */
+	private static int getInstanceId(SaudiElementTemplate2 template) {
+		return ++instanceId[Arrays.asList(SaudiElementTemplate2.values()).indexOf(template)];
+	}
 
 	/**
 	 * Instantiates a new element template.
@@ -106,32 +123,60 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 		switch(this) {
 		case WHEAT_1:
 			return DefaultAgricultureElement.createProductionElement(
-					name, name + " " + ++instanceId, location, location, 
+					name, name + " " + getInstanceId(WHEAT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
 					500, 500, 5.5/365*239005736, 0, 1.1e6, 65);
 		case WHEAT_2:
 			return DefaultAgricultureElement.createProductionElement(
-					name, name + " " + ++instanceId, location, location, 
+					name, name + " " + getInstanceId(WHEAT_2), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
 					1000, 1000, 5.5/365*239005736, 0, 1.1e6, 65);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
-					name, name + " " + ++instanceId, location, destination, 
+					name, name + " " + getInstanceId(FOOD_TRANSPORT_1), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
 					0.90, 2./365*239005736*1000, 0, 0);
 		case FOOD_TRANSPORT_2:
 			return DefaultAgricultureElement.createDistributionElement(
-					name, name + " " + ++instanceId, location, destination, 
+					name, name + " " + getInstanceId(FOOD_TRANSPORT_2), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year,  0, 
 							0, 0, 0, true), 
 					0.90, 10./365*239005736*1000, 0, 0);
+		case RO_PLANT_1:
+			return DefaultWaterElement.createProductionElement(
+					name, name + " " + getInstanceId(RO_PLANT_1), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 5, 
+							maxOperations, endYear-year, 1, 
+							0, 0, 0, true), 
+					0.0, 25e6, 25e6, 5.5e-3, 0, true);
+		case RO_PLANT_2:
+			return DefaultWaterElement.createProductionElement(
+					name, name + " " + getInstanceId(RO_PLANT_2), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 5, 
+							maxOperations, endYear-year, 1, 
+							0, 0, 0, true), 
+					0.0, 100e6, 100e6, 4.5e-3, 0, true);
+		case WATER_PIPELINE_1:
+			return DefaultWaterElement.createDistributionElement(
+					name, name + " " + getInstanceId(WATER_PIPELINE_1), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 0, 
+							maxOperations, endYear-year, 0, 
+							0, 0, 0, true), 
+					0.85, 25e6, 25e6, 2.0e-3, 0);
+		case WATER_PIPELINE_2:
+			return DefaultWaterElement.createDistributionElement(
+					name, name + " " + getInstanceId(WATER_PIPELINE_2), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 0, 
+							maxOperations, endYear-year, 0, 
+							0, 0, 0, true), 
+					0.90, 100e6, 100e6, 2.0e-3, 0);
 		default:
 			throw new IllegalArgumentException(
 					"Unknown element template.");

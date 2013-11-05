@@ -1,11 +1,28 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class MutableWaterElement.
  */
-public final class MutableWaterElement extends DefaultMutableInfrastructureElement {
+public final class MutableWaterElement extends DefaultMutableInfrastructureElement 
+		implements WaterUnitsOutput, ElectricityUnitsOutput, CurrencyUnitsOutput {
+
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	
 	private double maxWaterProduction;
 	private double initialWaterProduction;
 	private double reservoirIntensityOfWaterProduction;
@@ -24,18 +41,45 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 	 */
 	@Override
 	public WaterElement createElement() {
+		DefaultWaterElement e = new DefaultWaterElement(); // for units
 		return new DefaultWaterElement(getTemplateName(), getName(), getOrigin(), 
 				getDestination(), getLifecycleModel().createLifecycleModel(), 
 				getReservoirIntensityOfWaterProduction(),
-				getMaxWaterProduction(), getInitialWaterProduction(), 
-				getElectricalIntensityOfWaterProduction(),
-				getVariableOperationsCostOfWaterProduction(),
+				WaterUnits.convertFlow(getMaxWaterProduction(), this, e), 
+				WaterUnits.convertFlow(getInitialWaterProduction(), this, e), 
+				DefaultUnits.convert(getElectricalIntensityOfWaterProduction(), 
+						getElectricityUnits(), getWaterUnits(), 
+						e.getElectricityUnits(), e.getWaterUnits()),
+				DefaultUnits.convert(getVariableOperationsCostOfWaterProduction(),
+						getCurrencyUnits(), getWaterUnits(), 
+						e.getCurrencyUnits(), e.getWaterUnits()),
 				isCoastalAccessRequired(),
-				getDistributionEfficiency(), getMaxWaterInput(), 
-				getInitialWaterInput(), 
-				getElectricalIntensityOfWaterDistribution(),
-				getVariableOperationsCostOfWaterDistribution());
+				getDistributionEfficiency(), 
+				WaterUnits.convertFlow(getMaxWaterInput(), this, e), 
+				WaterUnits.convertFlow(getInitialWaterInput(), this, e), 
+				DefaultUnits.convert(getElectricalIntensityOfWaterDistribution(),
+						getElectricityUnits(), getWaterUnits(), 
+						e.getElectricityUnits(), e.getWaterUnits()),
+				DefaultUnits.convert(getVariableOperationsCostOfWaterDistribution(),
+						getCurrencyUnits(), getWaterUnits(), 
+						e.getCurrencyUnits(), e.getWaterUnits()));
 	}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+	
 	/**
 	 * Gets the distribution efficiency.
 	 *
@@ -61,6 +105,22 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 	 */
 	public double getElectricalIntensityOfWaterProduction() {
 		return electricalIntensityOfWaterProduction;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
 	}
 	
 	/**
@@ -126,6 +186,22 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 		return variableOperationsCostOfWaterProduction;
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+	
 	/**
 	 * Checks if is coastal access required.
 	 *
@@ -172,7 +248,7 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 			double electricalIntensityOfWaterProduction) {
 		this.electricalIntensityOfWaterProduction = electricalIntensityOfWaterProduction;
 	}
-	
+
 	/**
 	 * Sets the initial water input.
 	 *
@@ -228,7 +304,7 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 			double variableOperationsCostOfWaterDistribution) {
 		this.variableOperationsCostOfWaterDistribution = variableOperationsCostOfWaterDistribution;
 	}
-
+	
 	/**
 	 * Sets the variable operations cost of water production.
 	 *

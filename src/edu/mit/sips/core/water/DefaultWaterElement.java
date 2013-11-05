@@ -2,6 +2,8 @@ package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
@@ -9,7 +11,6 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultWaterElement.
  */
 public final class DefaultWaterElement extends DefaultInfrastructureElement implements WaterElement {
-	
 	/**
 	 * Instantiates a new distribution water element.
 	 *
@@ -38,7 +39,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 				electricalIntensityOfWaterDistribution,
 				variableOperationsCostOfWaterDistribution);
 	}
-	
 	/**
 	 * Instantiates a new fixed water element.
 	 *
@@ -70,6 +70,11 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 				variableOperationsCostOfWaterProduction, coastalAccessRequired,
 				0, 0, 0, 0, 0);
 	}
+	
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
 
 	private final double maxWaterProduction;
 	private final double initialWaterProduction;
@@ -261,6 +266,22 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterElement#getMaxWaterInput()
 	 */
 	@Override
@@ -283,7 +304,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
@@ -292,16 +313,32 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		MutableWaterElement element = new MutableWaterElement();
 		setMutableFields(element);
 		element.setReservoirIntensityOfWaterProduction(reservoirIntensityOfWaterProduction);
-		element.setMaxWaterProduction(maxWaterProduction);
-		element.setInitialWaterProduction(initialWaterProduction);
-		element.setElectricalIntensityOfWaterProduction(electricalIntensityOfWaterProduction);
-		element.setVariableOperationsCostOfWaterProduction(variableOperationsCostOfWaterProduction);
+		element.setMaxWaterProduction(WaterUnits.convertFlow(
+				maxWaterProduction, this, element));
+		element.setInitialWaterProduction(WaterUnits.convertFlow(
+				initialWaterProduction, this, element));
+		element.setElectricalIntensityOfWaterProduction(DefaultUnits.convert(
+				electricalIntensityOfWaterProduction, 
+				getElectricityUnits(), getWaterUnits(), 
+				element.getElectricityUnits(), element.getWaterUnits()));
+		element.setVariableOperationsCostOfWaterProduction(DefaultUnits.convert(
+				variableOperationsCostOfWaterProduction, 
+				getCurrencyUnits(), getWaterUnits(), 
+				element.getCurrencyUnits(), element.getWaterUnits()));
 		element.setCoastalAccessRequired(coastalAccessRequired);
 		element.setDistributionEfficiency(distributionEfficiency);
-		element.setMaxWaterInput(maxWaterInput);
-		element.setInitialWaterInput(initialWaterInput);
-		element.setElectricalIntensityOfWaterDistribution(electricalIntensityOfWaterDistribution);
-		element.setVariableOperationsCostOfWaterDistribution(variableOperationsCostOfWaterDistribution);
+		element.setMaxWaterInput(WaterUnits.convertFlow(
+				maxWaterInput, this, element));
+		element.setInitialWaterInput(WaterUnits.convertFlow(
+				initialWaterInput, this, element));
+		element.setElectricalIntensityOfWaterDistribution(DefaultUnits.convert(
+				electricalIntensityOfWaterDistribution, 
+				getElectricityUnits(), getWaterUnits(), 
+				element.getElectricityUnits(), element.getWaterUnits()));
+		element.setVariableOperationsCostOfWaterDistribution(DefaultUnits.convert(
+				variableOperationsCostOfWaterDistribution, 
+				getCurrencyUnits(), getWaterUnits(), 
+				element.getCurrencyUnits(), element.getWaterUnits()));
 		return element;
 	}
 
@@ -384,7 +421,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -392,9 +429,9 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterElement#getWaterWithdrawals()
 	 */
@@ -420,7 +457,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		// Use mutator method to validate water input.
 		setWaterInput(initialWaterInput);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterElement#isCoastalAccessRequired()
 	 */

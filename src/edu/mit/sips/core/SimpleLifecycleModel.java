@@ -1,5 +1,8 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+
 /**
  * The Class SimpleLifecycleModel.
  * 
@@ -12,6 +15,9 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	private final long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private final double capitalCost, fixedOperationsCost, decommissionCost;
 	private final boolean levelizeCosts;
+
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits timeUnits = TimeUnits.year;
 	
 	/**
 	 * Instantiates a new simple lifecycle model.
@@ -162,6 +168,22 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return timeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
 	/**
 	 * Gets the decommission cost.
 	 *
@@ -197,7 +219,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * Gets the fixed operations cost.
 	 *
@@ -236,26 +258,35 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public long getMaxOperationsDuration() {
 		return maxOperationsDuration;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#getMutableLifecycleModel()
 	 */
 	@Override
 	public MutableSimpleLifecycleModel getMutableLifecycleModel() {
 		MutableSimpleLifecycleModel model = new MutableSimpleLifecycleModel();
-		model.setTimeAvailable(timeAvailable);
-		model.setTimeInitialized(timeInitialized);
-		model.setInitializationDuration(initializationDuration);
-		model.setMaxOperationsDuration(maxOperationsDuration);
-		model.setOperationsDuration(operationsDuration);
-		model.setDecommissionDuration(decommissionDuration);
-		model.setCapitalCost(capitalCost);
-		model.setFixedOperationsCost(fixedOperationsCost);
-		model.setDecommissionCost(decommissionCost);
+		model.setTimeAvailable((long) TimeUnits.convert(
+				timeAvailable, this, model));
+		model.setTimeInitialized((long) TimeUnits.convert(
+				timeInitialized, this, model));
+		model.setInitializationDuration((long) TimeUnits.convert(
+				initializationDuration, this, model));
+		model.setMaxOperationsDuration((long) TimeUnits.convert(
+				maxOperationsDuration, this, model));
+		model.setOperationsDuration((long) TimeUnits.convert(
+				operationsDuration, this, model));
+		model.setDecommissionDuration((long) TimeUnits.convert(
+				decommissionDuration, this, model));
+		model.setCapitalCost(CurrencyUnits.convertStock(
+				capitalCost, this, model));
+		model.setFixedOperationsCost(CurrencyUnits.convertFlow(
+				fixedOperationsCost, this, model));
+		model.setDecommissionCost(CurrencyUnits.convertStock(
+				decommissionCost, this, model));
 		model.setLevelizeCosts(levelizeCosts);
 		return model;
 	}
-
+	
 	/**
 	 * Gets the time available.
 	 *
@@ -282,7 +313,15 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public long getTimeInitialized() {
 		return timeInitialized;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
+	 */
+	@Override
+	public TimeUnits getTimeUnits() {
+		return timeUnits;
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#initialize(long)
 	 */
@@ -290,7 +329,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public void initialize(long time) {
 		this.time = time;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#isExists()
 	 */
@@ -299,7 +338,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		return time >= timeInitialized 
 				&& time < getTimeDecommissioned() + decommissionDuration;
 	}
-	
+
 	/**
 	 * Checks if is levelize costs.
 	 *
@@ -308,7 +347,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public boolean isLevelizeCosts() {
 		return levelizeCosts;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#isOperational()
 	 */

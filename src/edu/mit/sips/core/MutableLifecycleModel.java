@@ -1,9 +1,12 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnitsOutput;
+
 /**
  * The Interface MutableLifecycleModel.
  */
-public interface MutableLifecycleModel  {
+public interface MutableLifecycleModel extends TimeUnitsOutput, CurrencyUnitsOutput {
 	
 	/**
 	 * Creates the lifecycle model.

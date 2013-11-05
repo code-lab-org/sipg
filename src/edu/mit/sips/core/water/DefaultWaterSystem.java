@@ -26,6 +26,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+		private final TimeUnits currencyTimeUnits = TimeUnits.year;
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		
 		private final List<WaterElement> elements = 
 				Collections.synchronizedList(new ArrayList<WaterElement>());
 		private final DomesticProductionModel domesticProductionModel;
@@ -159,13 +166,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
 					* getElectricityConsumptionFromPublicProduction();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 		 */
 		@Override
 		public TimeUnits getCurrencyTimeUnits() {
-			return TimeUnits.year;
+			return currencyTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -173,7 +180,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public CurrencyUnits getCurrencyUnits() {
-			return CurrencyUnits.sim;
+			return currencyUnits;
 		}
 
 		/* (non-Javadoc)
@@ -255,7 +262,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -263,7 +270,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -572,7 +579,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -580,7 +587,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)
@@ -647,6 +654,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+		private final TimeUnits currencyTimeUnits = TimeUnits.year;
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice;
 		
@@ -655,7 +669,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public TimeUnits getCurrencyTimeUnits() {
-			return TimeUnits.year;
+			return currencyTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -663,7 +677,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public CurrencyUnits getCurrencyUnits() {
-			return CurrencyUnits.sim;
+			return currencyUnits;
 		}
 		
 		/* (non-Javadoc)
@@ -679,7 +693,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -687,7 +701,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -709,7 +723,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -717,7 +731,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)

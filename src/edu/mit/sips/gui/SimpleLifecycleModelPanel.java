@@ -15,14 +15,21 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.MutableSimpleLifecycleModel;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.TimeUnitsOutput;
 
 /**
  * The Class SimpleLifecycleModelPanel.
  */
-public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
+public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements CurrencyUnitsOutput, TimeUnitsOutput {
 	private static final long serialVersionUID = 4823361209584020543L;
 	
 	private NumberFormat timeFormat;
+	
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits timeUnits = TimeUnits.year;
 	
 	private final JFormattedTextField timeAvailableText, timeInitializedText, 
 			initializationDurationText, capitalCostText;
@@ -48,92 +55,104 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		c.gridy = 0;
 		c.insets = new Insets(2,2,2,2);
 		
+		final SimpleLifecycleModelPanel thisPanel = this;
+		
 		c.gridx = 0;
 		timeAvailableText = new JFormattedTextField(timeFormat);
 		timeAvailableText.setColumns(10);
 		timeAvailableText.setHorizontalAlignment(JTextField.RIGHT);
-		timeAvailableText.setValue(lifecycleModel.getTimeAvailable());
+		timeAvailableText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getTimeAvailable(), lifecycleModel, this));
 		timeAvailableText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setTimeAvailable(
-									(Long) timeAvailableText.getValue());
+							lifecycleModel.setTimeAvailable((long) TimeUnits.convert(
+									(Long) timeAvailableText.getValue(), 
+									thisPanel, lifecycleModel));
 							timeAvailableText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							timeAvailableText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Time Available", timeAvailableText, "(year)");
+		addInput(c, "Time Available", timeAvailableText, timeUnits.toString());
 		timeInitializedText = new JFormattedTextField(timeFormat);
 		timeInitializedText.setColumns(10);
 		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
-		timeInitializedText.setValue(lifecycleModel.getTimeInitialized());
+		timeInitializedText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getTimeInitialized(), lifecycleModel, this));
 		timeInitializedText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setTimeInitialized(
-									(Long) timeInitializedText.getValue());
+							lifecycleModel.setTimeInitialized((long) TimeUnits.convert(
+									(Long) timeInitializedText.getValue(), 
+									thisPanel, lifecycleModel));
 							timeInitializedText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							timeInitializedText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Time Initialized", timeInitializedText, "(year)");
+		addInput(c, "Time Initialized", timeInitializedText, timeUnits.toString());
 		initializationDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		initializationDurationText.setColumns(10);
 		initializationDurationText.setHorizontalAlignment(JTextField.RIGHT);
-		initializationDurationText.setValue(lifecycleModel.getInitializationDuration());
+		initializationDurationText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getInitializationDuration(), lifecycleModel, this));
 		initializationDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setInitializationDuration(
-									(Long) initializationDurationText.getValue());
+							lifecycleModel.setInitializationDuration((long) TimeUnits.convert(
+									(Long) initializationDurationText.getValue(), 
+									thisPanel, lifecycleModel));
 							initializationDurationText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initializationDurationText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Initialization Duration", initializationDurationText, "years");
+		addInput(c, "Initialization Duration", initializationDurationText, timeUnits.toString());
 		capitalCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		capitalCostText.setColumns(10);
 		capitalCostText.setHorizontalAlignment(JTextField.RIGHT);
-		capitalCostText.setValue(lifecycleModel.getCapitalCost());
+		capitalCostText.setValue(CurrencyUnits.convertStock(
+				lifecycleModel.getCapitalCost(), lifecycleModel, thisPanel));
 		capitalCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setCapitalCost(
-									((Number) capitalCostText.getValue()).doubleValue());
+							lifecycleModel.setCapitalCost(CurrencyUnits.convertStock(
+									((Number) capitalCostText.getValue()).doubleValue(),
+									thisPanel, lifecycleModel));
 							capitalCostText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							capitalCostText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Capital Cost", capitalCostText, "SAR");
+		addInput(c, "Capital Cost", capitalCostText, currencyUnits.getAbbreviation());
 		fixedOperationsCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		fixedOperationsCostText.setColumns(10);
 		fixedOperationsCostText.setHorizontalAlignment(JTextField.RIGHT);
-		fixedOperationsCostText.setValue(lifecycleModel.getFixedOperationsCost());
+		fixedOperationsCostText.setValue(CurrencyUnits.convertFlow(
+				lifecycleModel.getFixedOperationsCost(), lifecycleModel, thisPanel));
 		fixedOperationsCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setFixedOperationsCost(
-									((Number) fixedOperationsCostText.getValue()).doubleValue());
+							lifecycleModel.setFixedOperationsCost(CurrencyUnits.convertFlow(
+									((Number) fixedOperationsCostText.getValue()).doubleValue(),
+									thisPanel, lifecycleModel));
 							fixedOperationsCostText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							fixedOperationsCostText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Fixed Operations Cost", fixedOperationsCostText, "SAR/year");
+		addInput(c, "Fixed Operations Cost", fixedOperationsCostText, currencyUnits + "/" + timeUnits);
 
 		c.gridx = 3;
 		c.gridy = 0;
@@ -141,71 +160,79 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		maxOperationsDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		maxOperationsDurationText.setColumns(10);
 		maxOperationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
-		maxOperationsDurationText.setValue(lifecycleModel.getMaxOperationsDuration());
+		maxOperationsDurationText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getMaxOperationsDuration(), lifecycleModel, this));
 		maxOperationsDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setMaxOperationsDuration(
-									(Long) maxOperationsDurationText.getValue());
+							lifecycleModel.setMaxOperationsDuration((long) TimeUnits.convert(
+									(Long) maxOperationsDurationText.getValue(), 
+									thisPanel, lifecycleModel));
 							maxOperationsDurationText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxOperationsDurationText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Max Operations Duration", maxOperationsDurationText, "years");
+		addInput(c, "Max Operations Duration", maxOperationsDurationText, timeUnits.toString());
 		operationsDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		operationsDurationText.setColumns(10);
 		operationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
-		operationsDurationText.setValue(lifecycleModel.getOperationsDuration());
+		operationsDurationText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getOperationsDuration(), lifecycleModel, this));
 		operationsDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setOperationsDuration(
-									(Long) operationsDurationText.getValue());
+							lifecycleModel.setOperationsDuration((long) TimeUnits.convert(
+									(Long) operationsDurationText.getValue(), 
+									thisPanel, lifecycleModel));
 							operationsDurationText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							operationsDurationText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Operations Duration", operationsDurationText, "years");
+		addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
 		decommissionDurationText.setHorizontalAlignment(JTextField.RIGHT);
-		decommissionDurationText.setValue(lifecycleModel.getDecommissionDuration());
+		decommissionDurationText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getDecommissionDuration(), lifecycleModel, this));
 		decommissionDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setDecommissionDuration(
-									(Long) decommissionDurationText.getValue());
+							lifecycleModel.setDecommissionDuration((long) TimeUnits.convert(
+									(Long) decommissionDurationText.getValue(), 
+									thisPanel, lifecycleModel));
 							decommissionDurationText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							decommissionDurationText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Decommission Duration", decommissionDurationText, "years");
+		addInput(c, "Decommission Duration", decommissionDurationText, timeUnits.toString());
 		decommissionCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		decommissionCostText.setColumns(10);
 		decommissionCostText.setHorizontalAlignment(JTextField.RIGHT);
-		decommissionCostText.setValue(lifecycleModel.getDecommissionCost());
+		decommissionCostText.setValue(CurrencyUnits.convertStock(
+				lifecycleModel.getDecommissionCost(), lifecycleModel, this));
 		decommissionCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setDecommissionCost(
-									((Number) decommissionCostText.getValue()).doubleValue());
+							lifecycleModel.setDecommissionCost(CurrencyUnits.convertStock(
+									((Number) decommissionCostText.getValue()).doubleValue(), 
+									thisPanel, lifecycleModel));
 							decommissionCostText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							decommissionCostText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Decommission Cost", decommissionCostText, "SAR");
+		addInput(c, "Decommission Cost", decommissionCostText, currencyUnits.toString());
 		levelizeCostsCheck = new JCheckBox();
 		levelizeCostsCheck.setSelected(lifecycleModel.isLevelizeCosts());
 		levelizeCostsCheck.addItemListener(new ItemListener() {
@@ -258,5 +285,29 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel {
 		add(new JLabel(units), c);
 		c.gridy++;
 		c.gridx-=2;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return timeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
+	 */
+	@Override
+	public TimeUnits getTimeUnits() {
+		return timeUnits;
 	}
 }

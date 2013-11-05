@@ -71,6 +71,27 @@ public abstract class DefaultUnits implements Units {
 				* targetUnits.getScale();
 	}
 	
+	/**
+	 * Convert.
+	 *
+	 * @param value the value
+	 * @param sourceNumeratorUnits the source numerator units
+	 * @param sourceDenominatorUnits the source denominator units
+	 * @param targetNumeratorUnits the target numerator units
+	 * @param targetDenominatorUnits the target denominator units
+	 * @return the double
+	 */
+	public static double convert(double value, 
+			DefaultUnits sourceNumeratorUnits, 
+			DefaultUnits sourceDenominatorUnits, 
+			DefaultUnits targetNumeratorUnits, 
+			DefaultUnits targetDenominatorUnits) {
+		return value / sourceNumeratorUnits.getScale() 
+				* sourceDenominatorUnits.getScale() 
+				* targetNumeratorUnits.getScale()
+				/ targetDenominatorUnits.getScale();
+	}
+	
 	private final String name;
 	private final String abbreviation;
 	private final double scale;

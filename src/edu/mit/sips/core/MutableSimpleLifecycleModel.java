@@ -1,9 +1,15 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+
 /**
  * The Class MutableSimpleLifecycleModel.
  */
 public final class MutableSimpleLifecycleModel implements MutableLifecycleModel {
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits timeUnits = TimeUnits.year;
+	
 	private long timeAvailable, timeInitialized, initializationDuration;
 	private long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private double capitalCost, fixedOperationsCost, decommissionCost;
@@ -14,11 +20,18 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	@Override
 	public SimpleLifecycleModel createLifecycleModel() {
-		return new SimpleLifecycleModel(timeAvailable, timeInitialized, 
-				initializationDuration, maxOperationsDuration,
-				operationsDuration, decommissionDuration,
-				capitalCost, fixedOperationsCost, 
-				decommissionCost, levelizeCosts);
+		SimpleLifecycleModel m = new SimpleLifecycleModel(); // for units
+		return new SimpleLifecycleModel(
+				(long) TimeUnits.convert(timeAvailable, this, m),
+				(long) TimeUnits.convert(timeInitialized, this, m), 
+				(long) TimeUnits.convert(initializationDuration, this, m), 
+				(long) TimeUnits.convert(maxOperationsDuration, this, m),
+				(long) TimeUnits.convert(operationsDuration, this, m), 
+				(long) TimeUnits.convert(decommissionDuration, this, m),
+				CurrencyUnits.convertStock(capitalCost, this, m),
+				CurrencyUnits.convertFlow(fixedOperationsCost, this, m), 
+				CurrencyUnits.convertStock(decommissionCost, this, m), 
+				levelizeCosts);
 	}
 	/**
 	 * Gets the capital cost.
@@ -198,5 +211,29 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public void setTimeInitialized(long timeInitialized) {
 		this.timeInitialized = timeInitialized;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return timeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
+	 */
+	@Override
+	public TimeUnits getTimeUnits() {
+		return timeUnits;
 	}
 }

@@ -19,4 +19,17 @@ public class TimeUnits extends DefaultUnits {
 			double scale) {
 		super(name, abbreviation, scale);
 	}
+	
+	/**
+	 * Convert.
+	 *
+	 * @param value the value
+	 * @param sourceUnits the source units
+	 * @param targetUnits the target units
+	 */
+	public static double convert(double value, 
+			TimeUnitsOutput source, TimeUnitsOutput target) {
+		return DefaultUnits.convertStock(value, 
+				source.getTimeUnits(), target.getTimeUnits());
+	}
 }

@@ -273,9 +273,11 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			updateSeries(foodUseData, "Society", year, 
 					FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
 							getSociety().getSocialSystem(), this));
-			updateSeries(waterUseData, getAgricultureSystem().getName(), year, 
-					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
-							getAgricultureSystem(), this));
+			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
+				updateSeries(waterUseData, element.getName(), year, 
+						WaterUnits.convertFlow(element.getWaterConsumption(),
+								element, this));
+			}
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
 				updateSeries(foodUseData, nestedSystem.getSociety().getName() + " Society", year,

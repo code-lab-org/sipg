@@ -338,10 +338,12 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			updateSeries(waterUseData, "Society", year, 
 					WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem(), this));
-			updateSeries(electricityUseData, getWaterSystem().getName(), year, 
-					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPublicProduction(),
-							getWaterSystem(), this));
-			updateSeries(electricityUseData, getWaterSystem().getName() + " (Private)", year, 
+			for(WaterElement element : getWaterSystem().getInternalElements()) {
+				updateSeries(electricityUseData, element.getName(), year, 
+						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
+								element, this));
+			}
+			updateSeries(electricityUseData, "Private Production", year, 
 					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
 							getWaterSystem(), this));
 		} else {
@@ -350,10 +352,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 						WaterUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
 				updateSeries(electricityUseData, nestedSystem.getName(), year, 
-						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPublicProduction(),
-								nestedSystem, this));
-				updateSeries(electricityUseData, nestedSystem.getName() + " (Private)", year, 
-						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPrivateProduction(),
+						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
 								nestedSystem, this));
 			}
 		}
@@ -408,7 +407,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 								getWaterSystem(), this));
 			}
 		}
-		updateSeries(waterSourceData, "Artesian Well", year, 
+		updateSeries(waterSourceData, "Private Production", year, 
 				WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
 						getWaterSystem(), this));
 		updateSeries(waterSourceData, "Import", year, 
