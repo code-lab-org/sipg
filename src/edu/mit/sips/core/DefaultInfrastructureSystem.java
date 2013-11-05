@@ -40,7 +40,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCapitalExpense()
 		 */
 		@Override
-		public final double getCapitalExpense() {
+		public double getCapitalExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
 				value += e.getCapitalExpense();
@@ -52,7 +52,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 		 */
 		@Override
-		public final double getCashFlow() {
+		public double getCashFlow() {
 			return getTotalRevenue() 
 					- getTotalExpense();
 		}
@@ -61,7 +61,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDecommissionExpense()
 		 */
 		@Override
-		public final double getDecommissionExpense() {
+		public double getDecommissionExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
 				value += e.getDecommissionExpense();
@@ -73,7 +73,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getLifecycleExpense()
 		 */
 		@Override
-		public final double getLifecycleExpense() {
+		public double getLifecycleExpense() {
 			 return getCapitalExpense() 
 				+ getOperationsExpense() 
 				+ getDecommissionExpense();
@@ -94,7 +94,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
 		 */
 		@Override
-		public final double getOperationsExpense() {
+		public double getOperationsExpense() {
 			double value = 0;
 			for(InfrastructureElement e : getInternalElements()) {
 				value += e.getTotalOperationsExpense();
@@ -102,12 +102,11 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 			return value;
 		}
 
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalExpense()
 		 */
 		@Override
-		public final double getTotalExpense() {
+		public double getTotalExpense() {
 			return getLifecycleExpense()  
 					+ getConsumptionExpense()
 					+ getDistributionExpense()
@@ -118,7 +117,7 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalRevenue()
 		 */
 		@Override
-		public final double getTotalRevenue() {
+		public double getTotalRevenue() {
 			return getSalesRevenue() 
 					+ getDistributionRevenue()
 					+ getExportRevenue();

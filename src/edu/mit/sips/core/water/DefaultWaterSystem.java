@@ -225,9 +225,29 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getElectricityConsumptionFromPublicProduction() {
 			double energyConsumption = 0;
 			for(WaterElement e : getInternalElements()) {
-				energyConsumption += e.getElectricityConsumption();
+				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
+					energyConsumption += 0;
+				} else {
+					energyConsumption += e.getElectricityConsumption();
+				}
 			}
 			return energyConsumption;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
+		 */
+		@Override
+		public double getOperationsExpense() {
+			double value = 0;
+			for(WaterElement e : getInternalElements()) {
+				if(e.isCoastalAccessRequired() && !isCoastalAccess()) {
+					value += e.getFixedOperationsExpense();
+				} else {
+					value += e.getTotalOperationsExpense();
+				}
+			}
+			return value;
 		}
 
 		/* (non-Javadoc)
