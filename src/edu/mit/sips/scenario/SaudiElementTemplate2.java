@@ -152,14 +152,14 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 		case RO_PLANT_1:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 5, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, endYear-year, 1, 
 							0, 0, 0, true), 
 					0.0, 50e6, 50e6, 5.5e-3, 0, true);
 		case RO_PLANT_2:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_2), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 5, 
+					new SimpleLifecycleModel(timeAvailable, year, 4, 
 							maxOperations, endYear-year, 1, 
 							0, 0, 0, true), 
 					0.0, 150e6, 150e6, 4.5e-3, 0, true);
