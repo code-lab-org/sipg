@@ -46,6 +46,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	DefaultTableXYDataset petroleumUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumNetRevenue = new DefaultTableXYDataset();
+	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
 	
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -86,6 +87,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				"Petroleum Source (" + oilUnits + "/" + oilTimeUnits + ")", petroleumSourceData));
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", petroleumUseData));
+		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
+				electricityUseData));
+
 		
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Petroleum Use Fraction (-)", 
@@ -143,7 +148,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	private List<PetroleumSystem.Local> getNestedPetroleumSystems() {
 		List<PetroleumSystem.Local> systems = new ArrayList<PetroleumSystem.Local>();
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			if(nestedSociety.getWaterSystem() instanceof PetroleumSystem.Local) {
+			if(nestedSociety.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 				systems.add((PetroleumSystem.Local)nestedSociety.getPetroleumSystem());
 			}
 		}
@@ -192,6 +197,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		petroleumSourceData.removeAllSeries();
 		petroleumRevenue.removeAllSeries();
 		petroleumNetRevenue.removeAllSeries();
+		electricityUseData.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -325,9 +331,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		} else {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(petroleumReservoirDataset, nestedSociety.getName(), year, 
-						OilUnits.convertStock(
-								getPetroleumSystem().getPetroleumReservoirVolume(),
-								getPetroleumSystem(), this));
+						OilUnits.convertStock(((PetroleumSystem.Local)nestedSociety.
+								getPetroleumSystem()).getPetroleumReservoirVolume(),
+								nestedSociety.getPetroleumSystem(), this));
 			}
 
 			updateSeries(petroleumSourceData, "Production", year, 
@@ -347,7 +353,20 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 							getPetroleumSystem().getPetroleumOutDistributionLosses(),
 							getPetroleumSystem(), this));
 		}
-
+		
+		if(getNestedPetroleumSystems().isEmpty()) {
+			for(PetroleumElement element : getPetroleumSystem().getInternalElements()) {
+				updateSeries(electricityUseData, element.getName(), year, 
+						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
+								element, this));
+			}
+		} else {
+			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
+				updateSeries(electricityUseData, nestedSystem.getName(), year, 
+						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
+								nestedSystem, this));
+			}
+		}
 		updateSeries(petroleumRevenue, "Capital", year, 
 				CurrencyUnits.convertFlow(
 						-getPetroleumSystem().getCapitalExpense(),

@@ -98,21 +98,6 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
-				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1d/0.10,
-								Arrays.asList(
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1945, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1985, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1990, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1995, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)
-										),
-										electricitySystemDomesticProductionModel,
-										electricityDomesticPriceModel):
-							new DefaultElectricitySystem.Remote(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(10e9, 10e9,
 								Arrays.asList(
@@ -136,6 +121,21 @@ public final class SaudiScenario1 extends DefaultScenario {
 										petroleumSystemDomesticProductionModel,
 										petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
+				sectors.contains(Sector.ELECTRICITY)?
+						new DefaultElectricitySystem.Local(1d/0.10,
+								Arrays.asList(
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1945, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1985, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1990, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(1995, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate.POWER_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)
+										),
+										electricitySystemDomesticProductionModel,
+										electricityDomesticPriceModel):
+							new DefaultElectricitySystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
@@ -178,6 +178,11 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
+				sectors.contains(Sector.PETROLEUM)?
+						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
+								petroleumSystemDomesticProductionModel,
+								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
+							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
@@ -187,11 +192,6 @@ public final class SaudiScenario1 extends DefaultScenario {
 										electricitySystemDomesticProductionModel,
 										electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
-				sectors.contains(Sector.PETROLEUM)?
-						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
-								petroleumSystemDomesticProductionModel,
-								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
@@ -230,6 +230,11 @@ public final class SaudiScenario1 extends DefaultScenario {
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem.Remote(),
+				sectors.contains(Sector.PETROLEUM)?
+						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
+								petroleumSystemDomesticProductionModel,
+								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
+							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
@@ -245,11 +250,6 @@ public final class SaudiScenario1 extends DefaultScenario {
 										electricitySystemDomesticProductionModel,
 										electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
-				sectors.contains(Sector.PETROLEUM)?
-						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
-								petroleumSystemDomesticProductionModel,
-								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem.Remote(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,

@@ -24,6 +24,11 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements PetroleumSystem.Local {
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		private final OilUnits oilUnits = OilUnits.toe;
+		private final TimeUnits oilTimeUnits = TimeUnits.year;
+		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final List<PetroleumElement> elements = 
@@ -186,7 +191,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 		
 		/* (non-Javadoc)
@@ -194,7 +199,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -286,7 +291,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public TimeUnits getOilTimeUnits() {
-			return TimeUnits.year;
+			return oilTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -294,7 +299,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public OilUnits getOilUnits() {
-			return OilUnits.toe;
+			return oilUnits;
 		}
 
 		/* (non-Javadoc)
@@ -495,6 +500,11 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements PetroleumSystem.Remote {
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		private final OilUnits oilUnits = OilUnits.toe;
+		private final TimeUnits oilTimeUnits = TimeUnits.year;
+		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice, exportPrice;
 
@@ -511,7 +521,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -519,7 +529,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -527,7 +537,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public TimeUnits getOilTimeUnits() {
-			return TimeUnits.year;
+			return oilTimeUnits;
 		}
 		
 		/* (non-Javadoc)
@@ -535,7 +545,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public OilUnits getOilUnits() {
-			return OilUnits.toe;
+			return oilUnits;
 		}
 		
 		/* (non-Javadoc)

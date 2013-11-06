@@ -10,11 +10,6 @@ import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
 
 public class City extends DefaultSociety implements Society {
 	/**
@@ -30,13 +25,13 @@ public class City extends DefaultSociety implements Society {
 	 * @param name the name
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
-	 * @param electricitySystem the electricity system
 	 * @param petroleumSystem the petroleum system
+	 * @param electricitySystem the electricity system
 	 * @param socialSystem the social system
 	 */
 	public City(String name, AgricultureSystem agricultureSystem,
-			WaterSystem waterSystem, ElectricitySystem electricitySystem,
-			PetroleumSystem petroleumSystem, SocialSystem socialSystem) {
+			WaterSystem waterSystem, PetroleumSystem petroleumSystem,
+			ElectricitySystem electricitySystem, SocialSystem socialSystem) {
 		super(name, new ArrayList<Society>(), agricultureSystem,
 				waterSystem, electricitySystem, petroleumSystem, socialSystem);
 	}

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
+import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
 public enum SaudiElementTemplate2 implements ElementTemplate {
@@ -15,7 +16,11 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 	RO_PLANT_1		(Sector.WATER,			false,	"Small RO Plant",				1970,	50),
 	RO_PLANT_2		(Sector.WATER,			false,	"Large RO Plant",				1980,	50),
 	WATER_PIPELINE_1(Sector.WATER,			true, 	"Low-volume Water Pipeline", 	1950,	100),
-	WATER_PIPELINE_2(Sector.WATER,			true, 	"High-volume Water Pipeline", 	1950,	100);
+	WATER_PIPELINE_2(Sector.WATER,			true, 	"High-volume Water Pipeline", 	1950,	100),
+	OIL_WELL_1		(Sector.PETROLEUM,		false,	"Small Oil Well",				1940,	100),
+	OIL_WELL_2		(Sector.PETROLEUM,		false,	"Large Oil Well",				1970,	100),
+	OIL_PIPELINE_1	(Sector.PETROLEUM,		true, 	"Low-volume Oil Pipeline", 		1940,	50),
+	OIL_PIPELINE_2	(Sector.PETROLEUM,		true, 	"High-volume Oil Pipeline", 	1970,	50);
 	
 	private final Sector sector;
 	private final boolean transport;
@@ -177,6 +182,34 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 							maxOperations, endYear-year, 0, 
 							0, 0, 0, true), 
 					0.90, 150e6, 150e6, 2.0e-3, 0);
+		case OIL_WELL_1:
+			return DefaultPetroleumElement.createProductionElement(
+					name, name + " " + getInstanceId(OIL_WELL_1), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 
+							maxOperations, endYear-year, 0, 
+							0, 0, 0, true), 
+					1.0, 25e6, 25e6, 0);
+		case OIL_WELL_2:
+			return DefaultPetroleumElement.createProductionElement(
+					name, name + " " + getInstanceId(OIL_WELL_2), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, endYear-year, 1, 
+							0, 0, 0, true), 
+					1.0, 100e6, 100e6, 0);
+		case OIL_PIPELINE_1:
+			return DefaultPetroleumElement.createDistributionElement(
+					name, name + " " + getInstanceId(OIL_PIPELINE_1), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 
+							maxOperations, endYear-year, 0, 
+							0, 0, 0, true), 
+					0.98, 25e6, 25e6, 2.0e-3, 0);
+		case OIL_PIPELINE_2:
+			return DefaultPetroleumElement.createDistributionElement(
+					name, name + " " + getInstanceId(OIL_PIPELINE_2), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, endYear-year, 0, 
+							0, 0, 0, true), 
+					0.99, 100e6, 100e6, 2.0e-3, 0);
 		default:
 			throw new IllegalArgumentException(
 					"Unknown element template.");

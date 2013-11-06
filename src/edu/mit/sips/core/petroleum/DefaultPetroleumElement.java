@@ -68,6 +68,11 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 				variableOperationsCostOfPetroleumProduction, 0, 0, 0, 0, 0);
 	}
 	
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final OilUnits oilUnits = OilUnits.toe;
+	private final TimeUnits oilTimeUnits = TimeUnits.year;
+	
 	private final double reservoirIntensityOfPetroleumProduction;
 	private final double maxPetroleumProduction;
 	private final double initialPetroleumProduction;
@@ -232,7 +237,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
+		return electricityTimeUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -240,7 +245,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
 
 	/* (non-Javadoc)
@@ -297,7 +302,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
-		return TimeUnits.year;
+		return oilTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -305,7 +310,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public OilUnits getOilUnits() {
-		return OilUnits.toe;
+		return oilUnits;
 	}
 	
 	/* (non-Javadoc)

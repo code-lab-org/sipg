@@ -91,16 +91,16 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				+ "/" + getCurrencyTimeUnits() + ")", 
 				waterRevenue, null, waterNetRevenue));
 		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
-				"Water Source (" + getWaterUnits() 
-				+ "/" + getWaterTimeUnits() + ")", 
+				"Water Source (" + waterUnits 
+				+ "/" + waterTimeUnits + ")", 
 				waterSourceData));
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
-				"Water Use (" + getWaterUnits() 
-				+ "/" + getWaterTimeUnits() + ")", 
+				"Water Use (" + waterUnits 
+				+ "/" + waterTimeUnits + ")", 
 				waterUseData));
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
-				"Electricity Use (" + getElectricityUnits() 
-				+ "/" + getElectricityTimeUnits() + ")",
+				"Electricity Use (" + electricityUnits
+				+ "/" + electricityTimeUnits + ")",
 				electricityUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -113,7 +113,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				+ "/" + TimeUnits.day + ")", 
 				waterConsumptionPerCapita));
 		addTab("Reservoir", Icons.WATER_RESERVOIR, createStackedAreaChart(
-				"Water Reservoir Volume (" + getWaterUnits() + ")", 
+				"Water Reservoir Volume (" + waterUnits + ")", 
 				waterReservoirDataset));
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
