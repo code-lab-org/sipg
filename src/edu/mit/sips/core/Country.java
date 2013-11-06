@@ -70,7 +70,7 @@ public class Country extends DefaultSociety implements Society {
 		SocialSystem socialSystem = new DefaultSocialSoS();
 		
 		return new Country(name, initialFunds, nestedSocieties, agricultureSystem, 
-				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
 	private final long initialFunds;
@@ -98,10 +98,10 @@ public class Country extends DefaultSociety implements Society {
 	 */
 	private Country(String name, long initialFunds, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem,
+			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
 			SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
-				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 		
 		// no need to validate initial funds
 		this.initialFunds = initialFunds;

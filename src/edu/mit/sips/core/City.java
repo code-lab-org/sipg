@@ -33,7 +33,7 @@ public class City extends DefaultSociety implements Society {
 			WaterSystem waterSystem, PetroleumSystem petroleumSystem,
 			ElectricitySystem electricitySystem, SocialSystem socialSystem) {
 		super(name, new ArrayList<Society>(), agricultureSystem,
-				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
 	/* (non-Javadoc)

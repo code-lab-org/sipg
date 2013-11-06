@@ -90,15 +90,6 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		infraPane.addTab(society.getWaterSystem().getName(), 
 				Icons.WATER, waterTab);		
 		
-		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
-			electricityTab = new LocalElectricitySystemPanel(
-					(ElectricitySystem.Local) society.getElectricitySystem());
-		} else {
-			electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
-		}
-		infraPane.addTab(society.getElectricitySystem().getName(), 
-				Icons.ELECTRICITY, electricityTab);
-		
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			petroleumTab = new LocalPetroleumSystemPanel(
 					(PetroleumSystem.Local) society.getPetroleumSystem());
@@ -107,6 +98,15 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 		infraPane.addTab(society.getPetroleumSystem().getName(), 
 				Icons.PETROLEUM, petroleumTab);
+		
+		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			electricityTab = new LocalElectricitySystemPanel(
+					(ElectricitySystem.Local) society.getElectricitySystem());
+		} else {
+			electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
+		}
+		infraPane.addTab(society.getElectricitySystem().getName(), 
+				Icons.ELECTRICITY, electricityTab);
 
 		for(Society nestedSociety : society.getNestedSocieties()) {
 			SocietyPane subPane = new SocietyPane(nestedSociety);

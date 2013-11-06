@@ -32,6 +32,17 @@ public abstract class DefaultSociety implements Society {
 	private transient Society society;
 	private final List<? extends Society> nestedSocieties;
 	
+	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.kcal;
+	private final TimeUnits foodTimeUnits = TimeUnits.day;
+	private final OilUnits oilUnits = OilUnits.toe;
+	private final TimeUnits oilTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	
 	private AgricultureSystem agricultureSystem;
 	private WaterSystem waterSystem;
 	private ElectricitySystem electricitySystem;
@@ -49,10 +60,10 @@ public abstract class DefaultSociety implements Society {
 		agricultureSystem.setSociety(this);
 		this.waterSystem = new DefaultWaterSystem.Remote();
 		waterSystem.setSociety(this);
-		this.electricitySystem = new DefaultElectricitySystem.Remote();
-		electricitySystem.setSociety(this);
 		this.petroleumSystem = new DefaultPetroleumSystem.Remote();
 		petroleumSystem.setSociety(this);
+		this.electricitySystem = new DefaultElectricitySystem.Remote();
+		electricitySystem.setSociety(this);
 		this.socialSystem = new DefaultSocialSystem.Remote();
 		socialSystem.setSociety(this);
 	}
@@ -70,7 +81,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	public DefaultSociety(String name, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem, 
+			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
 			SocialSystem socialSystem) {
 		// Validate name.
 		if(name == null) {
@@ -136,7 +147,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -144,7 +155,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.sim;
+		return currencyUnits;
 	}
 
 	/* (non-Javadoc)
@@ -160,7 +171,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
+		return electricityTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -168,7 +179,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
 
 	/* (non-Javadoc)
@@ -176,7 +187,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
-		return TimeUnits.day;
+		return foodTimeUnits;
 	}	
 	
 	/* (non-Javadoc)
@@ -184,7 +195,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public FoodUnits getFoodUnits() {
-		return FoodUnits.kcal;
+		return foodUnits;
 	}
 
 	/* (non-Javadoc)
@@ -193,7 +204,7 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public List<? extends InfrastructureSystem> getInfrastructureSystems() {
 		return Arrays.asList(getAgricultureSystem(), getWaterSystem(), 
-				getElectricitySystem(), getPetroleumSystem(), getSocialSystem());
+				getPetroleumSystem(), getElectricitySystem(), getSocialSystem());
 	}
 
 	/* (non-Javadoc)
@@ -224,11 +235,11 @@ public abstract class DefaultSociety implements Society {
 		if(waterSystem instanceof WaterSystem.Local) {
 			sectors.add(Sector.WATER);
 		}
-		if(electricitySystem instanceof ElectricitySystem.Local) {
-			sectors.add(Sector.ELECTRICITY);
-		}
 		if(petroleumSystem instanceof PetroleumSystem.Local) {
 			sectors.add(Sector.PETROLEUM);
+		}
+		if(electricitySystem instanceof ElectricitySystem.Local) {
+			sectors.add(Sector.ELECTRICITY);
 		}
 		return sectors;
 	}
@@ -254,7 +265,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
-		return TimeUnits.year;
+		return oilTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -262,7 +273,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public OilUnits getOilUnits() {
-		return OilUnits.toe;
+		return oilUnits;
 	}
 
 	/* (non-Javadoc)
@@ -351,7 +362,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -359,7 +370,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)

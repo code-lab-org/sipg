@@ -68,7 +68,7 @@ public class Region extends DefaultSociety implements Society {
 		SocialSystem socialSystem = new DefaultSocialSoS();
 		
 		return new Region(name, nestedSocieties, agricultureSystem, 
-				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 
 	/**
@@ -86,10 +86,10 @@ public class Region extends DefaultSociety implements Society {
 	 */
 	private Region(String name, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			ElectricitySystem electricitySystem, PetroleumSystem petroleumSystem, 
+			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
 			SocialSystem socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
-				waterSystem, electricitySystem, petroleumSystem, socialSystem);
+				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
 	/* (non-Javadoc)
