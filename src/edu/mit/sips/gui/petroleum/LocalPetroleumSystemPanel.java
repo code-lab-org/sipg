@@ -50,9 +50,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.GWh;
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final OilUnits oilUnits = OilUnits.Btoe;
+	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	/**
@@ -335,11 +335,17 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 								getPetroleumSystem()).getPetroleumReservoirVolume(),
 								nestedSociety.getPetroleumSystem(), this));
 			}
-
-			updateSeries(petroleumSourceData, "Production", year, 
+			
+			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
+				updateSeries(petroleumSourceData, nestedSystem.getSociety().getName() 
+						+ " Production", year,
+						OilUnits.convertFlow(nestedSystem.getPetroleumProduction(), 
+								nestedSystem, this));
+			}
+			/*updateSeries(petroleumSourceData, "Production", year, 
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumProduction(),
-							getPetroleumSystem(), this));
+							getPetroleumSystem(), this));*/
 			updateSeries(petroleumSourceData, "Distribution", year, 
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumInDistribution(),

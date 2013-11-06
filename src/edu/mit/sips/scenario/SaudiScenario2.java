@@ -105,7 +105,25 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(65e9, 65e9,
 								Arrays.asList(
-										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL)
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1962, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1964, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1966, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1968, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1970, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1970, 1981, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1972, 1982, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1976, 1983, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1980, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1980, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1984, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1988, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1990, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
 										),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
