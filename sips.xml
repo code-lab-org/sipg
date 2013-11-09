@@ -314,6 +314,18 @@
                         <semantics>Water consumed (m^3) by the social system.</semantics>
                     </attribute>
                     <attribute>
+                        <name>PetroleumConsumption</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>Periodic</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Petroleum consumed (toe) by the social system.</semantics>
+                    </attribute>
+                    <attribute>
                         <name>DomesticProduct</name>
                         <dataType>HLAfloat64BE</dataType>
                         <updateType>Periodic</updateType>
