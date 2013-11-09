@@ -192,7 +192,7 @@ public class WaterStateProvider implements SpatialStateProvider, WaterUnitsOutpu
 	 */
 	@Override
 	public String getOtherProductionLabel() {
-		return "Artesian Well";
+		return "Private Production";
 	}
 
 	/* (non-Javadoc)

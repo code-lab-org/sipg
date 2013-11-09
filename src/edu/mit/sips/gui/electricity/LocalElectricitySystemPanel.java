@@ -396,7 +396,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityWasted(),
 						getElectricitySystem(), this));
-		updateSeries(electricitySourceData, "Petroleum Burn", year, 
+		updateSeries(electricitySourceData, "Private Production", year, 
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityFromPrivateProduction(),
 						getElectricitySystem(), this));

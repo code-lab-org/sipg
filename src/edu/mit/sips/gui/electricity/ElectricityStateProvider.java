@@ -212,7 +212,7 @@ public class ElectricityStateProvider implements SpatialStateProvider, Electrici
 	 */
 	@Override
 	public String getOtherProductionLabel() {
-		return "Petroleum Burn";
+		return "Private Production";
 	}
 
 	/* (non-Javadoc)
