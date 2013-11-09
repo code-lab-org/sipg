@@ -15,6 +15,7 @@ import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.PopulationModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
@@ -27,9 +28,12 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
+		private static final OilUnits oilUnits = OilUnits.toe;
+		private static final TimeUnits oilTimeUnits = TimeUnits.year;
+		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PopulationModel populationModel;
-		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel;
+		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel;
 		private double domesticProduct;
 		private transient double nextDomesticProduct;
 		
@@ -43,6 +47,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			this.electricityDemandModel = new DefaultDemandModel();
 			this.foodDemandModel = new DefaultDemandModel();
 			this.waterDemandModel = new DefaultDemandModel();
+			this.petroleumDemandModel = new DefaultDemandModel();
 		}
 		
 		/**
@@ -53,12 +58,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 * @param electricityDemandModel the electricity demand model
 		 * @param foodDemandModel the food demand model
 		 * @param waterDemandModel the water demand model
+		 * @param petroleumDemandModel the petroleum demand model
 		 */
 		public Local(DomesticProductionModel domesticProductionModel,
 				PopulationModel populationModel, 
 				DemandModel electricityDemandModel, 
 				DemandModel foodDemandModel,
-				DemandModel waterDemandModel) {
+				DemandModel waterDemandModel, 
+				DemandModel petroleumDemandModel) {
 			super("Society");
 
 			// Validate domestic production model.
@@ -95,6 +102,13 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 						"Water demand model cannot be null.");
 			}
 			this.waterDemandModel = waterDemandModel;
+			
+			// Validate petroleum demand model.
+			if(petroleumDemandModel == null) {
+				throw new IllegalArgumentException(
+						"Petroleum demand model cannot be null.");
+			}
+			this.petroleumDemandModel = petroleumDemandModel;
 		}
 
 		/* (non-Javadoc)
@@ -149,7 +163,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		public double getElectricityConsumption() {
 			return electricityDemandModel.getDemand(this);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 		 */
@@ -247,6 +261,30 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return oilTimeUnits;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return oilUnits;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
+		 */
+		@Override
+		public double getPetroleumConsumption() {
+			return petroleumDemandModel.getDemand(this);
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.SocialSystem#getPopulation()
 		 */
 		@Override
@@ -297,6 +335,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			electricityDemandModel.initialize(time);
 			foodDemandModel.initialize(time);
 			waterDemandModel.initialize(time);
+			petroleumDemandModel.initialize(time);
 			
 			domesticProduct = getDomesticProduction();
 		}
@@ -311,6 +350,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			electricityDemandModel.tick();
 			foodDemandModel.tick();
 			waterDemandModel.tick();
+			petroleumDemandModel.tick();
 		}
 
 		/* (non-Javadoc)
@@ -323,6 +363,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			electricityDemandModel.tock();
 			foodDemandModel.tock();
 			waterDemandModel.tock();
+			petroleumDemandModel.tock();
 		}
 	}
 	
@@ -330,11 +371,15 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements SocialSystem.Remote {
+		private static final OilUnits oilUnits = OilUnits.toe;
+		private static final TimeUnits oilTimeUnits = TimeUnits.year;
+		
 		private double domesticProduct;
 		private long population;
 		private double electricityConsumption;
 		private double foodConsumption;
 		private double waterConsumption;
+		private double petroleumConsumption;
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
@@ -390,6 +435,30 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		@Override
 		public FoodUnits getFoodUnits() {
 			return FoodUnits.kcal;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+		 */
+		@Override
+		public TimeUnits getOilTimeUnits() {
+			return oilTimeUnits;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+		 */
+		@Override
+		public OilUnits getOilUnits() {
+			return oilUnits;
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
+		 */
+		@Override
+		public double getPetroleumConsumption() {
+			return petroleumConsumption;
 		}
 
 		/* (non-Javadoc)
@@ -452,6 +521,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 			this.foodConsumption = foodConsumption;
 			fireAttributeChangeEvent(Arrays.asList(
 					FOOD_CONSUMPTION_ATTRIBUTE));
+		}
+
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setPetroleumConsumption(double)
+		 */
+		@Override
+		public void setPetroleumConsumption(double petroleumConsumption) {
+			this.petroleumConsumption = petroleumConsumption;
 		}
 
 		/* (non-Javadoc)

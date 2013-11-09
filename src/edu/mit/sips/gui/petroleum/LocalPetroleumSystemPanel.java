@@ -19,6 +19,7 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnits;
@@ -40,6 +41,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	TimeSeriesCollection localPetroleumData = new TimeSeriesCollection();
 	TimeSeriesCollection petroleumProductCostData = new TimeSeriesCollection();
 	TimeSeriesCollection petroleumSupplyProfitData = new TimeSeriesCollection();
+	TimeSeriesCollection petroleumConsumptionPerCapita = new TimeSeriesCollection();
 	
 	DefaultTableXYDataset petroleumReservoirDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumSourceData = new DefaultTableXYDataset();
@@ -95,6 +97,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Petroleum Use Fraction (-)", 
 				localPetroleumData));
+		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
+				"Oil Consumption per Capita (" + OilUnits.toe 
+				+ "/" + TimeUnits.year + ")", 
+				petroleumConsumptionPerCapita));
 		addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
 				"Oil Reservoir Volume (" + oilUnits + ")",
 				petroleumReservoirDataset), "Reservoir");
@@ -198,6 +204,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		petroleumRevenue.removeAllSeries();
 		petroleumNetRevenue.removeAllSeries();
 		electricityUseData.removeAllSeries();
+		petroleumConsumptionPerCapita.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -246,6 +253,26 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					nestedSystem.getUnitSupplyProfit());
 		}
 		
+
+		if(getSociety().getSocialSystem().getPopulation() > 0) {
+			updateSeriesCollection(petroleumConsumptionPerCapita, getSociety().getName(), year, 
+					DefaultUnits.convertFlow(getSociety().getSocialSystem().getPetroleumConsumption(),
+							getSociety().getSocialSystem().getOilUnits(),
+							getSociety().getSocialSystem().getOilTimeUnits(),
+							OilUnits.toe, TimeUnits.year)
+							/ getSociety().getSocialSystem().getPopulation());
+			for(Society nestedSociety : getSociety().getNestedSocieties()) {
+				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
+					updateSeriesCollection(petroleumConsumptionPerCapita, nestedSociety.getName(), year, 
+							DefaultUnits.convertFlow(nestedSociety.getSocialSystem().getPetroleumConsumption(),
+									nestedSociety.getSocialSystem().getOilUnits(),
+									nestedSociety.getSocialSystem().getOilTimeUnits(),
+									OilUnits.toe, TimeUnits.year)
+									/ nestedSociety.getSocialSystem().getPopulation());
+				}
+			}
+		}
+		
 		petroleumReservoirIndicatorPanel.setValue(OilUnits.convertStock(
 				getPetroleumSystem().getPetroleumReservoirVolume(), 
 				getPetroleumSystem(), this));
@@ -259,47 +286,67 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					nestedSystem.getSociety().getName(), year, 
 					nestedSystem.getLocalPetroleumFraction());
 		}
-		
+
 		updateSeries(petroleumRevenue, "Capital", year, 
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getCapitalExpense(), 
+						-getPetroleumSystem().getCapitalExpense(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Operations", year, 
+		updateSeries(petroleumRevenue, "Operations", year,  
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getOperationsExpense(), 
+						-getPetroleumSystem().getOperationsExpense(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Decommission", year, 
+		updateSeries(petroleumRevenue, "Decommission", year,  
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getDecommissionExpense(), 
+						-getPetroleumSystem().getDecommissionExpense(),
 						getPetroleumSystem(), this));
 		updateSeries(petroleumRevenue, "Consumption", year, 
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getConsumptionExpense(), 
+						-getPetroleumSystem().getConsumptionExpense(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "In-Distribution", year, 
+		updateSeries(petroleumRevenue, "In-Distribution", year,  
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getDistributionExpense(), 
+						-getPetroleumSystem().getDistributionExpense(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Import", year, 
+		updateSeries(petroleumRevenue, "Import", year,  
 				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getImportExpense(), 
+						-getPetroleumSystem().getImportExpense(),
 						getPetroleumSystem(), this));
 		updateSeries(petroleumRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getDistributionRevenue(), 
+				CurrencyUnits.convertFlow( 
+						getPetroleumSystem().getDistributionRevenue(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Export", year,
+		updateSeries(petroleumRevenue, "Export", year, 
 				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getExportRevenue(), 
+						getPetroleumSystem().getExportRevenue(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Sales", year, 
+		updateSeries(petroleumRevenue, "Sales", year,  
 				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getSalesRevenue(), 
+						getPetroleumSystem().getSalesRevenue(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumNetRevenue, "Net Revenue", year, 
+		updateSeries(petroleumNetRevenue, "Net Revenue", year,  
 				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getCashFlow(), 
+						getPetroleumSystem().getCashFlow(),
 						getPetroleumSystem(), this));
+		
+		if(getNestedPetroleumSystems().isEmpty()) {
+			updateSeries(petroleumUseData, "Society", year, 
+					OilUnits.convertFlow(getSociety().getSocialSystem().getPetroleumConsumption(),
+							getSociety().getSocialSystem(), this));
+			for(PetroleumElement element : getPetroleumSystem().getInternalElements()) {
+				updateSeries(electricityUseData, element.getName(), year, 
+						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
+								element, this));
+			}
+		} else {
+			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
+				updateSeries(petroleumUseData, nestedSystem.getSociety().getName() + " Society", year,
+						OilUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getPetroleumConsumption(), 
+								nestedSystem.getSociety().getSocialSystem(), this));
+				updateSeries(electricityUseData, nestedSystem.getName(), year, 
+						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
+								nestedSystem, this));
+			}
+		}
 
 		if(getPetroleumSystem() instanceof DefaultPetroleumSystem.Local) {
 			updateSeries(petroleumReservoirDataset, "Reservoir", year, 
@@ -360,61 +407,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 							getPetroleumSystem(), this));
 		}
 		
-		if(getNestedPetroleumSystems().isEmpty()) {
-			for(PetroleumElement element : getPetroleumSystem().getInternalElements()) {
-				updateSeries(electricityUseData, element.getName(), year, 
-						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
-								element, this));
-			}
-		} else {
-			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
-				updateSeries(electricityUseData, nestedSystem.getName(), year, 
-						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
-								nestedSystem, this));
-			}
-		}
-		updateSeries(petroleumRevenue, "Capital", year, 
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getCapitalExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Operations", year,  
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getOperationsExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Decommission", year,  
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getDecommissionExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Consumption", year, 
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getConsumptionExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "In-Distribution", year,  
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getDistributionExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Import", year,  
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getImportExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow( 
-						getPetroleumSystem().getDistributionRevenue(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Export", year, 
-				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getExportRevenue(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Sales", year,  
-				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getSalesRevenue(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumNetRevenue, "Net Revenue", year,  
-				CurrencyUnits.convertFlow(
-						getPetroleumSystem().getCashFlow(),
-						getPetroleumSystem(), this));	
 		updateSeries(petroleumUseData, "Electricity", year, 
-				ElectricityUnits.convertFlow(
+				OilUnits.convertFlow(
 						getSociety().getElectricitySystem().getPetroleumConsumption(),
 						getSociety().getElectricitySystem(), this));
 		updateSeries(petroleumSourceData, "Import", year, 

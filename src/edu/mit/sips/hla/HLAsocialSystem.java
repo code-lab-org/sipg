@@ -36,6 +36,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
 	FOOD_CONSUMPTION_ATTRIBUTE = "FoodConsumption",
 	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
+	PETROLEUM_CONSUMPTION_ATTRIBUTE = "PetroleumConsumption",
 	POPULATION_ATTRIBUTE = "Population",
 	DOMESTIC_PRODUCT_ATTRIBUTE = "DomesticProduct";
 	
@@ -47,6 +48,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		FOOD_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
+		PETROLEUM_CONSUMPTION_ATTRIBUTE,
 		POPULATION_ATTRIBUTE,
 		DOMESTIC_PRODUCT_ATTRIBUTE
 	};
@@ -179,6 +181,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	private final HLAfloat64BE electricityConsumption;
 	private final HLAfloat64BE foodConsumption;
 	private final HLAfloat64BE waterConsumption;
+	private final HLAfloat64BE oilConsumption;
 	private final HLAfloat64BE domesticProduct;
 	private final HLAinteger64BE population;
 	
@@ -213,6 +216,8 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 				socialSystem.getFoodConsumption());
 		waterConsumption = encoderFactory.createHLAfloat64BE(
 				socialSystem.getWaterConsumption());
+		oilConsumption = encoderFactory.createHLAfloat64BE(
+				socialSystem.getPetroleumConsumption());
 		domesticProduct = encoderFactory.createHLAfloat64BE(
 				socialSystem.getDomesticProduct());
 		population = encoderFactory.createHLAinteger64BE(
@@ -222,6 +227,8 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		attributeValues.put(getAttributeHandle(FOOD_CONSUMPTION_ATTRIBUTE), 
 				foodConsumption);
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
+				waterConsumption);
+		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
 		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCT_ATTRIBUTE), 
 				domesticProduct);
@@ -254,6 +261,12 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 				if(evt.getAttributeNames().contains(
 						SocialSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
 					waterConsumption.setValue(
+							getSocialSystem().getWaterConsumption());
+					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
+				}
+				if(evt.getAttributeNames().contains(
+						SocialSystem.PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
+					oilConsumption.setValue(
 							getSocialSystem().getWaterConsumption());
 					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
 				}
@@ -291,6 +304,11 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 					WATER_CONSUMPTION_ATTRIBUTE)) {
 				remote.setWaterConsumption(
 						waterConsumption.getValue());
+			}
+			if(evt.getAttributeNames().contains(
+					PETROLEUM_CONSUMPTION_ATTRIBUTE)) {
+				remote.setPetroleumConsumption(
+						oilConsumption.getValue());
 			}
 			if(evt.getAttributeNames().contains(
 					DOMESTIC_PRODUCT_ATTRIBUTE)) {
@@ -350,6 +368,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 		socialSystem.setFoodConsumption(getSocialSystem().getFoodConsumption());
 		socialSystem.setPopulation(getSocialSystem().getPopulation());
 		socialSystem.setWaterConsumption(getSocialSystem().getWaterConsumption());
+		socialSystem.setPetroleumConsumption(getSocialSystem().getPetroleumConsumption());
 		super.setInfrastructureSystem(socialSystem);
 	}
 }

@@ -21,6 +21,7 @@ import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
+import edu.mit.sips.core.social.demand.ConstantDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
@@ -41,7 +42,8 @@ public final class SaudiScenario2 extends DefaultScenario {
 			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
 	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950, 0.15, 1700, 3100),
 			waterDemandModel = new LogisticTimeDemandModel(1965, 175*365*1e-3, 0.08, 25*365*1e-3, 325*365*1e-3), 
-			electricityDemandModel = new LogisticTimeDemandModel(1950, 0.25*365*1e-3, 0.09, 0*365*1e-3, 40*365*1e-3);
+			electricityDemandModel = new LogisticTimeDemandModel(1950, 0.25*365*1e-3, 0.09, 0*365*1e-3, 40*365*1e-3),
+			petroleumDemandModel = new ConstantDemandModel(10);
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(150), 
 			foodImportPriceModel = new ConstantPriceModel(200), 
 			foodExportPriceModel = new ConstantPriceModel(150),
@@ -129,7 +131,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1d/0.10,
+						new DefaultElectricitySystem.Local(1./8.14,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -138,7 +140,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -184,7 +186,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1d/0.10,
+						new DefaultElectricitySystem.Local(1./8.14,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -193,7 +195,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 0.75e6, 0.05, (long) 4e6),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -240,7 +242,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1d/0.10,
+						new DefaultElectricitySystem.Local(1./8.14,
 								new ArrayList<ElectricityElement>(),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -249,7 +251,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 }

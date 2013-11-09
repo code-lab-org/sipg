@@ -48,6 +48,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityNetRevenue = new DefaultTableXYDataset();
+	DefaultTableXYDataset petroleumUseData = new DefaultTableXYDataset();
 	
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -88,6 +89,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricityUseData));
+		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
+				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", petroleumUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Electricity Use Fraction (-)", 
@@ -158,7 +161,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	private List<ElectricitySystem.Local> getNestedElectricitySystems() {
 		List<ElectricitySystem.Local> systems = new ArrayList<ElectricitySystem.Local>();
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			if(nestedSociety.getWaterSystem() instanceof ElectricitySystem.Local) {
+			if(nestedSociety.getElectricitySystem() instanceof ElectricitySystem.Local) {
 				systems.add((ElectricitySystem.Local)nestedSociety.getElectricitySystem());
 			}
 		}
@@ -199,6 +202,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		electricitySourceData.removeAllSeries();
 		electricityRevenue.removeAllSeries();
 		electricityNetRevenue.removeAllSeries();
+		petroleumUseData.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -289,37 +293,6 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			}
 		}
 		
-		updateSeries(electricityRevenue, "Capital", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getCapitalExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Operations", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getOperationsExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Decommission", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getDecommissionExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Consumption", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getConsumptionExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "In-Distribution", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getDistributionExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Import", year, 
-				CurrencyUnits.convertFlow(-getElectricitySystem().getImportExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow(getElectricitySystem().getDistributionRevenue(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Export", year,
-				CurrencyUnits.convertFlow(getElectricitySystem().getExportRevenue(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Sales", year, 
-				CurrencyUnits.convertFlow(getElectricitySystem().getSalesRevenue(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityNetRevenue, "Net Revenue", year, 
-				CurrencyUnits.convertFlow(getElectricitySystem().getCashFlow(), 
-						getElectricitySystem(), this));
-		
 		if(getElectricitySystem() instanceof DefaultElectricitySystem.Local) {
 			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
 				if(element.getMaxElectricityProduction() > 0) {
@@ -359,6 +332,20 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					ElectricityUnits.convertFlow(
 							getElectricitySystem().getElectricityOutDistributionLosses(),
 							getElectricitySystem(), this));
+		}
+		
+		if(getNestedElectricitySystems().isEmpty()) {
+			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
+				updateSeries(petroleumUseData, element.getName(), year, 
+						OilUnits.convertFlow(element.getPetroleumConsumption(),
+								element, this));
+			}
+		} else {
+			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
+				updateSeries(petroleumUseData, nestedSystem.getName(), year, 
+						OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
+								nestedSystem, this));
+			}
 		}
 		
 		updateSeries(electricityRevenue, "Capital", year, 

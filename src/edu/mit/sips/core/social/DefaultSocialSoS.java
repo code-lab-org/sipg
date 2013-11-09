@@ -8,6 +8,7 @@ import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
@@ -15,6 +16,8 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultSocialSoS.
  */
 public class DefaultSocialSoS extends DefaultInfrastructureSoS implements SocialSoS {
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new default social so s.
@@ -103,6 +106,34 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 		return Collections.unmodifiableList(systems);
 	}
 
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
+	 */
+	@Override
+	public double getPetroleumConsumption() {
+		double value = 0;
+		for(SocialSystem system : getNestedSystems()) {
+			value += system.getPetroleumConsumption();
+		}
+		return value;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()

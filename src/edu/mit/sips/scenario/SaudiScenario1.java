@@ -21,6 +21,7 @@ import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
+import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LinearBoundedProductDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
@@ -41,7 +42,8 @@ public final class SaudiScenario1 extends DefaultScenario {
 			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
 	private static DemandModel foodDemandModel = new LinearBoundedProductDemandModel(8000, 2, 100000, 4.5),
 			waterDemandModel = new LinearBoundedProductDemandModel(8000, 10, 100000, 100), 
-			electricityDemandModel = new LinearBoundedProductDemandModel(8000, 1, 100000, 10);
+			electricityDemandModel = new LinearBoundedProductDemandModel(8000, 1, 100000, 10),
+			petroleumDemandModel = new DefaultDemandModel();
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(150), 
 			foodImportPriceModel = new ConstantPriceModel(200), 
 			foodExportPriceModel = new ConstantPriceModel(150),
@@ -140,7 +142,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 50000, 0.08, 20000000),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -196,7 +198,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 10000, 0.05, 750000),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 
@@ -254,7 +256,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 100000, 0.07, 10000000),
-								electricityDemandModel, foodDemandModel, waterDemandModel):
+								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem.Remote());
 	}
 }

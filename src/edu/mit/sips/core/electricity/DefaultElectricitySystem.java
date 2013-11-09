@@ -26,6 +26,11 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements ElectricitySystem.Local {
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		private final OilUnits oilUnits = OilUnits.toe;
+		private final TimeUnits oilTimeUnits = TimeUnits.year;
+		
 		private final double petroleumIntensityOfPrivateProduction;
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel;
@@ -207,7 +212,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -215,7 +220,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -312,7 +317,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public TimeUnits getOilTimeUnits() {
-			return TimeUnits.year;
+			return oilTimeUnits;
 		}
 		
 		/* (non-Javadoc)
@@ -320,7 +325,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public OilUnits getOilUnits() {
-			return OilUnits.toe;
+			return oilUnits;
 		}
 		
 		/* (non-Javadoc)

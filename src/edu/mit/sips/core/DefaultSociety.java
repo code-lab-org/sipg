@@ -336,7 +336,8 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalPetroleumDemand() {
-		return getElectricitySystem().getPetroleumConsumption();
+		return getSocialSystem().getPetroleumConsumption()
+				+ getElectricitySystem().getPetroleumConsumption();
 	}
 
 	/* (non-Javadoc)
