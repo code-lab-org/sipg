@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
@@ -25,12 +26,14 @@ import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.OilUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class ElectricitySystemPanel.
  */
 public class LocalElectricitySystemPanel extends ElectricitySystemPanel 
-		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput {
+		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput, WaterUnitsOutput {
 	private static final long serialVersionUID = 2218175276232419659L;
 	
 	private final LinearIndicatorPanel renewableElectricityIndicatorPanel, 
@@ -49,6 +52,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	DefaultTableXYDataset electricityRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityNetRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumUseData = new DefaultTableXYDataset();
+	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
 	
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -56,6 +60,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new local electricity system panel.
@@ -91,6 +97,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				electricityUseData));
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", petroleumUseData));
+		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+				"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", waterUseData));
 
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Electricity Use Fraction (-)", 
@@ -203,6 +211,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		electricityRevenue.removeAllSeries();
 		electricityNetRevenue.removeAllSeries();
 		petroleumUseData.removeAllSeries();
+		waterUseData.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -320,14 +329,17 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					ElectricityUnits.convertFlow(
 							getElectricitySystem().getElectricityProduction(),
 							getElectricitySystem(), this));
-			updateSeries(electricitySourceData, "Distribution", year, 
-					ElectricityUnits.convertFlow(
-							getElectricitySystem().getElectricityInDistribution(),
-							getElectricitySystem(), this));
-			updateSeries(electricityUseData, "Distribution", year, 
-					ElectricityUnits.convertFlow(
-							getElectricitySystem().getElectricityOutDistribution(),
-							getElectricitySystem(), this));
+
+			if(!getElectricitySystem().getExternalElements().isEmpty()) {
+				updateSeries(electricitySourceData, "Distribution", year, 
+						ElectricityUnits.convertFlow(
+								getElectricitySystem().getElectricityInDistribution(),
+								getElectricitySystem(), this));
+				updateSeries(electricityUseData, "Distribution", year, 
+						ElectricityUnits.convertFlow(
+								getElectricitySystem().getElectricityOutDistribution(),
+								getElectricitySystem(), this));
+			}
 			updateSeries(electricityUseData, "Distribution Losses", year, 
 					ElectricityUnits.convertFlow(
 							getElectricitySystem().getElectricityOutDistributionLosses(),
@@ -335,18 +347,36 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		}
 		
 		if(getNestedElectricitySystems().isEmpty()) {
+			updateSeries(electricityUseData, "Society", year, 
+					ElectricityUnits.convertFlow(getSociety().getSocialSystem().getElectricityConsumption(),
+							getSociety().getSocialSystem(), this));
 			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
 				if(element.getPetroleumConsumption() > 0) {
 					updateSeries(petroleumUseData, element.getName(), year, 
 							OilUnits.convertFlow(element.getPetroleumConsumption(),
 									element, this));
 				}
+				if(element.getWaterConsumption() > 0) {
+					updateSeries(waterUseData, element.getName(), year, 
+							WaterUnits.convertFlow(element.getWaterConsumption(),
+									element, this));
+				}
 			}
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
-				updateSeries(petroleumUseData, nestedSystem.getName(), year, 
-						OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
-								nestedSystem, this));
+				updateSeries(electricityUseData, nestedSystem.getSociety().getName() + " Society", year,
+						ElectricityUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getElectricityConsumption(), 
+								nestedSystem.getSociety().getSocialSystem(), this));
+				if(nestedSystem.getPetroleumConsumption() > 0) {
+					updateSeries(petroleumUseData, nestedSystem.getName(), year, 
+							OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
+									nestedSystem, this));
+				}
+				if(nestedSystem.getWaterConsumption() > 0) {
+					updateSeries(waterUseData, nestedSystem.getName(), year, 
+							WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
+									nestedSystem, this));
+				}
 			}
 		}
 		
@@ -366,14 +396,16 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getConsumptionExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "In-Distribution", year, 
-				CurrencyUnits.convertFlow(
-						-getElectricitySystem().getDistributionExpense(), 
-						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow(
-						getElectricitySystem().getDistributionRevenue(), 
-						getElectricitySystem(), this));
+		if(!(getElectricitySystem().getSociety() instanceof Country)) {
+			updateSeries(electricityRevenue, "In-Distribution", year, 
+					CurrencyUnits.convertFlow(
+							-getElectricitySystem().getDistributionExpense(), 
+							getElectricitySystem(), this));
+			updateSeries(electricityRevenue, "Out-Distribution", year, 
+					CurrencyUnits.convertFlow(
+							getElectricitySystem().getDistributionRevenue(), 
+							getElectricitySystem(), this));
+		}
 		updateSeries(electricityRevenue, "Sales", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getSalesRevenue(), 
@@ -382,10 +414,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getCashFlow(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityUseData, "Society", year, 
-				ElectricityUnits.convertFlow(
-						getSociety().getSocialSystem().getElectricityConsumption(),
-						getSociety().getSocialSystem(), this));
+
 		updateSeries(electricityUseData, "Water", year,  
 				ElectricityUnits.convertFlow(
 						getSociety().getWaterSystem().getElectricityConsumption(),
@@ -402,5 +431,21 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityFromPrivateProduction(),
 						getElectricitySystem(), this));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
 	}
 }

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
@@ -32,6 +33,12 @@ import edu.mit.sips.sim.util.TimeUnits;
 public class LocalPetroleumSystemPanel extends PetroleumSystemPanel 
 		implements OilUnitsOutput, ElectricityUnitsOutput, CurrencyUnitsOutput {
 	private static final long serialVersionUID = 2218175276232419659L;
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
+	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.Mtoe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel, 
 	localPetroleumIndicatorPanel;
@@ -49,13 +56,6 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	DefaultTableXYDataset petroleumRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumNetRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
-	
-	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
-	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.GWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final OilUnits oilUnits = OilUnits.Mtoe;
-	private final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new local petroleum system panel.
@@ -303,17 +303,19 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				CurrencyUnits.convertFlow(
 						-getPetroleumSystem().getConsumptionExpense(),
 						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "In-Distribution", year,  
-				CurrencyUnits.convertFlow(
-						-getPetroleumSystem().getDistributionExpense(),
-						getPetroleumSystem(), this));
+		if(!(getPetroleumSystem().getSociety() instanceof Country)) {
+			updateSeries(petroleumRevenue, "In-Distribution", year,  
+					CurrencyUnits.convertFlow(
+							-getPetroleumSystem().getDistributionExpense(),
+							getPetroleumSystem(), this));
+			updateSeries(petroleumRevenue, "Out-Distribution", year, 
+					CurrencyUnits.convertFlow( 
+							getPetroleumSystem().getDistributionRevenue(),
+							getPetroleumSystem(), this));
+		}
 		updateSeries(petroleumRevenue, "Import", year,  
 				CurrencyUnits.convertFlow(
 						-getPetroleumSystem().getImportExpense(),
-						getPetroleumSystem(), this));
-		updateSeries(petroleumRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow( 
-						getPetroleumSystem().getDistributionRevenue(),
 						getPetroleumSystem(), this));
 		updateSeries(petroleumRevenue, "Export", year, 
 				CurrencyUnits.convertFlow(
@@ -344,9 +346,11 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				updateSeries(petroleumUseData, nestedSystem.getSociety().getName() + " Society", year,
 						OilUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getPetroleumConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
-				updateSeries(electricityUseData, nestedSystem.getName(), year, 
-						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
-								nestedSystem, this));
+				if(nestedSystem.getElectricityConsumption() > 0) {
+					updateSeries(electricityUseData, nestedSystem.getName(), year, 
+							ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
+									nestedSystem, this));
+				}
 			}
 		}
 
@@ -386,23 +390,27 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 			}
 			
 			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
-				updateSeries(petroleumSourceData, nestedSystem.getSociety().getName() 
-						+ " Production", year,
-						OilUnits.convertFlow(nestedSystem.getPetroleumProduction(), 
-								nestedSystem, this));
+				if(nestedSystem.getPetroleumProduction() > 0) {
+					updateSeries(petroleumSourceData, nestedSystem.getSociety().getName() 
+							+ " Production", year,
+							OilUnits.convertFlow(nestedSystem.getPetroleumProduction(), 
+									nestedSystem, this));
+				}
 			}
 			/*updateSeries(petroleumSourceData, "Production", year, 
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumProduction(),
 							getPetroleumSystem(), this));*/
-			updateSeries(petroleumSourceData, "Distribution", year, 
-					OilUnits.convertStock(
-							getPetroleumSystem().getPetroleumInDistribution(),
-							getPetroleumSystem(), this));
-			updateSeries(petroleumUseData, "Distribution", year, 
-					OilUnits.convertStock(
-							getPetroleumSystem().getPetroleumOutDistribution(),
-							getPetroleumSystem(), this));
+			if(!getPetroleumSystem().getExternalElements().isEmpty()) {
+				updateSeries(petroleumSourceData, "Distribution", year, 
+						OilUnits.convertStock(
+								getPetroleumSystem().getPetroleumInDistribution(),
+								getPetroleumSystem(), this));
+				updateSeries(petroleumUseData, "Distribution", year, 
+						OilUnits.convertStock(
+								getPetroleumSystem().getPetroleumOutDistribution(),
+								getPetroleumSystem(), this));
+			}
 			updateSeries(petroleumUseData, "Distribution Losses", year, 
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumOutDistributionLosses(),

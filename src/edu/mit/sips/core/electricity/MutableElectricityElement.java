@@ -1,12 +1,26 @@
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class MutableElectricityElement.
  */
-public final class MutableElectricityElement extends
-		DefaultMutableInfrastructureElement {
+public final class MutableElectricityElement extends DefaultMutableInfrastructureElement 
+		implements WaterUnitsOutput, OilUnitsOutput, ElectricityUnitsOutput {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	
 	private double maxElectricityProduction;
 	private double initialElectricityProduction;
 	private double petroleumIntensityOfElectricityProduction;
@@ -42,6 +56,22 @@ public final class MutableElectricityElement extends
 	 */
 	public double getDistributionEfficiency() {
 		return distributionEfficiency;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
 	}
 
 	/**
@@ -80,6 +110,22 @@ public final class MutableElectricityElement extends
 		return maxElectricityProduction;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
 	/**
 	 * Gets the petroleum intensity of electricity production.
 	 *
@@ -114,6 +160,22 @@ public final class MutableElectricityElement extends
 	 */
 	public double getWaterIntensityOfElectricityProduction() {
 		return waterIntensityOfElectricityProduction;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 
 	/**
@@ -200,5 +262,4 @@ public final class MutableElectricityElement extends
 			double waterIntensityOfElectricityProduction) {
 		this.waterIntensityOfElectricityProduction = waterIntensityOfElectricityProduction;
 	}
-
 }

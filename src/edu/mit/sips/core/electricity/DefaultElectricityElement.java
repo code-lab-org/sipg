@@ -13,6 +13,14 @@ import edu.mit.sips.sim.util.WaterUnits;
 public class DefaultElectricityElement extends DefaultInfrastructureElement
 		implements ElectricityElement {
 
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	/**
 	 * Creates the distribution element.
 	 *
@@ -38,7 +46,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 				0, 0, 0, 0, distributionEfficiency, maxElectricityInput, 
 				initialElectricityInput, variableOperationsCostOfElectricityDistribution);
 	}
-	
 	/**
 	 * Creates the production element.
 	 *
@@ -252,7 +259,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
+		return electricityTimeUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -260,7 +267,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -317,7 +324,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
-		return TimeUnits.year;
+		return oilTimeUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -325,7 +332,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public OilUnits getOilUnits() {
-		return OilUnits.toe;
+		return oilUnits;
 	}
 
 	/* (non-Javadoc)
@@ -399,7 +406,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -407,7 +414,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)

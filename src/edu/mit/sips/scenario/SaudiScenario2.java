@@ -21,7 +21,6 @@ import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
-import edu.mit.sips.core.social.demand.ConstantDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
@@ -43,7 +42,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950, 0.15, 1700, 3100),
 			waterDemandModel = new LogisticTimeDemandModel(1965, 175*365*1e-3, 0.08, 25*365*1e-3, 325*365*1e-3), 
 			electricityDemandModel = new LogisticTimeDemandModel(1950, 0.25*365*1e-3, 0.09, 0*365*1e-3, 40*365*1e-3),
-			petroleumDemandModel = new ConstantDemandModel(10);
+			petroleumDemandModel = new LogisticTimeDemandModel(1970, 1, 0.07, 0, 9);
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(150), 
 			foodImportPriceModel = new ConstantPriceModel(200), 
 			foodExportPriceModel = new ConstantPriceModel(150),
@@ -108,8 +107,8 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new DefaultPetroleumSystem.Local(65e9, 65e9,
 								Arrays.asList(
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1962, INDUSTRIAL, INDUSTRIAL),
@@ -120,19 +119,22 @@ public final class SaudiScenario2 extends DefaultScenario {
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1970, 1981, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1972, 1982, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1976, 1983, INDUSTRIAL, INDUSTRIAL),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1980, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1980, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1976, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1976, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1984, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1988, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1990, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1994, INDUSTRIAL, URBAN),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
 										),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1./8.14,
-								new ArrayList<ElectricityElement>(),
+						new DefaultElectricitySystem.Local(0.5,
+								Arrays.asList(
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1954, INDUSTRIAL, INDUSTRIAL)
+										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
@@ -186,8 +188,10 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1./8.14,
-								new ArrayList<ElectricityElement>(),
+						new DefaultElectricitySystem.Local(0.5,
+								Arrays.asList(
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1966, RURAL, RURAL)
+										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),
@@ -242,8 +246,10 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem.Remote(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(1./8.14,
-								new ArrayList<ElectricityElement>(),
+						new DefaultElectricitySystem.Local(0.5,
+								Arrays.asList(
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN)
+										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem.Remote(),

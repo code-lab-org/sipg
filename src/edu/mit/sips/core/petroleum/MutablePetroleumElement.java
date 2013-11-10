@@ -2,11 +2,22 @@
 package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class MutablePetroleumElement.
  */
-public final class MutablePetroleumElement extends DefaultMutableInfrastructureElement {
+public final class MutablePetroleumElement extends DefaultMutableInfrastructureElement
+		implements ElectricityUnitsOutput, OilUnitsOutput {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	
 	private double maxPetroleumProduction;
 	private double initialPetroleumProduction;
 	private double reservoirIntensityOfPetroleumProduction;
@@ -52,6 +63,22 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 		return electricalIntensityOfPetroleumDistribution;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
 	/**
 	 * Gets the initial petroleum input.
 	 *
@@ -88,6 +115,22 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 		return maxPetroleumProduction;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
 	/**
 	 * Gets the reservoir intensity of petroleum production.
 	 *
@@ -114,7 +157,6 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public double getVariableOperationsCostOfPetroleumProduction() {
 		return variableOperationsCostOfPetroleumProduction;
 	}
-
 	/**
 	 * Sets the distribution efficiency.
 	 *
@@ -123,7 +165,6 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public void setDistributionEfficiency(double distributionEfficiency) {
 		this.distributionEfficiency = distributionEfficiency;
 	}
-
 	/**
 	 * Sets the electrical intensity of petroleum distribution.
 	 *
@@ -133,7 +174,6 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 			double electricalIntensityOfPetroleumDistribution) {
 		this.electricalIntensityOfPetroleumDistribution = electricalIntensityOfPetroleumDistribution;
 	}
-
 	/**
 	 * Sets the initial petroleum input.
 	 *
@@ -142,7 +182,6 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public void setInitialPetroleumInput(double initialPetroleumInput) {
 		this.initialPetroleumInput = initialPetroleumInput;
 	}
-
 	/**
 	 * Sets the initial petroleum production.
 	 *
@@ -151,6 +190,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public void setInitialPetroleumProduction(double initialPetroleumProduction) {
 		this.initialPetroleumProduction = initialPetroleumProduction;
 	}
+	
 	/**
 	 * Sets the max petroleum input.
 	 *
@@ -159,6 +199,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public void setMaxPetroleumInput(double maxPetroleumInput) {
 		this.maxPetroleumInput = maxPetroleumInput;
 	}
+
 	/**
 	 * Sets the max petroleum production.
 	 *
@@ -167,6 +208,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	public void setMaxPetroleumProduction(double maxPetroleumProduction) {
 		this.maxPetroleumProduction = maxPetroleumProduction;
 	}
+
 	/**
 	 * Sets the reservoir intensity of petroleum production.
 	 *
@@ -176,6 +218,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 			double reservoirIntensityOfPetroleumProduction) {
 		this.reservoirIntensityOfPetroleumProduction = reservoirIntensityOfPetroleumProduction;
 	}
+
 	/**
 	 * Sets the variable operations cost of petroleum distribution.
 	 *
@@ -185,7 +228,7 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 			double variableOperationsCostOfPetroleumDistribution) {
 		this.variableOperationsCostOfPetroleumDistribution = variableOperationsCostOfPetroleumDistribution;
 	}
-	
+
 	/**
 	 * Sets the variable operations cost of petroleum production.
 	 *

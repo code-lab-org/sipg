@@ -14,12 +14,31 @@ import edu.mit.sips.core.electricity.MutableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.DefaultUnits;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
  * The Class ElectricityElementPanel.
  */
-public class ElectricityElementPanel extends ElementPanel {
+public class ElectricityElementPanel extends ElementPanel 
+		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput, WaterUnitsOutput {
 	private static final long serialVersionUID = -9048149807650177253L;
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
+	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.Mtoe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.km3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	private final JFormattedTextField maxElectricityProductionText;
 	private final JFormattedTextField initialElectricityProductionText;
@@ -42,17 +61,20 @@ public class ElectricityElementPanel extends ElementPanel {
 			final MutableElectricityElement element) {
 		super(scenario, element);
 		
+		final ElectricityElementPanel thisPanel = this; 
+		
 		maxElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityProductionText.setColumns(10);
 		maxElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		maxElectricityProductionText.setValue(
-				element.getMaxElectricityProduction());
+		maxElectricityProductionText.setValue(ElectricityUnits.convertFlow(
+				element.getMaxElectricityProduction(), element, this));
 		maxElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxElectricityProduction(
-									((Number) maxElectricityProductionText.getValue()).doubleValue());
+							element.setMaxElectricityProduction(ElectricityUnits.convertFlow(
+									(Double) maxElectricityProductionText.getValue(),
+									thisPanel, element));
 							maxElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityProductionText.setForeground(Color.red);
@@ -62,14 +84,15 @@ public class ElectricityElementPanel extends ElementPanel {
 		initialElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialElectricityProductionText.setColumns(10);
 		initialElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		initialElectricityProductionText.setValue(
-				element.getInitialElectricityProduction());
+		initialElectricityProductionText.setValue(ElectricityUnits.convertFlow(
+				element.getInitialElectricityProduction(), element, this));
 		initialElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialElectricityProduction(
-									((Number) initialElectricityProductionText.getValue()).doubleValue());
+							element.setInitialElectricityProduction(ElectricityUnits.convertFlow(
+									(Double) initialElectricityProductionText.getValue(),
+									thisPanel, element));
 							initialElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialElectricityProductionText.setForeground(Color.red);
@@ -79,14 +102,18 @@ public class ElectricityElementPanel extends ElementPanel {
 		petroleumIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		petroleumIntensityOfElectricityProductionText.setColumns(10);
 		petroleumIntensityOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		petroleumIntensityOfElectricityProductionText.setValue(
-				element.getPetroleumIntensityOfElectricityProduction());
+		petroleumIntensityOfElectricityProductionText.setValue(DefaultUnits.convert(
+				element.getPetroleumIntensityOfElectricityProduction(),
+				element.getOilUnits(), element.getElectricityUnits(), 
+				getOilUnits(), getElectricityUnits()));
 		petroleumIntensityOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setPetroleumIntensityOfElectricityProduction(
-									((Number) petroleumIntensityOfElectricityProductionText.getValue()).doubleValue());
+							element.setPetroleumIntensityOfElectricityProduction(DefaultUnits.convert(
+									(Double) petroleumIntensityOfElectricityProductionText.getValue(),
+									getOilUnits(), getElectricityUnits(), 
+									element.getOilUnits(), element.getElectricityUnits()));
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -96,14 +123,18 @@ public class ElectricityElementPanel extends ElementPanel {
 		waterIntensityOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		waterIntensityOfElectricityProductionText.setColumns(10);
 		waterIntensityOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		waterIntensityOfElectricityProductionText.setValue(
-				element.getPetroleumIntensityOfElectricityProduction());
+		waterIntensityOfElectricityProductionText.setValue(DefaultUnits.convert(
+				element.getPetroleumIntensityOfElectricityProduction(), 
+				element.getWaterUnits(), element.getElectricityUnits(), 
+				getWaterUnits(), getElectricityUnits()));
 		waterIntensityOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setPetroleumIntensityOfElectricityProduction(
-									((Number) waterIntensityOfElectricityProductionText.getValue()).doubleValue());
+							element.setPetroleumIntensityOfElectricityProduction(DefaultUnits.convert(
+									(Double) waterIntensityOfElectricityProductionText.getValue(),
+									getWaterUnits(), getElectricityUnits(),
+									element.getWaterUnits(), element.getElectricityUnits()));
 							waterIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							waterIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -113,14 +144,18 @@ public class ElectricityElementPanel extends ElementPanel {
 		variableOperationsCostOfElectricityProductionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfElectricityProductionText.setColumns(10);
 		variableOperationsCostOfElectricityProductionText.setHorizontalAlignment(JTextField.RIGHT);
-		variableOperationsCostOfElectricityProductionText.setValue(
-				element.getVariableOperationsCostOfElectricityProduction());
+		variableOperationsCostOfElectricityProductionText.setValue(DefaultUnits.convert(
+				element.getVariableOperationsCostOfElectricityProduction(), 
+				element.getCurrencyUnits(), element.getElectricityUnits(), 
+				getCurrencyUnits(), getElectricityUnits()));
 		variableOperationsCostOfElectricityProductionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfElectricityProduction(
-									((Number) variableOperationsCostOfElectricityProductionText.getValue()).doubleValue());
+							element.setVariableOperationsCostOfElectricityProduction(DefaultUnits.convert(
+									(Double) variableOperationsCostOfElectricityProductionText.getValue(),
+									getCurrencyUnits(), getElectricityUnits(),
+									element.getCurrencyUnits(), element.getElectricityUnits()));
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.red);
@@ -130,14 +165,15 @@ public class ElectricityElementPanel extends ElementPanel {
 		maxElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityInputText.setColumns(10);
 		maxElectricityInputText.setHorizontalAlignment(JTextField.RIGHT);
-		maxElectricityInputText.setValue(
-				element.getMaxElectricityInput());
+		maxElectricityInputText.setValue(ElectricityUnits.convertFlow(
+				element.getMaxElectricityInput(), element, this));
 		maxElectricityInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setMaxElectricityInput(
-									((Number) maxElectricityInputText.getValue()).doubleValue());
+							element.setMaxElectricityInput(ElectricityUnits.convertFlow(
+									(Double) maxElectricityInputText.getValue(),
+									thisPanel, element));
 							maxElectricityInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityInputText.setForeground(Color.red);
@@ -147,14 +183,15 @@ public class ElectricityElementPanel extends ElementPanel {
 		initialElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		initialElectricityInputText.setColumns(10);
 		initialElectricityInputText.setHorizontalAlignment(JTextField.RIGHT);
-		initialElectricityInputText.setValue(
-				element.getInitialElectricityInput());
+		initialElectricityInputText.setValue(ElectricityUnits.convertFlow(
+				element.getInitialElectricityInput(), element, this));
 		initialElectricityInputText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setInitialElectricityInput(
-									((Number) initialElectricityInputText.getValue()).doubleValue());
+							element.setInitialElectricityInput(ElectricityUnits.convertFlow(
+									(Double) initialElectricityInputText.getValue(),
+									thisPanel, element));
 							initialElectricityInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							initialElectricityInputText.setForeground(Color.red);
@@ -171,7 +208,7 @@ public class ElectricityElementPanel extends ElementPanel {
 					public void documentChanged() {
 						try {
 							element.setDistributionEfficiency(
-									((Number) distributionEfficiencyText.getValue()).doubleValue());
+									(Double) distributionEfficiencyText.getValue());
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -181,14 +218,18 @@ public class ElectricityElementPanel extends ElementPanel {
 		variableOperationsCostOfElectricityDistributionText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		variableOperationsCostOfElectricityDistributionText.setColumns(10);
 		variableOperationsCostOfElectricityDistributionText.setHorizontalAlignment(JTextField.RIGHT);
-		variableOperationsCostOfElectricityDistributionText.setValue(
-				element.getVariableOperationsCostOfElectricityDistribution());
+		variableOperationsCostOfElectricityDistributionText.setValue(DefaultUnits.convert(
+				element.getVariableOperationsCostOfElectricityDistribution(), 
+				element.getCurrencyUnits(), element.getElectricityUnits(), 
+				getCurrencyUnits(), getElectricityUnits()));
 		variableOperationsCostOfElectricityDistributionText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							element.setVariableOperationsCostOfElectricityDistribution(
-									((Number) variableOperationsCostOfElectricityDistributionText.getValue()).doubleValue());
+							element.setVariableOperationsCostOfElectricityDistribution(DefaultUnits.convert(
+									(Double) variableOperationsCostOfElectricityDistributionText.getValue(),
+									getCurrencyUnits(), getElectricityUnits(),
+									element.getCurrencyUnits(), element.getElectricityUnits()));
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.red);
@@ -209,15 +250,20 @@ public class ElectricityElementPanel extends ElementPanel {
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
 				addInput(elementPanel, c, "Max Electricity Production", 
-						maxElectricityProductionText, "toe/year");
+						maxElectricityProductionText, 
+						electricityUnits + "/" + electricityTimeUnits);
 				addInput(elementPanel, c, "Initial Electricity Production",
-						initialElectricityProductionText, "toe/year");
+						initialElectricityProductionText,
+						electricityUnits + "/" + electricityTimeUnits);
 				addInput(elementPanel, c, "Petroleum Intensity of Production",
-						petroleumIntensityOfElectricityProductionText, "toe/toe");
+						petroleumIntensityOfElectricityProductionText,
+						oilUnits + "/" + electricityUnits);
 				addInput(elementPanel, c, "Water Intensity of Production",
-						waterIntensityOfElectricityProductionText, "<html>m<sup>3</sup>/toe</html>");
+						waterIntensityOfElectricityProductionText,
+						waterUnits + "/" + electricityUnits);
 				addInput(elementPanel, c, "Variable Cost of Production",
-						variableOperationsCostOfElectricityProductionText, "SAR/toe");
+						variableOperationsCostOfElectricityProductionText,
+						currencyUnits + "/" + electricityUnits);
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -225,13 +271,16 @@ public class ElectricityElementPanel extends ElementPanel {
 			c.gridx = 3;
 			c.gridy = 0;
 			addInput(elementPanel, c, "Max Electricity Input", 
-					maxElectricityInputText, "toe/year");
+					maxElectricityInputText,
+					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Initial Electricity Input",
-					initialElectricityInputText, "toe/year");
+					initialElectricityInputText,
+					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "toe out/toe in");
+					distributionEfficiencyText, "-");
 			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfElectricityDistributionText, " SAR/toe");
+					variableOperationsCostOfElectricityDistributionText,
+					currencyUnits + "/" + electricityUnits);
 		}
 
 		// set input enabled state
@@ -243,5 +292,68 @@ public class ElectricityElementPanel extends ElementPanel {
 		distributionEfficiencyText.setEnabled(element.getTemplateName() == null);
 		variableOperationsCostOfElectricityDistributionText.setEnabled(element.getTemplateName() == null);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
+import edu.mit.sips.core.electricity.DefaultElectricityElement;
 import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
@@ -20,7 +21,13 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 	OIL_WELL_1		(Sector.PETROLEUM,		false,	"Small Oil Well",				1940,	100),
 	OIL_WELL_2		(Sector.PETROLEUM,		false,	"Large Oil Well",				1970,	100),
 	OIL_PIPELINE_1	(Sector.PETROLEUM,		true, 	"Low-volume Oil Pipeline", 		1940,	50),
-	OIL_PIPELINE_2	(Sector.PETROLEUM,		true, 	"High-volume Oil Pipeline", 	1970,	50);
+	OIL_PIPELINE_2	(Sector.PETROLEUM,		true, 	"High-volume Oil Pipeline", 	1970,	50),
+	POWER_PLANT_1	(Sector.ELECTRICITY,	false,	"Small Thermal Power Plant",	1950,	50),
+	POWER_PLANT_2	(Sector.ELECTRICITY,	false,	"Large Thermal Power Plant",	1970,	50),
+	PV_PLANT_1		(Sector.ELECTRICITY,	false,	"Small Solar PV Plant",			1980,	30),
+	PV_PLANT_2		(Sector.ELECTRICITY,	false,	"Large Solar PV Plant",			1980,	30),
+	POWER_LINE_1	(Sector.ELECTRICITY,	true, 	"Low-capacity Power Line",		1950,	50),
+	POWER_LINE_2	(Sector.ELECTRICITY,	true, 	"High-capacity Power Line", 	1980,	50);
 	
 	private final Sector sector;
 	private final boolean transport;
@@ -153,7 +160,7 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year-0+0,  0, 
 							0, 0, 0, true), 
-					0.95, 10./365*239005736*1000, 0, 0);
+					0.95, 15./365*239005736*1000, 0, 0);
 		case RO_PLANT_1:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_1), location, location, 
@@ -210,6 +217,48 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 							maxOperations, endYear-year-2+0, 0, 
 							0, 0, 0, true), 
 					0.99, 50e6, 50e6, 2.0e-3, 0);
+		case POWER_PLANT_1:
+			return DefaultElectricityElement.createProductionElement(
+					name, name + " " + getInstanceId(POWER_PLANT_1), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 
+							maxOperations, endYear-year-1+1, 1, 
+							0, 0, 0, true), 
+					2e6, 2e6, 0.3, 0, 0);
+		case POWER_PLANT_2:
+			return DefaultElectricityElement.createProductionElement(
+					name, name + " " + getInstanceId(POWER_PLANT_2), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, endYear-year-2+1, 1, 
+							0, 0, 0, true), 
+					10e6, 10e6, 0.25, 0, 0);
+		case PV_PLANT_1:
+			return DefaultElectricityElement.createProductionElement(
+					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, endYear-year-2+1, 1, 
+							0, 0, 0, true), 
+					2e6, 2e6, 0, 0, 0);
+		case PV_PLANT_2:
+			return DefaultElectricityElement.createProductionElement(
+					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, endYear-year-2+1, 1, 
+							0, 0, 0, true), 
+					10e6, 10e6, 0, 0, 0);
+		case POWER_LINE_1:
+			return DefaultElectricityElement.createDistributionElement(
+					name, name + " " + getInstanceId(POWER_LINE_1), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 
+							maxOperations, endYear-year-1+0, 0, 
+							0, 0, 0, true), 
+					0.94, 1000*365*24, 1000*365*24, 0);
+		case POWER_LINE_2:
+			return DefaultElectricityElement.createDistributionElement(
+					name, name + " " + getInstanceId(POWER_LINE_2), location, destination, 
+					new SimpleLifecycleModel(timeAvailable, year, 1, 
+							maxOperations, endYear-year-1+0, 0, 
+							0, 0, 0, true), 
+					0.96, 5000*365*24, 5000*365*24, 0);
 		default:
 			throw new IllegalArgumentException(
 					"Unknown element template.");

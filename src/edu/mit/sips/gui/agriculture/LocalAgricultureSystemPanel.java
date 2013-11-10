@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -302,14 +303,16 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(agricultureRevenue, "Consumption", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "In-Distribution", year, 
-				CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
-						getAgricultureSystem(), this));
+		if(!(getAgricultureSystem().getSociety() instanceof Country)) {
+			updateSeries(agricultureRevenue, "In-Distribution", year, 
+					CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
+							getAgricultureSystem(), this));
+			updateSeries(agricultureRevenue, "Out-Distribution", year, 
+					CurrencyUnits.convertFlow(getAgricultureSystem().getDistributionRevenue(),
+							getAgricultureSystem(), this));
+		}
 		updateSeries(agricultureRevenue, "Import", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getImportExpense(),
-						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Out-Distribution", year, 
-				CurrencyUnits.convertFlow(getAgricultureSystem().getDistributionRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Export", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getExportRevenue(),
@@ -348,12 +351,14 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			/*updateSeries(foodSourceData, "Production", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodProduction(),
 							getAgricultureSystem(), this));*/
-			updateSeries(foodSourceData, "Distribution", year, 
-					FoodUnits.convertFlow(getAgricultureSystem().getFoodInDistribution(),
-							getAgricultureSystem(), this));
-			updateSeries(foodUseData, "Distribution", year, 
-					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(),
-							getAgricultureSystem(), this));
+			if(!getAgricultureSystem().getExternalElements().isEmpty()) {
+				updateSeries(foodSourceData, "Distribution", year, 
+						FoodUnits.convertFlow(getAgricultureSystem().getFoodInDistribution(),
+								getAgricultureSystem(), this));
+				updateSeries(foodUseData, "Distribution", year, 
+						FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(),
+								getAgricultureSystem(), this));
+			}
 			updateSeries(foodUseData, "Distribution Losses", year, 
 					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistributionLosses(),
 							getAgricultureSystem(), this));

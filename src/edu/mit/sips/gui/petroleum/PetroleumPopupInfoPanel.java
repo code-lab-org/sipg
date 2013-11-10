@@ -6,12 +6,26 @@ import javax.swing.JLabel;
 
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.gui.DefaultPopupInfoPanel;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.ElectricityUnitsOutput;
+import edu.mit.sips.sim.util.OilUnits;
+import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class PetroleumElementInfoPanel.
  */
-public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel {
+public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel 
+		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput{
 	private static final long serialVersionUID = -821170818354101199L;
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
+	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.Mtoe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	private final PetroleumElement element;
 	private final NumberFormat format = NumberFormat.getNumberInstance();
@@ -28,44 +42,38 @@ public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel {
 		super(element);
 		
 		this.element = element;
-		productionLabel = new JLabel(
-				format.format(element.getPetroleumProduction()),
-				JLabel.RIGHT);
-		withdrawalsLabel = new JLabel(
-				format.format(element.getPetroleumWithdrawals()),
-				JLabel.RIGHT);
-		inputLabel = new JLabel(
-				format.format(element.getPetroleumInput()),
-				JLabel.RIGHT);
-		outputLabel = new JLabel(
-				format.format(element.getPetroleumOutput()),
-				JLabel.RIGHT);
-		expensesLabel = new JLabel(
-				format.format(element.getTotalExpense()),
-				JLabel.RIGHT);
-		electricityLabel = new JLabel(
-				format.format(element.getElectricityConsumption()),
-				JLabel.RIGHT);
+		productionLabel = new JLabel(format.format(OilUnits.convertFlow(
+				element.getPetroleumProduction(), element, this)), JLabel.RIGHT);
+		withdrawalsLabel = new JLabel(format.format(OilUnits.convertFlow(
+				element.getPetroleumWithdrawals(), element, this)), JLabel.RIGHT);
+		inputLabel = new JLabel(format.format(OilUnits.convertFlow(
+				element.getPetroleumInput(), element, this)), JLabel.RIGHT);
+		outputLabel = new JLabel(format.format(OilUnits.convertFlow(
+				element.getPetroleumOutput(), element, this)), JLabel.RIGHT);
+		expensesLabel = new JLabel(format.format(CurrencyUnits.convertFlow(
+				element.getTotalExpense(), element, this)), JLabel.RIGHT);
+		electricityLabel = new JLabel(format.format(ElectricityUnits.convertFlow(
+				element.getElectricityConsumption(), element, this)), JLabel.RIGHT);
 
 
 		if(element.getTemplateName() == null 
 				|| element.getMaxPetroleumProduction() > 0) {
 			addField("Petroleum Production:", productionLabel, 
-					"<html>m<sup>3</sup></html>");
-			addField("Land Use:", withdrawalsLabel, 
-					"<html>m<sup>3</sup></html>");
+					oilUnits + "/" + oilTimeUnits);
+			addField("Reserves Use:", withdrawalsLabel, 
+					oilUnits + "/" + oilTimeUnits);
 		}
 		if(element.getTemplateName() == null 
 				|| element.getMaxPetroleumInput() > 0) {
 			addField("Petroleum Input:", inputLabel, 
-					"<html>m<sup>3</sup></html>");
+					oilUnits + "/" + oilTimeUnits);
 			addField("Petroleum Output:", outputLabel, 
-					"<html>m<sup>3</sup></html>");
+					oilUnits + "/" + oilTimeUnits);
 		}
 		addField("Total Expenses:", expensesLabel, 
-				"<html>SAR</html>");
+				currencyUnits + "/" + currencyTimeUnits);
 		addField("Electricity Use:", electricityLabel, 
-				"<html>toe</html>");
+				electricityUnits + "/" + electricityTimeUnits);
 	}
 
 	/* (non-Javadoc)
@@ -86,5 +94,53 @@ public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel {
 				format.format(element.getTotalExpense()));
 		electricityLabel.setText(
 				format.format(element.getElectricityConsumption()));
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
 	}
 }
