@@ -333,9 +333,11 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					OilUnits.convertFlow(getSociety().getSocialSystem().getPetroleumConsumption(),
 							getSociety().getSocialSystem(), this));
 			for(PetroleumElement element : getPetroleumSystem().getInternalElements()) {
-				updateSeries(electricityUseData, element.getName(), year, 
-						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
-								element, this));
+				if(element.getElectricityConsumption() > 0) {
+					updateSeries(electricityUseData, element.getName(), year, 
+							ElectricityUnits.convertFlow(element.getElectricityConsumption(),
+									element, this));
+				}
 			}
 		} else {
 			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {

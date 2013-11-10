@@ -336,9 +336,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		
 		if(getNestedElectricitySystems().isEmpty()) {
 			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
-				updateSeries(petroleumUseData, element.getName(), year, 
-						OilUnits.convertFlow(element.getPetroleumConsumption(),
-								element, this));
+				if(element.getPetroleumConsumption() > 0) {
+					updateSeries(petroleumUseData, element.getName(), year, 
+							OilUnits.convertFlow(element.getPetroleumConsumption(),
+									element, this));
+				}
 			}
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {

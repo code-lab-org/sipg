@@ -339,9 +339,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 					WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem(), this));
 			for(WaterElement element : getWaterSystem().getInternalElements()) {
-				updateSeries(electricityUseData, element.getName(), year, 
-						ElectricityUnits.convertFlow(element.getElectricityConsumption(),
-								element, this));
+				if(element.getElectricityConsumption() > 0) {
+					updateSeries(electricityUseData, element.getName(), year, 
+							ElectricityUnits.convertFlow(element.getElectricityConsumption(),
+									element, this));
+				}
 			}
 			updateSeries(electricityUseData, "Private Production", year, 
 					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
