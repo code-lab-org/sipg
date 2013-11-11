@@ -133,7 +133,18 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.5,
 								Arrays.asList(
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1954, INDUSTRIAL, INDUSTRIAL)
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1970, INDUSTRIAL, RURAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1974, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1984, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1992, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1998, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -248,7 +259,8 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.5,
 								Arrays.asList(
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN)
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1972, URBAN, URBAN)
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
