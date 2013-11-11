@@ -59,7 +59,7 @@
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
                     <order>TimeStamp</order>
-                    <semantics>Net cash flow (SAR) from this infrastructure system.</semantics>
+                    <semantics>Net cash flow (sim) from this infrastructure system.</semantics>
                 </attribute>
                 <attribute>
                     <name>DomesticProduction</name>
@@ -71,7 +71,7 @@
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
                     <order>TimeStamp</order>
-                    <semantics>Domestic production (SAR) contributed from this infrastructure system.</semantics>
+                    <semantics>Domestic production (sim) contributed from this infrastructure system.</semantics>
                 </attribute>
                 <objectClass>
                     <name>WaterSystem</name>
@@ -99,7 +99,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic water (SAR/m^3).</semantics>
+                        <semantics>Unit price of domestic water (sim/m^3).</semantics>
                     </attribute>
                     <attribute>
                         <name>WaterImportPrice</name>
@@ -111,7 +111,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of import water (SAR/m^3).</semantics>
+                        <semantics>Unit price of import water (sim/m^3).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -140,7 +140,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic food (SAR/kcal).</semantics>
+                        <semantics>Unit price of domestic food (sim/GJ).</semantics>
                     </attribute>
                     <attribute>
                         <name>FoodImportPrice</name>
@@ -152,7 +152,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of import food (SAR/kcal).</semantics>
+                        <semantics>Unit price of import food (sim/GJ).</semantics>
                     </attribute>
                     <attribute>
                         <name>FoodExportPrice</name>
@@ -164,7 +164,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of export food (SAR/kcal).</semantics>
+                        <semantics>Unit price of export food (sim/GJ).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -205,7 +205,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic electricity (SAR/toe).</semantics>
+                        <semantics>Unit price of domestic electricity (sim/toe).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -222,7 +222,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Electricity consumed (kWh) by the petroleum system.</semantics>
+                        <semantics>Electricity consumed (MWh) by the petroleum system.</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumDomesticPrice</name>
@@ -234,7 +234,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of domestic petroleum (SAR/toe).</semantics>
+                        <semantics>Unit price of domestic petroleum (sim/toe).</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumImportPrice</name>
@@ -246,7 +246,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of import petroleum (SAR/toe).</semantics>
+                        <semantics>Unit price of import petroleum (sim/toe).</semantics>
                     </attribute>
                     <attribute>
                         <name>PetroleumExportPrice</name>
@@ -258,7 +258,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Unit price of export petroleum (SAR/toe).</semantics>
+                        <semantics>Unit price of export petroleum (sim/toe).</semantics>
                     </attribute>
                 </objectClass>
                 <objectClass>
@@ -299,7 +299,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Food consumed (Mj) by the social system.</semantics>
+                        <semantics>Food consumed (GJ) by the social system.</semantics>
                     </attribute>
                     <attribute>
                         <name>WaterConsumption</name>
@@ -335,7 +335,7 @@
                         <dimensions/>
                         <transportation>HLAreliable</transportation>
                         <order>TimeStamp</order>
-                        <semantics>Domestic product (SAR) of this social system.</semantics>
+                        <semantics>Domestic product (sim) of this social system.</semantics>
                     </attribute>
                 </objectClass>
             </objectClass>
