@@ -108,7 +108,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								Arrays.asList(
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1990, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1962, INDUSTRIAL, INDUSTRIAL),
@@ -120,12 +120,15 @@ public final class SaudiScenario2 extends DefaultScenario {
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1972, 1982, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1976, 1983, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1976, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1976, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1976, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1984, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1988, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1988, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1990, INDUSTRIAL, INDUSTRIAL),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1994, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1992, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(2004, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(2008, INDUSTRIAL, RURAL)
 										),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
@@ -139,11 +142,11 @@ public final class SaudiScenario2 extends DefaultScenario {
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1984, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1992, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1998, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2003, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL),
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2005, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)
 										),
 								electricitySystemDomesticProductionModel,
@@ -201,7 +204,10 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(0.5,
 								Arrays.asList(
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1966, RURAL, RURAL)
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1966, RURAL, RURAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1986, RURAL, RURAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1996, RURAL, RURAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(2000, RURAL, RURAL)
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
@@ -260,7 +266,19 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new DefaultElectricitySystem.Local(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN),
-										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1972, URBAN, URBAN)
+										(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1972, URBAN, RURAL),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1972, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1982, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1988, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1990, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1994, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1996, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1998, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2000, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, URBAN, URBAN),
+										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2008, URBAN, URBAN)
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
