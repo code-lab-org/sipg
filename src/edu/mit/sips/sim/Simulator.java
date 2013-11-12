@@ -96,9 +96,9 @@ public class Simulator implements SimulationControlListener {
 			throw new IllegalStateException("Simulation must be initialized.");
 		}
 		
-		long stopTime = Math.min(endTime + 1, time + duration);
+		long stopTime = Math.min(endTime, time + duration);
 		
-		while(time < stopTime) {
+		while(time <= stopTime) {
 			runAutoOptimization();
 			
 			try {
