@@ -348,9 +348,6 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 									element, this));
 				}
 			}
-			updateSeries(electricityUseData, "Private Production", year, 
-					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
-							getWaterSystem(), this));
 		} else {
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Society", year,
@@ -359,11 +356,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				updateSeries(electricityUseData, nestedSystem.getName(), year, 
 						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPublicProduction(),
 								nestedSystem, this));
-				updateSeries(electricityUseData, nestedSystem.getName() + " Private Production", year, 
-						ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
-								getWaterSystem(), this));
 			}
 		}
+		updateSeries(electricityUseData, "Private Production", year, 
+				ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
+						getWaterSystem(), this));
 		updateSeries(waterUseData, "Agriculture", year, 
 				WaterUnits.convertFlow(getSociety().getAgricultureSystem().getWaterConsumption(), 
 						getSociety().getAgricultureSystem(), this));
