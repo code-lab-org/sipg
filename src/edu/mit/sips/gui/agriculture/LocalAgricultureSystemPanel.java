@@ -245,28 +245,35 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		}
 		
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
-			updateSeries(landAvailableDataset, "Land", year, 
+			updateSeries(landAvailableDataset, "Available", year, 
 					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
-
+			updateSeries(landAvailableDataset, "Used", year, 
+					getAgricultureSystem().getLandAreaUsed());
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName(), 
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", 
+						year, nestedSystem.getLandAreaUsed());
 			}
 		}
 		
 		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
-			updateSeries(laborAvailableDataset, "Labor", year, 
+			updateSeries(laborAvailableDataset, "Available", year, 
 					getAgricultureSystem().getLaborParticipationRate() 
 					* getAgricultureSystem().getSociety().getSocialSystem().getPopulation()
 					- getAgricultureSystem().getLaborUsed());
+			updateSeries(laborAvailableDataset, "Used", year, 
+					getAgricultureSystem().getLaborUsed());
 
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName(), year,
+				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", year,
 						nestedSystem.getLaborParticipationRate() 
 						* nestedSystem.getSociety().getSocialSystem().getPopulation()
 						- nestedSystem.getLaborUsed());
+				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", year,
+						nestedSystem.getLaborUsed());
 			}
 		}
 	
