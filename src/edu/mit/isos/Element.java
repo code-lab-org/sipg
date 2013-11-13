@@ -1,29 +1,29 @@
 package edu.mit.isos;
 
-public class Element {
-	protected String name;
-	protected Resource stock = new Resource();
-	protected Resource transformInputs = new Resource();
-	protected Resource transformOutputs = new Resource();
-	protected Resource transportInputs = new Resource();
-	protected Resource transportOutputs = new Resource();
-	protected Resource storeInputs = new Resource();
-	protected Resource storeOutputs = new Resource();
-	protected Resource exchangeInputs = new Resource();
-	protected Resource exchangeOutputs = new Resource();
-	protected Node origin, destination;
-	protected State state;
+public abstract class Element {
+	private String name;
+	private final Resource initialStock;
+	private final State initialState;
+	private final Location initialLocation;
+	private Resource stock;
+	private State state;
+	private Location location;
+	private transient Location nextLocation;
+	private transient Resource nextStock;
+	private transient State nextState;
 
 	public Element() {
 		name = "";
-		origin = null;
-		destination = null;
+		initialLocation = null;
+		initialStock = new Resource();
+		initialState = new State();
 	}
 
-	public Element(String name, Node origin, Node destination) {
+	public Element(String name, Location initialLocation, Resource initialStock, State initialState) {
 		this.name = name;
-		this.origin = origin;
-		this.destination = destination;
+		this.initialLocation = initialLocation;
+		this.initialStock = initialStock;
+		this.initialState = initialState;
 	}
 
 	public State getState() {
@@ -33,52 +33,62 @@ public class Element {
 	public String getName() {
 		return name;
 	}
-	
-	public Node getDestination() {
-		return destination;
-	}
 
 	public Resource getExchangeInputs() {
-		return exchangeInputs;
+		return new Resource();
 	}
 
 	public Resource getExchangeOutputs() {
-		return exchangeOutputs;
+		return new Resource();
 	}
 
-	public Node getOrigin() {
-		return origin;
+	public Location getLocation() {
+		return location;
 	}
 	public Resource getStock() {
 		return stock;
 	}
 	public Resource getStoreInputs() {
-		return storeInputs;
+		return new Resource();
 	}
 	public Resource getStoreOutputs() {
-		return storeOutputs;
+		return new Resource();
 	}
 	public Resource getTransformInputs() {
-		return transformInputs;
+		return new Resource();
 	}
 	
 	public Resource getTransformOutputs() {
-		return transformOutputs;
+		return new Resource();
 	}
 	
 	public Resource getTransportInputs() {
-		return transportInputs;
+		return new Resource();
 	}
 	
 	public Resource getTransportOutputs() {
-		return transportOutputs;
+		return new Resource();
 	}
 	
-	public void tick() {		
-		stock = stock.add(storeInputs).subtract(storeOutputs);
+	public void initialize(long initialTime) {
+		stock = initialStock;
+		state = initialState;
+		location = initialLocation;
+	}
+	
+	public void tick(long duration) {		
+		nextStock = stock.add(getStoreInputs().multiply(duration)).subtract(getStoreOutputs().multiply(duration));
+		nextState = state;
+		nextLocation = location;
+	}
+	
+	public void tock() {
+		stock = nextStock;
+		state = nextState;
+		location = nextLocation;
 	}
 	
 	public String toString() {
-		return name + " " + stock.toString();
+		return name + " " + " (" + state + " @ " + location + ", " + stock + ") ";
 	}
 }

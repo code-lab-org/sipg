@@ -1,33 +1,45 @@
 package edu.mit.isos;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Resource {
-	private List<BigDecimal> amount = new ArrayList<BigDecimal>(5);
+	private static MathContext context = MathContext.UNLIMITED;//new MathContext(6, RoundingMode.HALF_UP);
+	protected List<BigDecimal> amount = new ArrayList<BigDecimal>(5);
 	
 	public Resource() {
 		for(int i = 0; i < 5; i++) {
-			amount.add(i, new BigDecimal(0));
+			amount.add(i, new BigDecimal(0, context));
 		}
 	}
 	
-	public Resource(double amount0, double amount1, double amount2, 
-			double amount3, double amount4) {
-		amount.add(0, new BigDecimal(amount0));
-		amount.add(1, new BigDecimal(amount1));
-		amount.add(2, new BigDecimal(amount2));
-		amount.add(3, new BigDecimal(amount3));
-		amount.add(4, new BigDecimal(amount4));
+	public Resource(String amount0, String amount1, String amount2, 
+			String amount3, String amount4) {
+		this();
+		amount.set(0, new BigDecimal(amount0, context));
+		amount.set(1, new BigDecimal(amount1, context));
+		amount.set(2, new BigDecimal(amount2, context));
+		amount.set(3, new BigDecimal(amount3, context));
+		amount.set(4, new BigDecimal(amount4, context));
+	}
+	
+	public Resource(int index, String amount) {
+		this(index, new BigDecimal(amount, context));
+	}
+	
+	protected Resource(int index, BigDecimal amount) {
+		this();
+		this.amount.set(index, amount);
 	}
 	
 	public Resource add(Resource resource) {
 		Resource newResource = new Resource();
 		for(int i = 0; i < amount.size(); i++) {
-			newResource.amount.set(i, this.amount.get(i).add(resource.amount.get(i)));
+			newResource.amount.set(i, this.amount.get(i).add(resource.amount.get(i), context));
 		}
 		return newResource;
 	}
@@ -35,7 +47,7 @@ public class Resource {
 	public Resource subtract(Resource resource) {
 		Resource newResource = new Resource();
 		for(int i = 0; i < amount.size(); i++) {
-			newResource.amount.set(i, this.amount.get(i).subtract(resource.amount.get(i)));
+			newResource.amount.set(i, this.amount.get(i).subtract(resource.amount.get(i), context));
 		}
 		return newResource;
 	}
@@ -43,9 +55,37 @@ public class Resource {
 	public Resource multiply(double scalar) {
 		Resource newResource = new Resource();
 		for(int i = 0; i < amount.size(); i++) {
-			newResource.amount.set(i, this.amount.get(i).multiply(new BigDecimal(scalar)));
+			newResource.amount.set(i, this.amount.get(i).multiply(new BigDecimal(scalar, context), context));
 		}
 		return newResource;
+	}
+	
+	public Resource multiply(Resource resource) {
+		Resource newResource = copy();
+		for(int i = 0; i < amount.size(); i++) {
+			newResource.amount.set(i, this.amount.get(i).multiply(resource.amount.get(i), context));
+		}
+		return newResource;
+	}
+	
+	private Resource copy() {
+		Resource newResource = new Resource();
+		for(int i = 0; i < amount.size(); i++) {
+			newResource.amount.set(i, this.amount.get(i));
+		}
+		return newResource;
+	}
+	
+	public Resource swap(int oldIndex, int newIndex) {
+		Resource newResource = copy();
+		BigDecimal value = newResource.amount.get(oldIndex);
+		newResource.amount.set(oldIndex, newResource.amount.get(newIndex));
+		newResource.amount.set(newIndex, value);
+		return newResource;
+	}
+	
+	public Resource get(int index) {
+		return new Resource(index, amount.get(index));
 	}
 	
 	public boolean equals(Object object) {
