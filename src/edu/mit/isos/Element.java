@@ -33,14 +33,14 @@ public abstract class Element {
 	public String getName() {
 		return name;
 	}
-
-	public Resource getExchangeInputs() {
-		return new Resource();
-	}
-
-	public Resource getExchangeOutputs() {
-		return new Resource();
-	}
+	
+	public abstract Resource getExchangeTo(Element element);
+	
+	public abstract Resource getExchangeFrom(Element element);
+	
+	public abstract Resource getExchangeInputs();
+	
+	public abstract Resource getExchangeOutputs();
 
 	public Location getLocation() {
 		return location;
@@ -86,6 +86,14 @@ public abstract class Element {
 		stock = nextStock;
 		state = nextState;
 		location = nextLocation;
+	}
+	
+	public void miniTick() {
+		
+	}
+	
+	public void miniTock() {
+		
 	}
 	
 	public String toString() {

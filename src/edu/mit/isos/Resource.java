@@ -8,23 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Resource {
+	public static final int AQUIFER = 0, WATER = 1, ELECTRICITY = 2, OIL = 3, RESERVES = 4, PEOPLE = 5;
 	private static MathContext context = MathContext.UNLIMITED;//new MathContext(6, RoundingMode.HALF_UP);
-	protected List<BigDecimal> amount = new ArrayList<BigDecimal>(5);
+	protected List<BigDecimal> amount = new ArrayList<BigDecimal>(6);
 	
 	public Resource() {
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 6; i++) {
 			amount.add(i, new BigDecimal(0, context));
 		}
 	}
 	
 	public Resource(String amount0, String amount1, String amount2, 
-			String amount3, String amount4) {
+			String amount3, String amount4, String amount5) {
 		this();
-		amount.set(0, new BigDecimal(amount0, context));
-		amount.set(1, new BigDecimal(amount1, context));
-		amount.set(2, new BigDecimal(amount2, context));
-		amount.set(3, new BigDecimal(amount3, context));
-		amount.set(4, new BigDecimal(amount4, context));
+		amount.set(AQUIFER, new BigDecimal(amount0, context));
+		amount.set(WATER, new BigDecimal(amount1, context));
+		amount.set(ELECTRICITY, new BigDecimal(amount2, context));
+		amount.set(OIL, new BigDecimal(amount3, context));
+		amount.set(RESERVES, new BigDecimal(amount4, context));
+		amount.set(PEOPLE, new BigDecimal(amount5, context));
 	}
 	
 	public Resource(int index, String amount) {
