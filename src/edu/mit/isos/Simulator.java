@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class Simulator {
 	private final static int NUM_SUB_STEPS = 6;
-	private final static boolean verifyFlow = false, verifyExchange = false, log = false, output = true;
+	private final static boolean verifyFlow = false, verifyExchange = false, log = true, output = false;
 	
 	public static void main(String[] args) {
 		Simulator s = new Simulator();
@@ -158,7 +158,7 @@ public class Simulator {
 				System.out.println(element);
 			}
 		}
-
+		
 		while(time <= initialTime + duration) {
 			for(int i = 0; i < NUM_SUB_STEPS; i++) {
 				for(Element element : elements) {
@@ -269,7 +269,7 @@ public class Simulator {
 	}
 	
 	private void postProcessOutput() {
-		for(long time = initialTime; time <= initialTime + duration; time++) {
+		for(long time = initialTime; time <= initialTime + duration; time+=5) {
 			System.out.println("Time = " + time);
 			System.out.println(String.format("%-19s %-9s %-9s %-39s %-39s %-39s %-39s %-39s", 
 					"Element", "State", "Location", "Stock", "Exchange-in", "Exchange-out", "Transform-in", "Transform-out"));
