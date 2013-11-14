@@ -18,12 +18,17 @@ public class OilSystemElement extends Element {
 	
 	@Override
 	public Resource getTransformInputs() {
-		return getTransformOutputs().get(Resource.OIL).swap(Resource.OIL, Resource.RESERVES);
+		return getOilProduction().get(Resource.OIL).swap(Resource.OIL, Resource.RESERVES);
+	}
+	
+	private Resource getOilProduction() {
+		return socialSupply.add(electricitySupply);
 	}
 	
 	@Override
 	public Resource getTransformOutputs() {
-		return socialSupply.add(electricitySupply);
+		return getOilProduction()
+				.add(getOilProduction().get(Resource.OIL).swap(Resource.OIL, Resource.CURRENCY).multiply(10));
 	}
 	
 	@Override
@@ -35,8 +40,8 @@ public class OilSystemElement extends Element {
 	
 	@Override
 	public void miniTick() {
-		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this);
-		nextElectricitySupply = electricitySystem==null?new Resource():electricitySystem.getExchangeFrom(this);
+		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this).get(Resource.OIL);
+		nextElectricitySupply = electricitySystem==null?new Resource():electricitySystem.getExchangeFrom(this).get(Resource.OIL);
 	}
 	
 	@Override

@@ -12,13 +12,20 @@ public class ElectricitySystemElement extends Element {
 	
 	@Override
 	public Resource getTransformInputs() {
-		return getTransformOutputs().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.OIL).multiply(0.5)
-				.add(getTransformOutputs().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.WATER).multiply(0.1));
+		return getElectricityProduction().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.OIL).multiply(0.5)
+				.add(getElectricityProduction().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.WATER).multiply(0.1));
+	}
+	
+	private Resource getElectricityProduction() {
+		return socialSupply.add(waterSupply);
 	}
 	
 	@Override
 	public Resource getTransformOutputs() {
-		return socialSupply.add(waterSupply);
+		return getElectricityProduction()
+				.add(getTransformInputs().get(Resource.OIL).swap(Resource.OIL, Resource.CURRENCY).multiply(-1))
+				.add(getTransformInputs().get(Resource.WATER).swap(Resource.WATER, Resource.CURRENCY).multiply(-1))
+				.add(getElectricityProduction().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.CURRENCY).multiply(2));
 	}
 	
 	@Override
@@ -30,8 +37,8 @@ public class ElectricitySystemElement extends Element {
 
 	@Override
 	public void miniTick() {
-		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this);
-		nextWaterSupply = waterSystem==null?new Resource():waterSystem.getExchangeFrom(this);
+		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this).get(Resource.ELECTRICITY);
+		nextWaterSupply = waterSystem==null?new Resource():waterSystem.getExchangeFrom(this).get(Resource.ELECTRICITY);
 	}
 	
 	@Override
@@ -45,7 +52,7 @@ public class ElectricitySystemElement extends Element {
 		if(element == null) {
 			return new Resource();
 		} else if(element == socialSystem) {
-			return socialSupply;
+			return socialSupply.add(getTransformOutputs().get(Resource.CURRENCY));
 		} else if(element == waterSystem) {
 			return waterSupply;
 		} else {

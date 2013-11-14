@@ -18,13 +18,19 @@ public class WaterSystemElement extends Element {
 	
 	@Override
 	public Resource getTransformInputs() {
-		return getTransformOutputs().get(Resource.WATER).swap(Resource.WATER, Resource.AQUIFER)
-				.add(getTransformOutputs().get(Resource.WATER).swap(Resource.WATER, Resource.ELECTRICITY).multiply(1));
+		return getWaterProduction().get(Resource.WATER).swap(Resource.WATER, Resource.AQUIFER)
+				.add(getWaterProduction().get(Resource.WATER).swap(Resource.WATER, Resource.ELECTRICITY).multiply(1));
+	}
+	
+	public Resource getWaterProduction() {
+		return socialSupply.add(electricitySupply);
 	}
 	
 	@Override
 	public Resource getTransformOutputs() {
-		return socialSupply.add(electricitySupply);
+		return getWaterProduction()
+				.add(getTransformInputs().get(Resource.ELECTRICITY).swap(Resource.ELECTRICITY, Resource.CURRENCY).multiply(-1))
+				.add(getWaterProduction().get(Resource.WATER).swap(Resource.WATER, Resource.CURRENCY).multiply(1.5));
 	}
 	
 	@Override
@@ -36,8 +42,8 @@ public class WaterSystemElement extends Element {
 	
 	@Override
 	public void miniTick() {
-		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this);
-		nextElectricitySupply = electricitySystem==null?new Resource():electricitySystem.getExchangeFrom(this);
+		nextSocialSupply = socialSystem==null?new Resource():socialSystem.getExchangeFrom(this).get(Resource.WATER);
+		nextElectricitySupply = electricitySystem==null?new Resource():electricitySystem.getExchangeFrom(this).get(Resource.WATER);
 	}
 	
 	@Override

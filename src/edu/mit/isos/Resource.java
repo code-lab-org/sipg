@@ -6,12 +6,12 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class Resource {
-	public static final int AQUIFER = 0, WATER = 1, ELECTRICITY = 2, OIL = 3, RESERVES = 4, PEOPLE = 5;
+	public static final int AQUIFER = 0, WATER = 1, ELECTRICITY = 2, OIL = 3, RESERVES = 4, PEOPLE = 5, CURRENCY = 6;
 	private static MathContext context = MathContext.DECIMAL32;
-	private BigDecimal[] amount = new BigDecimal[6];
+	private BigDecimal[] amount = new BigDecimal[7];
 	
 	public Resource() {
-		for(int i = 0; i < 6; i++) {
+		for(int i = 0; i < amount.length; i++) {
 			amount[i] = new BigDecimal(0, context);
 		}
 	}

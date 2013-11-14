@@ -2,6 +2,9 @@ package edu.mit.isos;
 
 public class SocialSystemElement extends Element {
 	private Element transportIn, transportOut;
+	private Resource electricityCash, nextElectricityCash;
+	private Resource oilCash, nextOilCash;
+	private Resource waterCash, nextWaterCash;
 	private Element waterSystem, electricitySystem, oilSystem;
 	
 	public void setWaterSystem(Element waterSystem) {
@@ -23,7 +26,8 @@ public class SocialSystemElement extends Element {
 	
 	@Override
 	public Resource getStoreInputs() {
-		return getTransformOutputs().add(transportIn==null?new Resource():transportIn.getTransportOutputs());
+		return getTransformOutputs().add(transportIn==null?new Resource():transportIn.getTransportOutputs())
+				.add(electricityCash).add(waterCash).add(oilCash);
 	}
 	
 	@Override
@@ -41,10 +45,24 @@ public class SocialSystemElement extends Element {
 	@Override
 	public void initialize(long initialTime) {
 		super.initialize(initialTime);
+		electricityCash = new Resource();
+		waterCash = new Resource();
+		oilCash = new Resource();
 	}
 	
 	@Override
-	public void miniTock() { }
+	public void miniTick() {
+		nextElectricityCash = electricitySystem.getExchangeTo(this).get(Resource.CURRENCY);
+		nextWaterCash = waterSystem.getExchangeTo(this).get(Resource.CURRENCY);
+		nextOilCash = oilSystem.getExchangeTo(this).get(Resource.CURRENCY);
+	}
+	
+	@Override
+	public void miniTock() {
+		electricityCash = nextElectricityCash;
+		waterCash = nextWaterCash;
+		oilCash = nextOilCash;
+	}
 	
 	public void setTransportIn(Element transportIn) {
 		this.transportIn = transportIn;
@@ -64,11 +82,14 @@ public class SocialSystemElement extends Element {
 		if(element == null) {
 			return new Resource();
 		} else if(element == waterSystem) {
-			return getTransformInputs().get(Resource.WATER);
+			return getTransformInputs().get(Resource.WATER)
+					.add(waterCash);
 		} else if(element == electricitySystem) {
-			return getTransformInputs().get(Resource.ELECTRICITY);
+			return getTransformInputs().get(Resource.ELECTRICITY)
+					.add(electricityCash);
 		}  else if(element == oilSystem) {
-			return getTransformInputs().get(Resource.OIL);
+			return getTransformInputs().get(Resource.OIL)
+					.add(oilCash);
 		}  else {
 			return new Resource();
 		}
@@ -81,6 +102,6 @@ public class SocialSystemElement extends Element {
 
 	@Override
 	public Resource getExchangeOutputs() {
-		return getTransformInputs();
+		return getTransformInputs().add(electricityCash).add(waterCash).add(oilCash);
 	}
 }

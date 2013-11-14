@@ -271,11 +271,11 @@ public class Simulator {
 	private void postProcessOutput() {
 		for(long time = initialTime; time <= initialTime + duration; time+=5) {
 			System.out.println("Time = " + time);
-			System.out.println(String.format("%-19s %-9s %-9s %-39s %-39s %-39s %-39s %-39s", 
+			System.out.println(String.format("%-19s %-9s %-9s %-59s %-59s %-59s %-59s %-59s", 
 					"Element", "State", "Location", "Stock", "Exchange-in", "Exchange-out", "Transform-in", "Transform-out"));
 			for(String element : stockHistory.get(time).keySet()) {
 				
-				System.out.println(String.format("%-19s %-9s %-9s %-39s %-39s %-39s %-39s %-39s", 
+				System.out.println(String.format("%-19s %-9s %-9s %-59s %-59s %-59s %-59s %-59s", 
 						element, 
 						stateHistory.get(time).get(element),
 						locationHistory.get(time).get(element), 
