@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.util.Calendar;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -38,6 +40,7 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.TableXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
+import org.jfree.ui.RectangleEdge;
 
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
@@ -87,19 +90,26 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 */
 	public abstract void update(int year);
 	
-	/**
-	 * Creates the stacked area chart.
-	 *
-	 * @param valueAxis the value axis
-	 * @param areaDataset the dataset
-	 * @return the j free chart
-	 */
-	protected Component createStackedAreaChart(final String valueAxis,
-			final TableXYDataset areaDataset, final String valueAxis2, 
-			final TableXYDataset lineDataset) {
-		JFreeChart chart = ChartFactory.createStackedXYAreaChart(
-						null, "Year", valueAxis, areaDataset, 
-						PlotOrientation.VERTICAL, true, false, false);
+	private JFreeChart createChart(boolean isArea, final String valueAxis,
+			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset, 
+			final String valueAxis2, final TableXYDataset lineDataset2) {
+		JFreeChart chart;
+		if(isArea && areaDataset != null) {
+			chart = ChartFactory.createStackedXYAreaChart(
+					null, "Year", valueAxis, areaDataset, 
+					PlotOrientation.VERTICAL, true, false, false);
+			chart.getLegend().setPosition(RectangleEdge.RIGHT);
+		} else if(areaDataset != null) {
+			chart = ChartFactory.createXYLineChart(
+					null, "Year", valueAxis, areaDataset, 
+					PlotOrientation.VERTICAL, true, false, false);
+			chart.getLegend().setPosition(RectangleEdge.RIGHT);
+		} else {
+			chart = ChartFactory.createXYLineChart(
+					null, "Year", valueAxis, lineDataset, 
+					PlotOrientation.VERTICAL, false, false, false);
+		}
+		
 		if(chart.getPlot() instanceof XYPlot) {
 			XYPlot xyPlot = (XYPlot) chart.getPlot();
 			xyPlot.setBackgroundPaint(Color.WHITE);
@@ -110,51 +120,121 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 			xyPlot.setDomainAxis(new DateAxis("Year"));
 			xyPlot.getDomainAxis().setLabelFont(oldAxis.getLabelFont());
 			xyPlot.getDomainAxis().setTickLabelFont(oldAxis.getTickLabelFont());
+
+			if(!isArea && areaDataset != null) {
+				xyPlot.setRenderer(0, new XYLineAndShapeRenderer());
+			}
+			if(colors != null && areaDataset != null) {
+				for(int i = 0; i < colors.length; i++) {
+					if(colors[i] != null) {
+						xyPlot.getRenderer(0).setSeriesPaint(i, colors[i]);
+					}
+				}
+			}
 			
-			if(lineDataset != null) {
+			if(areaDataset != null && lineDataset != null) {
 				xyPlot.setDataset(1, lineDataset);
+				xyPlot.mapDatasetToRangeAxis(1, 0);
+				xyPlot.setRenderer(1, new XYLineAndShapeRenderer());
+				xyPlot.getRenderer(1).setSeriesPaint(0, Color.black);
+			} else if(lineDataset != null) {
+				xyPlot.setRenderer(0, new XYLineAndShapeRenderer());
+				xyPlot.getRenderer(0).setSeriesPaint(0, Color.black);
+			}
+
+			if(lineDataset2 != null) {
+				xyPlot.setDataset(2, lineDataset2);
 				if(valueAxis2 != null) {
 					xyPlot.setRangeAxis(1,new NumberAxis(valueAxis2));
 					xyPlot.getRangeAxis(1).setLabelFont(
 							xyPlot.getRangeAxis(0).getLabelFont());
 					xyPlot.getRangeAxis(1).setTickLabelFont(
 							xyPlot.getRangeAxis(0).getTickLabelFont());
-					xyPlot.mapDatasetToRangeAxis(1, 1);
+					xyPlot.mapDatasetToRangeAxis(2, 1);
 				}
-				xyPlot.setRenderer(1, new XYLineAndShapeRenderer());
-				xyPlot.getRenderer(1).setSeriesPaint(0, Color.black);
-				xyPlot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
+				xyPlot.setRenderer(2, new XYLineAndShapeRenderer());
+				xyPlot.getRenderer(2).setSeriesPaint(0, Color.red);
 			}
+			xyPlot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
 		}
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setMinimumDrawHeight(400);
-		chartPanel.setMaximumDrawHeight(1050);
-		chartPanel.setMinimumDrawWidth(600);
-		chartPanel.setMaximumDrawWidth(1680);
-		
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(chartPanel, BorderLayout.CENTER);
+		return chart;
+	}
+	
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param valueAxis the value axis
+	 * @param areaDataset the dataset
+	 * @return the j free chart
+	 */
+	protected Component createStackedAreaChart(final String valueAxis,
+			final TableXYDataset areaDataset, final Color[] colors, final TableXYDataset lineDataset, 
+			final String valueAxis2, final TableXYDataset lineDataset2) {
+		final JPanel panel = new JPanel(new BorderLayout());
+		panel.add(new ChartPanel(createChart(true, valueAxis, areaDataset, 
+				colors, lineDataset, valueAxis2, lineDataset2)), BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		JButton exportAreaButton = new JButton(new AbstractAction("Export Area Data") {
+		JButton exportAreaButton = new JButton(new AbstractAction("Export Data") {
 			private static final long serialVersionUID = -7171676288524836282L;
 
 			public void actionPerformed(ActionEvent e) {
-				exportDataset(valueAxis, areaDataset);
+				if(areaDataset!=null) { 
+					exportDataset(valueAxis, areaDataset, lineDataset, lineDataset2);
+				} else {
+					exportDataset(valueAxis, lineDataset);
+				}
 			}
 		});
 		buttonPanel.add(exportAreaButton);
-		if(lineDataset != null) {
-			JButton exportLineButton = new JButton(new AbstractAction("Export Line Data") {
-				private static final long serialVersionUID = -7171676288524836282L;
-	
+		if(areaDataset != null) {
+			final JCheckBox areaToggle = new JCheckBox("Stacked Area", true);
+			areaToggle.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
-					exportDataset(valueAxis2, lineDataset);
+					for(int i = 0; i < panel.getComponentCount(); i++) {
+						if(panel.getComponent(i) instanceof ChartPanel) {
+							panel.remove(i);
+							break;
+						}
+					}
+					panel.add(new ChartPanel(createChart(areaToggle.isSelected(), valueAxis, areaDataset, 
+							colors, lineDataset, valueAxis2, lineDataset2)), BorderLayout.CENTER);
+					panel.validate();
 				}
 			});
-			buttonPanel.add(exportLineButton);
+			buttonPanel.add(areaToggle);
 		}
 		panel.add(buttonPanel, BorderLayout.SOUTH);
 		return panel;
+	}
+	
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param valueAxis the value axis
+	 * @param areaDataset the dataset
+	 * @return the j free chart
+	 */
+	protected Component createStackedAreaChart(final String valueAxis,
+			final TableXYDataset areaDataset, Color[] colors, final String valueAxis2, 
+			final TableXYDataset lineDataset) {
+		return createStackedAreaChart(valueAxis, areaDataset, colors, null, valueAxis2, lineDataset);
+	}
+	
+	protected Component createStackedAreaChart(final String valueAxis,
+			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset) {
+		return createStackedAreaChart(valueAxis, areaDataset, colors, lineDataset, null, null);
+	}
+	
+	protected Component createStackedAreaChart(final String valueAxis,
+			final TableXYDataset areaDataset, final TableXYDataset lineDataset) {
+		return createStackedAreaChart(valueAxis, areaDataset, null, lineDataset, null, null);
+	}
+	
+	protected Component createStackedAreaChart(final String valueAxis,
+			final TableXYDataset areaDataset, final String valueAxis2, 
+			final TableXYDataset lineDataset) {
+		return createStackedAreaChart(valueAxis, areaDataset, null, null, valueAxis2, lineDataset);
 	}
 	
 	/**
@@ -165,8 +245,18 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @return the chart panel
 	 */
 	protected Component createStackedAreaChart(String valueAxis,
+			TableXYDataset areaDataset, Color[] colors) {
+		return createStackedAreaChart(valueAxis, areaDataset, colors, null, null);
+	}
+
+	protected Component createStackedAreaChart(String valueAxis,
 			TableXYDataset areaDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, null, null);
+		return createStackedAreaChart(valueAxis, areaDataset, null, null, null, null);
+	}
+
+	protected Component createSingleLineChart(String valueAxis,
+			TableXYDataset lineDataset) {
+		return createStackedAreaChart(valueAxis, null, null, lineDataset, null, null);
 	}
 	
 	/**
@@ -256,6 +346,10 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * Export dataset.
 	 */
 	protected void exportDataset(String valueAxis, XYDataset dataset) {
+		exportDataset(valueAxis, dataset, null, null);
+	}
+	
+	protected void exportDataset(String valueAxis, XYDataset dataset, XYDataset dataset2, XYDataset dataset3) {
 		if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
 			File f = fileChooser.getSelectedFile();
 			
@@ -278,12 +372,32 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 						for(int j = 0; j < dataset.getSeriesCount(); j++) {
 							b.append(", ").append(dataset.getSeriesKey(j));
 						}
+						if(dataset2 != null && dataset2.getSeriesCount() > 0) {
+							for(int j = 0; j < dataset2.getSeriesCount(); j++) {
+								b.append(", ").append(dataset2.getSeriesKey(j));
+							}
+						}
+						if(dataset3 != null && dataset3.getSeriesCount() > 0) {
+							for(int j = 0; j < dataset3.getSeriesCount(); j++) {
+								b.append(", ").append(dataset3.getSeriesKey(j));
+							}
+						}
 						b.append("\n");
 						for(int i = 0; i < dataset.getItemCount(0); i++) {
 							calendar.setTimeInMillis((long)dataset.getXValue(0, i));
 							b.append(calendar.get(Calendar.YEAR));
 							for(int j = 0; j < dataset.getSeriesCount(); j++) {
 								b.append(", ").append(dataset.getYValue(j, i));
+							}
+							if(dataset2 != null && dataset2.getItemCount(0) > i) {
+								for(int j = 0; j < dataset2.getSeriesCount(); j++) {
+									b.append(", ").append(dataset2.getYValue(j, i));
+								}
+							}
+							if(dataset3 != null && dataset3.getItemCount(0) > i) {
+								for(int j = 0; j < dataset3.getSeriesCount(); j++) {
+									b.append(", ").append(dataset3.getYValue(j, i));
+								}
 							}
 							b.append("\n");
 						}

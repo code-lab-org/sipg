@@ -88,7 +88,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Electricity Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", 
-				electricityRevenue, null, electricityNetRevenue));
+				electricityRevenue, electricityNetRevenue));
 		addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
 				"Electricity Source (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricitySourceData));

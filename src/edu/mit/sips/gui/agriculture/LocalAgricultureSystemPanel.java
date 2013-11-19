@@ -82,7 +82,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				createStackedAreaChart("Agriculture Revenue ("
 						+ currencyUnits.getAbbreviation() + "/"
 						+ currencyTimeUnits.getAbbreviation() + ")",
-						agricultureRevenue, null, agricultureNetRevenue));
+						agricultureRevenue, agricultureNetRevenue));
 		addTab("Source", Icons.AGRICULTURE_SOURCE,
 				createStackedAreaChart("Food Source (" + foodUnits
 						+ "/" + foodTimeUnits + ")", foodSourceData));

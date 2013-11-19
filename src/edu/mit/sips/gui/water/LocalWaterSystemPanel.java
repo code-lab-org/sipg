@@ -90,7 +90,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Water Revenue (" + getCurrencyUnits() 
 				+ "/" + getCurrencyTimeUnits() + ")", 
-				waterRevenue, null, waterNetRevenue));
+				waterRevenue, waterNetRevenue));
 		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
 				"Water Source (" + waterUnits 
 				+ "/" + waterTimeUnits + ")", 

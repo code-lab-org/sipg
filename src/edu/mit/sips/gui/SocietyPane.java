@@ -23,6 +23,7 @@ import edu.mit.sips.gui.electricity.LocalElectricitySystemPanel;
 import edu.mit.sips.gui.petroleum.BasicPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.LocalPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.PetroleumSystemPanel;
+import edu.mit.sips.gui.social.SocialSystemPanel;
 import edu.mit.sips.gui.water.BasicWaterSystemPanel;
 import edu.mit.sips.gui.water.LocalWaterSystemPanel;
 import edu.mit.sips.gui.water.WaterSystemPanel;

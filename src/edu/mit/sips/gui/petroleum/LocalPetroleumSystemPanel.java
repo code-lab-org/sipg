@@ -84,7 +84,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Petroleum Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", 
-				petroleumRevenue, null, petroleumNetRevenue));
+				petroleumRevenue, petroleumNetRevenue));
 		addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
 				"Petroleum Source (" + oilUnits + "/" + oilTimeUnits + ")", petroleumSourceData));
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(

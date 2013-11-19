@@ -1,9 +1,8 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.social;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 
-import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Country;
@@ -11,6 +10,10 @@ import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.gui.InfrastructureSystemPanel;
+import edu.mit.sips.gui.LinearIndicatorPanel;
+import edu.mit.sips.gui.PlottingUtils;
+import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
@@ -25,10 +28,11 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	
 	private final LinearIndicatorPanel domesticProductIndicatorPanel;
 
-	TimeSeriesCollection fundsData = new TimeSeriesCollection();
+	DefaultTableXYDataset fundsData = new DefaultTableXYDataset();
 	DefaultTableXYDataset infrastructureSystemRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset infrastructureSystemNetRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset populationDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset populationTotalDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset domesticProduct = new DefaultTableXYDataset();
 	DefaultTableXYDataset domesticProductPerCapita = new DefaultTableXYDataset();
 	DefaultTableXYDataset societyRevenue = new DefaultTableXYDataset();
@@ -48,31 +52,50 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		domesticProductIndicatorPanel = new LinearIndicatorPanel(
 				"Economic Production", 0, 100000);
 		indicatorsPanel.add(domesticProductIndicatorPanel);
-		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
+
+		/* temporarily removed
+		 * addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
+		 */
 
 		if(getSociety() instanceof Country) {
-			addTab("Funds", Icons.FUNDS, createTimeSeriesChart(
-					"Funds (" + getCurrencyUnits() + ")", fundsData));
+			addTab("Finances", Icons.FUNDS, createStackedAreaChart(
+					"Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
+					PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
+					infrastructureSystemNetRevenue,
+					"Cash Balance (" + getCurrencyUnits() + ")", fundsData));
+			addTab("Population", Icons.POPULATION, createStackedAreaChart(
+					"Population", populationDataset, 
+					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()),
+					populationTotalDataset));
+		} else {
+			addTab("Finances", Icons.FUNDS, createStackedAreaChart(
+					"Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
+					PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
+					infrastructureSystemNetRevenue, null, null));
+			addTab("Population", Icons.POPULATION, createSingleLineChart(
+					"Population", populationTotalDataset));
 		}
 
-		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Revenue (" + getCurrencyUnits() 
+		/* temporarily removed
+		addTab("System Cash Flow", Icons.REVENUE, createStackedAreaChart(
+				"Cash Flow (" + getCurrencyUnits() 
 				+ "/" + getCurrencyTimeUnits() + ")", 
 				infrastructureSystemRevenue, null, infrastructureSystemNetRevenue));
 		if(getSocialSystem() instanceof SocialSoS) {
-			addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-					"Revenue (" + getCurrencyUnits() 
+			addTab("Regional Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					"Cash Flow (" + getCurrencyUnits() 
 					+ "/" + getCurrencyTimeUnits() + ")", 
 					societyRevenue, null, societyNetRevenue));
 		}
-		addTab("Domestic Product", Icons.PRODUCT, createStackedAreaChart(
+		*/
+		
+		/* temporarily removed
+		 * addTab("Domestic Product", Icons.PRODUCT, createStackedAreaChart(
 				"Domestic Product (" + getCurrencyUnits() 
 				+ "/" + getCurrencyTimeUnits() + ")", domesticProduct, 
 				"Domestic Product per Capita (" + CurrencyUnits.sim 
 				+ "/" + TimeUnits.year + ")", domesticProductPerCapita));
-		addTab("Population", Icons.POPULATION, createStackedAreaChart(
-				"Population", populationDataset));
-
+		 */
 	}
 
 	/* (non-Javadoc)
@@ -146,11 +169,11 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	@Override
 	public void update(int year) {
 		if(getSociety() instanceof Country) {
-			updateSeriesCollection(fundsData, getSociety().getName(), year, 
+			updateSeries(fundsData, getSociety().getName() + " Balance", year, 
 					CurrencyUnits.convertStock(((Country)getSociety()).getFunds(), 
 							getSociety(), this));
 		}
-		updateSeries(infrastructureSystemNetRevenue, "Net Revenue", year, 
+		updateSeries(infrastructureSystemNetRevenue, "Net " + getSociety().getName(), year, 
 				CurrencyUnits.convertFlow(getSociety().getCashFlow(), 
 						getSociety(), this));
 
@@ -180,11 +203,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		
 		if(getSocialSystem() instanceof SocialSoS) {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
-				updateSeries(populationDataset, nestedSociety.getName(), year, 
-						nestedSociety.getSocialSystem().getPopulation());
-			}
-
-			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(domesticProduct, nestedSociety.getName(), year, 
 						CurrencyUnits.convertFlow(nestedSociety.getSocialSystem().getDomesticProduct(), 
 								nestedSociety, this));
@@ -199,12 +217,16 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					CurrencyUnits.convertFlow(getSociety().getCashFlow(), 
 							getSociety(), this));
 		} else {
-			updateSeries(populationDataset, getSociety().getName(), year, 
-					getSocialSystem().getPopulation());
-			
 			updateSeries(domesticProduct, getSociety().getName(), year, 
 					CurrencyUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
 							getSocialSystem(), this));
 		}
+
+		for(Society nestedSociety : getSociety().getNestedSocieties()) {
+			updateSeries(populationDataset, nestedSociety.getName(), year, 
+					nestedSociety.getSocialSystem().getPopulation());
+		}
+		updateSeries(populationTotalDataset, getSociety().getName(), year, 
+				getSocialSystem().getPopulation());
 	}
 }
