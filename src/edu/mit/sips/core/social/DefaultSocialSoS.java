@@ -16,8 +16,14 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultSocialSoS.
  */
 public class DefaultSocialSoS extends DefaultInfrastructureSoS implements SocialSoS {
-	private static final OilUnits oilUnits = OilUnits.toe;
-	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private final OilUnits oilUnits = OilUnits.toe;
+	private final TimeUnits oilTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.kcal;
+	private final TimeUnits foodTimeUnits = TimeUnits.day;
 
 	/**
 	 * Instantiates a new default social so s.
@@ -55,7 +61,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
+		return electricityTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -63,7 +69,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
 
 	/* (non-Javadoc)
@@ -83,7 +89,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
-		return TimeUnits.day;
+		return foodTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -91,7 +97,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public FoodUnits getFoodUnits() {
-		return FoodUnits.kcal;
+		return foodUnits;
 	}
 
 	/* (non-Javadoc)
@@ -164,7 +170,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -172,6 +178,6 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 }

@@ -646,29 +646,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
 		private final WaterUnits waterUnits = WaterUnits.m3;
 		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-		private final TimeUnits currencyTimeUnits = TimeUnits.year;
 		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 		private final TimeUnits electricityTimeUnits = TimeUnits.year;
 		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice;
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getCurrencyTimeUnits() {
-			return currencyTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-		 */
-		@Override
-		public CurrencyUnits getCurrencyUnits() {
-			return currencyUnits;
-		}
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()

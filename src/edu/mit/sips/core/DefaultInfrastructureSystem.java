@@ -175,8 +175,8 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 		}
 	}
 
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private final TimeUnits currencyTimeUnits = TimeUnits.year;
+	protected final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	protected final TimeUnits currencyTimeUnits = TimeUnits.year;
 	
 	private String name;
 	private transient Society society;

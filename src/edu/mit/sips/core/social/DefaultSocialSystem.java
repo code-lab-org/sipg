@@ -28,8 +28,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
-		private static final OilUnits oilUnits = OilUnits.toe;
-		private static final TimeUnits oilTimeUnits = TimeUnits.year;
+		private final OilUnits oilUnits = OilUnits.toe;
+		private final TimeUnits oilTimeUnits = TimeUnits.year;
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
+		private final FoodUnits foodUnits = FoodUnits.kcal;
+		private final TimeUnits foodTimeUnits = TimeUnits.day;
 		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PopulationModel populationModel;
@@ -169,7 +175,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -177,7 +183,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -219,7 +225,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getFoodTimeUnits() {
-			return TimeUnits.day;
+			return foodTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -227,7 +233,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public FoodUnits getFoodUnits() {
-			return FoodUnits.kcal;
+			return foodUnits;
 		}
 
 		/* (non-Javadoc)
@@ -313,7 +319,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -321,7 +327,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)
@@ -371,8 +377,14 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements SocialSystem.Remote {
-		private static final OilUnits oilUnits = OilUnits.toe;
-		private static final TimeUnits oilTimeUnits = TimeUnits.year;
+		private final OilUnits oilUnits = OilUnits.toe;
+		private final TimeUnits oilTimeUnits = TimeUnits.year;
+		private final FoodUnits foodUnits = FoodUnits.kcal;
+		private final TimeUnits foodTimeUnits = TimeUnits.day;
+		private final WaterUnits waterUnits = WaterUnits.m3;
+		private final TimeUnits waterTimeUnits = TimeUnits.year;
+		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+		private final TimeUnits electricityTimeUnits = TimeUnits.year;
 		
 		private double domesticProduct;
 		private long population;
@@ -402,7 +414,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -410,7 +422,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -426,7 +438,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getFoodTimeUnits() {
-			return TimeUnits.day;
+			return foodTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -434,7 +446,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public FoodUnits getFoodUnits() {
-			return FoodUnits.kcal;
+			return foodUnits;
 		}
 
 		/* (non-Javadoc)
@@ -482,7 +494,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -490,7 +502,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)

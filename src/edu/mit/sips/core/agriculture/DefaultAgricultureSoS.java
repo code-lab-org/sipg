@@ -721,19 +721,16 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		public void tock() { }
 	}
 	
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.kcal;
+	private final TimeUnits foodTimeUnits = TimeUnits.day;
+	
 	/**
 	 * Instantiates a new default agriculture so s.
 	 */
 	public DefaultAgricultureSoS() {
 		super("Agriculture");
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
 	}
 
 	/* (non-Javadoc)
@@ -786,7 +783,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
-		return TimeUnits.day;
+		return foodTimeUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -794,7 +791,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	@Override
 	public FoodUnits getFoodUnits() {
-		return FoodUnits.kcal;
+		return foodUnits;
 	}
 	
 	/* (non-Javadoc)
@@ -826,7 +823,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -834,6 +831,6 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 }

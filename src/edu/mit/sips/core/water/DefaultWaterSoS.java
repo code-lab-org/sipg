@@ -34,7 +34,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	/**
 	 * The Class Local.
 	 */
-	public static class Local extends DefaultInfrastructureSoS.Local implements WaterSoS.Local {
+	public static class Local extends DefaultInfrastructureSoS.Local implements WaterSoS.Local {		
 		private final WaterUnits waterUnits = WaterUnits.m3;
 		private final TimeUnits waterTimeUnits = TimeUnits.year;
 		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -771,30 +771,12 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private final TimeUnits currencyTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new default water so s.
 	 */
 	public DefaultWaterSoS() {
 		super("Water");
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return currencyTimeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
 	}
 
 	/* (non-Javadoc)

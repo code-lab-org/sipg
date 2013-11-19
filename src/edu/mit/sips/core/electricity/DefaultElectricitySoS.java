@@ -635,6 +635,13 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		@Override
 		public void tock() { }
 	}
+	
+	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private final OilUnits oilUnits = OilUnits.toe;
+	private final TimeUnits oilTimeUnits = TimeUnits.year;
+	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new default electricity so s.
@@ -663,7 +670,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
-		return TimeUnits.year;
+		return electricityTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -671,7 +678,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
-		return ElectricityUnits.MWh;
+		return electricityUnits;
 	}
 
 	/* (non-Javadoc)
@@ -691,7 +698,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
-		return TimeUnits.year;
+		return oilTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -699,7 +706,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public OilUnits getOilUnits() {
-		return OilUnits.toe;
+		return oilUnits;
 	}
 
 	/* (non-Javadoc)
@@ -731,7 +738,7 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
-		return TimeUnits.year;
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -739,6 +746,6 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	 */
 	@Override
 	public WaterUnits getWaterUnits() {
-		return WaterUnits.m3;
+		return waterUnits;
 	}
 }
