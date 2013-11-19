@@ -404,11 +404,10 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 							WaterUnits.convertFlow(nestedSystem.getWaterProduction(), 
 									nestedSystem, this));
 				}
-				updateSeries(waterSourceData, nestedSystem.getSociety().getName() 
-						+ " Private Production", year, 
-						WaterUnits.convertFlow(nestedSystem.getWaterFromPrivateProduction(), 
-								nestedSystem, this));
 			}
+			updateSeries(waterSourceData, "Private Production", year, 
+					WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
+							getWaterSystem(), this));
 			/*updateSeries(waterSourceData, "Production", year, 
 					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
 							getWaterSystem(), this));*/
