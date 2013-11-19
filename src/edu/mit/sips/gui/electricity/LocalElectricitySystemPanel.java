@@ -326,12 +326,10 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			}
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
-				if(nestedSystem.getElectricityProduction() > 0) {
-					updateSeries(electricitySourceData, nestedSystem.getSociety().getName() 
-							+ " Production", year,
-							OilUnits.convertFlow(nestedSystem.getElectricityProduction(), 
-									nestedSystem, this));
-				}
+				updateSeries(electricitySourceData, nestedSystem.getSociety().getName() 
+						+ " Production", year,
+						ElectricityUnits.convertFlow(nestedSystem.getElectricityProduction(), 
+								nestedSystem, this));
 			}
 			/*updateSeries(electricitySourceData, "Production", year, 
 					ElectricityUnits.convertFlow(
