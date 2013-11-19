@@ -1,7 +1,7 @@
 package edu.mit.isos;
 
 public abstract class Element {
-	private String name;
+	private final String name;
 	private final Resource initialStock;
 	private final State initialState;
 	private final Location initialLocation;
