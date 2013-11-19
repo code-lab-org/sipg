@@ -1,7 +1,7 @@
 package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
-import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -11,6 +11,10 @@ import edu.mit.sips.sim.util.TimeUnits;
  */
 public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		implements PetroleumElement {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	/**
 	 * Creates the distribution element.
@@ -67,11 +71,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 				maxPetroleumProduction, initialPetroleumProduction,
 				variableOperationsCostOfPetroleumProduction, 0, 0, 0, 0, 0);
 	}
-	
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final OilUnits oilUnits = OilUnits.toe;
-	private final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	private final double reservoirIntensityOfPetroleumProduction;
 	private final double maxPetroleumProduction;

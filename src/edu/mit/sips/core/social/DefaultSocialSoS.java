@@ -16,14 +16,14 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultSocialSoS.
  */
 public class DefaultSocialSoS extends DefaultInfrastructureSoS implements SocialSoS {
-	private final OilUnits oilUnits = OilUnits.toe;
-	private final TimeUnits oilTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final FoodUnits foodUnits = FoodUnits.kcal;
-	private final TimeUnits foodTimeUnits = TimeUnits.day;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.day;
 
 	/**
 	 * Instantiates a new default social so s.

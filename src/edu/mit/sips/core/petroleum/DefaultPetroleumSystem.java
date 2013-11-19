@@ -19,16 +19,15 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class DefaultPetroleumSystem.
  */
 public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem implements PetroleumSystem {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements PetroleumSystem.Local {
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final List<PetroleumElement> elements = 
@@ -499,12 +498,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	/**
 	 * The Class Remote.
 	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements PetroleumSystem.Remote {
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		
+	public static class Remote extends DefaultInfrastructureSystem.Remote implements PetroleumSystem.Remote {		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice, exportPrice;
 

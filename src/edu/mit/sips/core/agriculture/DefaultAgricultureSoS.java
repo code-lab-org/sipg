@@ -30,6 +30,10 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultAgricultureSoS.
  */
 public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements AgricultureSoS {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.day;
 	
 	/**
 	 * The Class Local.
@@ -68,14 +72,6 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			return value;
 		}
 		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
-		 */
-		@Override
-		public TimeUnits getCurrencyTimeUnits() {
-			return TimeUnits.year;
-		}
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
 		 */
@@ -227,7 +223,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		 */
 		@Override
 		public TimeUnits getFoodTimeUnits() {
-			return TimeUnits.day;
+			return foodTimeUnits;
 		}
 		
 		/* (non-Javadoc)
@@ -235,7 +231,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		 */
 		@Override
 		public FoodUnits getFoodUnits() {
-			return FoodUnits.kcal;
+			return foodUnits;
 		}
 
 		/* (non-Javadoc)
@@ -380,7 +376,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		 */
 		@Override
 		public TimeUnits getWaterTimeUnits() {
-			return TimeUnits.year;
+			return waterTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -388,7 +384,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		 */
 		@Override
 		public WaterUnits getWaterUnits() {
-			return WaterUnits.m3;
+			return waterUnits;
 		}
 
 		/* (non-Javadoc)
@@ -720,11 +716,6 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		@Override
 		public void tock() { }
 	}
-	
-	private final WaterUnits waterUnits = WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-	private final FoodUnits foodUnits = FoodUnits.kcal;
-	private final TimeUnits foodTimeUnits = TimeUnits.day;
 	
 	/**
 	 * Instantiates a new default agriculture so s.

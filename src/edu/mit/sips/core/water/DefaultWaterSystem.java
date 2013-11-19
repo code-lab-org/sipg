@@ -21,16 +21,15 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultWaterSystem.
  */
 public abstract class DefaultWaterSystem implements WaterSystem {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements WaterSystem.Local {
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		
 		private final List<WaterElement> elements = 
 				Collections.synchronizedList(new ArrayList<WaterElement>());
 		private final DomesticProductionModel domesticProductionModel;
@@ -644,11 +643,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice;
 		

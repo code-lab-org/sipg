@@ -1,5 +1,7 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
+import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 

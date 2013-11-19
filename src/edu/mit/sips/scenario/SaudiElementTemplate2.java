@@ -3,9 +3,9 @@ package edu.mit.sips.scenario;
 import java.util.Arrays;
 
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.SimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
 import edu.mit.sips.core.electricity.DefaultElectricityElement;
+import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 

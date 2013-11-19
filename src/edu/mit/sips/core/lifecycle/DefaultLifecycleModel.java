@@ -1,4 +1,4 @@
-package edu.mit.sips.core;
+package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -7,8 +7,8 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class DefaultLifecycleModel.
  */
 public class DefaultLifecycleModel implements LifecycleModel, MutableLifecycleModel {
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private final TimeUnits timeUnits = TimeUnits.year;
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private static final TimeUnits timeUnits = TimeUnits.year;
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.MutableLifecycleModel#createLifecycleModel()

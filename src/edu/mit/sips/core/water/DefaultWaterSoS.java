@@ -30,15 +30,15 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultWaterSoS.
  */
 public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSoS {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSoS.Local implements WaterSoS.Local {		
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
 		
 		/**
 		 * Instantiates a new local.
@@ -767,11 +767,6 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		public void tock() { }
 	}
 	
-	private final WaterUnits waterUnits = WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-
 	/**
 	 * Instantiates a new default water so s.
 	 */

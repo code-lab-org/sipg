@@ -32,6 +32,10 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class DefaultPetroleumSoS.
  */
 public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements PetroleumSoS {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	/**
 	 * The Class Local.
@@ -75,7 +79,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		 */
 		@Override
 		public TimeUnits getElectricityTimeUnits() {
-			return TimeUnits.year;
+			return electricityTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -83,7 +87,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		 */
 		@Override
 		public ElectricityUnits getElectricityUnits() {
-			return ElectricityUnits.MWh;
+			return electricityUnits;
 		}
 
 		/* (non-Javadoc)
@@ -167,7 +171,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		 */
 		@Override
 		public TimeUnits getOilTimeUnits() {
-			return TimeUnits.year;
+			return oilTimeUnits;
 		}
 
 		/* (non-Javadoc)
@@ -175,7 +179,7 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		 */
 		@Override
 		public OilUnits getOilUnits() {
-			return OilUnits.toe;
+			return oilUnits;
 		}
 
 		/* (non-Javadoc)
@@ -629,11 +633,6 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		@Override
 		public void tock() { }
 	}
-	
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final OilUnits oilUnits = OilUnits.toe;
-	private final TimeUnits oilTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new default petroleum so s.

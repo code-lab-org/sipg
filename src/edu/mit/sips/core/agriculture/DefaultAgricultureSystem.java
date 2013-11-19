@@ -19,16 +19,15 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultAgricultureSystem.
  */
 public abstract class DefaultAgricultureSystem implements AgricultureSystem {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.day;
 	
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements AgricultureSystem.Local {
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final FoodUnits foodUnits = FoodUnits.kcal;
-		private final TimeUnits foodTimeUnits = TimeUnits.day;
-		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 		private final double arableLandArea;	
@@ -495,11 +494,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final FoodUnits foodUnits = FoodUnits.kcal;
-		private final TimeUnits foodTimeUnits = TimeUnits.day;
-		
 		private double waterConsumption;
 		private double domesticPrice, importPrice, exportPrice;
 

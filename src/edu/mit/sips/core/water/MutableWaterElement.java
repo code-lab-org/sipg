@@ -1,7 +1,6 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
-import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
@@ -15,13 +14,10 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
  */
 public final class MutableWaterElement extends DefaultMutableInfrastructureElement 
 		implements WaterUnitsOutput, ElectricityUnitsOutput, CurrencyUnitsOutput {
-
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	private double maxWaterProduction;
 	private double initialWaterProduction;
@@ -63,21 +59,6 @@ public final class MutableWaterElement extends DefaultMutableInfrastructureEleme
 				DefaultUnits.convert(getVariableOperationsCostOfWaterDistribution(),
 						getCurrencyUnits(), getWaterUnits(), 
 						e.getCurrencyUnits(), e.getWaterUnits()));
-	}
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return currencyTimeUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
 	}
 	
 	/**

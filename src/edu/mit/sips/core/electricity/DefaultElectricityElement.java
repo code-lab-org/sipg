@@ -1,7 +1,7 @@
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
-import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -12,15 +12,13 @@ import edu.mit.sips.sim.util.WaterUnits;
  */
 public class DefaultElectricityElement extends DefaultInfrastructureElement
 		implements ElectricityElement {
-
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	
 	/**
 	 * Creates the distribution element.
 	 *

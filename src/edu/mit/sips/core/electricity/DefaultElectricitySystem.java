@@ -21,17 +21,17 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultElectricitySystem.
  */
 public abstract class DefaultElectricitySystem implements ElectricitySystem {
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
 	 * The Class Local.
 	 */
 	public static class Local extends DefaultInfrastructureSystem.Local implements ElectricitySystem.Local {
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
 		
 		private final double petroleumIntensityOfPrivateProduction;
 		private final DomesticProductionModel domesticProductionModel;
@@ -487,14 +487,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 	/**
 	 * The Class Remote.
 	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements ElectricitySystem.Remote {
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		
+	public static class Remote extends DefaultInfrastructureSystem.Remote implements ElectricitySystem.Remote {		
 		private double waterConsumption;
 		private double petroleumConsumption;
 		private double domesticPrice;

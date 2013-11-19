@@ -23,20 +23,19 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultSocialSystem.
  */
 public abstract class DefaultSocialSystem implements SocialSystem {
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.day;
 
 	/**
 	 * The Class Local.
 	 */
-	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		private final FoodUnits foodUnits = FoodUnits.kcal;
-		private final TimeUnits foodTimeUnits = TimeUnits.day;
-		
+	public static class Local extends DefaultInfrastructureSystem.Local implements SocialSystem.Local {		
 		private final DomesticProductionModel domesticProductionModel;
 		private final PopulationModel populationModel;
 		private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel;
@@ -376,16 +375,7 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	/**
 	 * The Class Remote.
 	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements SocialSystem.Remote {
-		private final OilUnits oilUnits = OilUnits.toe;
-		private final TimeUnits oilTimeUnits = TimeUnits.year;
-		private final FoodUnits foodUnits = FoodUnits.kcal;
-		private final TimeUnits foodTimeUnits = TimeUnits.day;
-		private final WaterUnits waterUnits = WaterUnits.m3;
-		private final TimeUnits waterTimeUnits = TimeUnits.year;
-		private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-		private final TimeUnits electricityTimeUnits = TimeUnits.year;
-		
+	public static class Remote extends DefaultInfrastructureSystem.Remote implements SocialSystem.Remote {		
 		private double domesticProduct;
 		private long population;
 		private double electricityConsumption;

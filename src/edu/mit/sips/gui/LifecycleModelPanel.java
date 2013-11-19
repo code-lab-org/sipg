@@ -2,9 +2,9 @@ package edu.mit.sips.gui;
 
 import javax.swing.JPanel;
 
-import edu.mit.sips.core.DefaultLifecycleModel;
-import edu.mit.sips.core.MutableLifecycleModel;
-import edu.mit.sips.core.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
+import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
+import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
 
 public class LifecycleModelPanel extends JPanel {
 	private static final long serialVersionUID = 7776877869870401110L;

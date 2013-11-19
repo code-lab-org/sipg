@@ -1,4 +1,4 @@
-package edu.mit.sips.core;
+package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -9,15 +9,15 @@ import edu.mit.sips.sim.util.TimeUnits;
  * @author Paul T. Grogan, ptgrogan@mit.edu
  */
 public class SimpleLifecycleModel implements LifecycleModel {
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private static final TimeUnits timeUnits = TimeUnits.year;
+	
 	private long time;
 	private transient long nextTime;
 	private final long timeAvailable, timeInitialized, initializationDuration;
 	private final long maxOperationsDuration, operationsDuration, decommissionDuration;
 	private final double capitalCost, fixedOperationsCost, decommissionCost;
 	private final boolean levelizeCosts;
-
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private final TimeUnits timeUnits = TimeUnits.year;
 	
 	/**
 	 * Instantiates a new simple lifecycle model.

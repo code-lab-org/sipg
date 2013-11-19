@@ -1,7 +1,7 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
-import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
@@ -12,6 +12,10 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultAgricultureElement.
  */
 public final class DefaultAgricultureElement extends DefaultInfrastructureElement implements AgricultureElement {
+	private final static TimeUnits foodTimeUnits = TimeUnits.day;
+	private final static FoodUnits foodUnits = FoodUnits.kcal;
+	private final static TimeUnits waterTimeUnits = TimeUnits.year;
+	private final static WaterUnits waterUnits = WaterUnits.m3;
 	
 	/**
 	 * Creates the distribution element.
@@ -66,11 +70,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 				initialLandArea, foodIntensityOfLandUsed, costIntensityOfLandUsed, 
 				waterIntensityOfLandUsed, laborIntensityOfLandUsed, 0, 0, 0, 0);
 	}
-	
-	private final TimeUnits foodTimeUnits = TimeUnits.day;
-	private final FoodUnits foodUnits = FoodUnits.kcal;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.m3;
 	
 	private final double maxLandArea;
 	private final double initialLandArea;

@@ -1,7 +1,7 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
-import edu.mit.sips.core.LifecycleModel;
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -11,6 +11,11 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultWaterElement.
  */
 public final class DefaultWaterElement extends DefaultInfrastructureElement implements WaterElement {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	
 	/**
 	 * Instantiates a new distribution water element.
 	 *
@@ -70,11 +75,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 				variableOperationsCostOfWaterProduction, coastalAccessRequired,
 				0, 0, 0, 0, 0);
 	}
-	
-	private final WaterUnits waterUnits = WaterUnits.m3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
 
 	private final double maxWaterProduction;
 	private final double initialWaterProduction;

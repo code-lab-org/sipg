@@ -1,4 +1,4 @@
-package edu.mit.sips.core;
+package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnitsOutput;

@@ -2,6 +2,8 @@ package edu.mit.sips.core;
 
 import javax.swing.event.EventListenerList;
 
+import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
@@ -15,7 +17,6 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	private final LifecycleModel lifecycleModel;
 	protected transient EventListenerList listenerList = new EventListenerList();
 
-	
 	/**
 	 * Instantiates a new default infrastructure element.
 	 */

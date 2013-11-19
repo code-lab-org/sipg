@@ -26,11 +26,11 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultLifecycleModel;
 import edu.mit.sips.core.MutableInfrastructureElement;
-import edu.mit.sips.core.MutableSimpleLifecycleModel;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
+import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
