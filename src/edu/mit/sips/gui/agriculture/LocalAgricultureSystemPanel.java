@@ -82,9 +82,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
 		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
 
-		List<String> revenueNames = Arrays.asList("Capital Exp", 
-				"Operations Exp", "Decommission Exp", "Input Exp", "Distribution Exp", 
-				"Import Exp", "Distribution Rev", "Export Rev", "Output Rev");
+		List<String> revenueNames = Arrays.asList("Capital Expense", 
+				"Operations Expense", "Decommission Expense", "Input Expense", "Distribution Expense", 
+				"Import Expense", "Distribution Revenue", "Export Revenue", "Output Revenue");
 		for(String name : revenueNames) {
 			agricultureRevenue.addSeries(new XYSeries(name, true, false));
 		}
@@ -344,35 +344,35 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 								nestedSystem, this));
 			}
 		}
-		updateSeries(agricultureRevenue, "Capital Exp", year, 
+		updateSeries(agricultureRevenue, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Operations Exp", year, 
+		updateSeries(agricultureRevenue, "Operations Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getOperationsExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Decommission Exp", year, 
+		updateSeries(agricultureRevenue, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getDecommissionExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Input Exp", year, 
+		updateSeries(agricultureRevenue, "Input Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));
 		if(!(getAgricultureSystem().getSociety() instanceof Country)) {
-			updateSeries(agricultureRevenue, "Distribution Exp", year, 
+			updateSeries(agricultureRevenue, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
 							getAgricultureSystem(), this));
 		}
-		updateSeries(agricultureRevenue, "Import Exp", year, 
+		updateSeries(agricultureRevenue, "Import Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getImportExpense(),
 						getAgricultureSystem(), this));
 		if(!(getAgricultureSystem().getSociety() instanceof Country)) {
-			updateSeries(agricultureRevenue, "Distribution Rev", year, 
+			updateSeries(agricultureRevenue, "Distribution Revenue", year, 
 					CurrencyUnits.convertFlow(getAgricultureSystem().getDistributionRevenue(),
 							getAgricultureSystem(), this));
 		}
-		updateSeries(agricultureRevenue, "Export Rev", year, 
+		updateSeries(agricultureRevenue, "Export Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getExportRevenue(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Output Rev", year, 
+		updateSeries(agricultureRevenue, "Output Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getSalesRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureNetRevenue, "Net Cash Flow", year, 

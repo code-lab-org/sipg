@@ -15,21 +15,38 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
 public abstract class PlottingUtils {
+	private static final Color lightRed = new Color(255, 102, 102),
+			lightOrange = new Color(255, 178, 102),
+			lightGreen = new Color(102, 255, 102),
+			lightBlue = new Color(102, 178, 255),
+			lightPurple = new Color(178, 102, 255),
+			gray = new Color(128, 128, 128),
+			pink = new Color(255, 153, 204),
+			darkGreen = new Color(0, 153, 0),
+			purple = new Color(153, 51, 255),
+			orange = new Color(255, 153, 51),
+			seaGreen = new Color(102, 255, 178),
+			limeGreen = new Color(153, 255, 51),
+			yellow = new Color(255, 255, 51),
+			teal = new Color(102, 255, 255),
+			magenta = new Color(255, 102, 255),
+			blue = new Color(102, 102, 255);
+	
 	public static Color getSystemColor(InfrastructureSystem system) {
 		if(system instanceof AgricultureSystem) {
-			return new Color(178, 255, 102);
+			return lightGreen;
 		}
 		if(system instanceof WaterSystem) {
-			return new Color(102, 178, 255);
+			return lightBlue;
 		}
 		if(system instanceof PetroleumSystem) {
-			return new Color(128, 128, 128);
+			return gray;
 		}
 		if(system instanceof ElectricitySystem) {
-			return new Color(178, 102, 255);
+			return lightPurple;
 		}
 		if(system instanceof SocialSystem) {
-			return new Color(255, 153, 204);
+			return pink;
 		}
 		return null;
 	}
@@ -44,16 +61,16 @@ public abstract class PlottingUtils {
 	
 	public static Color getSocietyColor(Society society) {
 		if(society instanceof Country) {
-			return new Color(0, 153, 0);
+			return darkGreen;
 		}
 		if(society.getName().contains("Industrial")) {
-			return new Color(128, 128, 128);
+			return gray;
 		}
 		if(society.getName().contains("Urban")) {
-			return new Color(102, 178, 255);
+			return lightBlue;
 		}
 		if(society.getName().contains("Rural")) {
-			return new Color(178, 255, 102);
+			return lightGreen;
 		}
 		return null;
 	}
@@ -69,92 +86,92 @@ public abstract class PlottingUtils {
 	public static Color getResourceColor(String name) {
 		// uses
 		if(name.contains("Export")) {
-			return new Color(153, 51, 255);
+			return purple;
 		}
 		if(name.contains("Losses")) {
-			return new Color(255, 153, 51);
+			return orange;
 		}
 		if(name.contains("Wasted")) {
-			return new Color(255, 102, 102);
+			return lightRed;
 		}
 		if(name.contains("Distribution")) {
-			return new Color(102, 255, 178);
+			return seaGreen;
 		}
 		if(name.contains("Agriculture")) {
-			return new Color(178, 255, 102);
+			return lightGreen;
 		}
 		if(name.contains("Water")) {
-			return new Color(102, 178, 255);
+			return lightBlue;
 		}
 		if(name.contains("Petroleum")) {
-			return new Color(128, 128, 128);
+			return gray;
 		}
 		if(name.contains("Electricity")) {
-			return new Color(178, 102, 255);
+			return lightPurple;
 		}
 		if(name.contains("Social") || name.contains("Society")) {
 			if(name.contains("Industrial")) {
-				return new Color(128, 128, 128);
+				return gray;
 			}
 			if(name.contains("Urban")) {
-				return new Color(102, 178, 255);
+				return lightBlue;
 			}
 			if(name.contains("Rural")) {
-				return new Color(178, 255, 102);
+				return lightGreen;
 			}
-			return new Color(255, 153, 204);
+			return pink;
 		}
 		// sources
 		if(name.contains("Import")) {
-			return new Color(178, 102, 255);
+			return lightPurple;
 		}
 		if(name.contains("Private")) {
-			return new Color(255, 153, 51);
+			return orange;
 		} else if(name.contains("Production")) {
 			if(name.contains("Industrial")) {
-				return new Color(128, 128, 128);
+				return gray;
 			}
 			if(name.contains("Urban")) {
-				return new Color(102, 178, 255);
+				return lightBlue;
 			}
 			if(name.contains("Rural")) {
-				return new Color(178, 255, 102);
+				return lightGreen;
 			}
-			return new Color(153, 255, 51);
+			return limeGreen;
 		} 
 		if(name.contains("Distribution")) {
-			return new Color(102, 255, 178);
+			return seaGreen;
 		}
 		return null;
 	}
 	
 	public static Color getCashFlowColor(String name) {
-		if(name.contains("Capital Exp")) {
-			return new Color(255, 102, 102);
+		if(name.contains("Capital Expense")) {
+			return lightRed;
 		}
-		if(name.contains("Operations Exp")) {
-			return new Color(255, 153, 51);
+		if(name.contains("Operations Expense")) {
+			return orange;
 		}
-		if(name.contains("Input Exp")) {
-			return new Color(178, 255, 102);
+		if(name.contains("Input Expense")) {
+			return lightGreen;
 		}
-		if(name.contains("Decommission Exp")) {
-			return new Color(255, 255, 51);
+		if(name.contains("Decommission Expense")) {
+			return yellow;
 		}
-		if(name.contains("Distribution Exp")) {
-			return new Color(255, 102, 255);
+		if(name.contains("Distribution Expense")) {
+			return magenta;
 		}
-		if(name.contains("Import Exp")) {
-			return new Color(178, 102, 255);
+		if(name.contains("Import Expense")) {
+			return lightPurple;
 		}
-		if(name.contains("Distribution Rev")) {
-			return new Color(102, 102, 255);
+		if(name.contains("Distribution Revenue")) {
+			return blue;
 		}
-		if(name.contains("Export Rev")) {
-			return new Color(153, 51, 255);
+		if(name.contains("Export Revenue")) {
+			return purple;
 		}
-		if(name.contains("Output Rev")) {
-			return new Color(102, 255, 102);
+		if(name.contains("Output Revenue")) {
+			return lightGreen;
 		}
 		return null;
 	}
