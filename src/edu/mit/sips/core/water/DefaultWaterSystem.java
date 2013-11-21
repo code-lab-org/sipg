@@ -21,11 +21,6 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultWaterSystem.
  */
 public abstract class DefaultWaterSystem implements WaterSystem {
-	private static final WaterUnits waterUnits = WaterUnits.m3;
-	private static final TimeUnits waterTimeUnits = TimeUnits.year;
-	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-
 	/**
 	 * The Class Local.
 	 */
@@ -310,9 +305,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getLocalWaterFraction() {
-			if(getSociety().getTotalWaterDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return Math.min(1, (getWaterProduction() + getWaterFromPrivateProduction())
-						/ WaterUnits.convertFlow(getSociety().getTotalWaterDemand(), getSociety(), this));
+						/ getSocietyDemand());
 			} 
 			return 0;
 		}
@@ -346,10 +341,9 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getRenewableWaterFraction() {
-			if(getSociety().getTotalWaterDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return getRenewableWaterProduction() 
-						/ WaterUnits.convertFlow(getSociety().getTotalWaterDemand(), 
-								getSociety(), this);
+						/ getSocietyDemand();
 			}
 			return 0;
 		}
@@ -407,9 +401,17 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getWaterDomesticPrice() * (WaterUnits.convertFlow(
-					getSociety().getTotalWaterDemand(), getSociety(), this)
+			return getWaterDomesticPrice() * (getSocietyDemand()
 					- getWaterFromPrivateProduction());
+		}
+
+		/**
+		 * Gets the society demand.
+		 *
+		 * @return the society demand
+		 */
+		private double getSocietyDemand() {
+			return WaterUnits.convertFlow(getSociety().getTotalWaterDemand(), getSociety(), this);
 		}
 
 		/* (non-Javadoc)
@@ -460,9 +462,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterFromPrivateProduction() {
 			// Artesian water used to meet shortfall in reaching minimum demand.
 			return Math.min(getWaterReservoirVolume() - getReservoirWithdrawalsFromPublicProduction(), 
-					Math.max(0, WaterUnits.convertFlow(
-								getSociety().getTotalWaterDemand(), 
-								getSociety(), this)
+					Math.max(0, getSocietyDemand()
 							+ getWaterOutDistribution()
 							- getWaterInDistribution()
 							- getWaterProduction()));
@@ -475,15 +475,13 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterImport() {
 			// Water is imported to meet shortfall in reaching minimum demand.
 			// Note that water cannot be exported, and is wasted if excess.
-			return Math.max(0, WaterUnits.convertFlow(
-						getSociety().getTotalWaterDemand(), 
-						getSociety(), this)
+			return Math.max(0, getSocietyDemand()
 					+ getWaterOutDistribution()
 					- getWaterInDistribution()
 					- getWaterProduction()
 					- getWaterFromPrivateProduction());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
 		 */
@@ -491,7 +489,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterImportPrice() {
 			return importPriceModel.getUnitPrice();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
 		 */
@@ -503,7 +501,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistribution()
 		 */
@@ -530,7 +528,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterProduction()
 		 */
@@ -578,7 +576,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public WaterUnits getWaterUnits() {
 			return waterUnits;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
@@ -589,7 +587,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					+ getWaterFromPrivateProduction()
 					+ getWaterInDistribution()
 					- getWaterOutDistribution()
-					- getSociety().getTotalWaterDemand());
+					- getSocietyDemand());
 		}
 
 		/* (non-Javadoc)
@@ -638,7 +636,6 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			waterReservoirVolume = nextWaterReservoirVolume;
 		}
 	}
-
 	/**
 	 * The Class Remote.
 	 */
@@ -728,4 +725,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			this.importPrice = importPrice;
 		}
 	}
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 }

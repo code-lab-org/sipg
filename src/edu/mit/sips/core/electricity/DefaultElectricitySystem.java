@@ -107,6 +107,15 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 					* getPetroleumConsumptionFromPublicProduction();
 		}
 
+		/**
+		 * Gets the society demand.
+		 *
+		 * @return the society demand
+		 */
+		private double getSocietyDemand() {
+			return ElectricityUnits.convertFlow(getSociety().getTotalElectricityDemand(), getSociety(), this);
+		}
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
@@ -153,7 +162,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getElectricityFromPrivateProduction() {
-			return Math.max(0, getSociety().getTotalElectricityDemand()  
+			return Math.max(0, getSocietyDemand()
 					+ getElectricityOutDistribution()
 					- getElectricityInDistribution()
 					- getElectricityProduction());
@@ -166,7 +175,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getElectricityInDistribution() {
 			double distribution = 0;
 			for(ElectricityElement e : getExternalElements()) {
-				distribution += e.getElectricityOutput();
+				distribution += ElectricityUnits.convertFlow(e.getElectricityOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -180,7 +189,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			for(ElectricityElement e : getInternalElements()) {
 				if(!getSociety().getCities().contains(
 						getSociety().getCountry().getCity(e.getDestination()))) {
-					distribution += e.getElectricityInput();
+					distribution += ElectricityUnits.convertFlow(e.getElectricityInput(), e, this);
 				}
 			}
 			return distribution;
@@ -193,7 +202,8 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getElectricityOutDistributionLosses() {
 			double distribution = 0;
 			for(ElectricityElement e : getInternalElements()) {
-				distribution += e.getElectricityInput() - e.getElectricityOutput();
+				distribution += ElectricityUnits.convertFlow(e.getElectricityInput(), e, this)
+						- ElectricityUnits.convertFlow(e.getElectricityOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -205,7 +215,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getElectricityProduction() {
 			double energyProduction = 0;
 			for(ElectricityElement e : getInternalElements()) {
-				energyProduction += e.getElectricityProduction();
+				energyProduction += ElectricityUnits.convertFlow(e.getElectricityProduction(), e, this);
 			}
 			return energyProduction;
 		}
@@ -235,7 +245,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			return Math.max(0, getElectricityProduction() 
 					+ getElectricityInDistribution()
 					- getElectricityOutDistribution()
-					- getSociety().getTotalElectricityDemand());
+					- getSocietyDemand());
 		}
 
 		/* (non-Javadoc)
@@ -307,10 +317,10 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getLocalElectricityFraction() {
-			if(getSociety().getTotalElectricityDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return Math.min(1, (getElectricityProduction() 
 						+ getElectricityFromPrivateProduction())
-						/ getSociety().getTotalElectricityDemand());
+						/ getSocietyDemand());
 			}
 			return 0;
 		}
@@ -357,7 +367,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getPetroleumConsumptionFromPublicProduction() {
 			double petroleumConsumption = 0;
 			for(ElectricityElement e : getInternalElements()) {
-				petroleumConsumption += e.getPetroleumConsumption();
+				petroleumConsumption += OilUnits.convertFlow(e.getPetroleumConsumption(), e, this);
 			}
 			return petroleumConsumption;
 		}
@@ -367,9 +377,9 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getRenewableElectricityFraction() {
-			if(getSociety().getTotalElectricityDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return getRenewableElectricityProduction() / 
-						getSociety().getTotalElectricityDemand();
+						getSocietyDemand();
 			}
 			return 0;
 		}
@@ -380,9 +390,9 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		@Override
 		public double getRenewableElectricityProduction() {
 			double production = 0;
-			for(ElectricityElement element : getInternalElements()) {
-				if(element.isRenewableElectricity()) {
-					production += element.getElectricityProduction();
+			for(ElectricityElement e : getInternalElements()) {
+				if(e.isRenewableElectricity()) {
+					production += ElectricityUnits.convertFlow(e.getElectricityProduction(), e, this);
 				}
 			}
 			return production;
@@ -393,7 +403,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getElectricityDomesticPrice() * (getSociety().getTotalElectricityDemand() 
+			return getElectricityDomesticPrice() * (getSocietyDemand()
 					- getElectricityFromPrivateProduction());
 		}
 
@@ -437,7 +447,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getWaterConsumption() {
 			double waterConsumption = 0;
 			for(ElectricityElement e : getInternalElements()) {
-				waterConsumption += e.getWaterConsumption();
+				waterConsumption += WaterUnits.convertFlow(e.getWaterConsumption(), e, this);
 			}
 			return waterConsumption;
 		}

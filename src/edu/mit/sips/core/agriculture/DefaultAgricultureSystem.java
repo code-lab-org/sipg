@@ -19,11 +19,6 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultAgricultureSystem.
  */
 public abstract class DefaultAgricultureSystem implements AgricultureSystem {
-	private static final WaterUnits waterUnits = WaterUnits.m3;
-	private static final TimeUnits waterTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
-	
 	/**
 	 * The Class Local.
 	 */
@@ -47,7 +42,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			this.arableLandArea = 0;
 			this.laborParticipationRate = 1;
 		}
-		
 		/**
 		 * Instantiates a new local.
 		 *
@@ -113,7 +107,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			this.exportPriceModel = exportPriceModel;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
 		 */
@@ -121,7 +115,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public synchronized boolean addElement(AgricultureElement element) {
 			return elements.add(element);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getArableLandArea()
 		 */
@@ -129,7 +123,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getArableLandArea() {
 			return arableLandArea;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 		 */
@@ -146,7 +140,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getDistributionExpense() {
 			return getFoodDomesticPrice() * getFoodInDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
 		 */
@@ -163,7 +157,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getDomesticProduction() {
 			return domesticProductionModel.getDomesticProduction(this);
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
@@ -219,7 +213,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getFoodDomesticPrice() {
 			return domesticPriceModel.getUnitPrice();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodExport()
 		 */
@@ -228,9 +222,9 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return Math.max(0, getFoodProduction() 
 					+ getFoodInDistribution()
 					- getFoodOutDistribution()
-					- getSociety().getTotalFoodDemand());
+					- getSocietyDemand());
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
 		 */
@@ -244,7 +238,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getFoodImport() {
-			return Math.max(0, getSociety().getTotalFoodDemand() 
+			return Math.max(0, getSocietyDemand()
 					+ getFoodOutDistribution() 
 					- getFoodInDistribution()
 					- getFoodProduction());
@@ -270,7 +264,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			return distribution;
 		}
 
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getFoodOutDistribution()
 		 */
@@ -285,7 +278,8 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return distribution;
 		}
-		
+
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 		 */
@@ -317,7 +311,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public TimeUnits getFoodTimeUnits() {
 			return foodTimeUnits;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
 		 */
@@ -349,7 +343,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public double getLaborParticipationRate() {
 			return laborParticipationRate;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborUsed()
 		 */
@@ -361,7 +355,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return value;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
 		 */
@@ -373,19 +367,19 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return landAreaUsed;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
 		 */
 		@Override
 		public double getLocalFoodFraction() {
-			if(getSociety().getTotalFoodDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return Math.min(1, getFoodProduction() 
-						/ getSociety().getTotalFoodDemand());
+						/ getSocietyDemand());
 			} 
 			return 0;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
 		 */
@@ -401,7 +395,16 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getFoodDomesticPrice() * getSociety().getTotalFoodDemand();
+			return getFoodDomesticPrice() * getSocietyDemand();
+		}
+
+		/**
+		 * Gets the society demand.
+		 *
+		 * @return the society demand
+		 */
+		private double getSocietyDemand() {
+			return FoodUnits.convertFlow(getSociety().getTotalFoodDemand(), getSociety(), this);
 		}
 
 		/* (non-Javadoc)
@@ -489,7 +492,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public void tock() { }
 	}
-	
 	/**
 	 * The Class Remote.
 	 */
@@ -602,4 +604,9 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			this.waterConsumption = waterConsumption;
 		}
 	}
+	
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.day;
 }

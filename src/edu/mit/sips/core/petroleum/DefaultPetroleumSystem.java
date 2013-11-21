@@ -19,11 +19,6 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class DefaultPetroleumSystem.
  */
 public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem implements PetroleumSystem {
-	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final OilUnits oilUnits = OilUnits.toe;
-	private static final TimeUnits oilTimeUnits = TimeUnits.year;
-	
 	/**
 	 * The Class Local.
 	 */
@@ -180,7 +175,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getElectricityConsumption() {
 			double consumption = 0;
 			for(PetroleumElement e : getInternalElements()) {
-				consumption += e.getElectricityConsumption();
+				consumption += ElectricityUnits.convertFlow(e.getElectricityConsumption(), e, this);
 			}
 			return consumption;
 		}
@@ -270,9 +265,9 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public double getLocalPetroleumFraction() {
-			if(getSociety().getTotalPetroleumDemand() > 0) {
+			if(getSocietyDemand() > 0) {
 				return Math.min(1, getPetroleumProduction() 
-						/ getSociety().getTotalPetroleumDemand());
+						/ getSocietyDemand());
 			}
 			return 0;
 		}
@@ -317,7 +312,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			return Math.max(0, getPetroleumProduction() 
 					+ getPetroleumInDistribution()
 					- getPetroleumOutDistribution()
-					- getSociety().getTotalPetroleumDemand());
+					- getSocietyDemand());
 		}
 
 		/* (non-Javadoc)
@@ -333,7 +328,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		 */
 		@Override
 		public double getPetroleumImport() {
-			return Math.max(0, getSociety().getTotalPetroleumDemand()
+			return Math.max(0, getSocietyDemand()
 					+ getPetroleumOutDistribution()
 					- getPetroleumInDistribution()
 					- getPetroleumProduction());
@@ -354,7 +349,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getPetroleumInDistribution() {
 			double distribution = 0;
 			for(PetroleumElement e : getExternalElements()) {
-				distribution += e.getPetroleumOutput();
+				distribution += OilUnits.convertFlow(e.getPetroleumOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -368,7 +363,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			for(PetroleumElement e : getInternalElements()) {
 				if(!getSociety().getCities().contains(
 						getSociety().getCountry().getCity(e.getDestination()))) {
-					distribution += e.getPetroleumInput();
+					distribution += OilUnits.convertFlow(e.getPetroleumInput(), e, this);
 				}
 			}
 			return distribution;
@@ -381,7 +376,8 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getPetroleumOutDistributionLosses() {
 			double distribution = 0;
 			for(PetroleumElement e : getInternalElements()) {
-				distribution += e.getPetroleumInput() - e.getPetroleumOutput();
+				distribution += OilUnits.convertFlow(e.getPetroleumInput(), e, this)
+						- OilUnits.convertFlow(e.getPetroleumOutput(), e, this);
 			}
 			return distribution;
 		}
@@ -393,10 +389,11 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getPetroleumProduction() {
 			double petroleumProduction = 0;
 			for(PetroleumElement e : getInternalElements()) {
-				petroleumProduction += e.getPetroleumProduction();
+				petroleumProduction += OilUnits.convertFlow(e.getPetroleumProduction(), e, this);
 			}
 			return petroleumProduction;
 		}
+
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumReservoirVolume()
@@ -405,7 +402,7 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getPetroleumReservoirVolume() {
 			return petroleumReservoirVolume;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
 		 */
@@ -413,17 +410,26 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		public double getPetroleumWithdrawals() {
 			double petroleumWithdrawals = 0;
 			for(PetroleumElement e : getInternalElements()) {
-				petroleumWithdrawals += e.getPetroleumWithdrawals();
+				petroleumWithdrawals += OilUnits.convertFlow(e.getPetroleumWithdrawals(), e, this);
 			}
 			return petroleumWithdrawals;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getPetroleumDomesticPrice() * getSociety().getTotalPetroleumDemand();
+			return getPetroleumDomesticPrice() * getSocietyDemand();
+		}
+
+		/**
+		 * Gets the society demand.
+		 *
+		 * @return the society demand
+		 */
+		private double getSocietyDemand() {
+			return OilUnits.convertFlow(getSociety().getTotalPetroleumDemand(), getSociety(), this);
 		}
 
 		/* (non-Javadoc)
@@ -494,7 +500,6 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			petroleumReservoirVolume = nextPetroleumReservoirVolume;
 		}
 	}
-
 	/**
 	 * The Class Remote.
 	 */
@@ -605,4 +610,9 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 			this.importPrice = importPrice;
 		}	
 	}
+	
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 }
