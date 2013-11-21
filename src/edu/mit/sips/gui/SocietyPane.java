@@ -13,18 +13,15 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
+import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.agriculture.AgricultureSystemPanel;
-import edu.mit.sips.gui.agriculture.BasicAgricultureSystemPanel;
 import edu.mit.sips.gui.agriculture.LocalAgricultureSystemPanel;
-import edu.mit.sips.gui.electricity.BasicElectricitySystemPanel;
 import edu.mit.sips.gui.electricity.ElectricitySystemPanel;
 import edu.mit.sips.gui.electricity.LocalElectricitySystemPanel;
-import edu.mit.sips.gui.petroleum.BasicPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.LocalPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.PetroleumSystemPanel;
 import edu.mit.sips.gui.social.SocialSystemPanel;
-import edu.mit.sips.gui.water.BasicWaterSystemPanel;
 import edu.mit.sips.gui.water.LocalWaterSystemPanel;
 import edu.mit.sips.gui.water.WaterSystemPanel;
 import edu.mit.sips.io.Icons;
@@ -37,14 +34,14 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 
 	private final List<SocietyPane> nestedPaneList = 
 			new ArrayList<SocietyPane>();
-	
+
 	private final WaterSystemPanel waterTab;
 	private final AgricultureSystemPanel agricultureTab;
 	private final ElectricitySystemPanel electricityTab;
 	private final PetroleumSystemPanel petroleumTab;
 	private final SocialSystemPanel socialTab;
 	private final JTabbedPane infraPane;
-	
+
 	/**
 	 * Instantiates a new social system pane.
 	 *
@@ -58,11 +55,15 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 				localSystemCount++;
 			}
 		}
-		*/
+		 */
 
-		socialTab = new SocialSystemPanel(society.getSocialSystem());
-		addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
-		
+		if(society instanceof Country || society.getSocialSystem() instanceof SocialSystem.Local) {
+			socialTab = new SocialSystemPanel(society.getSocialSystem());
+			addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
+		} else {
+			socialTab = null;
+		}
+
 		if(society instanceof City) { // || localSystemCount <= 1) {
 			// add infrastructure directly to society panel if city
 			// or if there are only 0 or 1 local infrastructure
@@ -72,42 +73,46 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			infraPane = new JTabbedPane();
 			addTab("Infrastructure", Icons.INFRASTRUCTURE, infraPane);
 		}
-		
+
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			agricultureTab = new LocalAgricultureSystemPanel(
 					(AgricultureSystem.Local)society.getAgricultureSystem());
+			infraPane.addTab(society.getAgricultureSystem().getName(), 
+					Icons.AGRICULTURE, agricultureTab);
 		} else {
-			agricultureTab = new BasicAgricultureSystemPanel(society.getAgricultureSystem());
+			// agricultureTab = new BasicAgricultureSystemPanel(society.getAgricultureSystem());
+			agricultureTab = null;
 		}
-		infraPane.addTab(society.getAgricultureSystem().getName(), 
-				Icons.AGRICULTURE, agricultureTab);
-		
+
 		if(society.getWaterSystem() instanceof WaterSystem.Local) {
 			waterTab = new LocalWaterSystemPanel(
 					(WaterSystem.Local) society.getWaterSystem());	
+			infraPane.addTab(society.getWaterSystem().getName(), 
+					Icons.WATER, waterTab);		
 		} else {
-			waterTab = new BasicWaterSystemPanel(society.getWaterSystem());
+			// waterTab = new BasicWaterSystemPanel(society.getWaterSystem());
+			waterTab = null;
 		}
-		infraPane.addTab(society.getWaterSystem().getName(), 
-				Icons.WATER, waterTab);		
-		
+
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			petroleumTab = new LocalPetroleumSystemPanel(
 					(PetroleumSystem.Local) society.getPetroleumSystem());
+			infraPane.addTab(society.getPetroleumSystem().getName(), 
+					Icons.PETROLEUM, petroleumTab);
 		} else {
-			petroleumTab = new BasicPetroleumSystemPanel(society.getPetroleumSystem());
+			// petroleumTab = new BasicPetroleumSystemPanel(society.getPetroleumSystem());
+			petroleumTab = null;
 		}
-		infraPane.addTab(society.getPetroleumSystem().getName(), 
-				Icons.PETROLEUM, petroleumTab);
-		
+
 		if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
 			electricityTab = new LocalElectricitySystemPanel(
 					(ElectricitySystem.Local) society.getElectricitySystem());
+			infraPane.addTab(society.getElectricitySystem().getName(), 
+					Icons.ELECTRICITY, electricityTab);
 		} else {
-			electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
+			// electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
+			electricityTab = null;
 		}
-		infraPane.addTab(society.getElectricitySystem().getName(), 
-				Icons.ELECTRICITY, electricityTab);
 
 		for(Society nestedSociety : society.getNestedSocieties()) {
 			SocietyPane subPane = new SocietyPane(nestedSociety);
@@ -115,7 +120,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			addTab(nestedSociety.getName(), getIcon(nestedSociety), subPane);
 		}
 	}
-	
+
 	/**
 	 * Gets the icon.
 	 *
@@ -133,35 +138,37 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			throw new IllegalArgumentException("Unknown society.");
 		}
 	}
-	
+
 	/**
 	 * Initialize.
 	 */
 	public void initialize() {
-		
+
 		if(waterTab != null) {
 			waterTab.initialize();
 		}
-		
+
 		if(agricultureTab != null) {
 			agricultureTab.initialize();
 		}
-		
+
 		if(electricityTab != null) {
 			electricityTab.initialize();
 		}
-		
+
 		if(petroleumTab != null) {
 			petroleumTab.initialize();
 		}
-		
-		socialTab.initialize();
-		
+
+		if(socialTab != null) {
+			socialTab.initialize();
+		}
+
 		for(SocietyPane subPane : nestedPaneList) {			
 			subPane.initialize();
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
@@ -169,18 +176,28 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	public void simulationCompleted(UpdateEvent event) {
 		// nothing to do here
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		waterTab.simulationInitialized(event);
-		agricultureTab.simulationInitialized(event);
-		socialTab.simulationInitialized(event);
-		electricityTab.simulationInitialized(event);
-		petroleumTab.simulationInitialized(event);
-		
+		if(waterTab != null) {
+			waterTab.simulationInitialized(event);
+		}
+		if(agricultureTab != null) {
+			agricultureTab.simulationInitialized(event);
+		}
+		if(electricityTab != null) {
+			electricityTab.simulationInitialized(event);
+		}
+		if(petroleumTab != null) {
+			petroleumTab.simulationInitialized(event);
+		}
+		if(socialTab != null) {
+			socialTab.simulationInitialized(event);
+		}
+
 		for(SocietyPane nestedPane : nestedPaneList) {
 			nestedPane.simulationInitialized(event);
 		}
@@ -191,12 +208,22 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		waterTab.simulationUpdated(event);
-		agricultureTab.simulationUpdated(event);
-		electricityTab.simulationUpdated(event);
-		petroleumTab.simulationUpdated(event);
-		socialTab.simulationUpdated(event);
-		
+		if(waterTab != null) {
+			waterTab.simulationUpdated(event);
+		}
+		if(agricultureTab != null) {
+			agricultureTab.simulationUpdated(event);
+		}
+		if(electricityTab != null) {
+			electricityTab.simulationUpdated(event);
+		}
+		if(petroleumTab != null) {
+			petroleumTab.simulationUpdated(event);
+		}
+		if(socialTab != null) {
+			socialTab.simulationUpdated(event);
+		}
+
 		for(SocietyPane nestedPane : nestedPaneList) {
 			nestedPane.simulationUpdated(event);
 		}
@@ -209,26 +236,36 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param superSystem the system
 	 */
 	public void updateDatasets(int year) {
-		infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
-				waterTab.getInfrastructureSystem().getName());
-		waterTab.update(year);
+		if(waterTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
+					waterTab.getInfrastructureSystem().getName());
+			waterTab.update(year);
+		}
 
-		infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
-				agricultureTab.getInfrastructureSystem().getName());
-		agricultureTab.update(year);
-		
-		infraPane.setTitleAt(infraPane.indexOfComponent(electricityTab), 
-				electricityTab.getInfrastructureSystem().getName());
-		electricityTab.update(year);
-		
-		infraPane.setTitleAt(infraPane.indexOfComponent(petroleumTab), 
-				petroleumTab.getInfrastructureSystem().getName());
-		petroleumTab.update(year);
+		if(agricultureTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
+					agricultureTab.getInfrastructureSystem().getName());
+			agricultureTab.update(year);
+		}
 
-		setTitleAt(indexOfComponent(socialTab), 
-				socialTab.getInfrastructureSystem().getName());
-		socialTab.update(year);
-		
+		if(electricityTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(electricityTab), 
+					electricityTab.getInfrastructureSystem().getName());
+			electricityTab.update(year);
+		}
+
+		if(petroleumTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(petroleumTab), 
+					petroleumTab.getInfrastructureSystem().getName());
+			petroleumTab.update(year);
+		}
+
+		if(socialTab != null) {
+			setTitleAt(indexOfComponent(socialTab), 
+					socialTab.getInfrastructureSystem().getName());
+			socialTab.update(year);
+		}
+
 		for(SocietyPane subPane : nestedPaneList) {			
 			subPane.updateDatasets(year);
 		}

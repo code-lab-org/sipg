@@ -496,6 +496,13 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
 		private double waterConsumption;
 		private double domesticPrice, importPrice, exportPrice;
+		
+		/**
+		 * Instantiates a new remote.
+		 */
+		public Remote() {
+			setName("Agriculture");
+		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()

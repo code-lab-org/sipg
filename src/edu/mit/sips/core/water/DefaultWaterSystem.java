@@ -646,6 +646,10 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		private double electricityConsumption;
 		private double domesticPrice, importPrice;
 		
+		public Remote() {
+			setName("Water");
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 		 */

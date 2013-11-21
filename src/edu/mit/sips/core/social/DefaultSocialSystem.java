@@ -382,6 +382,13 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		private double foodConsumption;
 		private double waterConsumption;
 		private double petroleumConsumption;
+		
+		/**
+		 * Instantiates a new remote.
+		 */
+		public Remote() {
+			setName("Society");
+		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()

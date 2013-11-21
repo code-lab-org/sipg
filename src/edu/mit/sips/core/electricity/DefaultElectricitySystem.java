@@ -1,3 +1,4 @@
+
 package edu.mit.sips.core.electricity;
 
 import java.util.ArrayList;
@@ -491,6 +492,13 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		private double waterConsumption;
 		private double petroleumConsumption;
 		private double domesticPrice;
+		
+		/**
+		 * Instantiates a new remote.
+		 */
+		public Remote() {
+			setName("Electricity");
+		}
 		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()

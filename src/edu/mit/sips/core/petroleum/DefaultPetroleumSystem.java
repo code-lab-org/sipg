@@ -501,6 +501,13 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements PetroleumSystem.Remote {		
 		private double electricityConsumption;
 		private double domesticPrice, importPrice, exportPrice;
+		
+		/**
+		 * Instantiates a new remote.
+		 */
+		public Remote() {
+			setName("Petroleum");
+		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getElectricityConsumption()
