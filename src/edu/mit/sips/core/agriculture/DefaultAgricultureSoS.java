@@ -32,8 +32,8 @@ import edu.mit.sips.sim.util.WaterUnits;
 public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements AgricultureSoS {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 	
 	/**
 	 * The Class Local.

@@ -12,8 +12,8 @@ import edu.mit.sips.sim.util.WaterUnits;
  * The Class DefaultAgricultureElement.
  */
 public final class DefaultAgricultureElement extends DefaultInfrastructureElement implements AgricultureElement {
-	private final static TimeUnits foodTimeUnits = TimeUnits.day;
-	private final static FoodUnits foodUnits = FoodUnits.kcal;
+	private final static TimeUnits foodTimeUnits = TimeUnits.year;
+	private final static FoodUnits foodUnits = FoodUnits.GJ;
 	private final static TimeUnits waterTimeUnits = TimeUnits.year;
 	private final static WaterUnits waterUnits = WaterUnits.m3;
 	

@@ -14,8 +14,8 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
  */
 public final class MutableAgricultureElement extends DefaultMutableInfrastructureElement 
 		implements FoodUnitsOutput, WaterUnitsOutput {
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	
