@@ -58,7 +58,7 @@ import edu.mit.sips.sim.Simulator;
 /**
  * The Class ElementsPane.
  */
-public class ElementsPane extends JPanel {
+public class ElementsPane extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
 	private final JPopupMenu contextPopup;
@@ -118,13 +118,29 @@ public class ElementsPane extends JPanel {
 				ElementTreeNode node = (ElementTreeNode) value;
 				setText(node.getUserObject().getName());
 				if(node.getUserObject() instanceof AgricultureElement) {
-					setIcon(Icons.AGRICULTURE);
+					if(node.getUserObject().isOperational()) {
+						setIcon(Icons.AGRICULTURE);
+					} else {
+						setIcon(Icons.AGRICULTURE_PLANNED);
+					}
 				} else if(node.getUserObject() instanceof WaterElement) {
-					setIcon(Icons.WATER);
+					if(node.getUserObject().isOperational()) {
+						setIcon(Icons.WATER);
+					} else {
+						setIcon(Icons.WATER_PLANNED);
+					}
 				} else if(node.getUserObject() instanceof ElectricityElement) {
-					setIcon(Icons.ELECTRICITY);
+					if(node.getUserObject().isOperational()) {
+						setIcon(Icons.ELECTRICITY);
+					} else {
+						setIcon(Icons.ELECTRICITY_PLANNED);
+					}
 				} else if(node.getUserObject() instanceof PetroleumElement) {
-					setIcon(Icons.PETROLEUM);
+					if(node.getUserObject().isOperational()) {
+						setIcon(Icons.PETROLEUM);
+					} else {
+						setIcon(Icons.PETROLEUM_PLANNED);
+					}
 				}
 			}
 			return this;
@@ -132,7 +148,7 @@ public class ElementsPane extends JPanel {
 	};
 
 	private final Action addElementTemplate = new AbstractAction(
-			"Add from Template", Icons.ADD_WIZARD) {
+			"Add from Template",Icons.ADD) { // TODO  Icons.ADD_WIZARD) {
 		private static final long serialVersionUID = -6723630338741885195L;
 
 		@Override
@@ -198,10 +214,11 @@ public class ElementsPane extends JPanel {
 	 */
 	public ElementsPane(Simulator simulator) {
 		this.simulator = simulator;
+		simulator.addUpdateListener(this);
 		
 		contextPopup = new JPopupMenu();
 		contextPopup.add(new JMenuItem(addElementTemplate));
-		contextPopup.add(new JMenuItem(addElement));
+		// TODO contextPopup.add(new JMenuItem(addElement));
 		contextPopup.add(new JMenuItem(editElement));
 		/*TODO 
 		contextPopup.add(new JMenuItem(editElementOperations));
@@ -306,7 +323,7 @@ public class ElementsPane extends JPanel {
 		buttonPanel.add(addTemplateButton);
 		JButton addButton = new JButton(addElement);
 		addButton.setText(null);
-		buttonPanel.add(addButton);
+		// TODO buttonPanel.add(addButton);
 		JButton editButton = new JButton(editElement);
 		editButton.setText(null);
 		buttonPanel.add(editButton);
@@ -500,5 +517,20 @@ public class ElementsPane extends JPanel {
 			elementsTree.setSelectionRow(Math.min(selectionIndex, 
 					elementsTree.getRowCount() - 1));
 		}
+	}
+
+	@Override
+	public void simulationCompleted(UpdateEvent event) {
+		elementsTree.repaint();
+	}
+
+	@Override
+	public void simulationInitialized(UpdateEvent event) {
+		elementsTree.repaint();
+	}
+
+	@Override
+	public void simulationUpdated(UpdateEvent event) {
+		elementsTree.repaint();
 	}
 }

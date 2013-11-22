@@ -247,7 +247,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		optimizationPanel.add(new JButton(configureOptimization), c);
 		c.gridx++;
 		optimizationPanel.add(new JButton(runOptimization), c);
-		add(optimizationPanel, BorderLayout.SOUTH);
+		// TODO add(optimizationPanel, BorderLayout.SOUTH);
 		
 		updateActions();
 	}

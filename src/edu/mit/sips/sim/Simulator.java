@@ -97,10 +97,10 @@ public class Simulator implements SimulationControlListener {
 		}
 		
 		long stopTime = Math.min(endTime, time + duration);
+
+		runAutoOptimization();
 		
 		while(time <= stopTime) {
-			runAutoOptimization();
-			
 			try {
 				simAmbassador.advance();
 			} catch (NotConnected ignored) {
@@ -112,6 +112,7 @@ public class Simulator implements SimulationControlListener {
 			time = time + 1;
 			scenario.getCountry().tock();
 			if(time <= endTime) {
+				runAutoOptimization();
 				fireUpdateEvent(time); // first update of next year
 			}
 		}

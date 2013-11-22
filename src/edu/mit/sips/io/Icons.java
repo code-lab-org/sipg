@@ -19,10 +19,14 @@ public abstract class Icons {
 	public static final Icon INFRASTRUCTURE = loadIcon("resources/silk/chart_organisation.png");
 			//loadIcon("resources/fugue/node.png");
 	public static final Icon AGRICULTURE = loadIcon("resources/fugue/leaf.png");
+	public static final Icon AGRICULTURE_PLANNED = loadIcon("resources/fugue/leaf--faded.png");
 	public static final Icon WATER = loadIcon("resources/fugue/water.png");
+	public static final Icon WATER_PLANNED  = loadIcon("resources/fugue/water--faded.png");
 	public static final Icon ENERGY = loadIcon("resources/fugue/lightning.png");
 	public static final Icon PETROLEUM = loadIcon("resources/fugue/petroleum.png");
+	public static final Icon PETROLEUM_PLANNED  = loadIcon("resources/fugue/petroleum--faded.png");
 	public static final Icon ELECTRICITY = loadIcon("resources/fugue/light-bulb.png");
+	public static final Icon ELECTRICITY_PLANNED  = loadIcon("resources/fugue/light-bulb--faded.png");
 	
 	public static final Icon PRODUCT = loadIcon("resources/silk/cog.png");
 	public static final Icon POPULATION = loadIcon("resources/silk/group.png");
