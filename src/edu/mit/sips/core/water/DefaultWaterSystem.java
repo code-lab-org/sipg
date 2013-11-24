@@ -10,9 +10,11 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
+import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
@@ -155,9 +157,11 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return CurrencyUnits.convertStock(
-					getSociety().getElectricitySystem().getElectricityDomesticPrice(), getSociety(), this)
-					* getElectricityConsumptionFromPublicProduction();
+			return getElectricityConsumptionFromPublicProduction() * DefaultUnits.convert(
+					getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+					getSociety().getElectricitySystem().getCurrencyUnits(), 
+					getSociety().getElectricitySystem().getElectricityUnits(),
+					getCurrencyUnits(), getElectricityUnits());
 		}
 
 		/* (non-Javadoc)
@@ -401,8 +405,18 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
-			return getWaterDomesticPrice() * (getSocietyDemand()
-					- getWaterFromPrivateProduction());
+			double privateProduction = getWaterFromPrivateProduction();
+			double publicProduction = getWaterProduction() - privateProduction;
+			double agConsumption = WaterUnits.convertFlow(
+					getSociety().getAgricultureSystem().getWaterConsumption(),
+					getSociety().getAgricultureSystem(), this);
+			double nonAgConsumption = getWaterProduction() - agConsumption;
+			
+			if(publicProduction <= nonAgConsumption) {
+				return publicProduction * getWaterDomesticPrice();
+			} else {
+				return (publicProduction - nonAgConsumption) * getWaterAgriculturalPrice();
+			}
 		}
 
 		/**
@@ -635,13 +649,22 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void tock() {
 			waterReservoirVolume = nextWaterReservoirVolume;
 		}
+
+		@Override
+		public double getWaterAgriculturalPrice() {
+			ElectricitySystem electSys = getSociety().getElectricitySystem();
+			return electricalIntensityOfPrivateProduction 
+					* DefaultUnits.convert(electSys.getElectricityDomesticPrice(),
+							electSys.getCurrencyUnits(), electSys.getElectricityUnits(),
+							getCurrencyUnits(), getElectricityUnits());
+		}
 	}
 	/**
 	 * The Class Remote.
 	 */
 	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
 		private double electricityConsumption;
-		private double domesticPrice, importPrice;
+		private double domesticPrice, importPrice, agriculturalPrice;
 		
 		public Remote() {
 			setName("Water");
@@ -723,6 +746,20 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		public void setWaterImportPrice(double importPrice) {
 			this.importPrice = importPrice;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
+		 */
+		public double getWaterAgriculturalPrice() {
+			return agriculturalPrice;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterAgriculturalPrice(double)
+		 */
+		public void setWaterAgriculturalPrice(double agriculturalPrice) {
+			this.agriculturalPrice = agriculturalPrice;
 		}
 	}
 	private static final WaterUnits waterUnits = WaterUnits.m3;

@@ -12,6 +12,7 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -103,7 +104,10 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getPetroleumSystem().getPetroleumDomesticPrice()
+			return DefaultUnits.convert(getSociety().getPetroleumSystem().getPetroleumDomesticPrice(),
+					getSociety().getPetroleumSystem().getCurrencyUnits(),
+					getSociety().getPetroleumSystem().getOilUnits(),
+					getCurrencyUnits(), getOilUnits())
 					* getPetroleumConsumptionFromPublicProduction();
 		}
 

@@ -24,6 +24,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -190,7 +191,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(PetroleumSystem system : getNestedSystems()) {
-					value += system.getPetroleumDomesticPrice();
+					value += DefaultUnits.convert(system.getPetroleumDomesticPrice(), 
+							system.getCurrencyUnits(), system.getOilUnits(),
+							getCurrencyUnits(), getOilUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -217,7 +220,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(PetroleumSystem system : getNestedSystems()) {
-					value += system.getPetroleumExportPrice();
+					value += DefaultUnits.convert(system.getPetroleumExportPrice(), 
+							system.getCurrencyUnits(), system.getOilUnits(),
+							getCurrencyUnits(), getOilUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -244,7 +249,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(PetroleumSystem system : getNestedSystems()) {
-					value += system.getPetroleumImportPrice();
+					value += DefaultUnits.convert(system.getPetroleumImportPrice(), 
+							system.getCurrencyUnits(), system.getOilUnits(),
+							getCurrencyUnits(), getOilUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -399,7 +406,11 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfPetroleumDistribution()
 						+ element.getElectricalIntensityOfPetroleumDistribution() * 
-						getSociety().getElectricitySystem().getElectricityDomesticPrice();
+						DefaultUnits.convert(
+								getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+								getSociety().getElectricitySystem().getCurrencyUnits(),
+								getSociety().getElectricitySystem().getElectricityUnits(),
+								getCurrencyUnits(), getElectricityUnits());
 				initialValues[elements.indexOf(element)] 
 						= element.getPetroleumInput();
 			}
@@ -515,7 +526,11 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 						+ element.getReservoirIntensityOfPetroleumProduction() 
 						* optimizationOptions.getDeltaReservoirOilPrice()
 						+ element.getElectricalIntensityOfPetroleumDistribution()
-						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
+						* (DefaultUnits.convert(
+								getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+								getSociety().getElectricitySystem().getCurrencyUnits(),
+								getSociety().getElectricitySystem().getElectricityUnits(),
+								getCurrencyUnits(), getElectricityUnits())
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.size() + elements.indexOf(element)] 
 						= element.getPetroleumInput();
@@ -705,7 +720,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(PetroleumSystem system : getNestedSystems()) {
-				value += system.getPetroleumDomesticPrice();
+				value += DefaultUnits.convert(system.getPetroleumDomesticPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
 			}
 			return value / getNestedSystems().size();
 		}
@@ -720,7 +737,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(PetroleumSystem system : getNestedSystems()) {
-				value += system.getPetroleumExportPrice();
+				value += DefaultUnits.convert(system.getPetroleumExportPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
 			}
 			return value / getNestedSystems().size();
 		}
@@ -735,7 +754,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(PetroleumSystem system : getNestedSystems()) {
-				value += system.getPetroleumImportPrice();
+				value += DefaultUnits.convert(system.getPetroleumImportPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
 			}
 			return value / getNestedSystems().size();
 		}

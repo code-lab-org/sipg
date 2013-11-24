@@ -22,6 +22,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
@@ -106,7 +107,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(AgricultureSystem system : getNestedSystems()) {
-					value += system.getFoodDomesticPrice();
+					value += DefaultUnits.convert(system.getFoodDomesticPrice(), 
+							system.getCurrencyUnits(), system.getFoodUnits(),
+							getCurrencyUnits(), getFoodUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -133,7 +136,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(AgricultureSystem system : getNestedSystems()) {
-					value += system.getFoodExportPrice();
+					value += DefaultUnits.convert(system.getFoodExportPrice(), 
+							system.getCurrencyUnits(), system.getFoodUnits(),
+							getCurrencyUnits(), getFoodUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -160,7 +165,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(AgricultureSystem system : getNestedSystems()) {
-					value += system.getFoodImportPrice();
+					value += DefaultUnits.convert(system.getFoodImportPrice(), 
+							system.getCurrencyUnits(), system.getFoodUnits(),
+							getCurrencyUnits(), getFoodUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -533,7 +540,11 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				costCoefficients[elements.indexOf(element)] = 
 						element.getCostIntensityOfLandUsed() 
 						+ element.getWaterIntensityOfLandUsed()
-						* (getSociety().getWaterSystem().getWaterDomesticPrice()
+						* (DefaultUnits.convert(
+								getSociety().getWaterSystem().getWaterAgriculturalPrice(),
+								getSociety().getWaterSystem().getCurrencyUnits(), 
+								getSociety().getWaterSystem().getWaterUnits(),
+								getCurrencyUnits(), getWaterUnits())
 								+ optimizationOptions.getDeltaDomesticWaterPrice());
 				initialValues[elements.indexOf(element)] = element.getLandArea();
 
@@ -732,7 +743,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(AgricultureSystem system : getNestedSystems()) {
-				value += system.getFoodDomesticPrice();
+				value += DefaultUnits.convert(system.getFoodDomesticPrice(), 
+						system.getCurrencyUnits(), system.getFoodUnits(),
+						getCurrencyUnits(), getFoodUnits());
 			}
 			return value / getNestedSystems().size();
 		}
@@ -747,7 +760,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(AgricultureSystem system : getNestedSystems()) {
-				value += system.getFoodExportPrice();
+				value += DefaultUnits.convert(system.getFoodExportPrice(), 
+						system.getCurrencyUnits(), system.getFoodUnits(),
+						getCurrencyUnits(), getFoodUnits());
 			}
 			return value / getNestedSystems().size();
 		}
@@ -762,7 +777,9 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(AgricultureSystem system : getNestedSystems()) {
-				value += system.getFoodImportPrice();
+				value += DefaultUnits.convert(system.getFoodImportPrice(), 
+						system.getCurrencyUnits(), system.getFoodUnits(),
+						getCurrencyUnits(), getFoodUnits());
 			}
 			return value / getNestedSystems().size();
 		}

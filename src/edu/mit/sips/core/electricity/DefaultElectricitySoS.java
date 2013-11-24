@@ -21,6 +21,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -86,7 +87,9 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 			if(!getNestedSystems().isEmpty()) {
 				double value = 0;
 				for(ElectricitySystem system : getNestedSystems()) {
-					value += system.getElectricityDomesticPrice();
+					value += DefaultUnits.convert(system.getElectricityDomesticPrice(), 
+							system.getCurrencyUnits(), system.getElectricityUnits(),
+							getCurrencyUnits(), getElectricityUnits());
 				}
 				return value / getNestedSystems().size();
 			}
@@ -465,7 +468,10 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 
 				// Set petroleum burn cost in each city.
 				costCoefficients[elements.size() + cities.indexOf(city)] = 
-						city.getPetroleumSystem().getPetroleumDomesticPrice();
+						DefaultUnits.convert(city.getPetroleumSystem().getPetroleumDomesticPrice(),
+								city.getPetroleumSystem().getCurrencyUnits(),
+								city.getPetroleumSystem().getOilUnits(),
+								getCurrencyUnits(), getOilUnits());
 				initialValues[elements.size() + cities.indexOf(city)] = 
 						Math.max(0,electricitySystem.getPetroleumConsumptionFromPrivateProduction());
 			}
@@ -530,12 +536,18 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 				// minimize transportation even if free.
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfElectricityProduction()
-		                		 + element.getWaterIntensityOfElectricityProduction()
-		                		 * (getSociety().getWaterSystem().getWaterDomesticPrice()
-		                				 + optimizationOptions.getDeltaDomesticWaterPrice())
-		                		 + element.getPetroleumIntensityOfElectricityProduction()
-		                		 * (getSociety().getPetroleumSystem().getPetroleumDomesticPrice()
-		                				 + optimizationOptions.getDeltaDomesticOilPrice());
+						+ element.getWaterIntensityOfElectricityProduction()
+						* (DefaultUnits.convert(getSociety().getWaterSystem().getWaterDomesticPrice(),
+								getSociety().getWaterSystem().getCurrencyUnits(),
+								getSociety().getWaterSystem().getWaterUnits(),
+								getCurrencyUnits(), getWaterUnits())
+								+ optimizationOptions.getDeltaDomesticWaterPrice())
+						+ element.getPetroleumIntensityOfElectricityProduction()
+						* (DefaultUnits.convert(getSociety().getPetroleumSystem().getPetroleumDomesticPrice(),
+								getSociety().getPetroleumSystem().getCurrencyUnits(),
+								getSociety().getPetroleumSystem().getOilUnits(),
+								getCurrencyUnits(), getOilUnits())
+								+ optimizationOptions.getDeltaDomesticOilPrice());
 				initialValues[elements.indexOf(element)] 
 						= element.getElectricityProduction();
 
@@ -582,7 +594,10 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 
 				// Set petroleum burn cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] = 
-						city.getPetroleumSystem().getPetroleumDomesticPrice()
+						DefaultUnits.convert(city.getPetroleumSystem().getPetroleumDomesticPrice(),
+								city.getPetroleumSystem().getCurrencyUnits(),
+								city.getPetroleumSystem().getOilUnits(),
+								getCurrencyUnits(), getOilUnits())
 						+ optimizationOptions.getDeltaDomesticOilPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] = 
 						Math.max(0,electricitySystem.getPetroleumConsumptionFromPrivateProduction());
@@ -657,7 +672,9 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		if(!getNestedSystems().isEmpty()) {
 			double value = 0;
 			for(ElectricitySystem system : getNestedSystems()) {
-				value += system.getElectricityDomesticPrice();
+				value += DefaultUnits.convert(system.getElectricityDomesticPrice(), 
+						system.getCurrencyUnits(), system.getElectricityUnits(),
+						getCurrencyUnits(), getElectricityUnits());
 			}
 			return value / getNestedSystems().size();
 		}

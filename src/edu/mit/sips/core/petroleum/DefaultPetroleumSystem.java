@@ -11,6 +11,7 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -132,15 +133,13 @@ public abstract class DefaultPetroleumSystem extends DefaultInfrastructureSystem
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 		 */
-		/**
-		 * Gets the consumption expense.
-		 *
-		 * @return the consumption expense
-		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getElectricitySystem().getElectricityDomesticPrice()
-					* getElectricityConsumption();
+			return getElectricityConsumption() * DefaultUnits.convert(
+					getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+					getSociety().getElectricitySystem().getCurrencyUnits(),
+					getSociety().getElectricitySystem().getElectricityUnits(),
+					getCurrencyUnits(), getElectricityUnits());
 		}
 		
 		/* (non-Javadoc)

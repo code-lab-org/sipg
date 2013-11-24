@@ -11,6 +11,7 @@ import edu.mit.sips.core.DefaultInfrastructureSystem;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
@@ -129,8 +130,11 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public double getConsumptionExpense() {
-			return getSociety().getWaterSystem().getWaterDomesticPrice()
-					* getWaterConsumption();
+			return getWaterConsumption() * DefaultUnits.convert(
+					getSociety().getWaterSystem().getWaterAgriculturalPrice(),
+					getSociety().getWaterSystem().getCurrencyUnits(), 
+					getSociety().getWaterSystem().getWaterUnits(),
+					getCurrencyUnits(), getWaterUnits());
 		}
 
 		/* (non-Javadoc)

@@ -22,6 +22,7 @@ import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
@@ -519,7 +520,11 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterDistribution()
 						+ element.getElectricalIntensityOfWaterDistribution()
-						* getSociety().getElectricitySystem().getElectricityDomesticPrice();
+						* DefaultUnits.convert(
+								getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+								getSociety().getElectricitySystem().getCurrencyUnits(), 
+								getSociety().getElectricitySystem().getElectricityUnits(),
+								getCurrencyUnits(), getElectricityUnits());
 				initialValues[elements.indexOf(element)] 
 						= element.getWaterInput();
 			}
@@ -628,7 +633,11 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 				costCoefficients[elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfWaterProduction() 
 						+ element.getElectricalIntensityOfWaterProduction()
-						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
+						* (DefaultUnits.convert(
+								getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+								getSociety().getElectricitySystem().getCurrencyUnits(), 
+								getSociety().getElectricitySystem().getElectricityUnits(),
+								getCurrencyUnits(), getElectricityUnits())
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.indexOf(element)] 
 						= element.getWaterProduction();
@@ -639,7 +648,11 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 						+ element.getReservoirIntensityOfWaterProduction()
 						* optimizationOptions.getDeltaAquiferWaterPrice()
 						+ element.getElectricalIntensityOfWaterDistribution()
-						* (getSociety().getElectricitySystem().getElectricityDomesticPrice()
+						* (DefaultUnits.convert(
+								getSociety().getElectricitySystem().getElectricityDomesticPrice(),
+								getSociety().getElectricitySystem().getCurrencyUnits(), 
+								getSociety().getElectricitySystem().getElectricityUnits(),
+								getCurrencyUnits(), getElectricityUnits())
 								+ optimizationOptions.getDeltaDomesticElectricityPrice());
 				initialValues[elements.size() + elements.indexOf(element)] 
 						= element.getWaterInput();
@@ -765,6 +778,18 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		 */
 		@Override
 		public void tock() { }
+
+		@Override
+		public double getWaterAgriculturalPrice() {
+			if(!getNestedSystems().isEmpty()) {
+				double value = 0;
+				for(WaterSystem system : getNestedSystems()) {
+					value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
+				}
+				return value / getNestedSystems().size();
+			}
+			return 0;
+		}
 	}
 	
 	/**
@@ -858,5 +883,17 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
+	}
+
+	@Override
+	public double getWaterAgriculturalPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
 	}
 }

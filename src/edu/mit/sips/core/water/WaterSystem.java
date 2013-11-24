@@ -226,12 +226,20 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		 * @param importPrice the import price
 		 */
 		public void setWaterImportPrice(double importPrice);
+		
+		/**
+		 * Sets the water agricultural price.
+		 *
+		 * @param agriculturalPrice the new water agricultural price
+		 */
+		public void setWaterAgriculturalPrice(double agriculturalPrice);
 
 	}
 	
 	public static final String 
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
 	WATER_DOMESTIC_PRICE_ATTRIBUTE = "waterDomesticPrice",
+	WATER_AGRICULTURAL_PRICE_ATTRIBUTE = "waterAgriculturalPrice",
 	WATER_IMPORT_PRICE_ATTRIBUTE = "waterImportPrice";
 	
 	/**
@@ -254,4 +262,11 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 	 * @return the water import price
 	 */
 	public double getWaterImportPrice();
+	
+	/**
+	 * Gets the water agricultural price.
+	 *
+	 * @return the water agricultural price
+	 */
+	public double getWaterAgriculturalPrice();
 }
