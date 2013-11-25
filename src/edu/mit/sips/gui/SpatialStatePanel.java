@@ -26,6 +26,7 @@ import edu.mit.sips.core.Society;
  */
 public class SpatialStatePanel extends JPanel {
 	private static final long serialVersionUID = -8936760551671238274L;
+	private static final double eps = 1e-9;
 	
 	private final Society society;
 	private final SpatialStateProvider stateProvider;
@@ -93,7 +94,8 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawString(label, 
 				(int) Math.round(line.x2 + margin*Math.cos(theta)
-						- (line.x2 < line.x1?g.getFontMetrics().stringWidth(label):0)), 
+						+ (Math.abs(Math.sin(theta))>.7?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?-g.getFontMetrics().stringWidth(label):0))), 
+						//- (line.x2 < line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y2 + margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
 		g.dispose();
@@ -115,7 +117,8 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawString(label, 
 				(int) Math.round(line.x1 - margin*Math.cos(theta)
-						- (line.x2 > line.x1?g.getFontMetrics().stringWidth(label):0)), 
+						+ (Math.abs(Math.sin(theta))>.1?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?0:-g.getFontMetrics().stringWidth(label)))), 
+						//- (line.x2 > line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y1 - margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
 		g.dispose();
@@ -143,7 +146,7 @@ public class SpatialStatePanel extends JPanel {
 					2*getCountryBoundaryRadius(), 2*getCountryBoundaryRadius());
 			g.setColor(new Color(0xff,0xff,0x99));
 			g.fill(countryEllipse);
-			g.setColor(Color.GRAY);
+			g.setColor(getNeutralColor());
 			g.draw(countryEllipse);
 			g.drawString(society.getCountry().getName(), 
 					getCenterX() + (int)Math.round((getSocietyBoundaryRadius() 
@@ -164,7 +167,7 @@ public class SpatialStatePanel extends JPanel {
 				2*getSocietyBoundaryRadius(), 
 				2*getSocietyBoundaryRadius());
 		g.fill(societyEllipse);
-		g.setColor(Color.GRAY);
+		g.setColor(getNeutralColor());
 		g.draw(societyEllipse);
 		g.drawString(society.getName(), 
 				getCenterX() - (int)Math.round(g.getFontMetrics().stringWidth(society.getName())/2), 
@@ -172,6 +175,18 @@ public class SpatialStatePanel extends JPanel {
 		
 		
 		g.dispose();
+	}
+	
+	private Color getSurplusColor() {
+		return PlottingUtils.YELLOW_GREEN;
+	}
+	
+	private Color getDefecitColor() {
+		return PlottingUtils.CRIMSON;
+	}
+	
+	private Color getNeutralColor() {
+		return PlottingUtils.GRAY;
 	}
 	
 	/**
@@ -186,10 +201,10 @@ public class SpatialStatePanel extends JPanel {
 		Point p = societyLocations.get(city);
 		
 		double consumptionValue = stateProvider.getConsumption(city);
-		if(consumptionValue == 0) {
-			g.setColor(Color.WHITE);
+		if(consumptionValue > eps) {
+			g.setColor(getDefecitColor());
 		} else {
-			g.setColor(Color.RED);
+			g.setColor(Color.WHITE);
 		}
 		g.fillOval(p.x - getElementRadius(), p.y - getElementRadius(),
 				2*getElementRadius(), 2*getElementRadius());
@@ -208,9 +223,9 @@ public class SpatialStatePanel extends JPanel {
 		if(stateProvider.isImportAllowed()) {
 			double importValue = stateProvider.getImport(city);
 			if(importValue > 0) {
-				g.setColor(Color.GREEN);
+				g.setColor(getSurplusColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			Line2D.Float importLine = new Line2D.Float(
 					getCenterX() + getCountryBoundaryRadius() + getElementRadius(), 
@@ -223,10 +238,10 @@ public class SpatialStatePanel extends JPanel {
 		
 		if(stateProvider.isExportAllowed()) {
 			double exportValue = stateProvider.getExport(city);
-			if(exportValue > 0) {
-				g.setColor(Color.RED);
+			if(exportValue > eps) {
+				g.setColor(getDefecitColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			Line2D.Float exportLine = new Line2D.Float(
 					getCenterX() + getElementRingRadius(),  
@@ -261,7 +276,7 @@ public class SpatialStatePanel extends JPanel {
 			double productionValue = stateProvider.getOtherProduction(city);
 			// double maxProduction = stateProvider.getConsumption(city);
 			int fillDiameter = 2*getElementRadius(); //(int) Math.min(2*getElementRadius(), productionValue/maxProduction*2*getElementRadius());
-			g.setColor(Color.GREEN);
+			g.setColor(getSurplusColor());
 			g.fillOval(loc.x - fillDiameter/2, loc.y - fillDiameter/2, 
 					fillDiameter, fillDiameter);
 			g.setColor(Color.BLACK);
@@ -292,10 +307,10 @@ public class SpatialStatePanel extends JPanel {
 		double theta = Math.atan2(p2.y - p1.y, p2.x - p1.x);
 		double dist = Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2));
 		double distribOutValue = stateProvider.getDistributionOut(society, dest);
-		if(distribOutValue > 0) {
-			g.setColor(Color.RED);
+		if(distribOutValue > eps) {
+			g.setColor(getDefecitColor());
 		} else {
-			g.setColor(Color.GRAY);
+			g.setColor(getNeutralColor());
 		}
 		Line2D.Double distribOutLine = new Line2D.Double(
 				p1.x + getSocietyRadius()*Math.cos(theta)+5*Math.sin(theta), 
@@ -312,10 +327,10 @@ public class SpatialStatePanel extends JPanel {
 
 		
 		double distribInValue = stateProvider.getDistributionIn(society, dest);
-		if(distribInValue > 0) {
-			g.setColor(Color.GREEN);
+		if(distribInValue > eps) {
+			g.setColor(getSurplusColor());
 		} else {
-			g.setColor(Color.GRAY);
+			g.setColor(getNeutralColor());
 		}
 		Line2D.Double distribInLine = new Line2D.Double(
 				p1.x + Math.min(dist/2, 2*getSocietyRadius())*Math.cos(theta)-5*Math.sin(theta), 
@@ -330,7 +345,7 @@ public class SpatialStatePanel extends JPanel {
 						(int) Math.round(distribInLine.y1 + 5*Math.sin(theta)
 								+ g.getFontMetrics().getHeight()/2));
 		
-		g.setColor(Color.GRAY);
+		g.setColor(getNeutralColor());
 		g.drawLine(p1.x + (int) Math.round(getSocietyRadius() * Math.cos(theta)), 
 				p1.y + (int) Math.round(getSocietyRadius() * Math.sin(theta)), 
 				p2.x - (int) Math.round(getSocietyRadius() * Math.cos(theta)), 
@@ -359,10 +374,10 @@ public class SpatialStatePanel extends JPanel {
 				+ g.getFontMetrics().getHeight()/2);
 		
 		double productionValue = stateProvider.getProduction(element);
-		if(productionValue == 0) {
-			g.setColor(Color.WHITE);
+		if(productionValue > eps) {
+			g.setColor(getSurplusColor());
 		} else {
-			g.setColor(Color.GREEN);
+			g.setColor(Color.WHITE);
 		}
 		g.fillOval(p.x - getElementRadius(), 
 				p.y - getElementRadius(), 
@@ -381,10 +396,10 @@ public class SpatialStatePanel extends JPanel {
 
 		if(stateProvider.isDistribution(element)) {
 			double distribInValue = city.getName().equals(element.getDestination()) ? stateProvider.getOutput(element) : 0;
-			if(distribInValue > 0) {
-				g.setColor(Color.GREEN);
+			if(distribInValue > eps) {
+				g.setColor(getSurplusColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			Line2D.Double distribInLine = new Line2D.Double(
 					p.x - getElementRadius()*Math.cos(theta), 
@@ -396,10 +411,10 @@ public class SpatialStatePanel extends JPanel {
 					formatValue(distribInValue));
 	
 			double distribOutValue = city.getName().equals(element.getOrigin()) ? stateProvider.getInput(element) : 0;
-			if(distribOutValue > 0) {
-				g.setColor(Color.RED);
+			if(distribOutValue > eps) {
+				g.setColor(getDefecitColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			Line2D.Double distribOutLine = new Line2D.Double(
 					p.x + getElementRadius()*Math.cos(theta), 
@@ -410,6 +425,30 @@ public class SpatialStatePanel extends JPanel {
 					new Line2D.Float(distribOutLine.getP1(), distribOutLine.getP2()), 
 					formatValue(distribOutValue));
 		}
+		g.dispose();
+	}
+	
+	private void drawLegend(Graphics2D g2d) {
+		Graphics2D g = (Graphics2D)g2d.create();
+		
+		g.setColor(getSurplusColor());
+		this.drawArrowLineWithHeadLabel(g, new Line2D.Float(
+				5, g.getFontMetrics().getHeight()/2 + 2, 
+				25, g.getFontMetrics().getHeight()/2 + 2), "In-flow");
+		g.setColor(getDefecitColor());
+		this.drawArrowLineWithHeadLabel(g, new Line2D.Float(
+				5, 3*g.getFontMetrics().getHeight()/2 + 2, 
+				25, 3*g.getFontMetrics().getHeight()/2 + 2), "Out-flow");
+		g.setColor(getSurplusColor());
+		g.fillOval(10, 5*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
+		g.setColor(Color.BLACK);
+		g.drawString("Surplus", 30, 3*g.getFontMetrics().getHeight() + 4);
+		g.drawOval(10, 5*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
+		g.setColor(getDefecitColor());
+		g.fillOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
+		g.setColor(Color.BLACK);
+		g.drawString("Defecit", 30, 4*g.getFontMetrics().getHeight() + 4);
+		g.drawOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.dispose();
 	}
 	
@@ -443,12 +482,13 @@ public class SpatialStatePanel extends JPanel {
 					+ g.getFontMetrics().getHeight()/2);
 		}
 		double netFlowValue = stateProvider.getNetFlow(society);
-		if(netFlowValue == 0) {
-			g.setColor(Color.WHITE);
-		} else if(netFlowValue > 0) {
-			g.setColor(Color.GREEN);
+		
+		if(netFlowValue > eps) {
+			g.setColor(getSurplusColor());
+		} else if(netFlowValue < -eps) {
+			g.setColor(getDefecitColor());
 		} else {
-			g.setColor(Color.RED);
+			g.setColor(Color.WHITE);
 		}
 		g.fillOval(p.x - getSocietyRadius(), p.y - getSocietyRadius(), 
 				2*getSocietyRadius(), 2*getSocietyRadius());
@@ -464,9 +504,9 @@ public class SpatialStatePanel extends JPanel {
 		if(!society.getCountry().equals(society.getSociety())) {
 			double domesticExport = stateProvider.getOtherDistributionOut(society);
 			if(domesticExport > 0) {
-				g.setColor(Color.RED);
+				g.setColor(getDefecitColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			double length = 0;
 			if(isCenterSociety) {
@@ -488,10 +528,10 @@ public class SpatialStatePanel extends JPanel {
 		
 		if(stateProvider.isExportAllowed()) {
 			double exportValue = stateProvider.getExport(society);
-			if(exportValue > 0) {
-				g.setColor(Color.RED);
+			if(exportValue > eps) {
+				g.setColor(getDefecitColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			double length = 0;
 			if(isCenterSociety) {
@@ -513,10 +553,10 @@ public class SpatialStatePanel extends JPanel {
 
 		if(stateProvider.isImportAllowed()) {
 			double importValue = stateProvider.getImport(society);
-			if(importValue > 0) {
-				g.setColor(Color.GREEN);
+			if(importValue > eps) {
+				g.setColor(getSurplusColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			double length = 0;
 			if(isCenterSociety) {
@@ -538,10 +578,10 @@ public class SpatialStatePanel extends JPanel {
 
 		if(!society.getCountry().equals(society.getSociety())) {
 			double domesticImport = stateProvider.getOtherDistributionIn(society);
-			if(domesticImport > 0) {
-				g.setColor(Color.GREEN);
+			if(domesticImport > eps) {
+				g.setColor(getSurplusColor());
 			} else {
-				g.setColor(Color.GRAY);
+				g.setColor(getNeutralColor());
 			}
 			double length = 0;
 			if(isCenterSociety) {
@@ -571,8 +611,17 @@ public class SpatialStatePanel extends JPanel {
 	 * @return the string
 	 */
 	private String formatValue(double value) {
-		if(value == 0) {
+		if(value < eps) {
 			return "";
+		} else if(value < 10) {
+			DecimalFormat format = new DecimalFormat("0.00");
+			return format.format(value)+ " " + stateProvider.getUnits();
+		} else if(value < 100) {
+			DecimalFormat format = new DecimalFormat("0.0");
+			return format.format(value)+ " " + stateProvider.getUnits();
+		} else if(value < 1000) {
+			DecimalFormat format = new DecimalFormat("0");
+			return format.format(value)+ " " + stateProvider.getUnits();
 		} else {
 			DecimalFormat format = new DecimalFormat("0.0E0");
 			return format.format(value)+ " " + stateProvider.getUnits();
@@ -775,6 +824,8 @@ public class SpatialStatePanel extends JPanel {
 				// TODO draw distribution to non-nested societies
 			}
 		}
+		
+		drawLegend(g2d);
 	}
 	
 	/* (non-Javadoc)

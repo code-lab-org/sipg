@@ -81,20 +81,18 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		
 		agricultureStatePanel = new SpatialStatePanel(
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
-		/* temporarily remove
 		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
-		 */
 
 		List<String> revenueNames;
 
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
-					"Decommission Expense", "Input Expense", "Distribution Expense", 
+					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
 					"Import Expense", "Distribution Revenue", "Export Revenue", 
 					"Output Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
-					"Decommission Expense", "Input Expense", "Import Expense", 
+					"Decommission Expense", /*"Input Expense", */"Import Expense", 
 					"Export Revenue", "Output Revenue");
 		}
 		for(String name : revenueNames) {
@@ -127,7 +125,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			for(Society society : getSociety().getNestedSocieties()) {
 				foodUseNames.add(society.getName() + " Society");
 			}
-			foodUseNames.add("Losses");
+			// foodUseNames.add("Losses");
 		} else {
 			foodUseNames.add(getSociety().getName()  + " Society");
 			foodUseNames.add("Out-Distribution");
@@ -378,14 +376,15 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Operations Expense", year, 
-				CurrencyUnits.convertFlow(-getAgricultureSystem().getOperationsExpense(),
+				CurrencyUnits.convertFlow(-getAgricultureSystem().getOperationsExpense()
+						-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));
 		updateSeries(agricultureRevenue, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getDecommissionExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Input Expense", year, 
+		/*updateSeries(agricultureRevenue, "Input Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getConsumptionExpense(),
-						getAgricultureSystem(), this));
+						getAgricultureSystem(), this));*/
 		if(!(getSociety() instanceof Country)) {
 			updateSeries(agricultureRevenue, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
@@ -455,9 +454,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 						FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(),
 								getAgricultureSystem(), this));
 			}
-			updateSeries(foodUseData, "Losses", year, 
+			/*updateSeries(foodUseData, "Losses", year, 
 					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistributionLosses(),
-							getAgricultureSystem(), this));
+							getAgricultureSystem(), this));*/
 		}
 		updateSeries(foodUseData, "Export", year, 
 				FoodUnits.convertFlow(getAgricultureSystem().getFoodExport(),

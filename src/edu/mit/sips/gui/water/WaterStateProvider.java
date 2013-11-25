@@ -17,7 +17,7 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
  * The Class WaterStateProvider.
  */
 public class WaterStateProvider implements SpatialStateProvider, WaterUnitsOutput {
-	private final WaterUnits waterUnits = WaterUnits.MCM;
+	private final WaterUnits waterUnits = WaterUnits.km3;
 	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/* (non-Javadoc)

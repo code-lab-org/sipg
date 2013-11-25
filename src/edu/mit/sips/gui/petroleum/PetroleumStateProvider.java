@@ -17,7 +17,7 @@ import edu.mit.sips.sim.util.TimeUnits;
  * The Class PetroleumStateProvider.
  */
 public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOutput {
-	private final OilUnits oilUnits = OilUnits.Btoe;
+	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	/* (non-Javadoc)

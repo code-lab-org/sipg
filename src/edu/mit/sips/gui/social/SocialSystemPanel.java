@@ -26,6 +26,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 public class SocialSystemPanel extends InfrastructureSystemPanel implements CurrencyUnitsOutput {
 	private static final long serialVersionUID = -8472419089458128152L;
 	
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
+	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
+	
 	private final LinearIndicatorPanel domesticProductIndicatorPanel;
 
 	DefaultTableXYDataset fundsData = new DefaultTableXYDataset();
@@ -103,7 +106,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
-		return TimeUnits.year;
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -111,7 +114,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
-		return CurrencyUnits.Tsim;
+		return currencyUnits;
 	}
 
 	/**
