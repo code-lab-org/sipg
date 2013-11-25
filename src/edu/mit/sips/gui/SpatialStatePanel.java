@@ -232,7 +232,7 @@ public class SpatialStatePanel extends JPanel {
 					getCenterY() + 10, 
 					getCenterX() + getElementRingRadius(),  
 					getCenterY() + 10);
-			drawArrowLineWithHeadLabel(g, importLine, formatValue(importValue));
+			drawArrowLineWithTailLabel(g, importLine, formatValue(importValue));
 			g.setColor(Color.BLACK);
 		}
 		
@@ -248,7 +248,7 @@ public class SpatialStatePanel extends JPanel {
 					getCenterY() - 10,
 					getCenterX() + getCountryBoundaryRadius() + getElementRadius(), 
 					getCenterY() - 10);
-			drawArrowLineWithTailLabel(g, exportLine, formatValue(exportValue));
+			drawArrowLineWithHeadLabel(g, exportLine, formatValue(exportValue));
 			g.setColor(Color.BLACK);
 		}
 		
