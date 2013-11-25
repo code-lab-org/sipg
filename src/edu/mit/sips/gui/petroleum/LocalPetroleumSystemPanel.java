@@ -427,10 +427,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					OilUnits.convertFlow(getPetroleumSystem().getPetroleumProduction(), 
 							getPetroleumSystem(), this));
 			updateSeries(petroleumUseData, "Distribution", year, 
-					OilUnits.convertFlow(getPetroleumSystem().getPetroleumInDistribution(),
+					OilUnits.convertFlow(getPetroleumSystem().getPetroleumOutDistribution(),
 							getPetroleumSystem(), this));
 			updateSeries(petroleumSourceData, "Distribution", year, 
-					OilUnits.convertFlow(getPetroleumSystem().getPetroleumOutDistribution(),
+					OilUnits.convertFlow(getPetroleumSystem().getPetroleumInDistribution(),
 							getPetroleumSystem(), this));
 		} else {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {

@@ -393,11 +393,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 							getElectricitySystem(), this));
 			updateSeries(electricityUseData, "Distribution", year, 
 					ElectricityUnits.convertFlow(
-							getElectricitySystem().getElectricityInDistribution(), 
+							getElectricitySystem().getElectricityOutDistribution(), 
 							getElectricitySystem(), this));
 			updateSeries(electricitySourceData,  "Distribution", year, 
 					ElectricityUnits.convertFlow(
-							getElectricitySystem().getElectricityOutDistribution(), 
+							getElectricitySystem().getElectricityInDistribution(), 
 							getElectricitySystem(), this));
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {

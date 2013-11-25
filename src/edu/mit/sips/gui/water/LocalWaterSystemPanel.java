@@ -467,10 +467,10 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 
 			if(!getWaterSystem().getExternalElements().isEmpty()) {
 				updateSeries(waterUseData, "Distribution", year, 
-						WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
+						WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
 								getWaterSystem(), this));
 				updateSeries(waterSourceData, "Distribution", year, 
-						WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(),
+						WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(),
 								getWaterSystem(), this));
 			}
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
