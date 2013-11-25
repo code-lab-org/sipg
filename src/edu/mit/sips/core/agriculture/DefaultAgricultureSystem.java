@@ -131,7 +131,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		@Override
 		public double getConsumptionExpense() {
 			return getWaterConsumption() * DefaultUnits.convert(
-					getSociety().getWaterSystem().getWaterAgriculturalPrice(),
+					getSociety().getWaterSystem().getWaterDomesticPrice(),
 					getSociety().getWaterSystem().getCurrencyUnits(), 
 					getSociety().getWaterSystem().getWaterUnits(),
 					getCurrencyUnits(), getWaterUnits());

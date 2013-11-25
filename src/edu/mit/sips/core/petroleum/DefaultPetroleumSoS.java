@@ -579,20 +579,20 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 				
 				// Constrain in-flow and production to meet demand.
 				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						energySystem.getSociety().getTotalPetroleumDemand()));
+						city.getTotalPetroleumDemand()));
 
 				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
 						= city.getPetroleumSystem().getPetroleumImportPrice() 
 						+ optimizationOptions.getDeltaImportOilPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
-						= Math.max(0, -energySystem.getPetroleumExport());
+						= energySystem.getPetroleumImport();
 				// Set export price in each city.
 				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= -city.getPetroleumSystem().getPetroleumExportPrice() 
 						- optimizationOptions.getDeltaExportOilPrice();
 				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
-						= Math.max(0, energySystem.getPetroleumExport());
+						= energySystem.getPetroleumExport();
 			}
 			
 			try {

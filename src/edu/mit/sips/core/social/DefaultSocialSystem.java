@@ -12,6 +12,7 @@ import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
+import edu.mit.sips.core.social.population.DefaultPopulationModel;
 import edu.mit.sips.core.social.population.PopulationModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
@@ -29,8 +30,8 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
 	/**
 	 * The Class Local.

@@ -405,6 +405,8 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		 */
 		@Override
 		public double getSalesRevenue() {
+			return (getSocietyDemand() - getWaterFromPrivateProduction()) * getWaterDomesticPrice();
+			/*
 			double privateProduction = getWaterFromPrivateProduction();
 			double publicProduction = getWaterProduction() - privateProduction;
 			double agConsumption = WaterUnits.convertFlow(
@@ -417,6 +419,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			} else {
 				return (publicProduction - nonAgConsumption) * getWaterAgriculturalPrice();
 			}
+			*/
 		}
 
 		/**

@@ -27,6 +27,10 @@ import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystemDomesticProductionModel;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class SaudiScenario2.
@@ -39,19 +43,29 @@ public final class SaudiScenario2 extends DefaultScenario {
 			electricitySystemDomesticProductionModel = new ElectricitySystemDomesticProductionModel(0),
 			petroleumSystemDomesticProductionModel = new PetroleumSystemDomesticProductionModel(100),
 			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
-	private static DemandModel foodDemandModel = new LogisticTimeDemandModel(1970, 1950, 0.15, 1700, 3100),
-			waterDemandModel = new LogisticTimeDemandModel(1965, 175*365*1e-3, 0.08, 25*365*1e-3, 325*365*1e-3), 
-			electricityDemandModel = new LogisticTimeDemandModel(1950, 0.25*365*1e-3, 0.09, 0*365*1e-3, 40*365*1e-3),
+	private static DemandModel 
+			foodDemandModel = new LogisticTimeDemandModel(1970, 
+					FoodUnits.convertFlow(1950, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 0.15, 
+					FoodUnits.convertFlow(1700, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 
+					FoodUnits.convertFlow(3100, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year)),
+			waterDemandModel = new LogisticTimeDemandModel(1965, 
+					WaterUnits.convertFlow(175, WaterUnits.L, TimeUnits.day, WaterUnits.m3, TimeUnits.year), 0.08, 
+					WaterUnits.convertFlow(25, WaterUnits.L, TimeUnits.day, WaterUnits.m3, TimeUnits.year), 
+					WaterUnits.convertFlow(325, WaterUnits.L, TimeUnits.day, WaterUnits.m3, TimeUnits.year)), 
+			electricityDemandModel = new LogisticTimeDemandModel(1950, 
+					ElectricityUnits.convertFlow(0.25, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year), 0.09, 
+					ElectricityUnits.convertFlow(0, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year), 
+					ElectricityUnits.convertFlow(40, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year)),
 			petroleumDemandModel = new LogisticTimeDemandModel(1970, 1, 0.07, 0, 9);
-	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(75), 
-			foodImportPriceModel = new ConstantPriceModel(100), 
-			foodExportPriceModel = new ConstantPriceModel(75),
-			waterDomesticPriceModel = new ConstantPriceModel(6), 
-			waterImportPriceModel = new ConstantPriceModel(40), 
-			electricityDomesticPriceModel = new ConstantPriceModel(375), 
-			petroleumDomesticPriceModel = new ConstantPriceModel(50), 
-			petroleumImportPriceModel = new ConstantPriceModel(375), 
-			petroleumExportPriceModel = new ConstantPriceModel(300);
+	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(50), 
+			foodImportPriceModel = new ConstantPriceModel(75), 
+			foodExportPriceModel = new ConstantPriceModel(50),
+			waterDomesticPriceModel = new ConstantPriceModel(0.05), 
+			waterImportPriceModel = new ConstantPriceModel(10), 
+			electricityDomesticPriceModel = new ConstantPriceModel(4), 
+			petroleumDomesticPriceModel = new ConstantPriceModel(8), 
+			petroleumImportPriceModel = new ConstantPriceModel(45), 
+			petroleumExportPriceModel = new ConstantPriceModel(40);
 
 	/**
 	 * Instantiates a new saudi scenario2.

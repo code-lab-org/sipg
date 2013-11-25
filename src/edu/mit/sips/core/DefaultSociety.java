@@ -36,8 +36,8 @@ public abstract class DefaultSociety implements Society {
 	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -318,9 +318,15 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalElectricityDemand() {
-		return getWaterSystem().getElectricityConsumption() 
-				+ getPetroleumSystem().getElectricityConsumption()
-				+ getSocialSystem().getElectricityConsumption();
+		return ElectricityUnits.convertFlow(
+				getWaterSystem().getElectricityConsumption(),
+				getWaterSystem(), this)
+				+ ElectricityUnits.convertFlow(
+						getPetroleumSystem().getElectricityConsumption(), 
+						getPetroleumSystem(), this)
+						+ ElectricityUnits.convertFlow(
+								getSocialSystem().getElectricityConsumption(), 
+								getSocialSystem(), this);
 	}
 
 	/* (non-Javadoc)
@@ -328,7 +334,9 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalFoodDemand() {
-		return getSocialSystem().getFoodConsumption();
+		return FoodUnits.convertFlow(
+				getSocialSystem().getFoodConsumption(), 
+				getSocialSystem(), this);
 	}
 
 	/* (non-Javadoc)
@@ -336,8 +344,12 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalPetroleumDemand() {
-		return getSocialSystem().getPetroleumConsumption()
-				+ getElectricitySystem().getPetroleumConsumption();
+		return OilUnits.convertFlow(
+				getSocialSystem().getPetroleumConsumption(),
+				getSocialSystem(), this)
+				+ OilUnits.convertFlow(
+						getElectricitySystem().getPetroleumConsumption(),
+						getElectricitySystem(), this);
 	}
 
 	/* (non-Javadoc)
@@ -345,9 +357,15 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public double getTotalWaterDemand() {
-		return getAgricultureSystem().getWaterConsumption()
-				+ getElectricitySystem().getWaterConsumption()
-				+ getSocialSystem().getWaterConsumption();
+		return WaterUnits.convertFlow(
+				getAgricultureSystem().getWaterConsumption(),
+				getAgricultureSystem(), this)
+				+ WaterUnits.convertFlow(
+						getElectricitySystem().getWaterConsumption(),
+						getElectricitySystem(), this)
+						+ WaterUnits.convertFlow(
+								getSocialSystem().getWaterConsumption(),
+								getSocialSystem(), this);
 	}
 
 	/* (non-Javadoc)

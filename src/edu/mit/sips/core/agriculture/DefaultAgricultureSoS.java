@@ -523,32 +523,31 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			double[] initialValues = new double[numVariables];
 			
 			for(AgricultureElement element : elements) {
-				// Constrain maximum land use in each fixed element.
+				// production constraint
 				double[] productionConstraint = new double[numVariables];
 				productionConstraint[elements.indexOf(element)] = 1;
 				constraints.add(new LinearConstraint(productionConstraint, 
 						Relationship.LEQ, element.getMaxLandArea()));
 
-				// Constrain maximum throughput in each distribution element.
-				double[] throughputConstraint = new double[numVariables];
-				throughputConstraint[elements.size() + elements.indexOf(element)] = 1;
-				constraints.add(new LinearConstraint(throughputConstraint, 
-						Relationship.LEQ, element.getMaxFoodInput()));
-
-				// Minimize costs - most obvious cost is importing, though also 
-				// minimize transportation even if free.
+				// production cost
 				costCoefficients[elements.indexOf(element)] = 
 						element.getCostIntensityOfLandUsed() 
 						+ element.getWaterIntensityOfLandUsed()
 						* (DefaultUnits.convert(
-								getSociety().getWaterSystem().getWaterAgriculturalPrice(),
+								getSociety().getWaterSystem().getWaterDomesticPrice(),
 								getSociety().getWaterSystem().getCurrencyUnits(), 
 								getSociety().getWaterSystem().getWaterUnits(),
 								getCurrencyUnits(), getWaterUnits())
 								+ optimizationOptions.getDeltaDomesticWaterPrice());
 				initialValues[elements.indexOf(element)] = element.getLandArea();
 
-				// Set the distribution cost.
+				// distribution constraint
+				double[] distributionConstraint = new double[numVariables];
+				distributionConstraint[elements.size() + elements.indexOf(element)] = 1;
+				constraints.add(new LinearConstraint(distributionConstraint, 
+						Relationship.LEQ, element.getMaxFoodInput()));
+
+				// distribution cost
 				costCoefficients[elements.size() + elements.indexOf(element)] 
 						= element.getVariableOperationsCostOfFoodDistribution();
 				initialValues[elements.size() + elements.indexOf(element)] 
@@ -563,62 +562,64 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 				AgricultureSystem.Local agricultureSystem = 
 						(AgricultureSystem.Local) city.getAgricultureSystem();
 				
-				// Constrain maximum arable land and labor in each city.
-				double[] resourceConstraint = new double[numVariables];
+				// land constraint
+				double[] landConstraint = new double[numVariables];
+				for(AgricultureElement element : elements) {
+					if(city.getName().equals(element.getOrigin())) {
+						landConstraint[elements.indexOf(element)] = 1.0;
+					}
+				}
+				constraints.add(new LinearConstraint(landConstraint, 
+						Relationship.LEQ, agricultureSystem.getArableLandArea()));
+
+				// labor constraint
 				double[] laborConstraint = new double[numVariables];
 				for(AgricultureElement element : elements) {
 					if(city.getName().equals(element.getOrigin())) {
-						resourceConstraint[elements.indexOf(element)] = 1.0;
 						laborConstraint[elements.indexOf(element)] = 
 								element.getLaborIntensityOfLandUsed();
 					}
 				}
-				constraints.add(new LinearConstraint(resourceConstraint, 
-						Relationship.LEQ, agricultureSystem.getArableLandArea()));
 				constraints.add(new LinearConstraint(laborConstraint, 
 						Relationship.LEQ, city.getSocialSystem().getPopulation() 
 						* agricultureSystem.getLaborParticipationRate()));
 				
-				// Constrain supply = demand in each city.
 				double[] flowCoefficients = new double[numVariables];
 				for(AgricultureElement element : elements) {
 					if(city.getName().equals(element.getOrigin())) {
+						// production flow
 						flowCoefficients[elements.indexOf(element)] 
 								= element.getFoodIntensityOfLandUsed();
 					}
 					
 					if(city.getName().equals(element.getOrigin())) {
-						// Set coefficient for in-flow to the distribution element.
-						// Order origin first to never distribute in self loop.
-						flowCoefficients[elements.size() + elements.indexOf(element)] 
-								= -1;
+						// distribution out-flow
+						flowCoefficients[elements.size() + elements.indexOf(element)] = -1;
 					} else if(city.getName().equals(element.getDestination())) {
-						// Set coefficient for out-flow from the distribution element.
+						// distribution in-flow
 						flowCoefficients[elements.size() + elements.indexOf(element)] 
 								= element.getDistributionEfficiency();
 					}
 				}
-				// Allow import in this city.
+				// import
 				flowCoefficients[2*elements.size() + cities.indexOf(city)] = 1;
-				// Allow export from this city.
-				flowCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] = -1;
-				
-				// Constrain in-flow and production to meet demand.
-				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
-						city.getTotalFoodDemand()));
-
-				// Set import cost in each city.
 				costCoefficients[2*elements.size() + cities.indexOf(city)] 
 						= city.getAgricultureSystem().getFoodImportPrice() 
 						+ optimizationOptions.getDeltaImportFoodPrice();
 				initialValues[2*elements.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodImport();
-				// Set export price in each city.
+				
+				// export
+				flowCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] = -1;
 				costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= -city.getAgricultureSystem().getFoodExportPrice()
 						- optimizationOptions.getDeltaExportFoodPrice();
 				initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 						= agricultureSystem.getFoodExport();
+				
+				// Constrain in-flow and production to meet demand.
+				constraints.add(new LinearConstraint(flowCoefficients, Relationship.EQ, 
+						city.getTotalFoodDemand()));
 			}
 			
 			try {
@@ -634,7 +635,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 						new LinearConstraintSet(constraints), 
 						new LinearObjectiveFunction(costCoefficients, 0d),
 						new InitialGuess(initialValues));
-		
+			
 				for(int i = 0; i < elements.size(); i++) {
 					// Add Math.min checks in case error exceeds bounds.
 					elements.get(i).setLandArea(Math.min(output.getPoint()[i],

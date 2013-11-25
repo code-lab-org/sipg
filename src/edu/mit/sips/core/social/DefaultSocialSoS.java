@@ -22,8 +22,8 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.kcal;
-	private static final TimeUnits foodTimeUnits = TimeUnits.day;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
 	/**
 	 * Instantiates a new default social so s.
