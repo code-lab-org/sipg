@@ -28,7 +28,7 @@ public class Country extends DefaultSociety implements Society {
 	 * @param nestedSocieties the nested societies
 	 * @return the country
 	 */
-	public static Country buildCountry(String name, long initialFunds, 
+	public static Country buildCountry(String name, double initialFunds, 
 			List<? extends Society> nestedSocieties) {
 		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
 		// agriculture system is national if there is a nested local system
@@ -73,7 +73,7 @@ public class Country extends DefaultSociety implements Society {
 				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
-	private final long initialFunds;
+	private final double initialFunds;
 	private double funds;
 	private transient double nextFunds;
 
@@ -96,7 +96,7 @@ public class Country extends DefaultSociety implements Society {
 	 * @param petroleumSystem the petroleum system
 	 * @param socialSystem the social system
 	 */
-	private Country(String name, long initialFunds, List<? extends Society> nestedSocieties,
+	private Country(String name, double initialFunds, List<? extends Society> nestedSocieties,
 			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
 			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
 			SocialSystem socialSystem) {
