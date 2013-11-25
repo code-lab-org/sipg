@@ -258,18 +258,6 @@ public abstract class PlottingUtils {
 		if(name.contains("Waste")) {
 			return INDIAN_RED;
 		}
-		if(name.contains("Agriculture")) {
-			return YELLOW_GREEN;
-		}
-		if(name.contains("Water")) {
-			return DODGER_BLUE;
-		}
-		if(name.contains("Petroleum")) {
-			return DIM_GRAY;
-		}
-		if(name.contains("Electricity")) {
-			return MEDIUM_PURPLE;
-		}
 		if(name.contains("Social") || name.contains("Society") || name.contains("Exchange")) {
 			if(name.contains("Industrial")) {
 				return DARK_KHAKI;
@@ -282,7 +270,19 @@ public abstract class PlottingUtils {
 			}
 			return PLUM;
 		}
-		if(name.contains("Production")) {
+		if(name.contains("Operations") || name.contains("Production")) {
+			if(name.contains("Agriculture")) {
+				return YELLOW_GREEN;
+			}
+			if(name.contains("Water")) {
+				return DODGER_BLUE;
+			}
+			if(name.contains("Petroleum")) {
+				return DIM_GRAY;
+			}
+			if(name.contains("Electricity")) {
+				return MEDIUM_PURPLE;
+			}
 			if(name.contains("Private")) {
 				return LIGHT_GREEN;
 			}

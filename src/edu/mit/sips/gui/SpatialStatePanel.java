@@ -94,7 +94,7 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawString(label, 
 				(int) Math.round(line.x2 + margin*Math.cos(theta)
-						+ (Math.abs(Math.sin(theta))>.7?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?-g.getFontMetrics().stringWidth(label):0))), 
+						+ (Math.abs(Math.sin(theta))>.9?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?-g.getFontMetrics().stringWidth(label):0))), 
 						//- (line.x2 < line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y2 + margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
@@ -117,7 +117,7 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawString(label, 
 				(int) Math.round(line.x1 - margin*Math.cos(theta)
-						+ (Math.abs(Math.sin(theta))>.1?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?0:-g.getFontMetrics().stringWidth(label)))), 
+						+ (Math.abs(Math.sin(theta))>.9?-g.getFontMetrics().stringWidth(label)/2:(line.x2 > line.x1?-g.getFontMetrics().stringWidth(label):0))), 
 						//- (line.x2 > line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y1 - margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
@@ -517,10 +517,10 @@ public class SpatialStatePanel extends JPanel {
 						getMaxRadius() - getSocietyRingRadius() + getSocietyRadius()/2);
 			}
 			Line2D.Double exportLine = new Line2D.Double(
-					p.x + getSocietyRadius()*Math.cos(theta+Math.PI/12), 
-					p.y + getSocietyRadius()*Math.sin(theta+Math.PI/12), 
-					p.x + length*Math.cos(theta+Math.PI/12), 
-					p.y + length*Math.sin(theta+Math.PI/12));
+					p.x + getSocietyRadius()*Math.cos(theta+Math.PI/18), 
+					p.y + getSocietyRadius()*Math.sin(theta+Math.PI/18), 
+					p.x + length*Math.cos(theta+Math.PI/18), 
+					p.y + length*Math.sin(theta+Math.PI/18));
 			drawArrowLineWithHeadLabel(g, 
 					new Line2D.Float(exportLine.getP1(), exportLine.getP2()),
 					formatValue(domesticExport));
@@ -542,10 +542,10 @@ public class SpatialStatePanel extends JPanel {
 						getMaxRadius() - getSocietyRingRadius() + getSocietyRadius()/2);
 			}
 			Line2D.Double exportLine = new Line2D.Double(
-					p.x + getSocietyRadius()*Math.cos(theta+Math.PI/6), 
-					p.y + getSocietyRadius()*Math.sin(theta+Math.PI/6), 
-					p.x + length*Math.cos(theta+Math.PI/6), 
-					p.y + length*Math.sin(theta+Math.PI/6));
+					p.x + getSocietyRadius()*Math.cos(theta+Math.PI/12), 
+					p.y + getSocietyRadius()*Math.sin(theta+Math.PI/12), 
+					p.x + length*Math.cos(theta+Math.PI/12), 
+					p.y + length*Math.sin(theta+Math.PI/12));
 			drawArrowLineWithHeadLabel(g, 
 					new Line2D.Float(exportLine.getP1(), exportLine.getP2()),
 					formatValue(exportValue));
@@ -567,10 +567,10 @@ public class SpatialStatePanel extends JPanel {
 						getMaxRadius() - getSocietyRingRadius() + getSocietyRadius()/2);
 			}
 			Line2D.Double importLine = new Line2D.Double(
-					p.x + length*Math.cos(theta-Math.PI/6), 
-					p.y + length*Math.sin(theta-Math.PI/6),
-					p.x + getSocietyRadius()*Math.cos(theta-Math.PI/6), 
-					p.y + getSocietyRadius()*Math.sin(theta-Math.PI/6));
+					p.x + length*Math.cos(theta-Math.PI/18), 
+					p.y + length*Math.sin(theta-Math.PI/18),
+					p.x + getSocietyRadius()*Math.cos(theta-Math.PI/18), 
+					p.y + getSocietyRadius()*Math.sin(theta-Math.PI/18));
 			drawArrowLineWithTailLabel(g, 
 					new Line2D.Float(importLine.getP1(), importLine.getP2()),
 					formatValue(importValue));

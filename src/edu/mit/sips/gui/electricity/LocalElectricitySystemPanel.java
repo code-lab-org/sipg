@@ -1,6 +1,7 @@
 package edu.mit.sips.gui.electricity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.BoxLayout;
@@ -8,13 +9,14 @@ import javax.swing.JPanel;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
+import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
-import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
+import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.SpatialStatePanel;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
@@ -80,26 +82,80 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				"Electricity Independence", 0, 1);
 		indicatorsPanel.add(renewableElectricityIndicatorPanel);
 		indicatorsPanel.add(localElectricityIndicatorPanel);
-		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
+		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		electricityStatePanel = new SpatialStatePanel(
 				getSociety(), new ElectricityStateProvider());
 		addTab("Network Flow", Icons.NETWORK, electricityStatePanel);
 
+		List<String> revenueNames;
+		if(!(getSociety() instanceof Country)) {
+			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
+					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
+					"Distribution Revenue", "Output Revenue");
+		} else {
+			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
+					"Decommission Expense", /*"Input Expense", */"Output Revenue");
+		}
+		for(String name : revenueNames) {
+			electricityRevenue.addSeries(new XYSeries(name, true, false));
+		}
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
 				"Electricity Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", 
-				electricityRevenue, electricityNetRevenue));
+				electricityRevenue, PlottingUtils.getCashFlowColors(revenueNames), electricityNetRevenue));
+		
+		List<String> electricitySourceNames = new ArrayList<String>();
+		if(getSociety() instanceof Country) {
+			for(Society society : getSociety().getNestedSocieties()) {
+				electricitySourceNames.add(society.getName() + " Production");
+			}
+		} else {
+			electricitySourceNames.add(getSociety().getName() + " Production");
+			electricitySourceNames.add("In-Distribution");
+		}
+		electricitySourceNames.add("Private Operations");
+		for(String name : electricitySourceNames) {
+			electricitySourceData.addSeries(new XYSeries(name, true, false));
+		}
 		addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
 				"Electricity Source (" + electricityUnits + "/" + electricityTimeUnits + ")", 
-				electricitySourceData));
+				electricitySourceData, PlottingUtils.getResourceColors(electricitySourceNames)));
+		
+		List<String> electricityUseNames = new ArrayList<String>();
+		if(getSociety() instanceof Country) {
+			for(Society society : getSociety().getNestedSocieties()) {
+				electricityUseNames.add(society.getName() + " Society");
+			}
+			// electricityUseNames.add("Losses");
+		} else {
+			electricityUseNames.add(getSociety().getName()  + " Society");
+			electricityUseNames.add("Out-Distribution");
+		}
+		electricityUseNames.add("Water Operations");
+		electricityUseNames.add("Petroleum Operations");
+		electricityUseNames.add("Waste");
+		for(String name : electricityUseNames) {
+			electricityUseData.addSeries(new XYSeries(name, true, false));
+		}
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")", 
-				electricityUseData));
+				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
+		
+		List<String> oilUseNames = new ArrayList<String>();
+		if(getSociety() instanceof Country) {
+			for(Society society : getSociety().getNestedSocieties()) {
+				oilUseNames.add(society.getName() + " Operations");
+			}
+		} else {
+			oilUseNames.add(getSociety().getName() + " Operations");
+		}
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
-				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", petroleumUseData));
+				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
+				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
+		
+		/*
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
 				"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", waterUseData));
-
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Electricity Use Fraction (-)", 
 				localElectricityData));
@@ -109,7 +165,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
 				"Electricity Consumption per Capita (" + 
 						ElectricityUnits.kWh + "/" + TimeUnits.day + ")", 
-				electricityConsumptionPerCapita), "Consumption");
+				electricityConsumptionPerCapita), "Consumption");*/
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/toe)", 
@@ -302,28 +358,47 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			}
 		}
 		
+		if(getNestedElectricitySystems().isEmpty()) {
+			updateSeries(electricityUseData, "Society", year, 
+					ElectricityUnits.convertFlow(getSociety().getSocialSystem().getElectricityConsumption(),
+							getSociety().getSocialSystem(), this));
+			updateSeries(petroleumUseData, "Operations", year, 
+					OilUnits.convertFlow(getElectricitySystem().getPetroleumConsumptionFromPublicProduction(),
+							getElectricitySystem(), this));
+			updateSeries(waterUseData, "Operations", year, 
+					WaterUnits.convertFlow(getElectricitySystem().getWaterConsumption(),
+							getElectricitySystem(), this));
+		} else {
+			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
+				updateSeries(electricityUseData, nestedSystem.getSociety().getName() + " Society", year,
+						ElectricityUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getElectricityConsumption(), 
+								nestedSystem.getSociety().getSocialSystem(), this));
+				if(nestedSystem.getPetroleumConsumption() > 0) {
+					updateSeries(petroleumUseData, nestedSystem.getName(), year, 
+							OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
+									nestedSystem, this));
+				}
+				if(nestedSystem.getWaterConsumption() > 0) {
+					updateSeries(waterUseData, nestedSystem.getName(), year, 
+							WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
+									nestedSystem, this));
+				}
+			}
+		}
+		
 		if(getElectricitySystem() instanceof DefaultElectricitySystem.Local) {
-			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
-				if(element.getMaxElectricityProduction() > 0) {
-					updateSeries(electricitySourceData, element.getName(), year, 
-							ElectricityUnits.convertFlow(
-									element.getElectricityProduction(), element, this));
-				}
-				
-				if(element.getMaxElectricityInput() > 0) {
-					updateSeries(electricityUseData, element.getName(), year, 
-							ElectricityUnits.convertFlow(
-									element.getElectricityInput(), element, this));
-				}
-			}
-
-			for(ElectricityElement element : getElectricitySystem().getExternalElements()) {
-				if(element.getMaxElectricityInput() > 0) {
-					updateSeries(electricitySourceData, element.getName(), year, 
-							ElectricityUnits.convertFlow(
-									element.getElectricityOutput(), element, this));
-				}
-			}
+			updateSeries(electricitySourceData, "Production", year, 
+					ElectricityUnits.convertFlow(
+							getElectricitySystem().getElectricityProduction(), 
+							getElectricitySystem(), this));
+			updateSeries(electricityUseData, "Distribution", year, 
+					ElectricityUnits.convertFlow(
+							getElectricitySystem().getElectricityInDistribution(), 
+							getElectricitySystem(), this));
+			updateSeries(electricitySourceData,  "Distribution", year, 
+					ElectricityUnits.convertFlow(
+							getElectricitySystem().getElectricityOutDistribution(), 
+							getElectricitySystem(), this));
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
 				updateSeries(electricitySourceData, nestedSystem.getSociety().getName() 
@@ -346,94 +421,60 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 								getElectricitySystem().getElectricityOutDistribution(),
 								getElectricitySystem(), this));
 			}
-			updateSeries(electricityUseData, "Distribution Losses", year, 
+			/*updateSeries(electricityUseData, "Distribution Losses", year, 
 					ElectricityUnits.convertFlow(
 							getElectricitySystem().getElectricityOutDistributionLosses(),
-							getElectricitySystem(), this));
+							getElectricitySystem(), this));*/
 		}
 		
-		if(getNestedElectricitySystems().isEmpty()) {
-			updateSeries(electricityUseData, "Society", year, 
-					ElectricityUnits.convertFlow(getSociety().getSocialSystem().getElectricityConsumption(),
-							getSociety().getSocialSystem(), this));
-			for(ElectricityElement element : getElectricitySystem().getInternalElements()) {
-				if(element.getPetroleumConsumption() > 0) {
-					updateSeries(petroleumUseData, element.getName(), year, 
-							OilUnits.convertFlow(element.getPetroleumConsumption(),
-									element, this));
-				}
-				if(element.getWaterConsumption() > 0) {
-					updateSeries(waterUseData, element.getName(), year, 
-							WaterUnits.convertFlow(element.getWaterConsumption(),
-									element, this));
-				}
-			}
-		} else {
-			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
-				updateSeries(electricityUseData, nestedSystem.getSociety().getName() + " Society", year,
-						ElectricityUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getElectricityConsumption(), 
-								nestedSystem.getSociety().getSocialSystem(), this));
-				if(nestedSystem.getPetroleumConsumption() > 0) {
-					updateSeries(petroleumUseData, nestedSystem.getName(), year, 
-							OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
-									nestedSystem, this));
-				}
-				if(nestedSystem.getWaterConsumption() > 0) {
-					updateSeries(waterUseData, nestedSystem.getName(), year, 
-							WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
-									nestedSystem, this));
-				}
-			}
-		}
-		
-		updateSeries(electricityRevenue, "Capital", year, 
+		updateSeries(electricityRevenue, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getCapitalExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Operations", year, 
+		updateSeries(electricityRevenue, "Operations Expense", year, 
 				CurrencyUnits.convertFlow(
-						-getElectricitySystem().getOperationsExpense(), 
+						-getElectricitySystem().getOperationsExpense()
+						-getElectricitySystem().getConsumptionExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Decommission", year, 
+		updateSeries(electricityRevenue, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getDecommissionExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Consumption", year, 
+		/*updateSeries(electricityRevenue, "Consumption Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getConsumptionExpense(), 
-						getElectricitySystem(), this));
+						getElectricitySystem(), this));*/
 		if(!(getElectricitySystem().getSociety() instanceof Country)) {
-			updateSeries(electricityRevenue, "In-Distribution", year, 
+			updateSeries(electricityRevenue, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(
 							-getElectricitySystem().getDistributionExpense(), 
 							getElectricitySystem(), this));
-			updateSeries(electricityRevenue, "Out-Distribution", year, 
+			updateSeries(electricityRevenue, "Distribution Revenue", year, 
 					CurrencyUnits.convertFlow(
 							getElectricitySystem().getDistributionRevenue(), 
 							getElectricitySystem(), this));
 		}
-		updateSeries(electricityRevenue, "Sales", year, 
+		updateSeries(electricityRevenue, "Output Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getSalesRevenue(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityNetRevenue, "Net Revenue", year, 
+		updateSeries(electricityNetRevenue, "Net Cash Flow", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getCashFlow(), 
 						getElectricitySystem(), this));
-
-		updateSeries(electricityUseData, "Water", year,  
+		updateSeries(electricityUseData, "Water Operations", year,  
 				ElectricityUnits.convertFlow(
 						getSociety().getWaterSystem().getElectricityConsumption(),
 						getSociety().getWaterSystem(), this));
-		updateSeries(electricityUseData, "Petroleum", year,  
+		updateSeries(electricityUseData, "Petroleum Operations", year,  
 				ElectricityUnits.convertFlow(
 						getSociety().getPetroleumSystem().getElectricityConsumption(),
 						getSociety().getPetroleumSystem(), this));
-		updateSeries(electricityUseData, "Wasted", year,  
+		updateSeries(electricityUseData, "Waste", year,  
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityWasted(),
 						getElectricitySystem(), this));
-		updateSeries(electricitySourceData, "Private Production", year, 
+		updateSeries(electricitySourceData, "Private Operations", year, 
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityFromPrivateProduction(),
 						getElectricitySystem(), this));

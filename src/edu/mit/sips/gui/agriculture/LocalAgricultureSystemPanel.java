@@ -75,16 +75,13 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		localFoodIndicatorPanel = new LinearIndicatorPanel(
 				"Food Independence", 0, 1);
 		indicatorsPanel.add(localFoodIndicatorPanel);
-		/* temporarily remove
-		addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		 */
+		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
 		agricultureStatePanel = new SpatialStatePanel(
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
 		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
 
 		List<String> revenueNames;
-
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
@@ -98,10 +95,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : revenueNames) {
 			agricultureRevenue.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Cash Flow", Icons.REVENUE,
-				createStackedAreaChart("Agriculture Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")",
+		addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+				"Agriculture Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")",
 						agricultureRevenue, PlottingUtils.getCashFlowColors(revenueNames), agricultureNetRevenue));
-		
 		
 		List<String> foodSourceNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
@@ -141,16 +137,17 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		List<String> waterUseNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				waterUseNames.add(society.getName() + " Production");
+				waterUseNames.add(society.getName() + " Operations");
 			}
 		} else {
-			waterUseNames.add(getSociety().getName() + " Production");
+			waterUseNames.add(getSociety().getName() + " Operations");
 		}
 		addTab("Use", Icons.WATER_USE,
 				createStackedAreaChart("Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
 						waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
 		
 		/* temporarily removed
+		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Food Fraction (-)", localFoodData));
 		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
 				"Food Consumption Per Capita (" + FoodUnits.kcal 
@@ -350,7 +347,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			updateSeries(foodUseData, "Society", year, 
 					FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
 							getSociety().getSocialSystem(), this));
-			updateSeries(waterUseData, "Production", year, 
+			updateSeries(waterUseData, "Operations", year, 
 					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
 							getAgricultureSystem(), this));
 			/* temporarily removed
@@ -367,7 +364,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				updateSeries(foodUseData, nestedSystem.getSociety().getName() + " Society", year,
 						FoodUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getFoodConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
-				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Production", year, 
+				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Operations", year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
 								nestedSystem, this));
 			}
