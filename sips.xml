@@ -102,6 +102,18 @@
                         <semantics>Unit price of domestic water (sim/m^3).</semantics>
                     </attribute>
                     <attribute>
+                        <name>WaterAgriculturalPrice</name>
+                        <dataType>HLAfloat64BE</dataType>
+                        <updateType>NA</updateType>
+                        <updateCondition>Every time step.</updateCondition>
+                        <ownership>NoTransfer</ownership>
+                        <sharing>PublishSubscribe</sharing>
+                        <dimensions/>
+                        <transportation>HLAreliable</transportation>
+                        <order>TimeStamp</order>
+                        <semantics>Unit price of agricultural water (sim/m^3).</semantics>
+                    </attribute>
+                    <attribute>
                         <name>WaterImportPrice</name>
                         <dataType>HLAfloat64BE</dataType>
                         <updateType>NA</updateType>
