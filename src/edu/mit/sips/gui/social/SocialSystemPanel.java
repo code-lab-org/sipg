@@ -135,6 +135,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		infrastructureSystemRevenue.removeAllSeries();
 		infrastructureSystemNetRevenue.removeAllSeries();
 		populationDataset.removeAllSeries();
+		populationTotalDataset.removeAllSeries();
 		domesticProduct.removeAllSeries();
 		domesticProductPerCapita.removeAllSeries();
 		societyRevenue.removeAllSeries();
