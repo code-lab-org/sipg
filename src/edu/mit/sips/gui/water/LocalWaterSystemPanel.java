@@ -395,7 +395,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 							-getWaterSystem().getDistributionExpense(), 
 							getWaterSystem(), this));
 		}
-		updateSeries(waterRevenue, "Sales Revenue", year, 
+		updateSeries(waterRevenue, "Output Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getWaterSystem().getSalesRevenue(), 
 						getWaterSystem(), this));
