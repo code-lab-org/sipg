@@ -166,29 +166,29 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					name, name + " " + getInstanceId(RO_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, endYear-year-2+1, 1, 
-							100e6, 2e6, 10e6, true), 
-					0.0, 50e6, 50e6, 5.5e-3, 0.05, true);
+							100e6, 1e6, 5e6, true), 
+					0.0, 50e6, 50e6, 5.5e-3, 0.014, true);
 		case RO_PLANT_2:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_2), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 4, 
 							maxOperations, endYear-year-4+1, 1, 
-							250e6, 5e6, 25e6, true), 
-					0.0, 150e6, 150e6, 4.5e-3, 0.045, true);
+							250e6, 2.5e6, 12.5e6, true), 
+					0.0, 150e6, 150e6, 4.5e-3, 0.012, true);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_1), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year-0+0, 0, 
-							10e6, 500e3, 0, true), 
-					0.85, 50e6, 50e6, 2.0e-3, 0.005);
+							10e6, 400e3, 0, true), 
+					0.85, 50e6, 50e6, 2.0e-3, 0.008);
 		case WATER_PIPELINE_2:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_2), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, endYear-year-0+0, 0, 
-							25e6, 1.25e6, 0, true), 
-					0.90, 150e6, 150e6, 2.0e-3, 0.005);
+							50e6, 1e6, 0, true), 
+					0.90, 150e6, 150e6, 2.0e-3, 0.008);
 		case OIL_WELL_1:
 			return DefaultPetroleumElement.createProductionElement(
 					name, name + " " + getInstanceId(OIL_WELL_1), location, location, 

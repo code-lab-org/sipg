@@ -59,7 +59,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 			petroleumDemandModel = new LogisticTimeDemandModel(1970, 1, 0.07, 0, 9);
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(50), 
 			foodImportPriceModel = new ConstantPriceModel(75), 
-			foodExportPriceModel = new ConstantPriceModel(50),
+			foodExportPriceModel = new ConstantPriceModel(40),
 			waterDomesticPriceModel = new ConstantPriceModel(0.05), 
 			waterImportPriceModel = new ConstantPriceModel(10), 
 			electricityDomesticPriceModel = new ConstantPriceModel(4), 
