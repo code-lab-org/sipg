@@ -222,42 +222,42 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					name, name + " " + getInstanceId(POWER_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, endYear-year-1+1, 1, 
-							50e6, 375e3, 5e6, true), 
+							50e6, 500e3, 2.5e6, true), 
 					2e6, 2e6, 0.3, 0, 0);
 		case POWER_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(POWER_PLANT_2), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, endYear-year-2+1, 1, 
-							175e6, 1.75e6, 17.5e6, true), 
+							175e6, 1.75e6, 8.75e6, true), 
 					10e6, 10e6, 0.25, 0, 0);
 		case PV_PLANT_1:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, endYear-year-2+1, 1, 
-							75e6, 487.5e3, 750e3, true), 
+							100e6, 500e3, 1e6, true), 
 					2e6, 2e6, 0, 0, 0);
 		case PV_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, endYear-year-2+1, 1, 
-							300e6, 1.8e6, 3e6, true), 
+							350e6, 1.75e6, 3.5e6, true), 
 					10e6, 10e6, 0, 0, 0);
 		case POWER_LINE_1:
 			return DefaultElectricityElement.createDistributionElement(
 					name, name + " " + getInstanceId(POWER_LINE_1), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, endYear-year-1+0, 0, 
-							10e6, 800e3, 0, true), 
+							50e6, 2e6, 0, true), 
 					0.94, 10e6, 10e6, 0);
 		case POWER_LINE_2:
 			return DefaultElectricityElement.createDistributionElement(
 					name, name + " " + getInstanceId(POWER_LINE_2), location, destination, 
 					new SimpleLifecycleModel(timeAvailable, year, 1, 
 							maxOperations, endYear-year-1+0, 0, 
-							45e6, 3.6e6, 0, true), 
+							225e6, 9e6, 0, true), 
 					0.96, 50e6, 50e6, 0);
 		default:
 			throw new IllegalArgumentException(
@@ -265,4 +265,3 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 		}
 	}
 }
-
