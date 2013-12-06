@@ -11,15 +11,22 @@ import hla.rti1516e.exceptions.RTIexception;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.core.water.DefaultWaterSystem;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.sim.util.ElectricityUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class HLAwaterSystem.
  */
-public class HLAwaterSystem extends HLAinfrastructureSystem {
-	public static final String 
-	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
+public class HLAwaterSystem extends HLAinfrastructureSystem implements WaterSystem {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	
+	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
 	
 	public static final String 
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
@@ -51,8 +58,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			WaterSystem.Local waterSystem) throws RTIexception {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, null, waterSystem);
-		waterSystem.addAttributeChangeListener(hlaSystem);
+				rtiAmbassador, encoderFactory, null);
+		hlaSystem.setAttributes(waterSystem);
 		return hlaSystem;
 	}
 	
@@ -69,10 +76,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
 		HLAwaterSystem hlaSystem = new HLAwaterSystem(
-				rtiAmbassador, encoderFactory, instanceName,
-				new DefaultWaterSystem.Remote());
+				rtiAmbassador, encoderFactory, instanceName);
 		//hlaSystem.requestAttributeValueUpdate();
-		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
 	
@@ -116,8 +121,10 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 				attributeHandleSet);
 	}
 	
-	private final HLAfloat64BE electricityConsumption;
-	private final HLAfloat64BE waterDomesticPrice, waterAgriculturalPrice, waterImportPrice;
+	private transient final HLAfloat64BE electricityConsumption;
+	private transient final HLAfloat64BE waterDomesticPrice;
+	private transient final HLAfloat64BE waterAgriculturalPrice;
+	private transient final HLAfloat64BE waterImportPrice;
 
 	/**
 	 * Instantiates a new hL awater system.
@@ -125,21 +132,15 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param waterSystem the water system
 	 * @throws RTIexception the rT iexception
 	 */
 	protected HLAwaterSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory, String instanceName,
-			WaterSystem waterSystem) throws RTIexception {
-		super(rtiAmbassador, encoderFactory, instanceName, waterSystem);
-		electricityConsumption = encoderFactory.createHLAfloat64BE(
-				waterSystem.getElectricityConsumption());
-		waterDomesticPrice = encoderFactory.createHLAfloat64BE(
-				waterSystem.getWaterDomesticPrice());
-		waterAgriculturalPrice = encoderFactory.createHLAfloat64BE(
-				waterSystem.getWaterAgriculturalPrice());
-		waterImportPrice = encoderFactory.createHLAfloat64BE(
-				waterSystem.getWaterImportPrice());
+			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
+		super(rtiAmbassador, encoderFactory, instanceName);
+		electricityConsumption = encoderFactory.createHLAfloat64BE();
+		waterDomesticPrice = encoderFactory.createHLAfloat64BE();
+		waterAgriculturalPrice = encoderFactory.createHLAfloat64BE();
+		waterImportPrice = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
 		attributeValues.put(getAttributeHandle(WATER_DOMESTIC_PRICE_ATTRIBUTE), 
@@ -151,84 +152,43 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
-	 */
-	@Override
-	public void attributeChanged(AttributeChangeEvent evt) {
-		super.attributeChanged(evt);
-		if(evt.getSource().equals(getInfrastructureSystem())) {
-			// object model changed values -- send updates to federation
-			//try {
-				//List<String> attributesToUpdate = new ArrayList<String>();
-				if(evt.getAttributeNames().contains(
-						WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
-					electricityConsumption.setValue(
-							getWaterSystem().getElectricityConsumption());
-					//attributesToUpdate.add(ELECTRICITY_CONSUMPTION_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						WaterSystem.WATER_DOMESTIC_PRICE_ATTRIBUTE)) {
-					waterDomesticPrice.setValue(
-							getWaterSystem().getWaterDomesticPrice());
-					//attributesToUpdate.add(WATER_DOMESTIC_PRICE_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						WaterSystem.WATER_AGRICULTURAL_PRICE_ATTRIBUTE)) {
-					waterAgriculturalPrice.setValue(
-							getWaterSystem().getWaterAgriculturalPrice());
-					//attributesToUpdate.add(WATER_AGRICULTURAL_PRICE_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						WaterSystem.WATER_IMPORT_PRICE_ATTRIBUTE)) {
-					waterImportPrice.setValue(
-							getWaterSystem().getWaterImportPrice());
-					//attributesToUpdate.add(WATER_IMPORT_PRICE_ATTRIBUTE);
-				}
-				//updateAttributes(attributesToUpdate);
-			//} catch(AttributeNotOwned ignored) {
-			//} catch(Exception ex) {
-			//	ex.printStackTrace();
-			//}
-		} else if(getWaterSystem() instanceof WaterSystem.Remote) {
-			WaterSystem.Remote remote = (WaterSystem.Remote) getWaterSystem();
-			// federation changed values -- send updates to object model
-			if(evt.getAttributeNames().contains(
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE)) {
-				remote.setElectricityConsumption(
-						electricityConsumption.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					WATER_DOMESTIC_PRICE_ATTRIBUTE)) {
-				remote.setWaterDomesticPrice(
-						waterDomesticPrice.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					WATER_AGRICULTURAL_PRICE_ATTRIBUTE)) {
-				remote.setWaterAgriculturalPrice(
-						waterAgriculturalPrice.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					WATER_IMPORT_PRICE_ATTRIBUTE)) {
-				remote.setWaterImportPrice(
-						waterImportPrice.getValue());
-			}
-		}
-	}
-	
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
 	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
+	 */
+	@Override
+	public double getElectricityConsumption() {
+		return electricityConsumption.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
 	}
 
 	/* (non-Javadoc)
@@ -239,26 +199,58 @@ public class HLAwaterSystem extends HLAinfrastructureSystem {
 		return CLASS_NAME;
 	}
 
-	/**
-	 * Gets the water system.
-	 *
-	 * @return the water system
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
 	 */
-	public WaterSystem getWaterSystem() {
-		return (WaterSystem) getInfrastructureSystem();
+	@Override
+	public double getWaterAgriculturalPrice() {
+		return waterAgriculturalPrice.getValue();
 	}
 
-	/**
-	 * Sets the water system.
-	 *
-	 * @param waterSystem the new water system
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
-	public void setWaterSystem(WaterSystem.Remote waterSystem) {
-		// copy attribute values to new system
-		waterSystem.setElectricityConsumption(getWaterSystem().getElectricityConsumption());
-		waterSystem.setWaterDomesticPrice(getWaterSystem().getWaterDomesticPrice());
-		waterSystem.setWaterAgriculturalPrice(getWaterSystem().getWaterAgriculturalPrice());
-		waterSystem.setWaterImportPrice(getWaterSystem().getWaterImportPrice());
-		super.setInfrastructureSystem(waterSystem);
+	@Override
+	public double getWaterDomesticPrice() {
+		return waterDomesticPrice.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+	 */
+	@Override
+	public double getWaterImportPrice() {
+		return waterImportPrice.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
+	 */
+	@Override
+	public void setAttributes(InfrastructureSystem system) {
+		super.setAttributes(system);
+		if(system instanceof WaterSystem) {
+			WaterSystem waterSystem = (WaterSystem) system;
+			electricityConsumption.setValue(waterSystem.getElectricityConsumption());
+			waterDomesticPrice.setValue(waterSystem.getWaterDomesticPrice());
+			waterAgriculturalPrice.setValue(waterSystem.getWaterAgriculturalPrice());
+			waterImportPrice.setValue(waterSystem.getWaterImportPrice());
+		}
 	}
 }

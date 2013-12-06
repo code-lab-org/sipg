@@ -2,7 +2,6 @@ package edu.mit.sips.core;
 
 import java.util.List;
 
-import edu.mit.sips.hla.AttributeChangeListener;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
 /**
@@ -121,45 +120,6 @@ public interface InfrastructureSystem extends CurrencyUnitsOutput {
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public static interface Remote extends InfrastructureSystem {
-		
-		/**
-		 * Sets the cash flow.
-		 *
-		 * @param cashFlow the new cash flow
-		 */
-		public void setCashFlow(double cashFlow);
-				
-		/**
-		 * Sets the domestic production.
-		 *
-		 * @param domesticProduction the new domestic production
-		 */
-		public void setDomesticProduction(double domesticProduction);
-	}
-	
-	public static final String NAME_ATTRIBUTE = "name", 
-			SOCIETY_ATTRIBUTE = "society", 
-			CASH_FLOW_ATTRIBUTE = "cashFlow", 
-			DOMESTIC_PRODUCTION_ATTRIBUTE = "domesticProduction";
-	
-	/**
-	 * Adds the property change listener.
-	 *
-	 * @param listener the listener
-	 */
-	public void addAttributeChangeListener(AttributeChangeListener listener);
-	
-	/**
-	 * Fire attribute change event.
-	 *
-	 * @param propertyNames the property names
-	 */
-	public void fireAttributeChangeEvent(List<String> propertyNames);
-	
-	/**
 	 * Gets the future cash flow.
 	 *
 	 * @return the future cash flow
@@ -188,23 +148,9 @@ public interface InfrastructureSystem extends CurrencyUnitsOutput {
 	public Society getSociety();
 	
 	/**
-	 * Removes the property change listener.
+	 * Sets the society.
 	 *
-	 * @param listener the listener
-	 */
-	public void removeAttributeChangeListener(AttributeChangeListener listener);
-
-	/**
-	 * Sets the name.
-	 *
-	 * @param name the new name
-	 */
-	public void setName(String name);
-	
-	/**
-	 * Gets the society.
-	 *
-	 * @return the new society
+	 * @param society the new society
 	 */
 	public void setSociety(Society society);
 }

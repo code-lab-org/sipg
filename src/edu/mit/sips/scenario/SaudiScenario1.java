@@ -87,7 +87,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem.Remote(),
+							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 3e9, 3e9, 3e6, 0, 1,
 								Arrays.asList(
@@ -99,7 +99,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem.Remote(),
+							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(10e9, 10e9,
 								Arrays.asList(
@@ -122,7 +122,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										petroleumSystemDomesticProductionModel,
 										petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem.Remote(),
+							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
@@ -137,13 +137,13 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										electricitySystemDomesticProductionModel,
 										electricityDomesticPriceModel):
-							new DefaultElectricitySystem.Remote(),
+							new DefaultElectricitySystem(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 50000, 0.08, 20000000),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
-							new DefaultSocialSystem.Remote());
+							new DefaultSocialSystem());
 	}
 
 	/**
@@ -168,7 +168,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										agricultureSystemDomesticProductionModel,
 										foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem.Remote(),
+							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(false, 3e9, 3e9, 3e6, 0, 1,
 								Arrays.asList(
@@ -179,12 +179,12 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem.Remote(),
+							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem.Remote(),
+							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
@@ -193,13 +193,13 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										electricitySystemDomesticProductionModel,
 										electricityDomesticPriceModel):
-							new DefaultElectricitySystem.Remote(),
+							new DefaultElectricitySystem(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 10000, 0.05, 750000),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
-							new DefaultSocialSystem.Remote());
+							new DefaultSocialSystem());
 	}
 
 	/**
@@ -219,7 +219,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										agricultureSystemDomesticProductionModel,
 										foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem.Remote(),
+							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new DefaultWaterSystem.Local(true, 2e9, 2e9, 1e6, 0, 1,
 								Arrays.asList(
@@ -231,12 +231,12 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										waterSystemDomesticProductionModel,
 										waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem.Remote(),
+							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem.Remote(),
+							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new DefaultElectricitySystem.Local(1d/0.10,
 								Arrays.asList(
@@ -251,12 +251,12 @@ public final class SaudiScenario1 extends DefaultScenario {
 										),
 										electricitySystemDomesticProductionModel,
 										electricityDomesticPriceModel):
-							new DefaultElectricitySystem.Remote(),
+							new DefaultElectricitySystem(),
 				assigned?
 						new DefaultSocialSystem.Local(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1950, 100000, 0.07, 10000000),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
-							new DefaultSocialSystem.Remote());
+							new DefaultSocialSystem());
 	}
 }

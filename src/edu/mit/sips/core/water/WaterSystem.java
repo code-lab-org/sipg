@@ -202,47 +202,6 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public static interface Remote extends WaterSystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Sets the electricity consumption.
-		 *
-		 * @param electricityConsumption the new electricity consumption
-		 */
-		public void setElectricityConsumption(double electricityConsumption);
-		
-		/**
-		 * Sets the water domestic price.
-		 *
-		 * @param domesticPrice the domestic price
-		 */
-		public void setWaterDomesticPrice(double domesticPrice);
-		
-		/**
-		 * Sets the water import price.
-		 *
-		 * @param importPrice the import price
-		 */
-		public void setWaterImportPrice(double importPrice);
-		
-		/**
-		 * Sets the water agricultural price.
-		 *
-		 * @param agriculturalPrice the new water agricultural price
-		 */
-		public void setWaterAgriculturalPrice(double agriculturalPrice);
-
-	}
-	
-	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-	WATER_DOMESTIC_PRICE_ATTRIBUTE = "waterDomesticPrice",
-	WATER_AGRICULTURAL_PRICE_ATTRIBUTE = "waterAgriculturalPrice",
-	WATER_IMPORT_PRICE_ATTRIBUTE = "waterImportPrice";
-	
-	/**
 	 * Gets the energy consumption.
 	 *
 	 * @return the energy consumption

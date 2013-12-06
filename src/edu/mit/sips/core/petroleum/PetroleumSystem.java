@@ -141,45 +141,6 @@ public interface PetroleumSystem extends InfrastructureSystem,
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public interface Remote extends PetroleumSystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Sets the electricity consumption.
-		 *
-		 * @param electricityConsumption the new electricity consumption
-		 */
-		public void setElectricityConsumption(double electricityConsumption);
-		
-		/**
-		 * Sets the petroleum domestic price.
-		 *
-		 * @param domesticPrice the new petroleum domestic price
-		 */
-		public void setPetroleumDomesticPrice(double domesticPrice);
-		
-		/**
-		 * Sets the petroleum export price.
-		 *
-		 * @param exportPrice the new petroleum export price
-		 */
-		public void setPetroleumExportPrice(double exportPrice);
-		
-		/**
-		 * Sets the petroleum import price.
-		 *
-		 * @param importPrice the new petroleum import price
-		 */
-		public void setPetroleumImportPrice(double importPrice);
-	}
-	
-	public static String ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-			PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE = "petroleumDomesticPrice",
-			PETROLEUM_IMPORT_PRICE_ATTRIBUTE = "petroleumImportPrice",
-			PETROLEUM_EXPORT_PRICE_ATTRIBUTE = "petroleumExportPrice";
-	
-	/**
 	 * Gets the electricity consumed.
 	 *
 	 * @return the electricity consumed

@@ -60,8 +60,6 @@ public final class Serialization {
 				new InterfaceAdapter<AgricultureSystem>());
 		gsonBuilder.registerTypeAdapter(AgricultureSystem.Local.class, 
 				new InterfaceAdapter<AgricultureSystem.Local>());
-		gsonBuilder.registerTypeAdapter(AgricultureSystem.Remote.class, 
-				new InterfaceAdapter<AgricultureSystem.Remote>());
 		gsonBuilder.registerTypeAdapter(AgricultureSoS.Local.class, 
 				new InterfaceAdapter<AgricultureSoS.Local>());
 		gsonBuilder.registerTypeAdapter(AgricultureSoS.class, 
@@ -70,8 +68,6 @@ public final class Serialization {
 				new InterfaceAdapter<WaterSystem>());
 		gsonBuilder.registerTypeAdapter(WaterSystem.Local.class, 
 				new InterfaceAdapter<WaterSystem.Local>());
-		gsonBuilder.registerTypeAdapter(WaterSystem.Remote.class, 
-				new InterfaceAdapter<WaterSystem.Remote>());
 		gsonBuilder.registerTypeAdapter(WaterSoS.Local.class, 
 				new InterfaceAdapter<WaterSoS.Local>());
 		gsonBuilder.registerTypeAdapter(WaterSoS.class, 
@@ -88,8 +84,6 @@ public final class Serialization {
 				new InterfaceAdapter<SocialSystem>());
 		gsonBuilder.registerTypeAdapter(SocialSystem.Local.class, 
 				new InterfaceAdapter<SocialSystem.Local>());
-		gsonBuilder.registerTypeAdapter(SocialSystem.Remote.class, 
-				new InterfaceAdapter<SocialSystem.Remote>());
 		gsonBuilder.registerTypeAdapter(SocialSoS.class, 
 				new InterfaceAdapter<SocialSoS>());
 		gsonBuilder.registerTypeAdapter(Society.class, 

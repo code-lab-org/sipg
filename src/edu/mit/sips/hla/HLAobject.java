@@ -11,7 +11,6 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.exceptions.RTIexception;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +20,15 @@ import javax.swing.event.EventListenerList;
 /**
  * The Class HLAobject.
  */
-public abstract class HLAobject implements AttributeChangeListener {
-	private final boolean local;
-	private final RTIambassador rtiAmbassador;
-	private final ObjectClassHandle objectClassHandle;
-	private final Map<String,AttributeHandle> attributeHandles = new HashMap<String,AttributeHandle>();
-	private final AttributeHandleSet attributeHandleSet;
-	private String instanceName;
-	private ObjectInstanceHandle objectInstanceHandle;
-	private EventListenerList listenerList = new EventListenerList();
+public abstract class HLAobject {
+	private transient final boolean local;
+	private transient final RTIambassador rtiAmbassador;
+	private transient final ObjectClassHandle objectClassHandle;
+	private transient final Map<String,AttributeHandle> attributeHandles = new HashMap<String,AttributeHandle>();
+	private transient final AttributeHandleSet attributeHandleSet;
+	private transient String instanceName;
+	private transient ObjectInstanceHandle objectInstanceHandle;
+	private transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
 	 * Instantiates a new HLA object.
@@ -62,33 +61,12 @@ public abstract class HLAobject implements AttributeChangeListener {
 	}
 	
 	/**
-	 * Adds the property change listener.
-	 *
-	 * @param listener the listener
-	 */
-	public final void addAttributeChangeListener(AttributeChangeListener listener) {
-		listenerList.add(AttributeChangeListener.class, listener);
-	}
-	
-	/**
 	 * Delete.
 	 *
 	 * @throws RTIexception the rT iexception
 	 */
 	public final void delete() throws RTIexception {
 		rtiAmbassador.deleteObjectInstance(getObjectInstanceHandle(), new byte[0]);
-	}
-	
-	/**
-	 * Fire property change event.
-	 *
-	 * @param event the event
-	 */
-	protected final void fireAttributeChangeEvent(AttributeChangeEvent event) {
-		AttributeChangeListener[] listeners = listenerList.getListeners(AttributeChangeListener.class);
-		for(int i = 0; i < listeners.length; i++) {
-			listeners[i].attributeChanged(event);
-		}
 	}
 	
 	/**
@@ -219,15 +197,6 @@ public abstract class HLAobject implements AttributeChangeListener {
 		rtiAmbassador.publishObjectClassAttributes(
 				getObjectClassHandle(), getAttributeHandleSet());
 	}
-
-	/**
-	 * Removes the property change listener.
-	 *
-	 * @param listener the listener
-	 */
-	public final void removeAttributeChangeListener(AttributeChangeListener listener) {
-		listenerList.remove(AttributeChangeListener.class, listener);
-	}
 	
 	/**
 	 * Request attribute value update.
@@ -250,8 +219,6 @@ public abstract class HLAobject implements AttributeChangeListener {
 			ByteWrapper wrapper = attributeHandleValueMap.getValueReference(attributeHandle);
 			if(wrapper != null) {
 				getAttributeValues().get(attributeHandle).decode(wrapper);
-				fireAttributeChangeEvent(new AttributeChangeEvent(this, 
-						Arrays.asList(getAttributeName(attributeHandle))));
 			}
 		}
 	}

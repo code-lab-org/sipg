@@ -19,62 +19,6 @@ public interface SocialSystem extends InfrastructureSystem,
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public static interface Remote extends SocialSystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Sets the domestic product.
-		 *
-		 * @param domesticProduct the new domestic product
-		 */
-		public void setDomesticProduct(double domesticProduct);
-		
-		/**
-		 * Sets the electricity consumption.
-		 *
-		 * @param electricityConsumption the new electricity consumption
-		 */
-		public void setElectricityConsumption(double electricityConsumption);
-		
-		/**
-		 * Sets the food consumption.
-		 *
-		 * @param foodConsumption the new food consumption
-		 */
-		public void setFoodConsumption(double foodConsumption);
-		
-		/**
-		 * Sets the petroleum consumption.
-		 *
-		 * @param petroleumConsumption the new petroleum consumption
-		 */
-		public void setPetroleumConsumption(double petroleumConsumption);
-		
-		/**
-		 * Sets the population.
-		 *
-		 * @param population the new population
-		 */
-		public void setPopulation(long population);
-		
-		/**
-		 * Sets the water consumption.
-		 *
-		 * @param waterConsumption the new water consumption
-		 */
-		public void setWaterConsumption(double waterConsumption);
-	}
-	
-	public static final String 
-	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "electricityConsumption",
-	FOOD_CONSUMPTION_ATTRIBUTE = "foodConsumption",
-	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption",
-	PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
-	POPULATION_ATTRIBUTE = "population",
-	DOMESTIC_PRODUCT_ATTRIBUTE = "domesticProduct";
-	
-	/**
 	 * Gets the domestic product.
 	 *
 	 * @return the domestic product

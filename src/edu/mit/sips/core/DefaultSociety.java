@@ -56,15 +56,15 @@ public abstract class DefaultSociety implements Society {
 		this.name = "Society";
 		this.nestedSocieties = Collections.unmodifiableList(
 				new ArrayList<Society>());
-		this.agricultureSystem = new DefaultAgricultureSystem.Remote();
+		this.agricultureSystem = new DefaultAgricultureSystem();
 		agricultureSystem.setSociety(this);
-		this.waterSystem = new DefaultWaterSystem.Remote();
+		this.waterSystem = new DefaultWaterSystem();
 		waterSystem.setSociety(this);
-		this.petroleumSystem = new DefaultPetroleumSystem.Remote();
+		this.petroleumSystem = new DefaultPetroleumSystem();
 		petroleumSystem.setSociety(this);
-		this.electricitySystem = new DefaultElectricitySystem.Remote();
+		this.electricitySystem = new DefaultElectricitySystem();
 		electricitySystem.setSociety(this);
-		this.socialSystem = new DefaultSocialSystem.Remote();
+		this.socialSystem = new DefaultSocialSystem();
 		socialSystem.setSociety(this);
 	}
 	
@@ -411,7 +411,7 @@ public abstract class DefaultSociety implements Society {
 	 * @see edu.mit.sips.core.Society#setAgricultureSystem(edu.mit.sips.core.agriculture.AgricultureSystem)
 	 */
 	@Override
-	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
+	public void setAgricultureSystem(AgricultureSystem agricultureSystem) {
 		agricultureSystem.setSociety(this);
 		this.agricultureSystem = agricultureSystem;
 	}
@@ -420,7 +420,7 @@ public abstract class DefaultSociety implements Society {
 	 * @see edu.mit.sips.core.Society#setElectricitySystem(edu.mit.sips.core.electricity.ElectricitySystem)
 	 */
 	@Override
-	public void setElectricitySystem(ElectricitySystem.Remote electricitySystem) {
+	public void setElectricitySystem(ElectricitySystem electricitySystem) {
 		electricitySystem.setSociety(this);
 		this.electricitySystem = electricitySystem;
 	}
@@ -429,7 +429,7 @@ public abstract class DefaultSociety implements Society {
 	 * @see edu.mit.sips.core.Society#setPetroleumSystem(edu.mit.sips.core.petroleum.PetroleumSystem)
 	 */
 	@Override
-	public void setPetroleumSystem(PetroleumSystem.Remote petroleumSystem) {
+	public void setPetroleumSystem(PetroleumSystem petroleumSystem) {
 		petroleumSystem.setSociety(this);
 		this.petroleumSystem = petroleumSystem;
 	}
@@ -438,7 +438,7 @@ public abstract class DefaultSociety implements Society {
 	 * @see edu.mit.sips.core.Society#setSocialSystem(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public void setSocialSystem(SocialSystem.Remote socialSystem) {
+	public void setSocialSystem(SocialSystem socialSystem) {
 		socialSystem.setSociety(this);
 		this.socialSystem = socialSystem;
 	}
@@ -455,7 +455,7 @@ public abstract class DefaultSociety implements Society {
 	 * @see edu.mit.sips.core.Society#setWaterSystem(edu.mit.sips.core.water.WaterSystem)
 	 */
 	@Override
-	public void setWaterSystem(WaterSystem.Remote waterSystem) {
+	public void setWaterSystem(WaterSystem waterSystem) {
 		waterSystem.setSociety(this);
 		this.waterSystem = waterSystem;
 	}

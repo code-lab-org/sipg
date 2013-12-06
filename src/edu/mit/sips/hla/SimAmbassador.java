@@ -18,6 +18,7 @@ import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SaveFailureReason;
 import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TransportationTypeHandle;
+import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
@@ -29,6 +30,7 @@ import hla.rti1516e.exceptions.FederationExecutionAlreadyExists;
 import hla.rti1516e.exceptions.FederationExecutionDoesNotExist;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIexception;
+import hla.rti1516e.exceptions.RTIinternalError;
 import hla.rti1516e.exceptions.RestoreInProgress;
 import hla.rti1516e.exceptions.TimeConstrainedAlreadyEnabled;
 import hla.rti1516e.exceptions.TimeConstrainedIsNotEnabled;
@@ -41,7 +43,6 @@ import hla.rti1516e.time.HLAinteger64TimeFactory;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +54,7 @@ import org.apache.log4j.Logger;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
@@ -92,6 +94,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	
 	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
 			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAinfrastructureSystem>());
+
+	private final Map<InfrastructureSystem, HLAinfrastructureSystem> localObjects = 
+			Collections.synchronizedMap(new HashMap<InfrastructureSystem, HLAinfrastructureSystem>());
 	
 	/**
 	 * Instantiates a new sim ambassador.
@@ -117,51 +122,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 		logger.trace("Advancing to the next timestep.");
 		
 		for(int i = 0; i < numberIterations; i++) {
-			logger.trace("Performing iteration number " + (i+1) + " of " + numberIterations + ".");
-			for(City city : simulator.getScenario().getCountry().getCities()) {
-				// fire attribute change events to manually update hla data objects
-				if(city.getSocialSystem() instanceof SocialSystem.Local) {
-					city.getSocialSystem().fireAttributeChangeEvent(
-							Arrays.asList(SocialSystem.POPULATION_ATTRIBUTE, 
-									SocialSystem.DOMESTIC_PRODUCT_ATTRIBUTE, 
-									SocialSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-									SocialSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE,
-									SocialSystem.WATER_CONSUMPTION_ATTRIBUTE,
-									SocialSystem.FOOD_CONSUMPTION_ATTRIBUTE,
-									SocialSystem.CASH_FLOW_ATTRIBUTE));
-				}
-				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-					city.getAgricultureSystem().fireAttributeChangeEvent(
-							Arrays.asList(AgricultureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-									AgricultureSystem.CASH_FLOW_ATTRIBUTE,
-									AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE));
-				}
-				if(city.getWaterSystem() instanceof WaterSystem.Local) {
-					city.getWaterSystem().fireAttributeChangeEvent(
-							Arrays.asList(WaterSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-								WaterSystem.CASH_FLOW_ATTRIBUTE,
-								WaterSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE));
-				}
-				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
-					city.getElectricitySystem().fireAttributeChangeEvent(
-							Arrays.asList(ElectricitySystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-									ElectricitySystem.CASH_FLOW_ATTRIBUTE,
-									ElectricitySystem.PETROLEUM_CONSUMPTION_ATTRIBUTE,
-									ElectricitySystem.WATER_CONSUMPTION_ATTRIBUTE));
-				}
-				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
-					city.getPetroleumSystem().fireAttributeChangeEvent(
-							Arrays.asList(PetroleumSystem.DOMESTIC_PRODUCTION_ATTRIBUTE,
-									PetroleumSystem.CASH_FLOW_ATTRIBUTE,
-									PetroleumSystem.ELECTRICITY_CONSUMPTION_ATTRIBUTE));
-				}
-			}
-			synchronized(hlaObjects) {
-				for(HLAinfrastructureSystem system : hlaObjects.values()) {
-					if(system.isLocal()) {
-						// initiate attribute update service
-						system.updateAllAttributes();
-					}
+			logger.trace("Performing iteration number " + (i+1) 
+					+ " of " + numberIterations + ".");
+			synchronized(localObjects) {
+				for(InfrastructureSystem system : localObjects.keySet()) {
+					localObjects.get(system).setAttributes(system);
+					localObjects.get(system).updateAllAttributes();
 				}
 			}
 
@@ -367,9 +333,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAagricultureSystem hlaObject = HLAagricultureSystem.
 							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
@@ -386,9 +351,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAwaterSystem hlaObject = HLAwaterSystem.
 							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
@@ -405,9 +369,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLAelectricitySystem hlaObject = HLAelectricitySystem.
 							createLocalElectricitySystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
@@ -424,9 +387,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 					HLApetroleumSystem hlaObject = HLApetroleumSystem.
 							createLocalPetroleumSystem(rtiAmbassador, encoderFactory, 
 									localSystem);
-					synchronized(hlaObjects) {
-						hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-					}	
+					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
@@ -441,9 +403,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 				HLAsocialSystem hlaObject = HLAsocialSystem.
 						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
 								localSystem);
-				synchronized(hlaObjects) {
-					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
-				}	
+				hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
+				localObjects.put(localSystem, hlaObject);
 			}
 		}
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
@@ -614,67 +575,37 @@ public class SimAmbassador extends NullFederateAmbassador {
 		System.out.println("Reflecting attributes with timestamp " 
 				+ theTime + " for " + hlaObjects.get(theObject));
 		
-		try {
-			synchronized(hlaObjects) {
-				if(hlaObjects.containsKey(theObject)) {
-					if(hlaObjects.get(theObject) instanceof HLAagricultureSystem) {
-						HLAagricultureSystem system = (HLAagricultureSystem) hlaObjects.get(theObject);
-						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null
-								&& !system.getSocietyName().isEmpty()) {
-							system.setAgricultureSystem((AgricultureSystem.Remote)
-									simulator.getScenario().getCountry().getSociety(
-											system.getSocietyName()).getAgricultureSystem());
+		if(hlaObjects.containsKey(theObject)) {
+			try {
+				HLAinfrastructureSystem system = hlaObjects.get(theObject);
+				system.setAllAttributes(theAttributes);
+			
+				if(theAttributes.containsKey(rtiAmbassador.getAttributeHandle(
+						rtiAmbassador.getObjectClassHandle(HLAinfrastructureSystem.CLASS_NAME), 
+						HLAinfrastructureSystem.SOCIETY_NAME_ATTRIBUTE))) {
+					for(Society society : simulator.getScenario().getCountry().getSocieties()) {
+						if(society.getName().equals(system.getSocietyName())) {
+							if(system instanceof AgricultureSystem) {
+								society.setAgricultureSystem((AgricultureSystem)system);
+							} else if(system instanceof WaterSystem) {
+								society.setWaterSystem((WaterSystem)system);
+							} else if(system instanceof PetroleumSystem) {
+								society.setPetroleumSystem((PetroleumSystem)system);
+							} else if(system instanceof ElectricitySystem) {
+								society.setElectricitySystem((ElectricitySystem)system);
+							} else if(system instanceof SocialSystem) {
+								society.setSocialSystem((SocialSystem)system);
+							} else {
+								logger.warn("Unknown infrastructure class, skipping.");
+							}
+							break;
 						}
-						// simulator.fireUpdateEvent(time);
-					} else if(hlaObjects.get(theObject) instanceof HLAwaterSystem) {
-						HLAwaterSystem system = (HLAwaterSystem) hlaObjects.get(theObject);
-						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null
-								&& !system.getSocietyName().isEmpty()) {
-							system.setWaterSystem((WaterSystem.Remote)
-									simulator.getScenario().getCountry().getSociety(
-											system.getSocietyName()).getWaterSystem());
-						}
-						// simulator.fireUpdateEvent(time);
-					} else if(hlaObjects.get(theObject) instanceof HLAelectricitySystem) {
-						HLAelectricitySystem system = (HLAelectricitySystem) hlaObjects.get(theObject);
-						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null
-								&& !system.getSocietyName().isEmpty()) {
-							system.setElectricitySystem((ElectricitySystem.Remote)
-									simulator.getScenario().getCountry().getSociety(
-											system.getSocietyName()).getElectricitySystem());
-						}
-						// simulator.fireUpdateEvent(time);
-					} else if(hlaObjects.get(theObject) instanceof HLApetroleumSystem) {
-						HLApetroleumSystem system = (HLApetroleumSystem) hlaObjects.get(theObject);
-						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null
-								&& !system.getSocietyName().isEmpty()) {
-							system.setPetroleumSystem((PetroleumSystem.Remote)
-									simulator.getScenario().getCountry().getSociety(
-											system.getSocietyName()).getPetroleumSystem());
-						}
-						// simulator.fireUpdateEvent(time);
-					} else if(hlaObjects.get(theObject) instanceof HLAsocialSystem) {
-						HLAsocialSystem system = (HLAsocialSystem) hlaObjects.get(theObject);
-						system.setAllAttributes(theAttributes);
-						if(system.getInfrastructureSystem().getSociety() == null
-								&& !system.getSocietyName().isEmpty()) {
-							system.setSocialSystem((SocialSystem.Remote)
-									simulator.getScenario().getCountry().getSociety(
-											system.getSocietyName()).getSocialSystem());
-						}
-						// simulator.fireUpdateEvent(time);
 					}
-				} 
+				}
+			} catch (RTIexception | DecoderException e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An exception of type " + ex.getMessage() 
-					+ " occurred while decoding an attribute update. See stack trace for more information.", 
-					"Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -725,16 +656,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 		} catch(NotConnected ignored) {
 		}
 		timeRegulating.set(false);
-		
-		synchronized(hlaObjects) {
-			for(HLAinfrastructureSystem system : hlaObjects.values()) {
-				if(system.isLocal()) {
-					// remove hla object as attribute change listener
-					((InfrastructureSystem.Local)system.getInfrastructureSystem())
-					.removeAttributeChangeListener(system);
-				}
-			}
-		}
 		
 		try {
 			rtiAmbassador.resignFederationExecution(ResignAction.DELETE_OBJECTS_THEN_DIVEST);

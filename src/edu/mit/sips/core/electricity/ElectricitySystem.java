@@ -156,38 +156,6 @@ public interface ElectricitySystem extends InfrastructureSystem,
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public static interface Remote extends ElectricitySystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Sets the electricity domestic price.
-		 *
-		 * @param domesticPrice the new electricity domestic price
-		 */
-		public void setElectricityDomesticPrice(double domesticPrice);
-		
-		/**
-		 * Sets the petroleum consumption.
-		 *
-		 * @param petroleumConsumption the new petroleum consumption
-		 */
-		public void setPetroleumConsumption(double petroleumConsumption);
-		
-		/**
-		 * Sets the water consumption.
-		 *
-		 * @param waterConsumption the new water consumption
-		 */
-		public void setWaterConsumption(double waterConsumption);
-	}
-	
-	/** The water consumption attribute. */
-	public static String WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption",
-			PETROLEUM_CONSUMPTION_ATTRIBUTE = "petroleumConsumption",
-			ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE = "electricityDomesticPrice";
-	
-	/**
 	 * Gets the electricity domestic price.
 	 *
 	 * @return the electricity domestic price

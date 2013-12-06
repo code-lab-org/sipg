@@ -1,7 +1,6 @@
 package edu.mit.sips.core.water;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -22,7 +21,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class DefaultWaterSystem.
  */
-public abstract class DefaultWaterSystem implements WaterSystem {
+public class DefaultWaterSystem extends DefaultInfrastructureSystem implements WaterSystem {
 	/**
 	 * The Class Local.
 	 */
@@ -465,6 +464,18 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		}
 
 		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
+		 */
+		@Override
+		public double getWaterAgriculturalPrice() {
+			ElectricitySystem electSys = getSociety().getElectricitySystem();
+			return electricalIntensityOfPrivateProduction 
+					* DefaultUnits.convert(electSys.getElectricityDomesticPrice(),
+							electSys.getCurrencyUnits(), electSys.getElectricityUnits(),
+							getCurrencyUnits(), getElectricityUnits());
+		}
+
+		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 		 */
 		@Override
@@ -484,7 +495,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 							- getWaterInDistribution()
 							- getWaterProduction()));
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterImport()
 		 */
@@ -498,7 +509,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 					- getWaterProduction()
 					- getWaterFromPrivateProduction());
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
 		 */
@@ -506,7 +517,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public double getWaterImportPrice() {
 			return importPriceModel.getUnitPrice();
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
 		 */
@@ -533,7 +544,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 			}
 			return distribution;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistributionLosses()
 		 */
@@ -585,7 +596,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public TimeUnits getWaterTimeUnits() {
 			return waterTimeUnits;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 		 */
@@ -593,7 +604,7 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public WaterUnits getWaterUnits() {
 			return waterUnits;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.WaterSystem#getWaterWasted()
 		 */
@@ -652,121 +663,74 @@ public abstract class DefaultWaterSystem implements WaterSystem {
 		public void tock() {
 			waterReservoirVolume = nextWaterReservoirVolume;
 		}
-
-		@Override
-		public double getWaterAgriculturalPrice() {
-			ElectricitySystem electSys = getSociety().getElectricitySystem();
-			return electricalIntensityOfPrivateProduction 
-					* DefaultUnits.convert(electSys.getElectricityDomesticPrice(),
-							electSys.getCurrencyUnits(), electSys.getElectricityUnits(),
-							getCurrencyUnits(), getElectricityUnits());
-		}
 	}
-	/**
-	 * The Class Remote.
-	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements WaterSystem.Remote {
-		private double electricityConsumption;
-		private double domesticPrice, importPrice, agriculturalPrice;
-		
-		public Remote() {
-			setName("Water");
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
-		 */
-		@Override
-		public double getElectricityConsumption() {
-			return electricityConsumption;
-		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getElectricityTimeUnits() {
-			return electricityTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
-		 */
-		@Override
-		public ElectricityUnits getElectricityUnits() {
-			return electricityUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
-		 */
-		public double getWaterDomesticPrice() {
-			return domesticPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
-		 */
-		public double getWaterImportPrice() {
-			return importPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getWaterTimeUnits() {
-			return waterTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-		 */
-		@Override
-		public WaterUnits getWaterUnits() {
-			return waterUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setElectricityConsumption(double)
-		 */
-		@Override
-		public void setElectricityConsumption(double electricityConsumption) {
-			this.electricityConsumption = electricityConsumption;
-			fireAttributeChangeEvent(Arrays.asList(
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterDomesticPrice(double)
-		 */
-		public void setWaterDomesticPrice(double domesticPrice) {
-			this.domesticPrice = domesticPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterImportPrice(double)
-		 */
-		public void setWaterImportPrice(double importPrice) {
-			this.importPrice = importPrice;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
-		 */
-		public double getWaterAgriculturalPrice() {
-			return agriculturalPrice;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.water.WaterSystem.Remote#setWaterAgriculturalPrice(double)
-		 */
-		public void setWaterAgriculturalPrice(double agriculturalPrice) {
-			this.agriculturalPrice = agriculturalPrice;
-		}
-	}
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
+	 */
+	@Override
+	public double getElectricityConsumption() {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
+	 */
+	@Override
+	public double getWaterAgriculturalPrice() {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
+	 */
+	@Override
+	public double getWaterDomesticPrice() {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
+	 */
+	@Override
+	public double getWaterImportPrice() {
+		return 0;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
 }

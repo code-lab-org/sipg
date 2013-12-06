@@ -160,28 +160,28 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	 *
 	 * @param agricultureSystem the new agriculture system
 	 */
-	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem);
+	public void setAgricultureSystem(AgricultureSystem agricultureSystem);
 	
 	/**
 	 * Sets the electricity system.
 	 *
 	 * @param electricitySystem the new electricity system
 	 */
-	public void setElectricitySystem(ElectricitySystem.Remote electricitySystem);
+	public void setElectricitySystem(ElectricitySystem electricitySystem);
 	
 	/**
 	 * Sets the petroleum system.
 	 *
 	 * @param petroluemSystem the new petroleum system
 	 */
-	public void setPetroleumSystem(PetroleumSystem.Remote petroluemSystem);
+	public void setPetroleumSystem(PetroleumSystem petroluemSystem);
 	
 	/**
 	 * Sets the social system.
 	 *
 	 * @param socialSystem the new social system
 	 */
-	public void setSocialSystem(SocialSystem.Remote socialSystem);
+	public void setSocialSystem(SocialSystem socialSystem);
 	
 	/**
 	 * Sets the society.
@@ -195,5 +195,5 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	 *
 	 * @param waterSystem the new water system
 	 */
-	public void setWaterSystem(WaterSystem.Remote waterSystem);
+	public void setWaterSystem(WaterSystem waterSystem);
 }

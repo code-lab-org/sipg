@@ -1,7 +1,6 @@
 package edu.mit.sips.core.social;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,16 +22,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class DefaultSocialSystem.
  */
-public abstract class DefaultSocialSystem implements SocialSystem {
-	private static final OilUnits oilUnits = OilUnits.toe;
-	private static final TimeUnits oilTimeUnits = TimeUnits.year;
-	private static final WaterUnits waterUnits = WaterUnits.m3;
-	private static final TimeUnits waterTimeUnits = TimeUnits.year;
-	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final FoodUnits foodUnits = FoodUnits.GJ;
-	private static final TimeUnits foodTimeUnits = TimeUnits.year;
-
+public class DefaultSocialSystem extends DefaultInfrastructureSystem implements SocialSystem {
 	/**
 	 * The Class Local.
 	 */
@@ -373,192 +363,124 @@ public abstract class DefaultSocialSystem implements SocialSystem {
 		}
 	}
 	
-	/**
-	 * The Class Remote.
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
 	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements SocialSystem.Remote {		
-		private double domesticProduct;
-		private long population;
-		private double electricityConsumption;
-		private double foodConsumption;
-		private double waterConsumption;
-		private double petroleumConsumption;
-		
-		/**
-		 * Instantiates a new remote.
-		 */
-		public Remote() {
-			setName("Society");
-		}
+	@Override
+	public double getDomesticProduct() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
-		 */
-		@Override
-		public double getDomesticProduct() {
-			return domesticProduct;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
+	 */
+	@Override
+	public double getElectricityConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
-		 */
-		@Override
-		public double getElectricityConsumption() {
-			return electricityConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getElectricityTimeUnits() {
-			return electricityTimeUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
-		 */
-		@Override
-		public ElectricityUnits getElectricityUnits() {
-			return electricityUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
+	 */
+	@Override
+	public double getFoodConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
-		 */
-		@Override
-		public double getFoodConsumption() {
-			return foodConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getFoodTimeUnits() {
-			return foodTimeUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
-		 */
-		@Override
-		public FoodUnits getFoodUnits() {
-			return foodUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-		 */
-		@Override
-		public TimeUnits getOilTimeUnits() {
-			return oilTimeUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-		 */
-		@Override
-		public OilUnits getOilUnits() {
-			return oilUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
+	 */
+	@Override
+	public double getPetroleumConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
-		 */
-		@Override
-		public double getPetroleumConsumption() {
-			return petroleumConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
+	 */
+	@Override
+	public long getPopulation() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
-		 */
-		@Override
-		public long getPopulation() {
-			return population;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumption()
+	 */
+	@Override
+	public double getWaterConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumption()
-		 */
-		@Override
-		public double getWaterConsumption() {
-			return waterConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getWaterTimeUnits() {
-			return waterTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-		 */
-		@Override
-		public WaterUnits getWaterUnits() {
-			return waterUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setDomesticProduct(double)
-		 */
-		@Override
-		public void setDomesticProduct(double domesticProduct) {
-			this.domesticProduct = domesticProduct;
-			fireAttributeChangeEvent(Arrays.asList(
-					DOMESTIC_PRODUCT_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setElectricityConsumption(double)
-		 */
-		@Override
-		public void setElectricityConsumption(double electricityConsumption) {
-			this.electricityConsumption = electricityConsumption;
-			fireAttributeChangeEvent(Arrays.asList(
-					ELECTRICITY_CONSUMPTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getFoodConsumption(double)
-		 */
-		@Override
-		public void setFoodConsumption(double foodConsumption) {
-			this.foodConsumption = foodConsumption;
-			fireAttributeChangeEvent(Arrays.asList(
-					FOOD_CONSUMPTION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setPetroleumConsumption(double)
-		 */
-		@Override
-		public void setPetroleumConsumption(double petroleumConsumption) {
-			this.petroleumConsumption = petroleumConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#setPopulation(long)
-		 */
-		@Override
-		public void setPopulation(long population) {
-			this.population = population;
-			fireAttributeChangeEvent(Arrays.asList(
-					POPULATION_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.social.SocialSystem.Remote#getWaterConsumption(double)
-		 */
-		@Override
-		public void setWaterConsumption(double waterConsumption) {
-			this.waterConsumption = waterConsumption;
-			fireAttributeChangeEvent(Arrays.asList(
-					WATER_CONSUMPTION_ATTRIBUTE));
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 }

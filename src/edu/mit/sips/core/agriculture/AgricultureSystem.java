@@ -153,46 +153,6 @@ public interface AgricultureSystem extends InfrastructureSystem,
 	}
 	
 	/**
-	 * The Interface Remote.
-	 */
-	public static interface Remote extends AgricultureSystem, InfrastructureSystem.Remote {
-		
-		/**
-		 * Sets the food domestic price.
-		 *
-		 * @param foodDomesticPrice the new food domestic price
-		 */
-		public void setFoodDomesticPrice(double foodDomesticPrice);
-		
-		/**
-		 * Sets the food export price.
-		 *
-		 * @param foodExportPrice the new food export price
-		 */
-		public void setFoodExportPrice(double foodExportPrice);
-		
-		/**
-		 * Sets the food import price.
-		 *
-		 * @param foodImportPrice the new food import price
-		 */
-		public void setFoodImportPrice(double foodImportPrice);
-		
-		/**
-		 * Sets the water consumption.
-		 *
-		 * @param waterConsumption the new water consumption
-		 */
-		public void setWaterConsumption(double waterConsumption);
-	}
-	
-	public final static String 
-	WATER_CONSUMPTION_ATTRIBUTE = "waterConsumption",
-	FOOD_DOMESTIC_PRICE_ATTRIBUTE = "foodDomesticPrice",
-	FOOD_IMPORT_PRICE_ATTRIBUTE = "foodImportPrice",
-	FOOD_EXPORT_PRICE_ATTRIBUTE = "foodExportPrice";
-	
-	/**
 	 * Gets the food domestic price.
 	 *
 	 * @return the food domestic price

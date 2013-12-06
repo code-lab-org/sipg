@@ -11,13 +11,20 @@ import hla.rti1516e.exceptions.RTIexception;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
+import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
  * The Class HLAwaterSystem.
  */
-public class HLAagricultureSystem extends HLAinfrastructureSystem {
+public class HLAagricultureSystem extends HLAinfrastructureSystem implements AgricultureSystem {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final FoodUnits foodUnits = FoodUnits.GJ;
+	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 	public static final String 
 	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.AgricultureSystem";
 	
@@ -51,8 +58,8 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			AgricultureSystem.Local agricultureSystem) throws RTIexception {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
-				rtiAmbassador, encoderFactory, null, agricultureSystem);
-		agricultureSystem.addAttributeChangeListener(hlaSystem);
+				rtiAmbassador, encoderFactory, null);
+		hlaSystem.setAttributes(agricultureSystem);
 		return hlaSystem;
 	}
 	
@@ -69,9 +76,8 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
 		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
-				rtiAmbassador, encoderFactory, instanceName, new DefaultAgricultureSystem.Remote());
+				rtiAmbassador, encoderFactory, instanceName);
 		//hlaSystem.requestAttributeValueUpdate();
-		hlaSystem.addAttributeChangeListener(hlaSystem);
 		return hlaSystem;
 	}
 	
@@ -115,8 +121,10 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 				attributeHandleSet);
 	}
 	
-	private final HLAfloat64BE waterConsumption;
-	private final HLAfloat64BE foodDomesticPrice, foodImportPrice, foodExportPrice;
+	private transient final HLAfloat64BE waterConsumption;
+	private transient final HLAfloat64BE foodDomesticPrice;
+	private transient final HLAfloat64BE foodImportPrice;
+	private transient final HLAfloat64BE foodExportPrice;
 
 	/**
 	 * Instantiates a new hL aagriculture system.
@@ -128,17 +136,12 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	 * @throws RTIexception the rT iexception
 	 */
 	protected HLAagricultureSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory, String instanceName,
-			AgricultureSystem agricultureSystem) throws RTIexception {
-		super(rtiAmbassador, encoderFactory, instanceName, agricultureSystem);
-		waterConsumption = encoderFactory.createHLAfloat64BE(
-				agricultureSystem.getWaterConsumption());
-		foodDomesticPrice = encoderFactory.createHLAfloat64BE(
-				agricultureSystem.getFoodDomesticPrice());
-		foodImportPrice = encoderFactory.createHLAfloat64BE(
-				agricultureSystem.getFoodImportPrice());
-		foodExportPrice = encoderFactory.createHLAfloat64BE(
-				agricultureSystem.getFoodExportPrice());
+			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
+		super(rtiAmbassador, encoderFactory, instanceName);
+		waterConsumption = encoderFactory.createHLAfloat64BE();
+		foodDomesticPrice = encoderFactory.createHLAfloat64BE();
+		foodImportPrice = encoderFactory.createHLAfloat64BE();
+		foodExportPrice = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
 		attributeValues.put(getAttributeHandle(FOOD_DOMESTIC_PRICE_ATTRIBUTE), 
@@ -149,81 +152,6 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 				foodExportPrice);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
-	 */
-	@Override
-	public void attributeChanged(AttributeChangeEvent evt) {
-		super.attributeChanged(evt);
-		if(evt.getSource().equals(getInfrastructureSystem())) {
-			// object model changed values -- send updates to federation
-			//try {
-			//	List<String> attributesToUpdate = new ArrayList<String>();
-				if(evt.getAttributeNames().contains(
-						AgricultureSystem.WATER_CONSUMPTION_ATTRIBUTE)) {
-					waterConsumption.setValue(
-							getAgricultureSystem().getWaterConsumption());
-					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						AgricultureSystem.FOOD_DOMESTIC_PRICE_ATTRIBUTE)) {
-					foodDomesticPrice.setValue(
-							getAgricultureSystem().getFoodDomesticPrice());
-					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						AgricultureSystem.FOOD_IMPORT_PRICE_ATTRIBUTE)) {
-					foodImportPrice.setValue(
-							getAgricultureSystem().getFoodImportPrice());
-					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(
-						AgricultureSystem.FOOD_EXPORT_PRICE_ATTRIBUTE)) {
-					foodExportPrice.setValue(
-							getAgricultureSystem().getFoodExportPrice());
-					//attributesToUpdate.add(WATER_CONSUMPTION_ATTRIBUTE);
-				}
-			//	updateAttributes(attributesToUpdate);
-			//} catch(AttributeNotOwned ignored) {
-			//} catch(Exception ex) {
-			//	ex.printStackTrace();
-			//}
-		} else if(getAgricultureSystem() instanceof AgricultureSystem.Remote) {
-			AgricultureSystem.Remote remote = 
-					(AgricultureSystem.Remote) getAgricultureSystem();
-			// federation changed values -- send updates to object model
-			if(evt.getAttributeNames().contains(
-					WATER_CONSUMPTION_ATTRIBUTE)) {
-				remote.setWaterConsumption(
-						waterConsumption.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					FOOD_DOMESTIC_PRICE_ATTRIBUTE)) {
-				remote.setFoodDomesticPrice(
-						foodDomesticPrice.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					FOOD_IMPORT_PRICE_ATTRIBUTE)) {
-				remote.setFoodImportPrice(
-						foodImportPrice.getValue());
-			}
-			if(evt.getAttributeNames().contains(
-					FOOD_EXPORT_PRICE_ATTRIBUTE)) {
-				remote.setFoodExportPrice(
-						foodExportPrice.getValue());
-			}
-		}
-	}
-	
-	/**
-	 * Gets the agriculture system.
-	 *
-	 * @return the agriculture system
-	 */
-	public AgricultureSystem getAgricultureSystem() {
-		return (AgricultureSystem) getInfrastructureSystem();
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
 	 */
@@ -241,6 +169,46 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+	 */
+	@Override
+	public double getFoodDomesticPrice() {
+		return foodDomesticPrice.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+	 */
+	@Override
+	public double getFoodExportPrice() {
+		return foodExportPrice.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+	 */
+	@Override
+	public double getFoodImportPrice() {
+		return foodImportPrice.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
 	 */
 	@Override
@@ -248,17 +216,42 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem {
 		return CLASS_NAME;
 	}
 
-	/**
-	 * Sets the agriculture system.
-	 *
-	 * @param agricultureSystem the new agriculture system
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
 	 */
-	public void setAgricultureSystem(AgricultureSystem.Remote agricultureSystem) {
-		// copy attribute values to new system
-		agricultureSystem.setWaterConsumption(getAgricultureSystem().getWaterConsumption());
-		agricultureSystem.setFoodDomesticPrice(getAgricultureSystem().getFoodDomesticPrice());
-		agricultureSystem.setFoodImportPrice(getAgricultureSystem().getFoodImportPrice());
-		agricultureSystem.setFoodExportPrice(getAgricultureSystem().getFoodExportPrice());
-		super.setInfrastructureSystem(agricultureSystem);
+	@Override
+	public double getWaterConsumption() {
+		return waterConsumption.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
+	 */
+	@Override
+	public void setAttributes(InfrastructureSystem system) {
+		super.setAttributes(system);
+		if(system instanceof AgricultureSystem) {
+			AgricultureSystem agricultureSystem = (AgricultureSystem) system;
+			waterConsumption.setValue(agricultureSystem.getWaterConsumption());
+			foodDomesticPrice.setValue(agricultureSystem.getFoodDomesticPrice());
+			foodImportPrice.setValue(agricultureSystem.getFoodImportPrice());
+			foodExportPrice.setValue(agricultureSystem.getFoodExportPrice());
+		}
 	}
 }

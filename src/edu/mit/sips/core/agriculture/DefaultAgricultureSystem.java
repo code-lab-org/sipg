@@ -19,7 +19,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class DefaultAgricultureSystem.
  */
-public abstract class DefaultAgricultureSystem implements AgricultureSystem {
+public class DefaultAgricultureSystem extends DefaultInfrastructureSystem implements AgricultureSystem {
 	/**
 	 * The Class Local.
 	 */
@@ -307,22 +307,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 			}
 			return foodProduction;
 		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-		 */
-		@Override
-		public TimeUnits getFoodTimeUnits() {
-			return foodTimeUnits;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
-		 */
-		@Override
-		public FoodUnits getFoodUnits() {
-			return foodUnits;
-		}
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
@@ -455,22 +439,6 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		}
 
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-		 */
-		@Override
-		public TimeUnits getWaterTimeUnits() {
-			return waterTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-		 */
-		@Override
-		public WaterUnits getWaterUnits() {
-			return waterUnits;
-		}
-
-		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.SimEntity#initialize(long)
 		 */
 		@Override
@@ -495,74 +463,7 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		 */
 		@Override
 		public void tock() { }
-	}
-	/**
-	 * The Class Remote.
-	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements AgricultureSystem.Remote {
-		private double waterConsumption;
-		private double domesticPrice, importPrice, exportPrice;
-		
-		/**
-		 * Instantiates a new remote.
-		 */
-		public Remote() {
-			setName("Agriculture");
-		}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.DefaultInfrastructureElement#getCurrencyTimeUnits()
-		 */
-		@Override
-		public TimeUnits getCurrencyTimeUnits() {
-			return TimeUnits.year;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
-		 */
-		public double getFoodDomesticPrice() {
-			return domesticPrice;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
-		 */
-		public double getFoodExportPrice() {
-			return exportPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
-		 */
-		public double getFoodImportPrice() {
-			return importPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-		 */
-		@Override
-		public TimeUnits getFoodTimeUnits() {
-			return foodTimeUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
-		 */
-		@Override
-		public FoodUnits getFoodUnits() {
-			return foodUnits;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
-		 */
-		@Override
-		public double getWaterConsumption() {
-			return waterConsumption;
-		}
-		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 		 */
@@ -578,34 +479,21 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 		public WaterUnits getWaterUnits() {
 			return waterUnits;
 		}
-
+		
 		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodDomesticPrice(double)
-		 */
-		public void setFoodDomesticPrice(double foodDomesticPrice) {
-			this.domesticPrice = foodDomesticPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodExportPrice(double)
-		 */
-		public void setFoodExportPrice(double foodExportPrice) {
-			this.exportPrice = foodExportPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setFoodImportPrice(double)
-		 */
-		public void setFoodImportPrice(double foodImportPrice) {
-			this.importPrice = foodImportPrice;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setWaterConsumption(double)
+		 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 		 */
 		@Override
-		public void setWaterConsumption(double waterConsumption) {
-			this.waterConsumption = waterConsumption;
+		public TimeUnits getFoodTimeUnits() {
+			return foodTimeUnits;
+		}
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+		 */
+		@Override
+		public FoodUnits getFoodUnits() {
+			return foodUnits;
 		}
 	}
 	
@@ -613,4 +501,68 @@ public abstract class DefaultAgricultureSystem implements AgricultureSystem {
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+	 */
+	@Override
+	public double getFoodDomesticPrice() {
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+	 */
+	@Override
+	public double getFoodExportPrice() {
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+	 */
+	@Override
+	public double getFoodImportPrice() {
+		return 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
+	 */
+	@Override
+	public double getWaterConsumption() {
+		return 0;
+	}
 }

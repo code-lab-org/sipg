@@ -22,14 +22,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class DefaultElectricitySystem.
  */
-public abstract class DefaultElectricitySystem implements ElectricitySystem {
-	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final OilUnits oilUnits = OilUnits.toe;
-	private static final TimeUnits oilTimeUnits = TimeUnits.year;
-	private static final WaterUnits waterUnits = WaterUnits.m3;
-	private static final TimeUnits waterTimeUnits = TimeUnits.year;
-	
+public class DefaultElectricitySystem extends DefaultInfrastructureSystem implements ElectricitySystem {
 	/**
 	 * The Class Local.
 	 */
@@ -111,15 +104,6 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 					* getPetroleumConsumptionFromPublicProduction();
 		}
 
-		/**
-		 * Gets the society demand.
-		 *
-		 * @return the society demand
-		 */
-		private double getSocietyDemand() {
-			return ElectricityUnits.convertFlow(getSociety().getTotalElectricityDemand(), getSociety(), this);
-		}
-
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 		 */
@@ -127,7 +111,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getDistributionExpense() {
 			return getElectricityDomesticPrice() * getElectricityInDistribution();
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
 		 */
@@ -143,14 +127,6 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		@Override
 		public double getDomesticProduction() {
 			return domesticProductionModel.getDomesticProduction(this);
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
-		 */
-		@Override
-		public double getPetroleumIntensityOfPrivateProduction() {
-			return petroleumIntensityOfPrivateProduction;
 		}
 		
 		/* (non-Javadoc)
@@ -223,7 +199,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return energyProduction;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 		 */
@@ -315,7 +291,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public List<ElectricityElement> getInternalElements() {
 			return Collections.unmodifiableList(elements);
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
 		 */
@@ -344,7 +320,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public OilUnits getOilUnits() {
 			return oilUnits;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.EnergySystem#getPetroleumConsumed()
 		 */
@@ -375,7 +351,15 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return petroleumConsumption;
 		}
-
+		
+		/* (non-Javadoc)
+		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
+		 */
+		@Override
+		public double getPetroleumIntensityOfPrivateProduction() {
+			return petroleumIntensityOfPrivateProduction;
+		}
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
 		 */
@@ -387,7 +371,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return 0;
 		}
-		
+
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.ElectricitySystem#getRenewableEnergyProduction()
 		 */
@@ -401,7 +385,7 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 			}
 			return production;
 		}
-
+		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
 		 */
@@ -409,6 +393,15 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public double getSalesRevenue() {
 			return getElectricityDomesticPrice() * (getSocietyDemand()
 					- getElectricityFromPrivateProduction());
+		}
+
+		/**
+		 * Gets the society demand.
+		 *
+		 * @return the society demand
+		 */
+		private double getSocietyDemand() {
+			return ElectricityUnits.convertFlow(getSociety().getTotalElectricityDemand(), getSociety(), this);
 		}
 
 		/* (non-Javadoc)
@@ -499,115 +492,82 @@ public abstract class DefaultElectricitySystem implements ElectricitySystem {
 		public void tock() { }
 	}
 	
-	/**
-	 * The Class Remote.
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
 	 */
-	public static class Remote extends DefaultInfrastructureSystem.Remote implements ElectricitySystem.Remote {		
-		private double waterConsumption;
-		private double petroleumConsumption;
-		private double domesticPrice;
-		
-		/**
-		 * Instantiates a new remote.
-		 */
-		public Remote() {
-			setName("Electricity");
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
-		 */
-		@Override
-		public double getElectricityDomesticPrice() {
-			return domesticPrice;
-		}
+	@Override
+	public double getElectricityDomesticPrice() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-		 */
-		@Override
-		public TimeUnits getElectricityTimeUnits() {
-			return electricityTimeUnits;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-		 */
-		@Override
-		public ElectricityUnits getElectricityUnits() {
-			return electricityUnits;
-		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-		 */
-		@Override
-		public TimeUnits getOilTimeUnits() {
-			return oilTimeUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
+	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-		 */
-		@Override
-		public OilUnits getOilUnits() {
-			return oilUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
+	 */
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem#getPetroleumConsumption()
-		 */
-		@Override
-		public double getPetroleumConsumption() {
-			return petroleumConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
-		 */
-		@Override
-		public double getWaterConsumption() {
-			return waterConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-		 */
-		@Override
-		public TimeUnits getWaterTimeUnits() {
-			return waterTimeUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getPetroleumConsumption()
+	 */
+	@Override
+	public double getPetroleumConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-		 */
-		@Override
-		public WaterUnits getWaterUnits() {
-			return waterUnits;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getWaterConsumption()
+	 */
+	@Override
+	public double getWaterConsumption() {
+		return 0;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Remote#setElectricityDomesticPrice(double)
-		 */
-		@Override
-		public void setElectricityDomesticPrice(double domesticPrice) {
-			this.domesticPrice = domesticPrice;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
+	 */
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.electricity.ElectricitySystem.Remote#setPetroleumConsumption(double)
-		 */
-		@Override
-		public void setPetroleumConsumption(double petroleumConsumption) {
-			this.petroleumConsumption = petroleumConsumption;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Remote#setWaterConsumption(double)
-		 */
-		@Override
-		public void setWaterConsumption(double waterConsumption) {
-			this.waterConsumption = waterConsumption;
-		}
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
+	 */
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 }

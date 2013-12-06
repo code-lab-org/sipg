@@ -1,19 +1,12 @@
 package edu.mit.sips.core;
 
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.event.EventListenerList;
-
-import edu.mit.sips.hla.AttributeChangeEvent;
-import edu.mit.sips.hla.AttributeChangeListener;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class DefaultInfrastructureSystem.
  */
-public abstract class DefaultInfrastructureSystem implements InfrastructureSystem {
+public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	
 	/**
 	 * The Class Local.
@@ -122,57 +115,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 					+ getDistributionRevenue()
 					+ getExportRevenue();
 		}
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
-		 */
-		@Override
-		public void setSociety(Society society) {
-			super.setSociety(society);
-			fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
-		}
-	}
-
-	/**
-	 * The Class Remote.
-	 */
-	public abstract static class Remote extends DefaultInfrastructureSystem implements InfrastructureSystem.Remote {
-		private double cashFlow;
-		private double domesticProduction;
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
-		 */
-		@Override
-		public final double getCashFlow() {
-			return cashFlow;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-		 */
-		@Override
-		public final double getDomesticProduction() {
-			return domesticProduction;
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setCashFlow(double)
-		 */
-		@Override
-		public final void setCashFlow(double cashFlow) {
-			this.cashFlow = cashFlow;
-			fireAttributeChangeEvent(Arrays.asList(CASH_FLOW_ATTRIBUTE));
-		}
-
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setDomesticProduction(double)
-		 */
-		@Override
-		public final void setDomesticProduction(double domesticProduction) {
-			this.domesticProduction = domesticProduction;
-			fireAttributeChangeEvent(Arrays.asList(DOMESTIC_PRODUCTION_ATTRIBUTE));
-		}
 	}
 
 	protected static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
@@ -180,7 +122,6 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	
 	private String name;
 	private transient Society society;
-	private transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
 	 * Instantiates a new default infrastructure system.
@@ -203,25 +144,20 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.InfrastructureSystem#addAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
 	@Override
-	public void addAttributeChangeListener(AttributeChangeListener listener) {
-		listenerList.add(AttributeChangeListener.class, listener);
+	public double getCashFlow() {
+		return 0;
 	}
-	
+
+
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.InfrastructureSystem#fireAttributeChangeEvent(java.lang.String)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
 	 */
 	@Override
-	public final void fireAttributeChangeEvent(List<String> propertyNames) {
-		AttributeChangeEvent evt = new AttributeChangeEvent(
-				this, propertyNames);
-		AttributeChangeListener[] listeners = listenerList.getListeners(
-				AttributeChangeListener.class);
-		for(int i = 0; i < listeners.length; i++) {
-			listeners[i].attributeChanged(evt);
-		}
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
 	}
 
 	/* (non-Javadoc)
@@ -231,7 +167,14 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+	 */
+	@Override
+	public double getDomesticProduction() {
+		return 0;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
@@ -250,36 +193,10 @@ public abstract class DefaultInfrastructureSystem implements InfrastructureSyste
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return currencyTimeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.InfrastructureSystem#removeAttributeChangeListener(edu.mit.sips.hla.AttributeChangeListener)
-	 */
-	@Override
-	public void removeAttributeChangeListener(AttributeChangeListener listener) {
-		listenerList.remove(AttributeChangeListener.class, listener);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setName(java.lang.String)
-	 */
-	@Override
-	public void setName(String name) {
-		this.name = name;
-		fireAttributeChangeEvent(Arrays.asList(NAME_ATTRIBUTE));
-	}
-	
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
 	 */
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
-		fireAttributeChangeEvent(Arrays.asList(SOCIETY_ATTRIBUTE));
 	}
 }

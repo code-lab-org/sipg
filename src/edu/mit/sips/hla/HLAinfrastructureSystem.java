@@ -13,12 +13,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.Society;
+import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.sim.util.TimeUnits;
 
 /**
  * The Class HLAinfrastructureSystem.
  */
-public abstract class HLAinfrastructureSystem extends HLAobject {
+public abstract class HLAinfrastructureSystem extends HLAobject implements InfrastructureSystem {
 	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem";
+	protected static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	protected static final TimeUnits currencyTimeUnits = TimeUnits.year;
 	
 	public static final String NAME_ATTRIBUTE = "Name",
 			SOCIETY_NAME_ATTRIBUTE = "SocietyName",
@@ -73,12 +78,12 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 				attributeHandleSet);
 	}
 
-	private InfrastructureSystem infrastructureSystem;
-	private final HLAunicodeString name;
-	private final HLAunicodeString societyName;
-	private final HLAfloat64BE netCashFlow;
-	private final HLAfloat64BE domesticProduction;
-	protected final Map<AttributeHandle,DataElement> attributeValues = 
+	private transient Society society;
+	private transient final HLAunicodeString name;
+	private transient final HLAunicodeString societyName;
+	private transient final HLAfloat64BE netCashFlow;
+	private transient final HLAfloat64BE domesticProduction;
+	protected transient final Map<AttributeHandle,DataElement> attributeValues = 
 			new HashMap<AttributeHandle,DataElement>();
 	
 	/**
@@ -87,23 +92,15 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param infrastructureSystem the infrastructure system
 	 * @throws RTIexception the rT iexception
 	 */
 	protected HLAinfrastructureSystem(RTIambassador rtiAmbassador, 
-			EncoderFactory encoderFactory, String instanceName,
-			InfrastructureSystem infrastructureSystem) throws RTIexception {
+			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
 		super(rtiAmbassador, instanceName);
-		this.infrastructureSystem = infrastructureSystem;
-		name = encoderFactory.createHLAunicodeString(
-				infrastructureSystem.getName());
-		societyName = encoderFactory.createHLAunicodeString(
-				infrastructureSystem.getSociety()==null?"":
-					infrastructureSystem.getSociety().getName());
-		netCashFlow = encoderFactory.createHLAfloat64BE(
-				infrastructureSystem.getCashFlow());
-		domesticProduction = encoderFactory.createHLAfloat64BE(
-				infrastructureSystem.getDomesticProduction());
+		name = encoderFactory.createHLAunicodeString();
+		societyName = encoderFactory.createHLAunicodeString();
+		netCashFlow = encoderFactory.createHLAfloat64BE();
+		domesticProduction = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(NAME_ATTRIBUTE), 
 				name);
 		attributeValues.put(getAttributeHandle(SOCIETY_NAME_ATTRIBUTE), 
@@ -112,55 +109,6 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 				netCashFlow);
 		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCTION_ATTRIBUTE), 
 				domesticProduction);
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.AttributeChangeListener#attributeChanged(edu.mit.sips.hla.AttributeChangeEvent)
-	 */
-	@Override
-	public void attributeChanged(AttributeChangeEvent evt) {
-		if(evt.getSource().equals(infrastructureSystem)) {
-			// object model changed values -- send updates to federation
-			//try {
-				//List<String> attributesToUpdate = new ArrayList<String>();
-				if(evt.getAttributeNames().contains(InfrastructureSystem.NAME_ATTRIBUTE)) {
-					name.setValue(infrastructureSystem.getName());
-					//attributesToUpdate.add(NAME_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(InfrastructureSystem.SOCIETY_ATTRIBUTE)) {
-					societyName.setValue(infrastructureSystem.getSociety().getName());
-					//attributesToUpdate.add(SOCIETY_NAME_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(InfrastructureSystem.CASH_FLOW_ATTRIBUTE)) {
-					netCashFlow.setValue(infrastructureSystem.getCashFlow());
-					//attributesToUpdate.add(NET_CASH_FLOW_ATTRIBUTE);
-				}
-				if(evt.getAttributeNames().contains(InfrastructureSystem.DOMESTIC_PRODUCTION_ATTRIBUTE)) {
-					domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
-					//attributesToUpdate.add(DOMESTIC_PRODUCTION_ATTRIBUTE);
-				} 
-				//updateAttributes(attributesToUpdate);
-			//} catch(AttributeNotOwned ignored) {
-			//} catch(Exception ex) {
-			//	ex.printStackTrace();
-			//}
-		} else if(infrastructureSystem instanceof InfrastructureSystem.Remote) {
-			InfrastructureSystem.Remote remote = (InfrastructureSystem.Remote) infrastructureSystem;
-			// federation changed values -- send updates to object model
-			if(evt.getAttributeNames().contains(NAME_ATTRIBUTE)) {
-				remote.setName(name.getValue());
-			}
-			if(evt.getAttributeNames().contains(SOCIETY_NAME_ATTRIBUTE)) {
-				// handled in the federate ambassador
-				// remote.setSociety(remote.getSociety().getCountry().getSociety(societyName.getValue()));
-			}
-			if(evt.getAttributeNames().contains(NET_CASH_FLOW_ATTRIBUTE)) {
-				remote.setCashFlow(netCashFlow.getValue());
-			}
-			if(evt.getAttributeNames().contains(DOMESTIC_PRODUCTION_ATTRIBUTE)) {
-				remote.setDomesticProduction(domesticProduction.getValue());
-			}
-		}
 	}
 	
 	/* (non-Javadoc)
@@ -179,13 +127,44 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
-	/**
-	 * Gets the infrastructure system.
-	 *
-	 * @return the infrastructure system
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
-	public InfrastructureSystem getInfrastructureSystem() {
-		return infrastructureSystem;
+	@Override
+	public double getCashFlow() {
+		return netCashFlow.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return currencyTimeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+	 */
+	@Override
+	public double getDomesticProduction() {
+		return domesticProduction.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
+	 */
+	@Override
+	public String getName() {
+		return name.getValue();
 	}
 
 	/* (non-Javadoc)
@@ -196,6 +175,14 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 		return CLASS_NAME;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
+	 */
+	@Override
+	public Society getSociety() {
+		return society;
+	}
+
 	/**
 	 * Gets the society name.
 	 *
@@ -204,17 +191,25 @@ public abstract class HLAinfrastructureSystem extends HLAobject {
 	public String getSocietyName() {
 		return societyName.getValue();
 	}
-	
+
 	/**
 	 * Sets the infrastructure system.
 	 *
 	 * @param infrastructureSystem the new infrastructure system
 	 */
-	public void setInfrastructureSystem(InfrastructureSystem.Remote infrastructureSystem) {
-		// copy attribute values to new system
-		infrastructureSystem.setName(getInfrastructureSystem().getName());
-		infrastructureSystem.setCashFlow(getInfrastructureSystem().getCashFlow());
-		infrastructureSystem.setDomesticProduction(getInfrastructureSystem().getDomesticProduction());
-		this.infrastructureSystem = infrastructureSystem;
+	public void setAttributes(InfrastructureSystem infrastructureSystem) {
+		name.setValue(infrastructureSystem.getName());
+		societyName.setValue(infrastructureSystem.getSociety()==null ? "" 
+				: infrastructureSystem.getSociety().getName());
+		netCashFlow.setValue(infrastructureSystem.getCashFlow());
+		domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#setSociety(edu.mit.sips.core.Society)
+	 */
+	@Override
+	public void setSociety(Society society) {
+		this.society = society;
 	}
 }
