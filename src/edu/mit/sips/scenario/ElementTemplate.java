@@ -22,13 +22,13 @@ public interface ElementTemplate {
 	 * Creates the element.
 	 *
 	 * @param timeInitialized the time initialized
-	 * @param timeDecommissioned the time decommissioned
+	 * @param operationsDuration the operations duration
 	 * @param origin the origin
 	 * @param destination the destination
 	 * @return the infrastructure element
 	 */
 	public InfrastructureElement createElement(long timeInitialized,
-			long timeDecommissioned, String origin, String destination);
+			long operationsDuration, String origin, String destination);
 	
 	/**
 	 * Gets the max operations.
