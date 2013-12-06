@@ -15,7 +15,7 @@ import org.jfree.data.xy.XYSeries;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
+import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.SpatialStatePanel;
@@ -310,7 +310,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			}
 		}
 		
-		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
+		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
 			updateSeries(landAvailableDataset, "Available", year, 
 					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
 			updateSeries(landAvailableDataset, "Used", year, 
@@ -324,7 +324,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			}
 		}
 		
-		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
+		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
 			updateSeries(laborAvailableDataset, "Available", year, 
 					getAgricultureSystem().getLaborParticipationRate() 
 					* getSociety().getSocialSystem().getPopulation()
@@ -404,7 +404,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(agricultureNetRevenue, "Net Cash Flow", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getCashFlow(),
 						getAgricultureSystem(), this));
-		if(getAgricultureSystem() instanceof DefaultAgricultureSystem.Local) {
+		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
 			updateSeries(foodSourceData, "Production", year, 
 					FoodUnits.convertFlow(getAgricultureSystem().getFoodProduction(),
 							getAgricultureSystem(), this));

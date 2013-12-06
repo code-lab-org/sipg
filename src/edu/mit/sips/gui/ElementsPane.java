@@ -37,7 +37,6 @@ import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
@@ -449,7 +448,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			if(element instanceof AgricultureElement 
 					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 				AgricultureSystem.Local agricultureSystem = 
-						(DefaultAgricultureSystem.Local) city.getAgricultureSystem();
+						(AgricultureSystem.Local) city.getAgricultureSystem();
 				agricultureSystem.removeElement((AgricultureElement)element);
 				agricultureSystem.addElement((AgricultureElement)newElement);
 			} else if(element instanceof WaterElement

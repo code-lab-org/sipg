@@ -6,13 +6,16 @@ import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
+import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.electricity.DefaultElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSoS;
+import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.DefaultSocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
-import edu.mit.sips.core.water.DefaultWaterSoS;
+import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -32,7 +35,7 @@ public class Region extends DefaultSociety implements Society {
 		// agriculture system is local if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				agricultureSystem = new DefaultAgricultureSoS.Local();
+				agricultureSystem = new LocalAgricultureSoS();
 				break;
 			}
 		}
@@ -41,7 +44,7 @@ public class Region extends DefaultSociety implements Society {
 		// water system is local if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
-				waterSystem = new DefaultWaterSoS.Local();
+				waterSystem = new LocalWaterSoS();
 				break;
 			}
 		}
@@ -50,7 +53,7 @@ public class Region extends DefaultSociety implements Society {
 		// electricity system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
-				electricitySystem = new DefaultElectricitySoS.Local();
+				electricitySystem = new LocalElectricitySoS();
 				break;
 			}
 		}
@@ -59,7 +62,7 @@ public class Region extends DefaultSociety implements Society {
 		// petroleum system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
-				petroleumSystem = new DefaultPetroleumSoS.Local();
+				petroleumSystem = new LocalPetroleumSoS();
 				break;
 			}
 		}

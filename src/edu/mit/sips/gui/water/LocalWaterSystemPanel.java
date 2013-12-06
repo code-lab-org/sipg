@@ -14,7 +14,7 @@ import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.water.DefaultWaterSystem;
+import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
@@ -431,7 +431,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				WaterUnits.convertFlow(getSociety().getElectricitySystem().getWaterConsumption(), 
 						getSociety().getElectricitySystem(), this));*/
 		
-		if(getWaterSystem() instanceof DefaultWaterSystem.Local) {
+		if(getWaterSystem() instanceof LocalWaterSystem) {
 			updateSeries(waterSourceData, "Production", year, 
 					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
 							getWaterSystem(), this));

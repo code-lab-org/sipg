@@ -14,7 +14,7 @@ import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
+import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
@@ -417,7 +417,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 			}
 		}
 
-		if(getPetroleumSystem() instanceof DefaultPetroleumSystem.Local) {
+		if(getPetroleumSystem() instanceof LocalPetroleumSystem) {
 			updateSeries(petroleumReservoirDataset, "Reservoir", year, 
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumReservoirVolume(), 

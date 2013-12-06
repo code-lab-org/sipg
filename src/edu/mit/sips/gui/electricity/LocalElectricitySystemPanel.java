@@ -13,8 +13,8 @@ import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.SpatialStatePanel;
@@ -386,7 +386,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			}
 		}
 		
-		if(getElectricitySystem() instanceof DefaultElectricitySystem.Local) {
+		if(getElectricitySystem() instanceof LocalElectricitySystem) {
 			updateSeries(electricitySourceData, "Production", year, 
 					ElectricityUnits.convertFlow(
 							getElectricitySystem().getElectricityProduction(), 

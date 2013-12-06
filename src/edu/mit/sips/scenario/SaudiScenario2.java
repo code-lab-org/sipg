@@ -11,20 +11,25 @@ import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystemDomesticProductionModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
+import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystemDomesticProductionModel;
+import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
+import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystemDomesticProductionModel;
 import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
+import edu.mit.sips.core.social.LocalSocialSystem;
 import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
+import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystemDomesticProductionModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
@@ -92,7 +97,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createIndustrialCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(INDUSTRIAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(8e3, 0.04,
+						new LocalAgricultureSystem(8e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1976, INDUSTRIAL, INDUSTRIAL),
@@ -106,7 +111,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
+						new LocalWaterSystem(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1978, INDUSTRIAL, INDUSTRIAL),
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL),
@@ -118,7 +123,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
-						new DefaultPetroleumSystem.Local(65e9, 65e9,
+						new LocalPetroleumSystem(65e9, 65e9,
 								Arrays.asList(
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978, INDUSTRIAL, URBAN),
@@ -148,7 +153,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.5,
+						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1970, INDUSTRIAL, RURAL),
@@ -167,7 +172,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
-						new DefaultSocialSystem.Local(
+						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
@@ -184,7 +189,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createRuralCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(RURAL, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(15e3, 0.40,
+						new LocalAgricultureSystem(15e3, 0.40,
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, RURAL, RURAL),
 										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, INDUSTRIAL),
@@ -205,18 +210,18 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
+						new LocalWaterSystem(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
 								new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
-						new DefaultPetroleumSystem.Local(0, 0, new ArrayList<PetroleumElement>(),
+						new LocalPetroleumSystem(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.5,
+						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1966, RURAL, RURAL),
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1986, RURAL, RURAL),
@@ -227,7 +232,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
-						new DefaultSocialSystem.Local(
+						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 0.75e6, 0.05, (long) 4e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
@@ -244,7 +249,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	private static City createUrbanCity(boolean assigned, Collection<Sector> sectors) {
 		return new City(URBAN, 
 				sectors.contains(Sector.AGRICULTURE)?
-						new DefaultAgricultureSystem.Local(10e3, 0.04,
+						new LocalAgricultureSystem(10e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1974, URBAN, URBAN),
@@ -259,7 +264,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
-						new DefaultWaterSystem.Local(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
+						new LocalWaterSystem(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1980, URBAN, URBAN),
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1982, URBAN, URBAN),
@@ -271,13 +276,13 @@ public final class SaudiScenario2 extends DefaultScenario {
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
-						new DefaultPetroleumSystem.Local(0, 0, 
+						new LocalPetroleumSystem(0, 0, 
 								new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
-						new DefaultElectricitySystem.Local(0.5,
+						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN),
 										(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1972, URBAN, RURAL),
@@ -298,7 +303,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
-						new DefaultSocialSystem.Local(
+						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
