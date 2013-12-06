@@ -21,53 +21,19 @@ import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
 import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
-import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
-import hla.rti1516e.exceptions.CallNotAllowedFromWithinCallback;
-import hla.rti1516e.exceptions.ConnectionFailed;
-import hla.rti1516e.exceptions.CouldNotCreateLogicalTimeFactory;
-import hla.rti1516e.exceptions.CouldNotOpenFDD;
-import hla.rti1516e.exceptions.ErrorReadingFDD;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
-import hla.rti1516e.exceptions.FederateHasNotBegunSave;
 import hla.rti1516e.exceptions.FederateInternalError;
-import hla.rti1516e.exceptions.FederateIsExecutionMember;
-import hla.rti1516e.exceptions.FederateNameAlreadyInUse;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
-import hla.rti1516e.exceptions.FederateOwnsAttributes;
-import hla.rti1516e.exceptions.FederateUnableToUseTime;
 import hla.rti1516e.exceptions.FederatesCurrentlyJoined;
 import hla.rti1516e.exceptions.FederationExecutionAlreadyExists;
 import hla.rti1516e.exceptions.FederationExecutionDoesNotExist;
-import hla.rti1516e.exceptions.IllegalTimeArithmetic;
-import hla.rti1516e.exceptions.InTimeAdvancingState;
-import hla.rti1516e.exceptions.InconsistentFDD;
-import hla.rti1516e.exceptions.InvalidLocalSettingsDesignator;
-import hla.rti1516e.exceptions.InvalidLogicalTime;
-import hla.rti1516e.exceptions.InvalidLogicalTimeInterval;
-import hla.rti1516e.exceptions.InvalidLookahead;
-import hla.rti1516e.exceptions.InvalidObjectClassHandle;
-import hla.rti1516e.exceptions.InvalidResignAction;
-import hla.rti1516e.exceptions.LogicalTimeAlreadyPassed;
-import hla.rti1516e.exceptions.NameNotFound;
 import hla.rti1516e.exceptions.NotConnected;
-import hla.rti1516e.exceptions.ObjectClassNotDefined;
-import hla.rti1516e.exceptions.ObjectClassNotPublished;
-import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
-import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
-import hla.rti1516e.exceptions.RTIinternalError;
-import hla.rti1516e.exceptions.RequestForTimeConstrainedPending;
-import hla.rti1516e.exceptions.RequestForTimeRegulationPending;
+import hla.rti1516e.exceptions.RTIexception;
 import hla.rti1516e.exceptions.RestoreInProgress;
-import hla.rti1516e.exceptions.RestoreNotRequested;
-import hla.rti1516e.exceptions.SaveInProgress;
-import hla.rti1516e.exceptions.SaveNotInitiated;
-import hla.rti1516e.exceptions.SynchronizationPointLabelNotAnnounced;
 import hla.rti1516e.exceptions.TimeConstrainedAlreadyEnabled;
 import hla.rti1516e.exceptions.TimeConstrainedIsNotEnabled;
 import hla.rti1516e.exceptions.TimeRegulationAlreadyEnabled;
 import hla.rti1516e.exceptions.TimeRegulationIsNotEnabled;
-import hla.rti1516e.exceptions.UnsupportedCallbackModel;
 import hla.rti1516e.time.HLAinteger64Interval;
 import hla.rti1516e.time.HLAinteger64Time;
 import hla.rti1516e.time.HLAinteger64TimeFactory;
@@ -83,6 +49,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
+
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -92,7 +60,12 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.sim.Simulator;
 
+/**
+ * The Class SimAmbassador.
+ */
 public class SimAmbassador extends NullFederateAmbassador {
+	private static Logger logger = Logger.getLogger(SimAmbassador.class);
+	
 	private final int unitsPerYear = 1000;
 	private final int numberIterations = 4; // must be a factor of unitsPerYear
 	
@@ -124,10 +97,13 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Instantiates a new sim ambassador.
 	 * @throws RTIinternalError 
 	 */
-	public SimAmbassador(Simulator simulator)
-			throws RTIinternalError {
+	public SimAmbassador(Simulator simulator) throws RTIexception {
 		this.simulator = simulator;
+		
+		logger.trace("Making the RTI factory.");
 		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
+
+		logger.trace("Getting the RTI ambassador and encoder factory.");
 		rtiAmbassador = rtiFactory.getRtiAmbassador();
 		encoderFactory = rtiFactory.getEncoderFactory();
 	}
@@ -135,32 +111,13 @@ public class SimAmbassador extends NullFederateAmbassador {
 	/**
 	 * Advance.
 	 *
-	 * @throws LogicalTimeAlreadyPassed the logical time already passed
-	 * @throws InvalidLogicalTime the invalid logical time
-	 * @throws InTimeAdvancingState the in time advancing state
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
-	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws IllegalTimeArithmetic the illegal time arithmetic
-	 * @throws TimeRegulationIsNotEnabled 
-	 * @throws InvalidLogicalTimeInterval 
-	 * @throws ObjectInstanceNotKnown 
-	 * @throws AttributeNotDefined 
-	 * @throws AttributeNotOwned 
+	 * @throws RTIexception the rT iexception
 	 */
-	public void advance() 
-			throws LogicalTimeAlreadyPassed, InvalidLogicalTime, 
-			InTimeAdvancingState, RequestForTimeRegulationPending, 
-			RequestForTimeConstrainedPending, SaveInProgress, 
-			RestoreInProgress, FederateNotExecutionMember, NotConnected, 
-			RTIinternalError, IllegalTimeArithmetic, AttributeNotOwned, 
-			AttributeNotDefined, ObjectInstanceNotKnown, 
-			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
+	public void advance() throws RTIexception {
+		logger.trace("Advancing to the next timestep.");
+		
 		for(int i = 0; i < numberIterations; i++) {
+			logger.trace("Performing iteration number " + (i+1) + " of " + numberIterations + ".");
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				// fire attribute change events to manually update hla data objects
 				if(city.getSocialSystem() instanceof SocialSystem.Local) {
@@ -209,12 +166,16 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 
 			if(!connected.get()) {
+				logger.warn("Not connected - continuing in offline mode.");
 				return;
 			}
 
-			System.out.println("Requesting time advance to " 
+			logger.debug("Requesting time advance to " 
 					+ logicalTime.add(lookaheadInterval));
-			rtiAmbassador.timeAdvanceRequest(logicalTime.add(lookaheadInterval));
+			rtiAmbassador.timeAdvanceRequest(
+					logicalTime.add(lookaheadInterval));
+			
+			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				Thread.yield();
 			}
@@ -225,50 +186,20 @@ public class SimAmbassador extends NullFederateAmbassador {
 	/**
 	 * Connect.
 	 *
-	 * @throws ConnectionFailed the connection failed
-	 * @throws InvalidLocalSettingsDesignator the invalid local settings designator
-	 * @throws UnsupportedCallbackModel the unsupported callback model
-	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws ObjectInstanceNotKnown 
-	 * @throws ObjectClassNotPublished 
-	 * @throws ObjectClassNotDefined 
-	 * @throws AttributeNotDefined 
-	 * @throws InvalidObjectClassHandle 
-	 * @throws NameNotFound 
-	 * @throws RequestForTimeRegulationPending 
-	 * @throws InvalidLookahead 
-	 * @throws RequestForTimeConstrainedPending 
-	 * @throws InTimeAdvancingState 
-	 * @throws FederateNotExecutionMember 
-	 * @throws RestoreInProgress 
-	 * @throws SaveInProgress 
-	 * @throws FederationExecutionDoesNotExist 
-	 * @throws FederateNameAlreadyInUse 
-	 * @throws MalformedURLException 
-	 * @throws NotConnected 
-	 * @throws CouldNotOpenFDD 
-	 * @throws ErrorReadingFDD 
-	 * @throws InconsistentFDD 
-	 * @throws CouldNotCreateLogicalTimeFactory 
+	 * @throws RTIexception the RTI exception
+	 * @throws MalformedURLException the malformed url exception
 	 */
-	public void connect() 
-			throws ConnectionFailed, InvalidLocalSettingsDesignator, 
-			UnsupportedCallbackModel, CallNotAllowedFromWithinCallback, 
-			RTIinternalError, CouldNotCreateLogicalTimeFactory, 
-			InconsistentFDD, ErrorReadingFDD, CouldNotOpenFDD, 
-			NotConnected, MalformedURLException, FederateNameAlreadyInUse, 
-			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
-			FederateNotExecutionMember, InTimeAdvancingState, 
-			RequestForTimeConstrainedPending, InvalidLookahead, 
-			RequestForTimeRegulationPending, NameNotFound, InvalidObjectClassHandle, 
-			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
-			ObjectInstanceNotKnown {
+	public void connect() throws RTIexception, MalformedURLException {
+		logger.info("Connecting to the RTI with settings designator: " 
+			+ simulator.getConnection().getLocalSettingsDesignator());
 		try {
 			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
 					simulator.getConnection().getLocalSettingsDesignator());
-		} catch(AlreadyConnected ignored) { }
+		} catch(AlreadyConnected ignored) { 
+			logger.warn("Already connected.");
+		}
 		simulator.getConnection().setConnected(true);
+		logger.info("Connected to the RTI.");
 		
 		joinFederation();
 		
@@ -277,19 +208,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	
 	/**
 	 * Disconnect.
-	 * @throws RTIinternalError 
-	 * @throws CallNotAllowedFromWithinCallback 
-	 * @throws FederateIsExecutionMember 
-	 * @throws RestoreInProgress 
-	 * @throws SaveInProgress 
-	 * @throws FederateOwnsAttributes 
-	 * @throws OwnershipAcquisitionPending 
-	 * @throws InvalidResignAction 
+	 *
+	 * @throws RTIexception the rT iexception
 	 */
-	public void disconnect() 
-			throws FederateIsExecutionMember, CallNotAllowedFromWithinCallback, 
-			RTIinternalError, InvalidResignAction, OwnershipAcquisitionPending, 
-			FederateOwnsAttributes, SaveInProgress, RestoreInProgress {
+	public void disconnect() throws RTIexception {
 		resignFederation();
 		
 		rtiAmbassador.disconnect();
@@ -315,57 +237,50 @@ public class SimAmbassador extends NullFederateAmbassador {
 			String objectName,
 			FederateHandle producingFederate) {
 		
-		System.out.println("Discovering object instance " + objectName + ".");
+		logger.info("Discovering object instance " + objectName 
+				+ " with name " + objectName + ".");
 		
+		if(hlaObjects.containsKey(theObject)) {
+			logger.warn("Already discovered object instance, skipping.");
+			return;
+		}
+		
+		logger.trace("Searching for correct subclass.");
+		HLAinfrastructureSystem remoteSystem = null;
 		try {
 			if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLAagricultureSystem.CLASS_NAME))) {
-				HLAagricultureSystem remoteSystem = 
-						HLAagricultureSystem.createRemoteAgricultureSystem(
-								rtiAmbassador, encoderFactory, objectName);
-				synchronized(hlaObjects) {
-					hlaObjects.put(theObject, remoteSystem);
-				}
+				logger.trace("Creating a remote agriculture system.");
+				remoteSystem = HLAagricultureSystem.createRemoteAgricultureSystem(
+						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLAwaterSystem.CLASS_NAME))) {
-				HLAwaterSystem remoteSystem = 
-						HLAwaterSystem.createRemoteWaterSystem(
-								rtiAmbassador, encoderFactory, objectName);
-				synchronized(hlaObjects) {
-					hlaObjects.put(theObject, remoteSystem);
-				}
+				logger.trace("Creating a remote water system.");
+				remoteSystem = HLAwaterSystem.createRemoteWaterSystem(
+						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLAelectricitySystem.CLASS_NAME))) {
-				HLAelectricitySystem remoteSystem = 
-						HLAelectricitySystem.createRemoteElectricitySystem(
-								rtiAmbassador, encoderFactory, objectName);
-				synchronized(hlaObjects) {
-					hlaObjects.put(theObject, remoteSystem);
-				}
+				logger.trace("Creating a remote electricity system.");
+				remoteSystem = HLAelectricitySystem.createRemoteElectricitySystem(
+						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLApetroleumSystem.CLASS_NAME))) {
-				HLApetroleumSystem remoteSystem = 
-						HLApetroleumSystem.createRemotePetroleumSystem(
-								rtiAmbassador, encoderFactory, objectName);
-				synchronized(hlaObjects) {
-					hlaObjects.put(theObject, remoteSystem);
-				}
+				logger.trace("Creating a remote petroleum system.");
+				remoteSystem = HLApetroleumSystem.createRemotePetroleumSystem(
+						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					HLAsocialSystem.CLASS_NAME))) {
-				HLAsocialSystem remoteSystem = 
-						HLAsocialSystem.createRemoteSocialSystem(
-								rtiAmbassador, encoderFactory, objectName);
-				synchronized(hlaObjects) {
-					hlaObjects.put(theObject, remoteSystem);
-				}
+				logger.trace("Creating a remote social system.");
+				remoteSystem = HLAsocialSystem.createRemoteSocialSystem(
+						rtiAmbassador, encoderFactory, objectName);
+			} else {
+				logger.warn("Unknown object class, skipping.");
+				return;
 			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			JOptionPane.showMessageDialog(null, "An exception of type " 
-					+ ex.getMessage() 
-					+ " occurred while discovering an object."
-					+ " See stack trace for more information.", 
-					"Error", JOptionPane.ERROR_MESSAGE);
+			hlaObjects.put(theObject, remoteSystem);
+		} catch (RTIexception e) {
+			logger.error(e);
+			e.printStackTrace();
 		}
 	}
 	
@@ -373,53 +288,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Initialize.
 	 *
 	 * @param startTime the start time
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws NameNotFound the name not found
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws ObjectClassNotPublished the object class not published
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws LogicalTimeAlreadyPassed the logical time already passed
-	 * @throws InvalidLogicalTime the invalid logical time
-	 * @throws InTimeAdvancingState the in time advancing state
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
-	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws InvalidLookahead 
-	 * @throws CallNotAllowedFromWithinCallback 
-	 * @throws FederationExecutionDoesNotExist 
-	 * @throws FederateNameAlreadyInUse 
-	 * @throws MalformedURLException 
-	 * @throws CouldNotOpenFDD 
-	 * @throws ErrorReadingFDD 
-	 * @throws InconsistentFDD 
-	 * @throws CouldNotCreateLogicalTimeFactory 
-	 * @throws IllegalTimeArithmetic 
-	 * @throws TimeRegulationIsNotEnabled 
-	 * @throws InvalidLogicalTimeInterval 
-	 * @throws AttributeNotOwned 
-	 * @throws SynchronizationPointLabelNotAnnounced 
-	 * @throws FederateUnableToUseTime 
-	 * @throws SaveNotInitiated 
-	 * @throws FederateHasNotBegunSave 
+	 * @throws RTIexception the rT iexception
 	 */
-	public void initialize(long startTime) 
-			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
-			NotConnected, RTIinternalError, LogicalTimeAlreadyPassed, 
-			InvalidLogicalTime, InTimeAdvancingState, 
-			RequestForTimeRegulationPending, RequestForTimeConstrainedPending, 
-			CouldNotCreateLogicalTimeFactory, InconsistentFDD, ErrorReadingFDD,
-			CouldNotOpenFDD, MalformedURLException, FederateNameAlreadyInUse, 
-			FederationExecutionDoesNotExist, CallNotAllowedFromWithinCallback, 
-			InvalidLookahead, NameNotFound, InvalidObjectClassHandle, 
-			AttributeNotDefined, ObjectClassNotDefined, ObjectClassNotPublished, 
-			ObjectInstanceNotKnown, IllegalTimeArithmetic, AttributeNotOwned, 
-			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled, 
-			SynchronizationPointLabelNotAnnounced, FederateUnableToUseTime, SaveNotInitiated, FederateHasNotBegunSave {
+	public void initialize(long startTime) throws RTIexception {
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
@@ -613,33 +484,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	/**
 	 * Restore initial conditions.
 	 *
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws RestoreNotRequested the restore not requested
-	 * @throws SynchronizationPointLabelNotAnnounced the synchronization point label not announced
-	 * @throws LogicalTimeAlreadyPassed the logical time already passed
-	 * @throws InvalidLogicalTime the invalid logical time
-	 * @throws InTimeAdvancingState the in time advancing state
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
-	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws IllegalTimeArithmetic the illegal time arithmetic
-	 * @throws AttributeNotOwned the attribute not owned
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws InvalidLogicalTimeInterval the invalid logical time interval
-	 * @throws TimeRegulationIsNotEnabled the time regulation is not enabled
+	 * @throws RTIexception the rT iexception
 	 */
-	public void restoreInitialConditions() 
-			throws SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
-			NotConnected, RTIinternalError, RestoreNotRequested, 
-			SynchronizationPointLabelNotAnnounced, LogicalTimeAlreadyPassed, 
-			InvalidLogicalTime, InTimeAdvancingState, RequestForTimeRegulationPending, 
-			RequestForTimeConstrainedPending, IllegalTimeArithmetic, AttributeNotOwned, 
-			AttributeNotDefined, ObjectInstanceNotKnown, InvalidLogicalTimeInterval, 
-			TimeRegulationIsNotEnabled {
+	public void restoreInitialConditions() throws RTIexception {
 
 		rtiAmbassador.registerFederationSynchronizationPoint("reset", new byte[0]);
 		
@@ -707,40 +554,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	/**
 	 * Join federation.
 	 *
-	 * @throws CouldNotCreateLogicalTimeFactory the could not create logical time factory
-	 * @throws InconsistentFDD the inconsistent fdd
-	 * @throws ErrorReadingFDD the error reading fdd
-	 * @throws CouldNotOpenFDD the could not open fdd
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws MalformedURLException the malformed url exception
-	 * @throws FederateNameAlreadyInUse the federate name already in use
-	 * @throws FederationExecutionDoesNotExist the federation execution does not exist
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws InTimeAdvancingState the in time advancing state
-	 * @throws RequestForTimeConstrainedPending the request for time constrained pending
-	 * @throws InvalidLookahead the invalid lookahead
-	 * @throws RequestForTimeRegulationPending the request for time regulation pending
-	 * @throws ObjectClassNotDefined 
-	 * @throws AttributeNotDefined 
-	 * @throws InvalidObjectClassHandle 
-	 * @throws NameNotFound 
-	 * @throws ObjectInstanceNotKnown 
-	 * @throws ObjectClassNotPublished 
+	 * @throws RTIexception the rT iexception
+	 * @throws MalformedURLException 
 	 */
-	private void joinFederation() 
-			throws CouldNotCreateLogicalTimeFactory, InconsistentFDD, 
-			ErrorReadingFDD, CouldNotOpenFDD, NotConnected, RTIinternalError, 
-			MalformedURLException, FederateNameAlreadyInUse, 
-			FederationExecutionDoesNotExist, SaveInProgress, RestoreInProgress, 
-			CallNotAllowedFromWithinCallback, FederateNotExecutionMember, 
-			InTimeAdvancingState, RequestForTimeConstrainedPending, 
-			InvalidLookahead, RequestForTimeRegulationPending, NameNotFound, 
-			InvalidObjectClassHandle, AttributeNotDefined, ObjectClassNotDefined, 
-			ObjectClassNotPublished, ObjectInstanceNotKnown {
+	private void joinFederation() throws RTIexception, MalformedURLException {
 		try {
 			rtiAmbassador.createFederationExecution(simulator.getConnection().getFederationName(), 
 					new URL[]{new File(simulator.getConnection().getFomPath()).toURI().toURL()},
@@ -890,21 +707,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	/**
 	 * Resign federation.
 	 *
-	 * @throws InvalidResignAction the invalid resign action
-	 * @throws OwnershipAcquisitionPending the ownership acquisition pending
-	 * @throws FederateOwnsAttributes the federate owns attributes
-	 * @throws CallNotAllowedFromWithinCallback the call not allowed from within callback
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws NotConnected 
-	 * @throws FederateNotExecutionMember 
-	 * @throws RestoreInProgress 
-	 * @throws SaveInProgress 
-	 * @throws  
+	 * @throws RTIexception the rT iexception
 	 */
-	private void resignFederation() 
-			throws InvalidResignAction, OwnershipAcquisitionPending, 
-			FederateOwnsAttributes, CallNotAllowedFromWithinCallback, 
-			RTIinternalError, SaveInProgress, RestoreInProgress {
+	private void resignFederation() throws RTIexception {
 		try {
 			rtiAmbassador.disableTimeConstrained();
 		} catch (FederateNotExecutionMember ignored) {

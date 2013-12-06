@@ -7,17 +7,7 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.encoding.HLAinteger64BE;
-import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.FederateNotExecutionMember;
-import hla.rti1516e.exceptions.InvalidObjectClassHandle;
-import hla.rti1516e.exceptions.NameNotFound;
-import hla.rti1516e.exceptions.NotConnected;
-import hla.rti1516e.exceptions.ObjectClassNotDefined;
-import hla.rti1516e.exceptions.ObjectClassNotPublished;
-import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
-import hla.rti1516e.exceptions.RTIinternalError;
-import hla.rti1516e.exceptions.RestoreInProgress;
-import hla.rti1516e.exceptions.SaveInProgress;
+import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -60,24 +50,11 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * @param encoderFactory the encoder factory
 	 * @param socialSystem the social system
 	 * @return the hL asocial system
-	 * @throws NameNotFound the name not found
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws ObjectClassNotPublished the object class not published
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RTIexception the rT iexception
 	 */
 	public static HLAsocialSystem createLocalSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			SocialSystem.Local socialSystem) 
-					throws NameNotFound, FederateNotExecutionMember, 
-					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
-					ObjectClassNotPublished, ObjectClassNotDefined, 
-					SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
+			SocialSystem.Local socialSystem) throws RTIexception {
 		HLAsocialSystem hlaSystem = new HLAsocialSystem(
 				rtiAmbassador, encoderFactory, null, socialSystem);
 		socialSystem.addAttributeChangeListener(hlaSystem);
@@ -90,27 +67,12 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param socialSystem the social system
 	 * @return the hL asocial system
-	 * @throws NameNotFound the name not found
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws ObjectClassNotDefined 
-	 * @throws ObjectClassNotPublished 
+	 * @throws RTIexception the rT iexception
 	 */
 	public static HLAsocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			String instanceName) 
-					throws NameNotFound, FederateNotExecutionMember, 
-					NotConnected, RTIinternalError, InvalidObjectClassHandle, 
-					ObjectInstanceNotKnown, AttributeNotDefined, SaveInProgress, 
-					RestoreInProgress, ObjectClassNotPublished, ObjectClassNotDefined {
+			String instanceName) throws RTIexception {
 		HLAsocialSystem hlaSystem = new HLAsocialSystem(rtiAmbassador, 
 				encoderFactory, instanceName, new DefaultSocialSystem.Remote());
 		//hlaSystem.requestAttributeValueUpdate();
@@ -122,20 +84,10 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws NameNotFound the name not found
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
+	 * @throws RTIexception the rT iexception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
-			throws FederateNotExecutionMember, NotConnected, NameNotFound, 
-			InvalidObjectClassHandle, RTIinternalError, AttributeNotDefined, 
-			ObjectClassNotDefined, SaveInProgress, RestoreInProgress {
+			throws RTIexception {
 		AttributeHandleSet attributeHandleSet = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attributeName : ATTRIBUTES) {
@@ -152,20 +104,10 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws NameNotFound the name not found
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
+	 * @throws RTIexception the rT iexception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
-			throws FederateNotExecutionMember, NotConnected, NameNotFound, 
-			InvalidObjectClassHandle, RTIinternalError, AttributeNotDefined, 
-			ObjectClassNotDefined, SaveInProgress, RestoreInProgress {
+			throws RTIexception {
 		AttributeHandleSet attributeHandleSet = 
 				rtiAmbassador.getAttributeHandleSetFactory().create();
 		for(String attributeName : ATTRIBUTES) {
@@ -190,25 +132,13 @@ public class HLAsocialSystem extends HLAinfrastructureSystem {
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
+	 * @param instanceName the instance name
 	 * @param socialSystem the social system
-	 * @throws NameNotFound the name not found
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the rT iinternal error
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws RestoreInProgress 
-	 * @throws SaveInProgress 
-	 * @throws ObjectClassNotDefined 
-	 * @throws ObjectClassNotPublished 
+	 * @throws RTIexception the rT iexception
 	 */
 	protected HLAsocialSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName,
-			SocialSystem socialSystem) throws NameNotFound, 
-			FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidObjectClassHandle, ObjectInstanceNotKnown, 
-			ObjectClassNotPublished, ObjectClassNotDefined, 
-			SaveInProgress, RestoreInProgress {
+			SocialSystem socialSystem) throws RTIexception {
 		super(rtiAmbassador, encoderFactory, instanceName, socialSystem);
 		electricityConsumption = encoderFactory.createHLAfloat64BE(
 				socialSystem.getElectricityConsumption());

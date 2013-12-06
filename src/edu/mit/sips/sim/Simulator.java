@@ -1,7 +1,7 @@
 package edu.mit.sips.sim;
 
 import hla.rti1516e.exceptions.NotConnected;
-import hla.rti1516e.exceptions.RTIinternalError;
+import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -67,10 +67,10 @@ public class Simulator implements SimulationControlListener {
 		
 		try {
 			simAmbassador = new SimAmbassador(this);
-		} catch (RTIinternalError ex) {
-			ex.printStackTrace();
+		} catch (RTIexception e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, 
-					ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 

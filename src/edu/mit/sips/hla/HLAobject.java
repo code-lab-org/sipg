@@ -9,25 +9,7 @@ import hla.rti1516e.RTIambassador;
 import hla.rti1516e.encoding.ByteWrapper;
 import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.DecoderException;
-import hla.rti1516e.exceptions.AttributeNotDefined;
-import hla.rti1516e.exceptions.AttributeNotOwned;
-import hla.rti1516e.exceptions.DeletePrivilegeNotHeld;
-import hla.rti1516e.exceptions.FederateNotExecutionMember;
-import hla.rti1516e.exceptions.FederateOwnsAttributes;
-import hla.rti1516e.exceptions.IllegalTimeArithmetic;
-import hla.rti1516e.exceptions.InvalidLogicalTime;
-import hla.rti1516e.exceptions.InvalidLogicalTimeInterval;
-import hla.rti1516e.exceptions.InvalidObjectClassHandle;
-import hla.rti1516e.exceptions.NameNotFound;
-import hla.rti1516e.exceptions.NotConnected;
-import hla.rti1516e.exceptions.ObjectClassNotDefined;
-import hla.rti1516e.exceptions.ObjectClassNotPublished;
-import hla.rti1516e.exceptions.ObjectInstanceNotKnown;
-import hla.rti1516e.exceptions.OwnershipAcquisitionPending;
-import hla.rti1516e.exceptions.RTIinternalError;
-import hla.rti1516e.exceptions.RestoreInProgress;
-import hla.rti1516e.exceptions.SaveInProgress;
-import hla.rti1516e.exceptions.TimeRegulationIsNotEnabled;
+import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -54,22 +36,10 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param instanceName the instance name
-	 * @throws NameNotFound the name not found
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
-	 * @throws InvalidObjectClassHandle the invalid object class handle
-	 * @throws ObjectClassNotPublished the object class not published
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RTIexception the rT iexception
 	 */
 	public HLAobject(RTIambassador rtiAmbassador, String instanceName) 
-			throws NameNotFound, FederateNotExecutionMember, NotConnected, 
-			RTIinternalError, InvalidObjectClassHandle, 
-			ObjectClassNotPublished, ObjectClassNotDefined, 
-			SaveInProgress, RestoreInProgress, ObjectInstanceNotKnown {
+			throws RTIexception {
 		this.local = instanceName == null;
 		this.rtiAmbassador = rtiAmbassador;
 		
@@ -103,17 +73,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Delete.
 	 *
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
-	 * @throws DeletePrivilegeNotHeld the delete privilege not held
-	 * @throws ObjectInstanceNotKnown the object instance not known
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void delete() throws SaveInProgress, RestoreInProgress, 
-			FederateNotExecutionMember, NotConnected, RTIinternalError, DeletePrivilegeNotHeld, 
-			ObjectInstanceNotKnown {
+	public final void delete() throws RTIexception {
 		rtiAmbassador.deleteObjectInstance(getObjectInstanceHandle(), new byte[0]);
 	}
 	
@@ -223,18 +185,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Local delete.
 	 *
-	 * @throws OwnershipAcquisitionPending the ownership acquisition pending
-	 * @throws FederateOwnsAttributes the federate owns attributes
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void localDelete() throws OwnershipAcquisitionPending, 
-			FederateOwnsAttributes, ObjectInstanceNotKnown, SaveInProgress, RestoreInProgress, 
-			FederateNotExecutionMember, NotConnected, RTIinternalError {
+	public final void localDelete() throws RTIexception {
 		rtiAmbassador.localDeleteObjectInstance(getObjectInstanceHandle());
 	}
 	
@@ -242,19 +195,13 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * Provide attributes.
 	 *
 	 * @param attributeHandleSet the attribute handle set
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws AttributeNotOwned the attribute not owned
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws RTIinternalError the rT iinternal error
+	 * @throws RTIexception the rT iexception
 	 */
 	public final void provideAttributes(AttributeHandleSet attributeHandleSet) 
-			throws FederateNotExecutionMember, NotConnected, AttributeNotOwned, AttributeNotDefined, 
-			ObjectInstanceNotKnown, SaveInProgress, RestoreInProgress, RTIinternalError {
-		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(getAttributeValues().keySet().size());
+			throws RTIexception {
+		AttributeHandleValueMap attributes = 
+				rtiAmbassador.getAttributeHandleValueMapFactory().
+				create(getAttributeValues().keySet().size());
 		for(AttributeHandle attributeHandle : attributeHandleSet) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
@@ -266,17 +213,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Publish all attributes.
 	 *
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void publishAllAttributes() throws AttributeNotDefined, 
-			ObjectClassNotDefined, SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
-			NotConnected, RTIinternalError {
+	public final void publishAllAttributes() throws RTIexception {
 		rtiAmbassador.publishObjectClassAttributes(
 				getObjectClassHandle(), getAttributeHandleSet());
 	}
@@ -293,17 +232,9 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Request attribute value update.
 	 *
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void requestAttributeValueUpdate() 
-			throws AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
-			RestoreInProgress, FederateNotExecutionMember, NotConnected, RTIinternalError {
+	public final void requestAttributeValueUpdate() throws RTIexception {
 		rtiAmbassador.requestAttributeValueUpdate(
 				getObjectInstanceHandle(), getAttributeHandleSet(), new byte[0]);
 	}
@@ -328,18 +259,11 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Subscribe all attributes.
 	 *
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectClassNotDefined the object class not defined
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void subscribeAllAttributes() throws AttributeNotDefined, 
-			ObjectClassNotDefined, SaveInProgress, RestoreInProgress, FederateNotExecutionMember, 
-			NotConnected, RTIinternalError {
-		rtiAmbassador.subscribeObjectClassAttributes(getObjectClassHandle(), getAttributeHandleSet());
+	public final void subscribeAllAttributes() throws RTIexception {
+		rtiAmbassador.subscribeObjectClassAttributes(
+				getObjectClassHandle(), getAttributeHandleSet());
 	}
 	
 	/* (non-Javadoc)
@@ -353,25 +277,12 @@ public abstract class HLAobject implements AttributeChangeListener {
 	/**
 	 * Update all attributes.
 	 *
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws AttributeNotOwned the attribute not owned
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws RTIinternalError the RTI internal error
-	 * @throws TimeRegulationIsNotEnabled 
-	 * @throws InvalidLogicalTimeInterval 
-	 * @throws IllegalTimeArithmetic 
-	 * @throws InvalidLogicalTime 
+	 * @throws RTIexception the rT iexception
 	 */
-	public final void updateAllAttributes() throws FederateNotExecutionMember, 
-			NotConnected, AttributeNotOwned, AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
-			RestoreInProgress, RTIinternalError, InvalidLogicalTime, IllegalTimeArithmetic, 
-			InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
-		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(
-				getAttributeValues().keySet().size());
+	public final void updateAllAttributes() throws RTIexception {
+		AttributeHandleValueMap attributes = 
+				rtiAmbassador.getAttributeHandleValueMapFactory().
+				create(getAttributeValues().keySet().size());
 		for(AttributeHandle attributeHandle : getAttributeHandleSet()) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
@@ -386,24 +297,13 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * Update attributes.
 	 *
 	 * @param attributeHandleSet the attribute handle set
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws AttributeNotOwned the attribute not owned
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws RTIinternalError the RTI internal error
-	 * @throws TimeRegulationIsNotEnabled 
-	 * @throws InvalidLogicalTimeInterval 
-	 * @throws IllegalTimeArithmetic 
-	 * @throws InvalidLogicalTime 
+	 * @throws RTIexception the rT iexception
 	 */
 	public final void updateAttributes(AttributeHandleSet attributeHandleSet) 
-			throws FederateNotExecutionMember, NotConnected, AttributeNotOwned, AttributeNotDefined, 
-			ObjectInstanceNotKnown, SaveInProgress, RestoreInProgress, RTIinternalError, 
-			InvalidLogicalTime, IllegalTimeArithmetic, InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
-		AttributeHandleValueMap attributes = rtiAmbassador.getAttributeHandleValueMapFactory().create(getAttributeValues().keySet().size());
+			throws RTIexception {
+		AttributeHandleValueMap attributes = 
+				rtiAmbassador.getAttributeHandleValueMapFactory().
+				create(getAttributeValues().keySet().size());
 		for(AttributeHandle attributeHandle : attributeHandleSet) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
@@ -425,25 +325,13 @@ public abstract class HLAobject implements AttributeChangeListener {
 	 * Update attributes.
 	 *
 	 * @param attributeNames the attribute names
-	 * @throws AttributeNotOwned the attribute not owned
-	 * @throws AttributeNotDefined the attribute not defined
-	 * @throws ObjectInstanceNotKnown the object instance not known
-	 * @throws SaveInProgress the save in progress
-	 * @throws RestoreInProgress the restore in progress
-	 * @throws FederateNotExecutionMember the federate not execution member
-	 * @throws NotConnected the not connected
-	 * @throws RTIinternalError the RTI internal error
-	 * @throws InvalidLogicalTime 
-	 * @throws TimeRegulationIsNotEnabled 
-	 * @throws InvalidLogicalTimeInterval 
-	 * @throws IllegalTimeArithmetic 
+	 * @throws RTIexception the rT iexception
 	 */
 	public final void updateAttributes(List<String> attributeNames) 
-			throws AttributeNotOwned, AttributeNotDefined, ObjectInstanceNotKnown, SaveInProgress, 
-			RestoreInProgress, FederateNotExecutionMember, NotConnected, RTIinternalError, 
-			InvalidLogicalTime, IllegalTimeArithmetic, InvalidLogicalTimeInterval, TimeRegulationIsNotEnabled {
-		AttributeHandleValueMap attributes = rtiAmbassador.
-				getAttributeHandleValueMapFactory().create(attributeNames.size());
+			throws RTIexception {
+		AttributeHandleValueMap attributes = 
+				rtiAmbassador.getAttributeHandleValueMapFactory().
+				create(attributeNames.size());
 		for(String attributeName : attributeNames) {
 			attributes.put(getAttributeHandle(attributeName), 
 					getAttributeValues().get(
