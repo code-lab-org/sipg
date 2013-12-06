@@ -1,11 +1,16 @@
 package edu.mit.sips;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
 
@@ -13,16 +18,25 @@ import edu.mit.sips.sim.Simulator;
  * The Class BalancingProgram.
  */
 public class Player1 {
+	private static Logger logger = Logger.getLogger("edu.mit.sips");
 	/**
 	 * The main method.
 	 *
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		final Simulator simulator = new Simulator(new SaudiScenario2(
+		BasicConfigurator.configure();
+
+		logger.debug("Creating scenario.");
+		Scenario scenario = new SaudiScenario2(
 				Arrays.asList(SaudiScenario2.INDUSTRIAL),
-				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM)));
+				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM));
+
+		logger.debug("Creating simulator.");
+		final Simulator simulator = new Simulator(scenario);
 		//simulator.addUpdateListener(new ConsoleLogger());
+
+		logger.debug("Launching graphical user interface.");
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
@@ -32,16 +46,16 @@ public class Player1 {
 					frame.setVisible(true);
 				}
 			});
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (InterruptedException | InvocationTargetException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
 		}
-		
-		// set federate name after data is loaded in initialization
+
 		simulator.getConnection().setFederateName("Energy Player");
-		
 		try {
 			simulator.getAmbassador().connect();
 		} catch (Exception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
 		}
 	}
