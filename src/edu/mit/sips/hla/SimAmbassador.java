@@ -620,7 +620,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 			LogicalTime theTime,
 			OrderType receivedOrdering,
 			SupplementalReflectInfo reflectInfo) {
-		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, theTime, receivedOrdering, null, reflectInfo);
+		logger.trace("Redirecting to common callback method.");
+		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, 
+				sentOrdering, theTransport, theTime, receivedOrdering,
+				null, reflectInfo);
 	}
 	
 	/* (non-Javadoc)
@@ -632,7 +635,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 			OrderType sentOrdering,
 			TransportationTypeHandle theTransport,
 			SupplementalReflectInfo reflectInfo) {
-		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, sentOrdering, theTransport, null, null, reflectInfo);
+		logger.trace("Redirecting to common callback method.");
+		reflectAttributeValues(theObject, theAttributes, userSuppliedTag, 
+				sentOrdering, theTransport, null, null, reflectInfo);
 	}
 
 	/**
@@ -641,8 +646,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws RTIexception the rT iexception
 	 */
 	private void resignFederation() throws RTIexception {
+		logger.info("Terminating the federation execution.");
 		try {
 			rtiAmbassador.disableTimeConstrained();
+			logger.trace("Time constrained behavior disabled.");
 		} catch (FederateNotExecutionMember ignored) {
 		} catch (TimeConstrainedIsNotEnabled ignored) {
 		} catch(NotConnected ignored) {
@@ -651,6 +658,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		try {
 			rtiAmbassador.disableTimeRegulation();
+			logger.trace("Time regulation behavior disabled.");
 		} catch (FederateNotExecutionMember ignored) {
 		} catch (TimeRegulationIsNotEnabled ignored) {
 		} catch(NotConnected ignored) {
@@ -658,20 +666,24 @@ public class SimAmbassador extends NullFederateAmbassador {
 		timeRegulating.set(false);
 		
 		try {
-			rtiAmbassador.resignFederationExecution(ResignAction.DELETE_OBJECTS_THEN_DIVEST);
+			rtiAmbassador.resignFederationExecution(
+					ResignAction.DELETE_OBJECTS_THEN_DIVEST);
+			logger.trace("Resigned from the federation execution.");
 		} catch (FederateNotExecutionMember ignored) {
 		} catch (NotConnected ignored) { }
 		
 		try {
-			rtiAmbassador.destroyFederationExecution(simulator.getConnection().getFederationName());
+			rtiAmbassador.destroyFederationExecution(
+					simulator.getConnection().getFederationName());
+			logger.trace("Destroyed the federation execution.");
 		} catch (FederatesCurrentlyJoined ignored) {
 		} catch (FederationExecutionDoesNotExist ignored) {
 		} catch (NotConnected ignored) {
 		}
 		
-		synchronized(hlaObjects) {
-			hlaObjects.clear();
-		}
+		logger.trace("Clearing local and remote HLA objects.");
+		hlaObjects.clear();
+		localObjects.clear();
 		
 		initialized.set(false);
 	}
@@ -682,9 +694,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void timeAdvanceGrant(LogicalTime theTime)
 			throws FederateInternalError {
+		if(theTime instanceof HLAinteger64Time) {
+			logicalTime = (HLAinteger64Time) theTime;
+		} else {
+			logger.fatal("Incompatible time type: expected " 
+					+ HLAinteger64Time.class + " but received " 
+					+ theTime.getClass() + ".");
+		}
+		logger.info("Time advance granted (time = " + logicalTime.getValue() + ").");
 		timeAdvanceGranted.set(true);
-		logicalTime = (HLAinteger64Time) theTime;
-		System.out.println("(TAG) Logical time is " + logicalTime.getValue());
 	}
 
 	/* (non-Javadoc)
@@ -693,9 +711,16 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void timeConstrainedEnabled(LogicalTime time)
 			throws FederateInternalError {
+		if(time instanceof HLAinteger64Time) {
+			logicalTime = (HLAinteger64Time) time;
+		} else {
+			logger.fatal("Incompatible time type: expected " 
+					+ HLAinteger64Time.class + " but received " 
+					+ time.getClass() + ".");
+		}
+		logger.info("Time constrained is enabled (time = " 
+				+ logicalTime.getValue() + ").");
 		timeConstrained.set(true);
-		logicalTime = (HLAinteger64Time) time;
-		System.out.println("(TCE) Logical time is " + logicalTime.getValue());
 	}
 	
 	/* (non-Javadoc)
@@ -704,9 +729,16 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void timeRegulationEnabled(LogicalTime time)
 			throws FederateInternalError {
+		if(time instanceof HLAinteger64Time) {
+			logicalTime = (HLAinteger64Time) time;
+		} else {
+			logger.fatal("Incompatible time type: expected " 
+					+ HLAinteger64Time.class + " but received " 
+					+ time.getClass() + ".");
+		}
+		logger.info("Time regulation is enabled (time = " 
+				+ logicalTime.getValue() + ").");
 		timeRegulating.set(true);
-		logicalTime = (HLAinteger64Time) time;
-		System.out.println("(TRE) Logical time is " + logicalTime.getValue());
 	}
 
 	/* (non-Javadoc)
@@ -715,9 +747,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
 			throws FederateInternalError {
+		logger.info("Synchronization point (label = " 
+				+ synchronizationPointLabel 
+				+ ") registration successful.");
 		syncRegistered.set(true);
 		syncRegisterSuccess.set(true);
-		System.out.println(synchronizationPointLabel + " registration succeeded");
 	}
 
 	/* (non-Javadoc)
@@ -727,9 +761,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
 			SynchronizationPointFailureReason reason)
 					throws FederateInternalError {
+		logger.info("Synchronization point (label = " 
+				+ synchronizationPointLabel 
+				+ ") registration failed (reason = " + reason + ").");
 		syncRegistered.set(true);
 		syncRegisterSuccess.set(false);
-		System.out.println(synchronizationPointLabel + " registration failed: " + reason);
 	}
 
 	/* (non-Javadoc)
@@ -738,7 +774,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void announceSynchronizationPoint(String synchronizationPointLabel, byte[] userSuppliedTag)
 			throws FederateInternalError {
-		System.out.println("Synchronization Point Announced");
+		logger.info("Synchronization point announced (label = " 
+				+ synchronizationPointLabel + ").");
 		syncAnnounced.set(true);
 	}
 
@@ -746,9 +783,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @see hla.rti1516e.NullFederateAmbassador#federationSynchronized(java.lang.String, hla.rti1516e.FederateHandleSet)
 	 */
 	@Override
-	public void federationSynchronized(String synchronizationPointLabel, FederateHandleSet failedToSyncSet)
-			throws FederateInternalError {
-		System.out.println("Federation Synchronized");
+	public void federationSynchronized(String synchronizationPointLabel, 
+			FederateHandleSet failedToSyncSet)
+					throws FederateInternalError {
+		logger.info("Federation is synchronized (label = " 
+				+ synchronizationPointLabel + ").");
 		syncAchieved.set(true);
 	}
 
@@ -758,6 +797,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void initiateFederateSave(String label)
 			throws FederateInternalError {
+		logger.trace("Redirecting to common callback method.");
 		initiateFederateSave(label, null);
 	}
 
@@ -767,7 +807,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void initiateFederateSave(String label, LogicalTime time)
 			throws FederateInternalError  {
-		System.out.println("Initiate Federate Save");
+		logger.info("Initiate federate save (label = " 
+				+ label + ").");
 		saveInitiated.set(true);
 	}
 
@@ -776,7 +817,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	@Override
 	public void federationSaved() throws FederateInternalError {
-		System.out.println("Federation Saved");
+		logger.info("Federation has been saved.");
 		saveCompleted.set(true);
 	}
 
@@ -786,7 +827,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void federationNotSaved(SaveFailureReason reason)
 			throws FederateInternalError {
-		System.out.println("Federation Not Saved");
+		logger.warn("Federation was not saved (reason = " 
+			+ reason + ").");
 		saveCompleted.set(false);
 	}
 
@@ -796,7 +838,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void requestFederationRestoreSucceeded(String label)
 			throws FederateInternalError {
-		System.out.println("Request Federation Restore Succeeded");
+		logger.info("Request for federation restore (label = " 
+			+ label + ") was successful.");
 		restorationConfirmed.set(true);
 	}
 
@@ -806,7 +849,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void requestFederationRestoreFailed(String label)
 			throws FederateInternalError {
-		System.out.println("Request Federation Restore Failed");
+		logger.warn("Request for federation restore (label = " 
+				+ label + ") failed.");
 		restorationConfirmed.set(true);
 	}
 
@@ -815,7 +859,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	@Override
 	public void federationRestoreBegun() throws FederateInternalError {
-		System.out.println("Federate Restore Begun");
+		logger.info("Federation restore has begun.");
 		restorationBegun.set(true);
 	}
 
@@ -825,7 +869,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	@Override
 	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
 			throws FederateInternalError {
-		System.out.println("Federate Restore to " + label + " Initiated");
+		logger.info("Initiate federate restore (label = " 
+				+ label + ").");
 		restorationInitiated.set(true);
 	}
 
@@ -834,7 +879,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	@Override
 	public void federationRestored() throws FederateInternalError {
-		System.out.println("Federation Restored");
+		logger.info("Federation has been restored.");
 		restorationCompleted.set(true);
 	}
 	
@@ -843,8 +888,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	@Override
 	public void connectionLost(String faultDescription) throws FederateInternalError  {
-		connected.set(false);
+		logger.warn("RTI connection has been lost (fault = " 
+				+ faultDescription + ").");
 		
+		connected.set(false);
 		simulator.getConnection().setConnected(false);
 	}
 }

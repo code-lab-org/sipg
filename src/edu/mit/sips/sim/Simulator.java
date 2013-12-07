@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
+import org.apache.log4j.Logger;
+
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
@@ -28,6 +30,8 @@ import edu.mit.sips.scenario.Scenario;
  * The Class Simulator.
  */
 public class Simulator implements SimulationControlListener {	
+	private static Logger logger = Logger.getLogger(Simulator.class);
+	
 	private final Scenario scenario;
 	
 	private boolean autoOptimizeDistribution = true;
@@ -65,12 +69,12 @@ public class Simulator implements SimulationControlListener {
 		}
 		this.scenario = scenario;
 		
+		logger.trace("Creating federate ambassador.");
 		try {
 			simAmbassador = new SimAmbassador(this);
 		} catch (RTIexception e) {
+			logger.error(e.getMessage());
 			e.printStackTrace();
-			JOptionPane.showMessageDialog(null, 
-					e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -89,6 +93,8 @@ public class Simulator implements SimulationControlListener {
 	 * @param duration the duration
 	 */
 	private void advance(long duration) {
+		logger.debug("Advancing simulation with duration " + duration + ".");
+		
 		if(time + duration > endTime) {
 			throw new IllegalArgumentException("Duration cannot exceed end time.");
 		}
@@ -104,27 +110,30 @@ public class Simulator implements SimulationControlListener {
 			try {
 				simAmbassador.advance();
 			} catch (NotConnected ignored) {
-			} catch(Exception ex) {
-				ex.printStackTrace();
+				logger.warn("Not connected: continuing in offline mode.");
+			} catch (RTIexception e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
 			}
+			
+			logger.trace("Tick/tocking the country (time = " + time + ").");
 			scenario.getCountry().tick();
-			fireUpdateEvent(time); // final update of current year
-			time = time + 1;
 			scenario.getCountry().tock();
+			fireUpdateEvent(time);
+			time = time + 1;
+			logger.trace("The time is now " + time + ".");
+			
 			if(time <= endTime) {
+				logger.trace("Firing the first update for this time step.");
 				runAutoOptimization();
-				fireUpdateEvent(time); // first update of next year
+				fireUpdateEvent(time);
 			}
 		}
 		
 		if(time >= endTime) {
+			logger.trace("Simulation is completed.");
 			completed.set(true);
 			fireCompleteEvent(time);
-			try {
-				// TODO simAmbassador.disconnect();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
