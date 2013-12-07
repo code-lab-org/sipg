@@ -14,13 +14,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.NumberFormat;
 import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -50,8 +48,7 @@ implements ActionListener, ConnectionListener {
 			TOGGLE_REMEMBER = "toggleReminder",
 			CONNECT = "connect";
 	
-	private final JTextField federateName, federateType, federationName, hostAddress, fomPath;
-	private final JFormattedTextField portNumber;
+	private final JTextField federateName, federateType, federationName, fomPath;
 	private final JCheckBox rememberCheck;
 	private final JButton connectButton, browseButton;
 	private final JLabel statusLabel;
@@ -80,13 +77,6 @@ implements ActionListener, ConnectionListener {
 		federateName.setToolTipText("Your organization name.");
 		federationName = new JTextField(12);
 		federationName.setToolTipText("The federation to join.");
-		hostAddress = new JTextField(12);
-		hostAddress.setToolTipText("Address of the Central RTI Component.");
-		NumberFormat portFormat = NumberFormat.getIntegerInstance();
-		portFormat.setGroupingUsed(false);
-		portNumber = new JFormattedTextField(portFormat);
-		portNumber.setColumns(6);
-		portNumber.setToolTipText("Port number of the Central RTI Component.");
 		fomPath = new JTextField(20);
 		fomPath.setToolTipText("The Federation Object Model (FOM) file location.");
 		rememberCheck = new JCheckBox("Remember connection information");
@@ -165,48 +155,6 @@ implements ActionListener, ConnectionListener {
 		c.gridy++;
 		c.gridx = 0;
 		c.fill = GridBagConstraints.NONE;
-		add(new JLabel("Host: "), c);
-		c.gridx++;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		hostAddress.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				isCrcAddressValid();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				isCrcAddressValid();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				isCrcAddressValid();
-			}
-		});
-		add(hostAddress, c);
-		c.gridx++;
-		c.fill = GridBagConstraints.NONE;
-		add(new JLabel("Port: "), c);
-		c.gridx++;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		portNumber.getDocument().addDocumentListener(new DocumentListener() {
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				isCrcPortValid();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				isCrcPortValid();
-			}
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				isCrcPortValid();
-			}
-		});
-		add(portNumber, c);
 		c.gridy++;
 		c.gridx = 1;
 		c.gridwidth = 3;
@@ -267,51 +215,40 @@ implements ActionListener, ConnectionListener {
 		federationName.setEnabled(false);
 		fomPath.setEnabled(false);
 		browseButton.setEnabled(false);
-		hostAddress.setEnabled(false);
-		portNumber.setEnabled(false);
 		rememberCheck.setEnabled(false);
 		connectButton.setEnabled(false);
 		if(!simulator.getConnection().isConnected()) {
-			statusLabel.setText("Connecting to " + hostAddress.getText() + "...");
+			statusLabel.setText("Connecting to RTI...");
 			statusLabel.setIcon(Icons.LOADING);
-			if(!isCrcAddressValid()) {
-				statusLabel.setText("Host is not valid (expected domain name or an IP address).");
-			} else if(!isCrcPortValid()) {
-				statusLabel.setText("Port is not valid (expected an integer).");
-			} else {
-				simulator.getConnection().setHost(hostAddress.getText());
-				simulator.getConnection().setPort(((Number) portNumber.getValue()).intValue());
-				simulator.getConnection().setFederationName(federationName.getText());
-				simulator.getConnection().setFomPath(fomPath.getText());
-				simulator.getConnection().setFederateName(federateName.getText());
-				simulator.getConnection().setFederateType(federateType.getText());
-				new SwingWorker<Void,Void>() {
-					@Override
-					protected Void doInBackground() {
+
+			simulator.getConnection().setFederationName(federationName.getText());
+			simulator.getConnection().setFomPath(fomPath.getText());
+			simulator.getConnection().setFederateName(federateName.getText());
+			simulator.getConnection().setFederateType(federateType.getText());
+			new SwingWorker<Void,Void>() {
+				@Override
+				protected Void doInBackground() {
+					try {
+						simulator.getAmbassador().connect();
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						federateName.setEnabled(true);
+						federateType.setEnabled(true);
+						federationName.setEnabled(true);
+						fomPath.setEnabled(true);
+						browseButton.setEnabled(true);
+						rememberCheck.setEnabled(true);
+						connectButton.setEnabled(true);
+						connectButton.setText("Connect");
+						statusLabel.setIcon(null);
 						try {
-							simulator.getAmbassador().connect();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-							federateName.setEnabled(true);
-							federateType.setEnabled(true);
-							federationName.setEnabled(true);
-							fomPath.setEnabled(true);
-							browseButton.setEnabled(true);
-							hostAddress.setEnabled(true);
-							portNumber.setEnabled(true);
-							rememberCheck.setEnabled(true);
-							connectButton.setEnabled(true);
-							connectButton.setText("Connect");
-							statusLabel.setIcon(null);
-							try {
-								simulator.getAmbassador().disconnect();
-							} catch (Exception ignored) { }
-							statusLabel.setText("Failed (" + ex.getMessage() + ")");
-						}
-						return null;
+							simulator.getAmbassador().disconnect();
+						} catch (Exception ignored) { }
+						statusLabel.setText("Failed (" + ex.getMessage() + ")");
 					}
-				}.execute();
-			}
+					return null;
+				}
+			}.execute();
 		} else {
 			statusLabel.setText("Disconnecting...");
 			statusLabel.setIcon(Icons.LOADING);
@@ -345,15 +282,13 @@ implements ActionListener, ConnectionListener {
 		federationName.setEnabled(!isConnected);
 		fomPath.setEnabled(!isConnected);
 		browseButton.setEnabled(!isConnected);
-		hostAddress.setEnabled(!isConnected);
-		portNumber.setEnabled(!isConnected);
 		rememberCheck.setEnabled(!isConnected);
 		connectButton.setEnabled(true);
 		connectButton.setText(isConnected?"Disconnect":"Connect");
 		statusLabel.setIcon(isConnected?Icons.LOADING_COMPLETE:null);
 		
 		if(isConnected) {
-			statusLabel.setText("Connected to " + e.getConnection().getHost());
+			statusLabel.setText("Connected to RTI.");
 		} else {
 			statusLabel.setText("");
 		}
@@ -381,47 +316,7 @@ implements ActionListener, ConnectionListener {
 		federateType.setText(simulator.getConnection().getFederateType());
 		federationName.setText(simulator.getConnection().getFederationName());
 		fomPath.setText(simulator.getConnection().getFomPath());
-		hostAddress.setText(simulator.getConnection().getHost());
-		portNumber.setValue(simulator.getConnection().getPort());
 		rememberCheck.setSelected(isDataSaved());
-	}
-
-	/**
-	 * Checks if the CRC address is valid.
-	 *
-	 * @return true, if the CRC address is valid
-	 */
-	private boolean isCrcAddressValid() {
-		boolean validIpAddress = hostAddress.getText().matches(
-				"(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." 
-				+ "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\." 
-				+ "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\."
-				+ "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)");
-		boolean validHostname = hostAddress.getText().matches(
-				"(([a-zA-Z]|[a-zA-Z][a-zA-Z0-9\\-]*[a-zA-Z0-9])\\.)*"
-				+ "([A-Za-z]|[A-Za-z][A-Za-z0-9\\-]*[A-Za-z0-9])");
-		if(validIpAddress || validHostname) {
-			hostAddress.setForeground(Color.green);
-			return true;
-		} else {
-			hostAddress.setForeground(Color.red);
-			return false;
-		}
-	}
-		
-	/**
-	 * Checks if the CRC port is valid.
-	 *
-	 * @return true, if the CRC port is valid
-	 */
-	private boolean isCrcPortValid() {
-		if(((Number)portNumber.getValue()).intValue() > 0) {
-			portNumber.setForeground(Color.green);
-			return true;
-		} else {
-			portNumber.setForeground(Color.red);
-			return false;
-		}
 	}
 
 	/**
@@ -448,9 +343,7 @@ implements ActionListener, ConnectionListener {
 	 * @return true, if the data is valid
 	 */
 	private boolean isDataValid() {
-		return isCrcAddressValid() 
-				&& isCrcPortValid() 
-				&& !federateName.getText().isEmpty() 
+		return !federateName.getText().isEmpty() 
 				&& !federationName.getText().isEmpty()
 				&& isFomValid();
 	}
@@ -489,8 +382,6 @@ implements ActionListener, ConnectionListener {
 		simulator.getConnection().setFederateType(properties.getProperty("type"));
 		simulator.getConnection().setFederationName(properties.getProperty("federation"));
 		simulator.getConnection().setFomPath(properties.getProperty("fom"));
-		simulator.getConnection().setHost(properties.getProperty("host"));
-		simulator.getConnection().setPort(Integer.parseInt(properties.getProperty("port")));
 	}
 
 	/**
@@ -503,8 +394,6 @@ implements ActionListener, ConnectionListener {
 		properties.setProperty("type", federateType.getText());
 		properties.setProperty("federation", federationName.getText());
 		properties.setProperty("fom", fomPath.getText());
-		properties.setProperty("host", hostAddress.getText());
-		properties.setProperty("port", portNumber.getText());
 		try {
 			output = new FileOutputStream(new File(CONNECTION_DATA));
 			properties.storeToXML(output, null);

@@ -156,11 +156,9 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws MalformedURLException the malformed url exception
 	 */
 	public void connect() throws RTIexception, MalformedURLException {
-		logger.info("Connecting to the RTI with settings designator: " 
-			+ simulator.getConnection().getLocalSettingsDesignator());
+		logger.info("Connecting to the RTI.");
 		try {
-			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE, 
-					simulator.getConnection().getLocalSettingsDesignator());
+			rtiAmbassador.connect(this, CallbackModel.HLA_IMMEDIATE);
 		} catch(AlreadyConnected ignored) { 
 			logger.warn("Already connected.");
 		}

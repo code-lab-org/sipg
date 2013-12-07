@@ -13,8 +13,7 @@ import edu.mit.sips.gui.event.ConnectionListener;
  */
 public class FederationConnection implements Serializable {
 	private static final long serialVersionUID = -4649447975331252471L;
-	private String host, federationName, fomPath, federateName, federateType;
-	private int port;
+	private String federationName, fomPath, federateName, federateType;
 	private transient volatile AtomicBoolean connected = new AtomicBoolean(false);
 	
 	private final transient EventListenerList listenerList = 
@@ -24,8 +23,6 @@ public class FederationConnection implements Serializable {
 	 * Instantiates a new federation connection.
 	 */
 	public FederationConnection() {
-		host = "";
-		port = 0;
 		federationName = "";
 		fomPath = "";
 		federateName = "";
@@ -35,17 +32,13 @@ public class FederationConnection implements Serializable {
 	/**
 	 * Instantiates a new federation connection.
 	 *
-	 * @param host the host
-	 * @param port the port
 	 * @param federationName the federation name
 	 * @param fomPath the fom path
 	 * @param federateName the federate name
 	 * @param federateType the federate type
 	 */
-	public FederationConnection(String host, int port, String federationName, 
+	public FederationConnection(String federationName, 
 			String fomPath, String federateName, String federateType) {
-		this.host = host;
-		this.port = port;
 		this.federationName = federationName;
 		this.fomPath = fomPath;
 		this.federateName = federateName;
@@ -110,34 +103,6 @@ public class FederationConnection implements Serializable {
 	}
 
 	/**
-	 * Gets the host.
-	 *
-	 * @return the host
-	 */
-	public String getHost() {
-		return host;
-	}
-
-	/**
-	 * Gets the local settings designator.
-	 *
-	 * @return the local settings designator
-	 */
-	public String getLocalSettingsDesignator() {
-		// format for pitch prti
-		return "crcHost=" + host + ":" + port;
-	}
-
-	/**
-	 * Gets the port.
-	 *
-	 * @return the port
-	 */
-	public int getPort() {
-		return port;
-	}
-
-	/**
 	 * Checks if is connected.
 	 *
 	 * @return true, if is connected
@@ -154,9 +119,7 @@ public class FederationConnection implements Serializable {
 	 * @return true, if is empty
 	 */
 	public boolean isEmpty() {
-		return host.isEmpty() 
-				&& port == 0 
-				&& federationName.isEmpty() 
+		return federationName.isEmpty() 
 				&& fomPath.isEmpty() 
 				&& federateName.isEmpty() 
 				&& federateType.isEmpty();
@@ -229,29 +192,5 @@ public class FederationConnection implements Serializable {
 			throw new IllegalArgumentException("FOM path cannot be null");
 		}
 		this.fomPath = fomPath;
-	}
-	
-	/**
-	 * Sets the host.
-	 *
-	 * @param host the new host
-	 */
-	public void setHost(String host) {
-		if(host == null) {
-			throw new IllegalArgumentException("Host cannot be null");
-		}
-		this.host = host;
-	}
-	
-	/**
-	 * Sets the port.
-	 *
-	 * @param port the new port
-	 */
-	public void setPort(int port) {
-		if(port < 0) {
-			throw new IllegalArgumentException("Port cannot be negative");
-		}
-		this.port = port;
 	}
 }
