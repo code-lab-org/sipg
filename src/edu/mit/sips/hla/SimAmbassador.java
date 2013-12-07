@@ -176,12 +176,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws RTIexception the rT iexception
 	 */
 	public void disconnect() throws RTIexception {
-		resignFederation();
+		logger.info("Disconnecting from the RTI.");
+		
+		if(initialized.get()) {
+			resignFederation();
+		}
 		
 		rtiAmbassador.disconnect();
-		
+		logger.trace("Disconnected from the RTI.");
 		connected.set(false);
-		
 		simulator.getConnection().setConnected(false);
 	}
 
@@ -190,6 +193,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	public void discoverObjectInstance(ObjectInstanceHandle theObject,
 			ObjectClassHandle theObjectClass, String objectName) {
+		logger.trace("Redirecting to common callback method.");
 		discoverObjectInstance(theObject, theObjectClass, objectName, null);
 	}
 
@@ -197,10 +201,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @see hla.rti1516e.NullFederateAmbassador#discoverObjectInstance(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.ObjectClassHandle, java.lang.String)
 	 */
 	public void discoverObjectInstance(ObjectInstanceHandle theObject,
-			ObjectClassHandle theObjectClass,
-			String objectName,
+			ObjectClassHandle theObjectClass, String objectName,
 			FederateHandle producingFederate) {
-		
 		logger.info("Discovering object instance " + objectName 
 				+ " with name " + objectName + ".");
 		
@@ -255,144 +257,173 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws RTIexception the rT iexception
 	 */
 	public void initialize(long startTime) throws RTIexception {
+		logger.info("Initializing federate to time " + startTime);
+		
 		HLAinteger64TimeFactory timeFactory = 
 				(HLAinteger64TimeFactory) rtiAmbassador.getTimeFactory();
 		logicalTime = timeFactory.makeInitial();
-		lookaheadInterval = timeFactory.makeInterval(unitsPerYear/numberIterations);
+		lookaheadInterval = timeFactory.makeInterval(
+				unitsPerYear/numberIterations);
 
+		logger.trace("Enabling asynchronous delivery.");
 		try {
 			rtiAmbassador.enableAsynchronousDelivery();
-		} catch (AsynchronousDeliveryAlreadyEnabled ignored) { }
-		
+			logger.info("Asynchronous delivery enabled.");
+		} catch (AsynchronousDeliveryAlreadyEnabled ignored) {
+			logger.warn("Asynchronous delivery already enabled.");
+		}
+
+		logger.trace("Enabling time constrained behavior.");
 		try {
 			rtiAmbassador.enableTimeConstrained();
-		} catch (TimeConstrainedAlreadyEnabled ignored) { }
+		} catch (TimeConstrainedAlreadyEnabled ignored) { 
+			logger.warn("Time constrained behavior already enabled.");
+		}
+		logger.info("Waiting for time constrained callback...");
 		while(!timeConstrained.get()) {
 			Thread.yield();
 		}
-		
+		logger.trace("Time constrained behavior enabled.");
+
+		logger.trace("Enabling time regulation with lookahead " 
+				+ lookaheadInterval.getValue());
 		try {
 			rtiAmbassador.enableTimeRegulation(lookaheadInterval);
-		} catch (TimeRegulationAlreadyEnabled ignored) { }
+		} catch (TimeRegulationAlreadyEnabled ignored) { 
+			logger.warn("Time regulation already enabled.");
+		}
+		logger.info("Waiting for time regulation callback...");
 		while(!timeRegulating.get()) {
 			Thread.yield();
 		}
-		
-		// announce synchronization point
+		logger.trace("Time regulation enabled.");
+
+		logger.trace("Announcing synchronization point (label = initialized).");
 		rtiAmbassador.registerFederationSynchronizationPoint("initialized", new byte[0]);
-		
+
+		logger.trace("Waiting for sync. point registration callback...");
 		while(!syncRegistered.get()) {
 			Thread.yield();
 		}
-		boolean firstFederate = syncRegisterSuccess.get();
+		
+		boolean firstFederate = false;
+		if(syncRegisterSuccess.get()) {
+			logger.info("Sync. point was registered: " 
+					+ "this is the first joining federate.");
+			firstFederate = true;
+		} else {
+			logger.info("Sync. point was not registered: " 
+					+ "this is NOT the first joining federate.");
+		}
 		syncRegistered.set(false);
 		syncRegisterSuccess.set(false);
 		
-		if(firstFederate) {
-			System.out.println("Registered sync. point: requesting ta to " 
-					+ timeFactory.makeTime((startTime-2)*unitsPerYear));
-			rtiAmbassador.timeAdvanceRequest(
-					timeFactory.makeTime((startTime-2)*unitsPerYear));
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-		} else {
-			/* use for non-time regulating federates
-			TimeQueryReturn query = rtiAmbassador.queryGALT();
-			System.out.println("GALT is " + ((HLAinteger64Time)query.time).getValue());
-			rtiAmbassador.timeAdvanceRequest(query.time);
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
-			*/
-			rtiAmbassador.timeAdvanceRequest(
-					timeFactory.makeTime((startTime-2)*unitsPerYear));
-			while(!timeAdvanceGranted.get()) {
-				Thread.yield();
-			}
-			timeAdvanceGranted.set(false);
+		HLAinteger64Time initialTime = timeFactory.makeTime(
+				(startTime-2)*unitsPerYear);
+		logger.info("Requesting time advance to " 
+				+ initialTime.getValue() + ".");
+		rtiAmbassador.timeAdvanceRequest(initialTime);
+		logger.trace("Waiting for time request grant...");
+		while(!timeAdvanceGranted.get()) {
+			Thread.yield();
 		}
+		timeAdvanceGranted.set(false);
 		
+		logger.trace("Waiting for synchronization point announcement...");
 		while(!syncAnnounced.get()) {
 			Thread.yield();
 		}
 		syncAnnounced.set(false);
 		
-		if(simulator.getScenario().getCountry().getAgricultureSystem() instanceof AgricultureSystem.Local) {
-			// if country includes a local national agriculture system
-			// publish its attributes
+		if(simulator.getScenario().getCountry().getAgricultureSystem() 
+				instanceof AgricultureSystem.Local) {
+			logger.trace("Country contains a local agriculture " + 
+					"system: publish its attributes.");
 			HLAagricultureSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+					logger.trace("Creating HLA agriculture system for local " +
+							"system " + city.getAgricultureSystem() + ".");
 					AgricultureSystem.Local localSystem = 
 							(AgricultureSystem.Local) city.getAgricultureSystem();
-					HLAagricultureSystem hlaObject = HLAagricultureSystem.
-							createLocalAgricultureSystem(rtiAmbassador, encoderFactory, 
-									localSystem);
+					HLAagricultureSystem hlaObject = 
+							HLAagricultureSystem.createLocalAgricultureSystem(
+									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
+		logger.trace("Subscribing to agriculture system attributes.");
 		HLAagricultureSystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getScenario().getCountry().getWaterSystem() instanceof WaterSystem.Local) {
-			// if country includes a local national water system
-			// publish its attributes
+		if(simulator.getScenario().getCountry().getWaterSystem() 
+				instanceof WaterSystem.Local) {
+			logger.trace("Country contains a local water " + 
+					"system: publish its attributes.");
 			HLAwaterSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getWaterSystem() instanceof WaterSystem.Local) {
+					logger.trace("Creating HLA water system for local " +
+							"system " + city.getWaterSystem() + ".");
 					WaterSystem.Local localSystem = 
 							(WaterSystem.Local) city.getWaterSystem();
-					HLAwaterSystem hlaObject = HLAwaterSystem.
-							createLocalWaterSystem(rtiAmbassador, encoderFactory, 
-									localSystem);
+					HLAwaterSystem hlaObject = 
+							HLAwaterSystem.createLocalWaterSystem(
+									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
+		logger.trace("Subscribing to water system attributes.");
 		HLAwaterSystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getScenario().getCountry().getElectricitySystem() instanceof ElectricitySystem.Local) {
-			// if country includes a local national electricity system
-			// publish its attributes
+		if(simulator.getScenario().getCountry().getElectricitySystem() 
+				instanceof ElectricitySystem.Local) {
+			logger.trace("Country contains a local electricity " + 
+					"system: publish its attributes.");
 			HLAelectricitySystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
+					logger.trace("Creating HLA electricity system for local " +
+							"system " + city.getElectricitySystem() + ".");
 					ElectricitySystem.Local localSystem = 
 							(ElectricitySystem.Local) city.getElectricitySystem();
-					HLAelectricitySystem hlaObject = HLAelectricitySystem.
-							createLocalElectricitySystem(rtiAmbassador, encoderFactory, 
-									localSystem);
+					HLAelectricitySystem hlaObject = 
+							HLAelectricitySystem.createLocalElectricitySystem(
+									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
+		logger.trace("Subscribing to electricity system attributes.");
 		HLAelectricitySystem.subscribeAll(rtiAmbassador);
 		
-		if(simulator.getScenario().getCountry().getPetroleumSystem() instanceof PetroleumSystem.Local) {
-			// if country includes a local national petroleum system
-			// publish its attributes
+		if(simulator.getScenario().getCountry().getPetroleumSystem() 
+				instanceof PetroleumSystem.Local) {
+			logger.trace("Country contains a local petroleum " + 
+					"system: publish its attributes.");
 			HLApetroleumSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+					logger.trace("Creating HLA petroleum system for local " +
+							"system " + city.getElectricitySystem() + ".");
 					PetroleumSystem.Local localSystem = 
 							(PetroleumSystem.Local) city.getPetroleumSystem();
-					HLApetroleumSystem hlaObject = HLApetroleumSystem.
-							createLocalPetroleumSystem(rtiAmbassador, encoderFactory, 
-									localSystem);
+					HLApetroleumSystem hlaObject = 
+							HLApetroleumSystem.createLocalPetroleumSystem(
+									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
 				}
 			}
 		}
+		logger.trace("Subscribing to petroleum system attributes.");
 		HLApetroleumSystem.subscribeAll(rtiAmbassador);
 
-		// always publish city social system attributes
+		logger.trace("Publishing social system attributes.");
 		HLAsocialSystem.publishAll(rtiAmbassador);
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getSocialSystem() instanceof SocialSystem.Local) {
@@ -405,9 +436,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 				localObjects.put(localSystem, hlaObject);
 			}
 		}
+		logger.trace("Subscribing to social system attributes.");
 		HLAsocialSystem.subscribeAll(rtiAmbassador);
-		
+
+		logger.trace("Achieving synchronization point (label = initialized).");
 		rtiAmbassador.synchronizationPointAchieved("initialized");
+		logger.trace("Waiting for federation synchronized callback...");
 		while(!syncAchieved.get()) {
 			Thread.yield();
 		}
