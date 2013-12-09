@@ -74,7 +74,7 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	public final void addElementChangeListener(ElementChangeListener listener) {
 		listenerList.add(ElementChangeListener.class, listener);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureElement#fireElementChangeEvent()
 	 */
@@ -94,6 +94,14 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	@Override
 	public final double getCapitalExpense() { 
 		return lifecycleModel.getCapitalExpense();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return lifecycleModel.getCurrencyTimeUnits();
 	}
 	
 	/* (non-Javadoc)
@@ -128,6 +136,15 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		return lifecycleModel.getFixedOperationsExpense();
 	}
 	
+	/**
+	 * Gets the lifecycle model.
+	 *
+	 * @return the lifecycle model
+	 */
+	public LifecycleModel getLifecycleModel() {
+		return lifecycleModel;
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getName()
 	 */
@@ -150,14 +167,6 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 	@Override
 	public String getTemplateName() {
 		return templateName;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return lifecycleModel.getCurrencyTimeUnits();
 	}
 	
 	/* (non-Javadoc)
