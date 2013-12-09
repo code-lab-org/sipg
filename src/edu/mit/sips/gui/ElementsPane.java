@@ -32,6 +32,7 @@ import javax.swing.tree.TreeSelectionModel;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.Region;
@@ -41,6 +42,7 @@ import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
@@ -310,7 +312,16 @@ public class ElementsPane extends JPanel implements UpdateListener {
 						editElement.setEnabled(element != null);
 						editElementOperations.setEnabled(element != null 
 								&& element.isOperational());
-						removeElement.setEnabled(element != null);
+						boolean canRemove = element != null;
+						// TODO temporary to disallow removing pre-1980 elements
+						if(element instanceof DefaultInfrastructureElement 
+								&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
+								instanceof SimpleLifecycleModel) {
+							SimpleLifecycleModel model = (SimpleLifecycleModel) 
+									((DefaultInfrastructureElement) element).getLifecycleModel();
+							canRemove = canRemove && model.getTimeInitialized() >= 1980;
+						}
+						removeElement.setEnabled(canRemove);
 					}
 		});
 		add(new JScrollPane(elementsTree), BorderLayout.CENTER);
