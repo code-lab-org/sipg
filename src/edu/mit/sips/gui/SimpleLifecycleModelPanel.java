@@ -35,8 +35,8 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 			initializationDurationText, capitalCostText;
 	private final JFormattedTextField fixedOperationsCostText;
 	private final JFormattedTextField maxOperationsDurationText, 
-			operationsDurationText, decommissionDurationText, 
-			decommissionCostText;
+			operationsDurationText, timeDecommissionedText, 
+			decommissionDurationText, decommissionCostText;
 	private final JCheckBox levelizeCostsCheck;
 	
 	/**
@@ -202,7 +202,34 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
+		//TODO addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
+		timeDecommissionedText = new JFormattedTextField(timeFormat);
+		timeDecommissionedText.setColumns(10);
+		timeDecommissionedText.setHorizontalAlignment(JTextField.RIGHT);
+		timeDecommissionedText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getTimeDecommissioned(), lifecycleModel, this));
+		// TODO temporary to only allow initialization editing after 1980
+		timeDecommissionedText.setEnabled(lifecycleModel.getTimeDecommissioned() >= 1980);
+		timeDecommissionedText.getDocument().addDocumentListener(
+				new DocumentChangeListener() {
+					public void documentChanged() {
+						try {
+							long timeDecommissioned = (long) TimeUnits.convert(
+									(Long) timeDecommissionedText.getValue(), 
+									thisPanel, lifecycleModel);
+							// TODO temporary to only allow decommission after 1980
+							if(timeDecommissioned < 1980) {
+								throw new NumberFormatException(
+										"Decommission time must be >= 1980.");
+							}
+							lifecycleModel.setTimeDecommissioned(timeDecommissioned);
+							timeDecommissionedText.setForeground(Color.black);
+						} catch(NumberFormatException ex) {
+							timeDecommissionedText.setForeground(Color.red);
+						}
+					}
+				});
+		addInput(c, "Time Decommissioned", timeDecommissionedText, timeUnits.toString());
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
 		decommissionDurationText.setHorizontalAlignment(JTextField.RIGHT);

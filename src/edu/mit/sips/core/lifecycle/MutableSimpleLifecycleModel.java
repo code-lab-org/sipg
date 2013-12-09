@@ -42,6 +42,22 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 		return capitalCost;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
+	 */
+	@Override
+	public TimeUnits getCurrencyTimeUnits() {
+		return timeUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
+	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+	
 	/**
 	 * Gets the decommission cost.
 	 *
@@ -106,12 +122,29 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	}
 	
 	/**
+	 * Gets the time decommissioned.
+	 *
+	 * @return the time decommissioned
+	 */
+	public long getTimeDecommissioned() {
+		return timeInitialized + initializationDuration + operationsDuration;
+	}
+	
+	/**
 	 * Gets the time initialized.
 	 *
 	 * @return the time initialized
 	 */
 	public long getTimeInitialized() {
 		return timeInitialized;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
+	 */
+	@Override
+	public TimeUnits getTimeUnits() {
+		return timeUnits;
 	}
 	
 	/**
@@ -185,7 +218,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	public void setMaxOperationsDuration(long maxOperationsDuration) {
 		this.maxOperationsDuration = maxOperationsDuration;
 	}
-	
+
 	/**
 	 * Sets the operations duration.
 	 *
@@ -194,7 +227,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	public void setOperationsDuration(long operationsDuration) {
 		this.operationsDuration = operationsDuration;
 	}
-	
+
 	/**
 	 * Sets the time available.
 	 *
@@ -205,35 +238,20 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	}
 
 	/**
+	 * Sets the time decommissioned.
+	 *
+	 * @param timeDecommissioned the new time decommissioned
+	 */
+	public void setTimeDecommissioned(long timeDecommissioned) {
+		setOperationsDuration(timeDecommissioned - timeInitialized - initializationDuration);
+	}
+
+	/**
 	 * Sets the time initialized.
 	 *
 	 * @param timeInitialized the new time initialized
 	 */
 	public void setTimeInitialized(long timeInitialized) {
 		this.timeInitialized = timeInitialized;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return timeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
-	 */
-	@Override
-	public TimeUnits getTimeUnits() {
-		return timeUnits;
 	}
 }
