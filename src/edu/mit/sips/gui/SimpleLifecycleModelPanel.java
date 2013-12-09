@@ -82,13 +82,21 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
 		timeInitializedText.setValue((long) TimeUnits.convert(
 				lifecycleModel.getTimeInitialized(), lifecycleModel, this));
+		// TODO temporary to only allow initialization editing after 1980
+		timeInitializedText.setEnabled(lifecycleModel.getTimeInitialized() >= 1980);
 		timeInitializedText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setTimeInitialized((long) TimeUnits.convert(
+							long timeInitialized = (long) TimeUnits.convert(
 									(Long) timeInitializedText.getValue(), 
-									thisPanel, lifecycleModel));
+									thisPanel, lifecycleModel);
+							// TODO temporary to only allow initialization after 1980
+							if(timeInitialized < 1980) {
+								throw new NumberFormatException(
+										"Initialization time must be >= 1980.");
+							}
+							lifecycleModel.setTimeInitialized(timeInitialized);
 							timeInitializedText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							timeInitializedText.setForeground(Color.red);
