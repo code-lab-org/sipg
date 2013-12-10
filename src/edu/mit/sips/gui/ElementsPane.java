@@ -286,6 +286,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				}
 			}
 		});
+		/* TODO temporarily removed
 		elementsTree.addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent e) {
@@ -305,6 +306,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				elementPopup.setVisible(false);
 			}
 		});
+		*/
 		elementsTree.getSelectionModel().addTreeSelectionListener(
 				new TreeSelectionListener() {
 					@Override
