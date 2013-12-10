@@ -226,6 +226,54 @@ public class ElementPanel extends JPanel {
 	}
 	
 	/**
+	 * Adds the input.
+	 *
+	 * @param panel the panel
+	 * @param c the c
+	 * @param labelText1 the label text1
+	 * @param component1 the component1
+	 * @param units1 the units1
+	 * @param labelText2 the label text2
+	 * @param component2 the component2
+	 * @param units2 the units2
+	 */
+	protected void addInput(JPanel panel, GridBagConstraints c, 
+			String labelText1, JComponent component1, String units1, 
+			String labelText2, JComponent component2, String units2) {
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		panel.add(new JLabel(labelText1), c);
+		c.gridx++;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		panel.add(component1, c);
+		c.gridx++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.NONE;
+		panel.add(new JLabel(units1), c);
+		c.gridx++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
+		panel.add(new JLabel(labelText2), c);
+		c.gridx++;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.weightx = 1;
+		panel.add(component2, c);
+		c.gridx++;
+		c.weightx = 0;
+		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.NONE;
+		panel.add(new JLabel(units2), c);
+		c.gridy++;
+		c.gridx-=5;
+	}
+	
+	/**
 	 * Creates a new ElementPanel object.
 	 *
 	 * @param scenario the scenario
