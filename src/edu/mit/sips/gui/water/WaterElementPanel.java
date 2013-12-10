@@ -10,6 +10,7 @@ import java.text.NumberFormat;
 
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -39,12 +40,16 @@ public class WaterElementPanel extends ElementPanel
 	private final JFormattedTextField electricalIntensityOfWaterProductionText;
 	private final JFormattedTextField variableOperationsCostOfWaterProductionText;
 	private final JCheckBox coastalAccessRequiredCheck;
+	private final JLabel maxVariableCostLabel, maxElectricityUseLabel, 
+			maxReservoirUseLabel;
 
 	private final JFormattedTextField maxWaterInputText;
 	private final JFormattedTextField initialWaterInputText;
 	private final JFormattedTextField distributionEfficiencyText;
 	private final JFormattedTextField electricalIntensityOfWaterDistributionText;
 	private final JFormattedTextField variableOperationsCostOfWaterDistributionText;
+	private final JLabel maxOutputLabel, maxElectricityUseDistLabel, 
+			maxVariableCostDistLabel;
 
 	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -77,6 +82,18 @@ public class WaterElementPanel extends ElementPanel
 							element.setMaxWaterProduction(WaterUnits.convertFlow(
 									((Number) maxWaterProductionText.getValue()).doubleValue(),
 									thisPanel, element));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getVariableOperationsCostOfWaterProduction(), 
+											element, thisPanel)));
+							maxElectricityUseLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getElectricalIntensityOfWaterProduction(), 
+											element, thisPanel)));
+							maxReservoirUseLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getReservoirIntensityOfWaterProduction(), 
+											element, thisPanel)));
 							maxWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterProductionText.setForeground(Color.red);
@@ -112,6 +129,10 @@ public class WaterElementPanel extends ElementPanel
 						try {
 							element.setReservoirIntensityOfWaterProduction(
 									((Number) reservoirIntensityOfWaterProductionText.getValue()).doubleValue());
+							maxReservoirUseLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getReservoirIntensityOfWaterProduction(), 
+											element, thisPanel)));
 							reservoirIntensityOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							reservoirIntensityOfWaterProductionText.setForeground(Color.red);
@@ -133,6 +154,10 @@ public class WaterElementPanel extends ElementPanel
 									((Number) electricalIntensityOfWaterProductionText.getValue()).doubleValue(),
 									getElectricityUnits(), getWaterUnits(), 
 									element.getElectricityUnits(), element.getWaterUnits()));
+							maxElectricityUseLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getElectricalIntensityOfWaterProduction(), 
+											element, thisPanel)));
 							electricalIntensityOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterProductionText.setForeground(Color.red);
@@ -154,6 +179,10 @@ public class WaterElementPanel extends ElementPanel
 									((Number) variableOperationsCostOfWaterProductionText.getValue()).doubleValue(),
 									getCurrencyUnits(), getWaterUnits(), 
 									element.getCurrencyUnits(), element.getWaterUnits()));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxWaterProduction() 
+											* element.getVariableOperationsCostOfWaterProduction(), 
+											element, thisPanel)));
 							variableOperationsCostOfWaterProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterProductionText.setForeground(Color.red);
@@ -169,6 +198,19 @@ public class WaterElementPanel extends ElementPanel
 				element.setCoastalAccessRequired(coastalAccessRequiredCheck.isSelected());
 			}
 		});
+		maxVariableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxWaterProduction() 
+						* element.getVariableOperationsCostOfWaterProduction(), 
+						element, this)), JLabel.RIGHT);
+		maxElectricityUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				ElectricityUnits.convertFlow(element.getMaxWaterProduction() 
+						* element.getElectricalIntensityOfWaterProduction(), 
+						element, this)), JLabel.RIGHT);
+		maxReservoirUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				WaterUnits.convertFlow(element.getMaxWaterProduction() 
+						* element.getReservoirIntensityOfWaterProduction(), 
+						element, this)), JLabel.RIGHT);
+		
 		maxWaterInputText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		maxWaterInputText.setColumns(10);
 		maxWaterInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -181,6 +223,18 @@ public class WaterElementPanel extends ElementPanel
 							element.setMaxWaterInput(WaterUnits.convertFlow(
 									((Number) maxWaterInputText.getValue()).doubleValue(),
 									thisPanel, element));
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getVariableOperationsCostOfWaterDistribution(), 
+											element, thisPanel)));
+							maxElectricityUseDistLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getElectricalIntensityOfWaterDistribution(), 
+											element, thisPanel)));
 							maxWaterInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxWaterInputText.setForeground(Color.red);
@@ -215,6 +269,10 @@ public class WaterElementPanel extends ElementPanel
 						try {
 							element.setDistributionEfficiency(
 									((Number) distributionEfficiencyText.getValue()).doubleValue());
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -236,6 +294,10 @@ public class WaterElementPanel extends ElementPanel
 									((Number) electricalIntensityOfWaterDistributionText.getValue()).doubleValue(),
 									getElectricityUnits(), getWaterUnits(), 
 									element.getElectricityUnits(), element.getWaterUnits()));
+							maxElectricityUseDistLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getElectricalIntensityOfWaterDistribution(), 
+											element, thisPanel)));
 							electricalIntensityOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfWaterDistributionText.setForeground(Color.red);
@@ -257,12 +319,28 @@ public class WaterElementPanel extends ElementPanel
 									((Number) variableOperationsCostOfWaterDistributionText.getValue()).doubleValue(),
 									getCurrencyUnits(), getWaterUnits(), 
 									element.getCurrencyUnits(), element.getWaterUnits()));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxWaterInput() 
+											* element.getVariableOperationsCostOfWaterDistribution(), 
+											element, thisPanel)));
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfWaterDistributionText.setForeground(Color.red);
 						}
 					}
 				});
+		maxOutputLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				WaterUnits.convertFlow(element.getMaxWaterInput() 
+						* element.getDistributionEfficiency(), 
+						element, this)), JLabel.RIGHT);
+		maxVariableCostDistLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxWaterInput() 
+						* element.getVariableOperationsCostOfWaterDistribution(), 
+						element, this)), JLabel.RIGHT);
+		maxElectricityUseDistLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				ElectricityUnits.convertFlow(element.getMaxWaterInput() 
+						* element.getElectricalIntensityOfWaterDistribution(), 
+						element, this)), JLabel.RIGHT);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());
@@ -276,16 +354,25 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
-			addInput(elementPanel, c, "Max Water Production", 
-					maxWaterProductionText, waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Initial Water Production",
-					initialWaterProductionText, waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Reservoir Intensity of Production",
-					reservoirIntensityOfWaterProductionText, waterUnits + "/" + waterUnits);
-			addInput(elementPanel, c, "Electrical Intensity of Production",
-					electricalIntensityOfWaterProductionText, electricityUnits + "/" + waterUnits);
-			addInput(elementPanel, c, "Variable Cost of Production",
-					variableOperationsCostOfWaterProductionText, currencyUnits + "/" + waterUnits);
+			addInput(elementPanel, c, "Maximum Water Production", 
+					maxWaterProductionText, 
+					waterUnits + "/" + waterTimeUnits);
+			// TODO addInput(elementPanel, c, "Initial Water Production", initialWaterProductionText, waterUnits + "/" + waterTimeUnits);
+			addInput(elementPanel, c, "Specific Aquifer Consumption",
+					reservoirIntensityOfWaterProductionText, 
+					waterUnits + "/" + waterUnits,
+					"Maximum Aquifer Consumption", maxReservoirUseLabel,
+					waterUnits + "/" + waterTimeUnits);
+			addInput(elementPanel, c, "Specific Electricity Consumption",
+					electricalIntensityOfWaterProductionText, 
+					electricityUnits + "/" + waterUnits,
+					"Maximum Electricity Consumption", maxElectricityUseLabel,
+					electricityUnits + "/" + electricityTimeUnits);
+			addInput(elementPanel, c, "Variable Operations Cost",
+					variableOperationsCostOfWaterProductionText, 
+					currencyUnits + "/" + waterUnits,
+					"Maximum Variable Cost", maxVariableCostLabel,
+					currencyUnits + "/" + currencyTimeUnits);
 			
 			c.gridwidth = 3;
 			c.anchor = GridBagConstraints.LINE_END;
@@ -299,16 +386,25 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
-			addInput(elementPanel, c, "Max Water Input", 
-					maxWaterInputText, waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Initial Water Input",
-					initialWaterInputText, waterUnits + "/" + waterTimeUnits);
+			addInput(elementPanel, c, "Maximum Water Input", 
+					maxWaterInputText, 
+					waterUnits + "/" + waterTimeUnits);
+			// TODO addInput(elementPanel, c, "Initial Water Input", initialWaterInputText, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, waterUnits + "/" + waterUnits);
-			addInput(elementPanel, c, "Electrical Intensity of Distribution",
-					electricalIntensityOfWaterDistributionText, electricityUnits + "/" + waterUnits);
-			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfWaterDistributionText, currencyUnits + "/" + waterUnits);
+					distributionEfficiencyText, 
+					waterUnits + "/" + waterUnits,
+					"Maximum Water Output", maxOutputLabel,
+					waterUnits + "/" + waterTimeUnits);
+			addInput(elementPanel, c, "Specific Electricity Consumption",
+					electricalIntensityOfWaterDistributionText, 
+					electricityUnits + "/" + waterUnits,
+					"Maximum Electricity Consumption", maxElectricityUseDistLabel,
+					electricityUnits + "/" + electricityTimeUnits);
+			addInput(elementPanel, c, "Variable Operations Cost",
+					variableOperationsCostOfWaterDistributionText, 
+					currencyUnits + "/" + waterUnits,
+					"Maximum Variable Cost", maxVariableCostDistLabel,
+					currencyUnits + "/" + currencyTimeUnits);
 		}
 		
 		// set input enabled state
