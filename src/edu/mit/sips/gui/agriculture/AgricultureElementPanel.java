@@ -353,7 +353,7 @@ public class AgricultureElementPanel extends ElementPanel
 					maxFoodInput, foodUnits + "/" + foodTimeUnits);
 			// TODO addInput(elementPanel, c, "Initial Food Input", initialFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency", 
-					distributionEfficiency, "-",
+					distributionEfficiency, foodUnits + "/" + foodUnits,
 					"Maximum Food Output", maxOutputLabel, 
 					foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Variable Operations Cost", 
