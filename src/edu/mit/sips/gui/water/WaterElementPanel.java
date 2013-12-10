@@ -361,17 +361,17 @@ public class WaterElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Specific Aquifer Consumption",
 					reservoirIntensityOfWaterProductionText, 
 					waterUnits + "/" + waterUnits,
-					"Maximum Aquifer Consumption", maxReservoirUseLabel,
+					"  max: ", maxReservoirUseLabel,
 					waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Specific Electricity Consumption",
 					electricalIntensityOfWaterProductionText, 
 					electricityUnits + "/" + waterUnits,
-					"Maximum Electricity Consumption", maxElectricityUseLabel,
+					"  max: ", maxElectricityUseLabel,
 					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Variable Operations Cost",
 					variableOperationsCostOfWaterProductionText, 
 					currencyUnits + "/" + waterUnits,
-					"Maximum Variable Cost", maxVariableCostLabel,
+					"  max: ", maxVariableCostLabel,
 					currencyUnits + "/" + currencyTimeUnits);
 			
 			c.gridwidth = 3;
@@ -393,17 +393,17 @@ public class WaterElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Distribution Efficiency",
 					distributionEfficiencyText, 
 					waterUnits + "/" + waterUnits,
-					"Maximum Water Output", maxOutputLabel,
+					"  max: ", maxOutputLabel,
 					waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Specific Electricity Consumption",
 					electricalIntensityOfWaterDistributionText, 
 					electricityUnits + "/" + waterUnits,
-					"Maximum Electricity Consumption", maxElectricityUseDistLabel,
+					"  max: ", maxElectricityUseDistLabel,
 					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Variable Operations Cost",
 					variableOperationsCostOfWaterDistributionText, 
 					currencyUnits + "/" + waterUnits,
-					"Maximum Variable Cost", maxVariableCostDistLabel,
+					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
 		}
 		

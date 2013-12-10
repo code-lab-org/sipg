@@ -329,19 +329,19 @@ public class AgricultureElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Specific Food Yield", 
 					foodIntensityText, 	
 					foodUnits + "/" + foodTimeUnits + "/km^2",
-					"Maximum Food Yield", 
+					"  max: ", 
 					maxYieldLabel, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Variable Operations Cost", 
 					costIntensityText, currencyUnits + "/km^2",
-					"Maximum Variable Cost", 
+					"  max: ", 
 					maxVariableCostLabel, currencyUnits + "/" + currencyTimeUnits);
 			addInput(elementPanel, c, "Specific Water Consumption", 
 					waterIntensityText, waterUnits + "/km^2",
-					"Maximum Water Consumption", 
+					"  max: ", 
 					maxWaterUseLabel, waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Specific Labor Use", 
 					laborIntensityText, "people/km^2",
-					"Maximum Labor Use", 
+					"  max: ", 
 					maxLaborUseLabel, "people");
 		}
 		if(element.getTemplateName() == null 
@@ -354,12 +354,12 @@ public class AgricultureElementPanel extends ElementPanel
 			// TODO addInput(elementPanel, c, "Initial Food Input", initialFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency", 
 					distributionEfficiency, foodUnits + "/" + foodUnits,
-					"Maximum Food Output", maxOutputLabel, 
+					"  max: ", maxOutputLabel, 
 					foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Variable Operations Cost", 
 					variableOperationsCostOfFoodDistribution, 
 					currencyUnits + "/" + foodUnits,
-					"Maximum Variable Cost", maxVariableCostDistLabel,
+					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
 		}
 
