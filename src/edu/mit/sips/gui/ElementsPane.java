@@ -36,12 +36,14 @@ import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.MutableInfrastructureElement;
 import edu.mit.sips.core.Region;
+import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
 import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
@@ -307,6 +309,10 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				new TreeSelectionListener() {
 					@Override
 					public void valueChanged(TreeSelectionEvent e) {
+						Society society = elementsTreeModel.getSociety(
+								elementsTree.getSelectionPath());
+						addElement.setEnabled(society != null);
+						addElementTemplate.setEnabled(society != null);
 						InfrastructureElement element = elementsTreeModel.getElement(
 								elementsTree.getSelectionPath());
 						editElement.setEnabled(element != null);
@@ -368,6 +374,10 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				MutableInfrastructureElement element = template.createElement(
 						template.getTimeAvailable(), selectedCity.getName(), 
 						selectedCity.getName()).getMutableElement();
+				// TODO set time initialized to 1980
+				if(element.getLifecycleModel() instanceof MutableSimpleLifecycleModel) {
+					((MutableSimpleLifecycleModel)element.getLifecycleModel()).setTimeInitialized(1980);
+				}
 				openElementDialog(element.createElement());
 			}
 		}
@@ -407,6 +417,8 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	 */
 	public void initialize() {
 		elementsTreeModel.setState(simulator.getScenario().getCountry());
+		addElement.setEnabled(false);
+		addElementTemplate.setEnabled(false);
 		editElement.setEnabled(false);
 		editElementOperations.setEnabled(false);
 		removeElement.setEnabled(false);
