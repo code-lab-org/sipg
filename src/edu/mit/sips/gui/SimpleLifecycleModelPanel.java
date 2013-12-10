@@ -76,7 +76,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		addInput(c, "Time Available", timeAvailableText, timeUnits.toString());
+		addInput(c, "Year Available", timeAvailableText, "");
 		timeInitializedText = new JFormattedTextField(timeFormat);
 		timeInitializedText.setColumns(10);
 		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
@@ -103,7 +103,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		addInput(c, "Time Initialized", timeInitializedText, timeUnits.toString());
+		addInput(c, "Year Initialized", timeInitializedText, "");
 		initializationDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		initializationDurationText.setColumns(10);
 		initializationDurationText.setHorizontalAlignment(JTextField.RIGHT);
@@ -229,7 +229,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		addInput(c, "Time Decommissioned", timeDecommissionedText, timeUnits.toString());
+		addInput(c, "Year Decommissioned", timeDecommissionedText, "");
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
 		decommissionDurationText.setHorizontalAlignment(JTextField.RIGHT);
