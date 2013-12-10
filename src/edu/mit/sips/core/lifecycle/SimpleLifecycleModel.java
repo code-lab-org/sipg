@@ -36,6 +36,15 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	}
 
 	/**
+	 * Gets the max time decommissioned.
+	 *
+	 * @return the max time decommissioned
+	 */
+	public long getMaxTimeDecommissioned() {
+		return timeInitialized + initializationDuration + maxOperationsDuration;
+	}
+	
+	/**
 	 * Instantiates a new simple lifecycle model.
 	 *
 	 * @param timeAvailable the time available
@@ -58,7 +67,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 				decommissionDuration, capitalCost, 
 				fixedOperationsCost, decommissionCost, false);
 	}
-	
+
 	/**
 	 * Instantiates a new simple lifecycle model.
 	 *
@@ -149,7 +158,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public double getCapitalCost() {
 		return capitalCost;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#getCapitalExpense()
 	 */
@@ -167,7 +176,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
@@ -219,7 +228,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * Gets the fixed operations cost.
 	 *
@@ -228,7 +237,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public double getFixedOperationsCost() {
 		return fixedOperationsCost;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.LifecycleModel#getFixedOperationsExpense()
 	 */
@@ -240,7 +249,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 			return 0;
 		}
 	}
-
+	
 	/**
 	 * Gets the initialization duration.
 	 *
@@ -249,7 +258,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	public long getInitializationDuration() {
 		return initializationDuration;
 	}
-	
+
 	/**
 	 * Gets the max operations duration.
 	 *
@@ -257,15 +266,6 @@ public class SimpleLifecycleModel implements LifecycleModel {
 	 */
 	public long getMaxOperationsDuration() {
 		return maxOperationsDuration;
-	}
-
-	/**
-	 * Gets the max time decommissioned.
-	 *
-	 * @return the max time decommissioned
-	 */
-	public long getMaxTimeDecommissioned() {
-		return timeInitialized + initializationDuration + maxOperationsDuration;
 	}
 
 	/* (non-Javadoc)
