@@ -157,10 +157,19 @@ public class ElementPanel extends JPanel {
 		lifecycleModelContainer.add(buttonPanel, BorderLayout.SOUTH);
 		defaultElementPanel.add(lifecycleModelContainer, c);
 		
+		
 		// set input enabled state
-		destinationCombo.setEnabled(element.getTemplateName() == null 
+		// TODO only allow inputs to be changed if element initialized >= 1980
+		long timeInitialized = 0;
+		if(element.getLifecycleModel() instanceof MutableSimpleLifecycleModel) {
+			timeInitialized = ((MutableSimpleLifecycleModel)element.getLifecycleModel()).getTimeInitialized();
+		}
+		nameText.setEnabled(timeInitialized >= 1980);
+		originCombo.setEnabled(timeInitialized >= 1980);
+		destinationCombo.setEnabled(timeInitialized >= 1980 
+				&& (element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
-				|| scenario.getTemplate(element.getTemplateName()).isTransport());
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()));
 		selectLifecycleModel.setEnabled(element.getTemplateName()  == null);
 		lifecycleModelPanel.setTemplateMode(element.getTemplateName());
 	}
