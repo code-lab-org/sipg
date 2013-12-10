@@ -41,7 +41,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	public double getCapitalCost() {
 		return capitalCost;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
@@ -49,7 +49,7 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	public TimeUnits getCurrencyTimeUnits() {
 		return timeUnits;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
@@ -101,6 +101,15 @@ public final class MutableSimpleLifecycleModel implements MutableLifecycleModel 
 	 */
 	public long getMaxOperationsDuration() {
 		return maxOperationsDuration;
+	}
+	
+	/**
+	 * Gets the max time decommissioned.
+	 *
+	 * @return the max time decommissioned
+	 */
+	public long getMaxTimeDecommissioned() {
+		return timeInitialized + initializationDuration + maxOperationsDuration;
 	}
 	
 	/**

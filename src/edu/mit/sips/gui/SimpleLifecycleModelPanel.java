@@ -12,6 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
@@ -193,11 +194,16 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setOperationsDuration((long) TimeUnits.convert(
-									(Long) operationsDurationText.getValue(), 
-									thisPanel, lifecycleModel));
+							long operationsDuration = (long) TimeUnits.convert(
+									(Long) operationsDurationText.getValue(),
+									thisPanel, lifecycleModel);
+							if(operationsDuration > lifecycleModel.getMaxOperationsDuration()) {
+								throw new IllegalArgumentException(
+										"Operations duration cannot exceed maximum.");
+							}
+							lifecycleModel.setOperationsDuration(operationsDuration);
 							operationsDurationText.setForeground(Color.black);
-						} catch(NumberFormatException ex) {
+						} catch(IllegalArgumentException e) {
 							operationsDurationText.setForeground(Color.red);
 						}
 					}
@@ -219,12 +225,15 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 									thisPanel, lifecycleModel);
 							// TODO temporary to only allow decommission after 1980
 							if(timeDecommissioned < 1980) {
-								throw new NumberFormatException(
+								throw new IllegalArgumentException(
 										"Decommission time must be >= 1980.");
+							} else if(timeDecommissioned > lifecycleModel.getMaxTimeDecommissioned()) {
+								throw new IllegalArgumentException(
+										"Decommission time cannot exceed maximum operations time.");
 							}
 							lifecycleModel.setTimeDecommissioned(timeDecommissioned);
 							timeDecommissionedText.setForeground(Color.black);
-						} catch(NumberFormatException ex) {
+						} catch(IllegalArgumentException e) {
 							timeDecommissionedText.setForeground(Color.red);
 						}
 					}
