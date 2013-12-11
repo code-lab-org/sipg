@@ -376,7 +376,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 								nestedSystem.getSociety().getSocialSystem(), this));
 				if(nestedSystem.getPetroleumConsumption() > 0) {
 					updateSeries(petroleumUseData, nestedSystem.getName(), year, 
-							OilUnits.convertFlow(nestedSystem.getPetroleumConsumption(),
+							OilUnits.convertFlow(nestedSystem.getPetroleumConsumptionFromPublicProduction(),
 									nestedSystem, this));
 				}
 				if(nestedSystem.getWaterConsumption() > 0) {
