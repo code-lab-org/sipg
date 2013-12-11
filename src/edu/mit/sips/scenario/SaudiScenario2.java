@@ -49,10 +49,10 @@ public final class SaudiScenario2 extends DefaultScenario {
 			petroleumSystemDomesticProductionModel = new PetroleumSystemDomesticProductionModel(100),
 			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
 	private static DemandModel 
-			foodDemandModel = new LogisticTimeDemandModel(1970, 
-					FoodUnits.convertFlow(1950, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 0.15, 
-					FoodUnits.convertFlow(1700, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 
-					FoodUnits.convertFlow(3100, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year)),
+			foodDemandModel = new LogisticTimeDemandModel(1975, 
+					FoodUnits.convertFlow(2300, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 0.20, 
+					FoodUnits.convertFlow(1800, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 
+					FoodUnits.convertFlow(5800, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year)),
 			waterDemandModel = new LogisticTimeDemandModel(1965, 
 					WaterUnits.convertFlow(175, WaterUnits.L, TimeUnits.day, WaterUnits.m3, TimeUnits.year), 0.08, 
 					WaterUnits.convertFlow(25, WaterUnits.L, TimeUnits.day, WaterUnits.m3, TimeUnits.year), 
@@ -63,14 +63,14 @@ public final class SaudiScenario2 extends DefaultScenario {
 					ElectricityUnits.convertFlow(40, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year)),
 			petroleumDemandModel = new LogisticTimeDemandModel(1970, 1, 0.07, 0, 9);
 	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(50), 
-			foodImportPriceModel = new ConstantPriceModel(75), 
+			foodImportPriceModel = new ConstantPriceModel(50), 
 			foodExportPriceModel = new ConstantPriceModel(40),
 			waterDomesticPriceModel = new ConstantPriceModel(0.05), 
 			waterImportPriceModel = new ConstantPriceModel(10), 
 			electricityDomesticPriceModel = new ConstantPriceModel(4), 
 			petroleumDomesticPriceModel = new ConstantPriceModel(8), 
-			petroleumImportPriceModel = new ConstantPriceModel(45), 
-			petroleumExportPriceModel = new ConstantPriceModel(40);
+			petroleumImportPriceModel = new ConstantPriceModel(30), 
+			petroleumExportPriceModel = new ConstantPriceModel(30);
 
 	/**
 	 * Instantiates a new saudi scenario2.
@@ -100,12 +100,13 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new LocalAgricultureSystem(8e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, INDUSTRIAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1976, INDUSTRIAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 2008-1986, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL)
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, INDUSTRIAL, INDUSTRIAL)
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
@@ -195,16 +196,14 @@ public final class SaudiScenario2 extends DefaultScenario {
 										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1962, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1982, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1982, RURAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1982, RURAL, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, 2008-2002, RURAL, RURAL)
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1984, RURAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1984, RURAL, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, RURAL, RURAL)
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
@@ -252,13 +251,13 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new LocalAgricultureSystem(10e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1974, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, 1996-1984, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996-1986, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996-1986, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, URBAN, URBAN),
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, URBAN, URBAN)
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, 1996-1988, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1992, 1994-1992, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1992, 1994-1992, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, URBAN, URBAN)
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):

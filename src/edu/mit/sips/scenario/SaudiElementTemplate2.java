@@ -81,15 +81,15 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					name, name + " " + getInstanceId(WHEAT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
-							275e6, 13.75e6, 0, true), 
-					500, 500, 5000, 50e3, 1.e6, 60);
+							100e6, 5e6, 0, true), 
+					500, 500, 5000, 50e3, 1.5e6, 60);
 		case WHEAT_2:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + getInstanceId(WHEAT_2), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
-							500e6, 25e6, 0, true), 
-					1000, 1000, 5000, 45e3, 1.e6, 60);
+							180e6, 9e6, 0, true), 
+					1000, 1000, 5000, 45e3, 1.5e6, 60);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
 					name, name + " " + getInstanceId(FOOD_TRANSPORT_1), location, destination, 
