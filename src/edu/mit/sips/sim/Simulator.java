@@ -5,7 +5,6 @@ import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.swing.JOptionPane;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
@@ -118,8 +117,8 @@ public class Simulator implements SimulationControlListener {
 			
 			logger.trace("Tick/tocking the country (time = " + time + ").");
 			scenario.getCountry().tick();
-			scenario.getCountry().tock();
 			fireUpdateEvent(time);
+			scenario.getCountry().tock();
 			time = time + 1;
 			logger.trace("The time is now " + time + ".");
 			
