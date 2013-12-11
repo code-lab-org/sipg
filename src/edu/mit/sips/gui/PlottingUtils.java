@@ -247,10 +247,10 @@ public abstract class PlottingUtils {
 			return ORANGE;
 		}
 		if(name.contains("Out-Distribution")) {
-			return CORNFLOWER_BLUE;
+			return GOLD;
 		}
 		if(name.contains("In-Distribution")) {
-			return GOLD;
+			return CORNFLOWER_BLUE;
 		}
 		if(name.contains("Losses")) {
 			return LIGHT_CORAL;
@@ -314,13 +314,13 @@ public abstract class PlottingUtils {
 			return ROSY_BROWN;
 		}
 		if(name.contains("Distribution Expense")) {
-			return GOLD;
+			return CORNFLOWER_BLUE;
 		}
 		if(name.contains("Import Expense")) {
 			return ORANGE;
 		}
 		if(name.contains("Distribution Revenue")) {
-			return CORNFLOWER_BLUE;
+			return GOLD;
 		}
 		if(name.contains("Export Revenue")) {
 			return MEDIUM_SLATE_BLUE;
