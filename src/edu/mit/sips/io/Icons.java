@@ -31,6 +31,7 @@ public abstract class Icons {
 	public static final Icon PRODUCT = loadIcon("resources/silk/cog.png");
 	public static final Icon POPULATION = loadIcon("resources/silk/group.png");
 	public static final Icon REVENUE = loadIcon("resources/fugue/money.png");
+	public static final Icon INVESTMENT = loadIcon("resources/fugue/piggy-bank.png");
 	public static final Icon FUNDS = loadIcon("resources/fugue/bank.png");
 	public static final Icon CONFIGURATION = loadIcon("resources/silk/wrench.png");
 

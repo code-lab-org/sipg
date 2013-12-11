@@ -470,6 +470,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 */
 	@Override
 	public void initialize(long time) {
+		super.initialize(time);
 		petroleumReservoirVolume = initialPetroleumReservoirVolume;
 	}
 
@@ -486,6 +487,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 */
 	@Override
 	public void tick() {
+		super.tick();
 		nextPetroleumReservoirVolume = Math.min(maxPetroleumReservoirVolume, 
 				petroleumReservoirVolume - getPetroleumWithdrawals());
 	}
@@ -495,6 +497,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 */
 	@Override
 	public void tock() {
+		super.tock();
 		petroleumReservoirVolume = nextPetroleumReservoirVolume;
 	}
 }

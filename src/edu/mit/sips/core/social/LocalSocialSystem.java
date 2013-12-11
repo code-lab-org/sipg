@@ -32,6 +32,8 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	private final DomesticProductionModel domesticProductionModel;
 	private final PopulationModel populationModel;
 	private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel;
+	private double cumulativeCapitalExpense;
+	private transient double nextTotalCapitalExpense;
 	private double domesticProduct;
 	private transient double nextDomesticProduct;
 
@@ -336,6 +338,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 		petroleumDemandModel.initialize(time);
 
 		domesticProduct = getDomesticProduction();
+		cumulativeCapitalExpense = 0;
 	}
 
 	/* (non-Javadoc)
@@ -344,6 +347,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	@Override
 	public void tick() {
 		nextDomesticProduct = getNextDomesticProduct();
+		nextTotalCapitalExpense = getSociety().getTotalCapitalExpense();
 		populationModel.tick();
 		electricityDemandModel.tick();
 		foodDemandModel.tick();
@@ -357,10 +361,19 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	@Override
 	public void tock() {
 		domesticProduct = nextDomesticProduct;
+		cumulativeCapitalExpense += nextTotalCapitalExpense;
 		populationModel.tock();
 		electricityDemandModel.tock();
 		foodDemandModel.tock();
 		waterDemandModel.tock();
 		petroleumDemandModel.tock();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getTotalCapitalExpense()
+	 */
+	@Override
+	public double getCumulativeCapitalExpense() {
+		return cumulativeCapitalExpense;
 	}
 }

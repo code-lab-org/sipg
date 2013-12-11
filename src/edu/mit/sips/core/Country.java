@@ -78,8 +78,6 @@ public class Country extends DefaultSociety implements Society {
 	}
 	
 	private final double initialFunds;
-	private double funds;
-	private transient double nextFunds;
 
 	/**
 	 * Instantiates a new country.
@@ -149,6 +147,15 @@ public class Country extends DefaultSociety implements Society {
 	}
 	
 	/**
+	 * Gets the funds.
+	 *
+	 * @return the funds
+	 */
+	public double getFunds() {
+		return initialFunds + getCumulativeCashFlow();
+	}
+	
+	/**
 	 * Gets the society recursive.
 	 *
 	 * @param name the name
@@ -175,15 +182,6 @@ public class Country extends DefaultSociety implements Society {
 	public Country getCountry() {
 		return this;
 	}
-	
-	/**
-	 * Gets the funds.
-	 *
-	 * @return the funds
-	 */
-	public double getFunds() {
-		return funds;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#initialize(int)
@@ -194,7 +192,6 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.initialize(time);
 		}
-		funds = initialFunds;
 	}
 
 	/* (non-Javadoc)
@@ -206,7 +203,6 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.tick();
 		}
-		nextFunds = funds + getCashFlow();
 	}
 
 	/* (non-Javadoc)
@@ -218,6 +214,5 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.tock();
 		}
-		funds = nextFunds;
 	}
 }

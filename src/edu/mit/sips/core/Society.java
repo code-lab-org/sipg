@@ -30,11 +30,25 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	public AgricultureSystem getAgricultureSystem();
 	
 	/**
-	 * Gets the cash flow.
+	 * Gets the total cash flow.
 	 *
-	 * @return the cash flow
+	 * @return the total cash flow
 	 */
-	public double getCashFlow();
+	public double getTotalCashFlow();
+	
+	/**
+	 * Gets the cumulative cash flow.
+	 *
+	 * @return the cumulative cash flow
+	 */
+	public double getCumulativeCashFlow();
+	
+	/**
+	 * Gets the capital expense.
+	 *
+	 * @return the capital expense
+	 */
+	public double getTotalCapitalExpense();
 	
 	/**
 	 * Gets the cities.

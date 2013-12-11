@@ -385,13 +385,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSoS.Local#optimizeFoodDistribution()
 	 */
@@ -707,16 +700,4 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
 }

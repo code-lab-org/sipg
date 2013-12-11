@@ -6,6 +6,10 @@ import edu.mit.sips.sim.util.CurrencyUnits;
  * The Class LocalInfrastructureSystem.
  */
 public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSystem implements InfrastructureSystem.Local {
+	private double cumulativeCapitalExpense;
+	private transient double nextTotalCapitalExpense;
+	private double cumulativeCashFlow;
+	private transient double nextTotalCashFlow;
 	
 	/**
 	 * Instantiates a new local.
@@ -24,7 +28,7 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCapitalExpense()
+	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCapitalExpense()
 	 */
 	@Override
 	public double getCapitalExpense() {
@@ -108,5 +112,48 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		return getSalesRevenue() 
 				+ getDistributionRevenue()
 				+ getExportRevenue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
+	 */
+	@Override
+	public void initialize(long time) {
+		cumulativeCapitalExpense = 0;
+		cumulativeCashFlow = 0;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
+	@Override
+	public void tick() {
+		nextTotalCapitalExpense = getCapitalExpense();
+		nextTotalCashFlow = getCashFlow();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
+		this.cumulativeCapitalExpense += nextTotalCapitalExpense;
+		this.cumulativeCashFlow += nextTotalCashFlow;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCumulativeCapitalExpense()
+	 */
+	@Override
+	public double getCumulativeCapitalExpense() {
+		return cumulativeCapitalExpense;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCumulativeCashFlow()
+	 */
+	@Override
+	public double getCumulativeCashFlow() {
+		return cumulativeCashFlow;
 	}
 }

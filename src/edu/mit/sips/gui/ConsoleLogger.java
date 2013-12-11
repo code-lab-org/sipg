@@ -174,10 +174,10 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 		}
 		
 		System.out.printf("%-15s %-5s %,15.0f |", "Net Cash Flow", "SAR", 
-				country.getCashFlow());
+				country.getTotalCashFlow());
 		for(City city : country.getCities()) {
 			System.out.printf(" %,15.0f", 
-					city.getCashFlow());
+					city.getTotalCashFlow());
 		}
 		System.out.println();
 		System.out.printf("%-15s %-5s %,15.0f |", "  Agriculture", "SAR", 

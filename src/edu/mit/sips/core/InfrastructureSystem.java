@@ -12,13 +12,21 @@ public interface InfrastructureSystem extends CurrencyUnitsOutput {
 	 * The Interface Local.
 	 */
 	public static interface Local extends InfrastructureSystem, SimEntity {
+
+
+		/**
+		 * Gets the cumulative capital expense.
+		 *
+		 * @return the cumulative capital expense
+		 */
+		public double getCumulativeCapitalExpense();
 		
 		/**
-		 * Gets the capital expense.
+		 * Gets the cumulative cash flow.
 		 *
-		 * @return the capital expense
+		 * @return the cumulative cash flow
 		 */
-		public double getCapitalExpense();
+		public double getCumulativeCashFlow();
 		
 		/**
 		 * Gets the consumption expense.
@@ -139,6 +147,13 @@ public interface InfrastructureSystem extends CurrencyUnitsOutput {
 	 * @return the name
 	 */
 	public String getName();
+	
+	/**
+	 * Gets the capital expense.
+	 *
+	 * @return the capital expense
+	 */
+	public double getCapitalExpense();
 	
 	/**
 	 * Gets the society.

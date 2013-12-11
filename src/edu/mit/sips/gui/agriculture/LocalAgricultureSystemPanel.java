@@ -13,8 +13,10 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
@@ -58,8 +60,13 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	DefaultTableXYDataset foodSourceData = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
-	DefaultTableXYDataset agricultureRevenue = new DefaultTableXYDataset();
-	DefaultTableXYDataset agricultureNetRevenue = new DefaultTableXYDataset();
+	DefaultTableXYDataset cashFlow = new DefaultTableXYDataset();
+	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
+	DefaultTableXYDataset cumulativeBalance = new DefaultTableXYDataset();
+	
+	DefaultTableXYDataset capitalExpense = new DefaultTableXYDataset();
+	DefaultTableXYDataset capitalExpenseTotal = new DefaultTableXYDataset();
+	DefaultTableXYDataset cumulativeCapitalExpense = new DefaultTableXYDataset();
 	
 	/**
 	 * Instantiates a new local agriculture system panel.
@@ -93,11 +100,26 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 					"Export Revenue", "Output Revenue");
 		}
 		for(String name : revenueNames) {
-			agricultureRevenue.addSeries(new XYSeries(name, true, false));
+			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-				"Agriculture Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")",
-						agricultureRevenue, PlottingUtils.getCashFlowColors(revenueNames), agricultureNetRevenue));
+
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
+							"Cumulative Balance (" + getCurrencyUnits() + ")",
+							cumulativeBalance));
+			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
+					"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
+					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()), 
+					capitalExpenseTotal,
+					"Cumulative Investment (" + getCurrencyUnits() + ")", 
+					cumulativeCapitalExpense));
+		} else {
+			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
+		}
 		
 		List<String> foodSourceNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
@@ -233,8 +255,12 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		foodUseData.removeAllSeries();
 		waterUseData.removeAllSeries();
 		foodSourceData.removeAllSeries();
-		agricultureRevenue.removeAllSeries();
-		agricultureNetRevenue.removeAllSeries();
+		cashFlow.removeAllSeries();
+		netCashFlow.removeAllSeries();
+		cumulativeBalance.removeAllSeries();
+		capitalExpense.removeAllSeries();
+		capitalExpenseTotal.removeAllSeries();
+		cumulativeCapitalExpense.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -369,40 +395,43 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 								nestedSystem, this));
 			}
 		}
-		updateSeries(agricultureRevenue, "Capital Expense", year, 
+		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Operations Expense", year, 
+		updateSeries(cashFlow, "Operations Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getOperationsExpense()
 						-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Decommission Expense", year, 
+		updateSeries(cashFlow, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getDecommissionExpense(),
 						getAgricultureSystem(), this));
 		/*updateSeries(agricultureRevenue, "Input Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getConsumptionExpense(),
 						getAgricultureSystem(), this));*/
 		if(!(getSociety() instanceof Country)) {
-			updateSeries(agricultureRevenue, "Distribution Expense", year, 
+			updateSeries(cashFlow, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(-getAgricultureSystem().getDistributionExpense(),
 							getAgricultureSystem(), this));
 		}
-		updateSeries(agricultureRevenue, "Import Expense", year, 
+		updateSeries(cashFlow, "Import Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getImportExpense(),
 						getAgricultureSystem(), this));
 		if(!(getSociety() instanceof Country)) {
-			updateSeries(agricultureRevenue, "Distribution Revenue", year, 
+			updateSeries(cashFlow, "Distribution Revenue", year, 
 					CurrencyUnits.convertFlow(getAgricultureSystem().getDistributionRevenue(),
 							getAgricultureSystem(), this));
 		}
-		updateSeries(agricultureRevenue, "Export Revenue", year, 
+		updateSeries(cashFlow, "Export Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getExportRevenue(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureRevenue, "Output Revenue", year, 
+		updateSeries(cashFlow, "Output Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getSalesRevenue(),
 						getAgricultureSystem(), this));
-		updateSeries(agricultureNetRevenue, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Cash Flow", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getCashFlow(),
+						getAgricultureSystem(), this));
+		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+				CurrencyUnits.convertFlow(getAgricultureSystem().getCumulativeCashFlow(),
 						getAgricultureSystem(), this));
 		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
 			updateSeries(foodSourceData, "Production", year, 
@@ -461,6 +490,22 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(foodSourceData, "Import", year, 
 				FoodUnits.convertFlow(getAgricultureSystem().getFoodImport(),
 						getAgricultureSystem(), this));
+		
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			for(InfrastructureSystem nestedSystem : getNestedAgricultureSystems()) {
+				updateSeries(capitalExpense, nestedSystem.getName(), year, 
+						CurrencyUnits.convertFlow(nestedSystem.getCapitalExpense(), 
+								nestedSystem, this));
+			}
+			updateSeries(capitalExpenseTotal, "Total Investment", year, 
+					CurrencyUnits.convertFlow(
+							((LocalAgricultureSoS)getAgricultureSystem())
+							.getCapitalExpense(), getSociety(), this));
+			updateSeries(cumulativeCapitalExpense, "Cumulative Investment", year, 
+					CurrencyUnits.convertFlow(
+							((LocalAgricultureSoS)getAgricultureSystem())
+							.getCumulativeCapitalExpense(), getSociety(), this));
+		}
 	}
 
 	/* (non-Javadoc)

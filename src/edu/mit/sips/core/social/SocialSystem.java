@@ -15,7 +15,13 @@ public interface SocialSystem extends InfrastructureSystem,
 	 * The Interface Local.
 	 */
 	public static interface Local extends SocialSystem, InfrastructureSystem.Local {
-
+		
+		/**
+		 * Gets the cumulative capital expense.
+		 *
+		 * @return the cumulative capital expense
+		 */
+		public double getCumulativeCapitalExpense();
 	}
 	
 	/**

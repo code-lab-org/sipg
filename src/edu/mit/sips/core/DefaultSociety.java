@@ -48,6 +48,9 @@ public abstract class DefaultSociety implements Society {
 	private ElectricitySystem electricitySystem;
 	private PetroleumSystem petroleumSystem;
 	private SocialSystem socialSystem;
+
+	private double cumulativeCashFlow;
+	private transient double nextTotalCashFlow;
 	
 	/**
 	 * Instantiates a new default society.
@@ -121,6 +124,14 @@ public abstract class DefaultSociety implements Society {
 		this.socialSystem = socialSystem;
 		this.socialSystem.setSociety(this);
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getCumulativeCashFlow()
+	 */
+	@Override
+	public double getCumulativeCashFlow() {
+		return cumulativeCashFlow;
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.Society#getAgricultureSystem()
@@ -131,13 +142,25 @@ public abstract class DefaultSociety implements Society {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
+	 * @see edu.mit.sips.core.Society#getTotalCashFlow()
 	 */
 	@Override
-	public double getCashFlow() {
+	public double getTotalCashFlow() {
 		double value = 0;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			value += system.getCashFlow();
+		}
+		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getCapitalExpense()
+	 */
+	@Override
+	public double getTotalCapitalExpense() {
+		double value = 0;
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			value += system.getCapitalExpense();
 		}
 		return value;
 	}
@@ -397,6 +420,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public void initialize(long time) {
+		cumulativeCashFlow = 0;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).initialize(time);
@@ -465,6 +489,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public void tick() {
+		nextTotalCashFlow = getTotalCashFlow();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).tick();
@@ -480,6 +505,7 @@ public abstract class DefaultSociety implements Society {
 	 */
 	@Override
 	public void tock() {
+		cumulativeCashFlow += nextTotalCashFlow;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).tock();

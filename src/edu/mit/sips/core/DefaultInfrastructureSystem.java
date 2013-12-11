@@ -32,7 +32,7 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 		}
 		this.name = name;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
@@ -40,7 +40,6 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public double getCashFlow() {
 		return 0;
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
@@ -50,6 +49,7 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 		return currencyTimeUnits;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 	 */
@@ -57,7 +57,7 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
 	 */
@@ -65,13 +65,21 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public double getDomesticProduction() {
 		return 0;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
 	 */
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 */
+	@Override
+	public double getCapitalExpense() {
+		return 0;
 	}
 
 	/* (non-Javadoc)

@@ -202,7 +202,8 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 		societyName.setValue(infrastructureSystem.getSociety()==null ? "" 
 				: infrastructureSystem.getSociety().getName());
 		netCashFlow.setValue(infrastructureSystem.getCashFlow());
-		domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
+		// TODO domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
+		domesticProduction.setValue(infrastructureSystem.getCapitalExpense()); // TODO using existing variable for capex
 	}
 
 	/* (non-Javadoc)
@@ -211,5 +212,13 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 */
+	@Override
+	public double getCapitalExpense() {
+		return domesticProduction.getValue(); // TODO using existing variable for capex
 	}
 }

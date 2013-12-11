@@ -439,13 +439,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return waterConsumption;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
 	 */
@@ -453,19 +447,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	public synchronized boolean removeElement(AgricultureElement element) {
 		return elements.remove(element);
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */

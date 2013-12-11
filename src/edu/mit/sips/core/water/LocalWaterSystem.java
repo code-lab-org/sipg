@@ -621,6 +621,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 */
 	@Override
 	public void initialize(long time) {
+		super.initialize(time);
 		waterReservoirVolume = initialWaterReservoirVolume;
 	}
 
@@ -645,6 +646,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 */
 	@Override
 	public void tick() {
+		super.tick();
 		nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 				waterReservoirVolume + waterReservoirRechargeRate 
 				- getReservoirWithdrawals());
@@ -659,6 +661,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 */
 	@Override
 	public void tock() {
+		super.tock();
 		waterReservoirVolume = nextWaterReservoirVolume;
 	}
 }

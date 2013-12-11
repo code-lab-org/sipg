@@ -463,28 +463,10 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#removeElement(edu.mit.sips.core.electricity.ElectricityElement)
 	 */
 	@Override
 	public synchronized boolean removeElement(ElectricityElement element) {
 		return elements.remove(element);
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
 }

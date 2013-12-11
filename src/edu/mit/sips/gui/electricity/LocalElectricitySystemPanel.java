@@ -12,8 +12,10 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
@@ -51,10 +53,16 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 
 	DefaultTableXYDataset electricitySourceData = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
-	DefaultTableXYDataset electricityRevenue = new DefaultTableXYDataset();
-	DefaultTableXYDataset electricityNetRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset petroleumUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
+	
+	DefaultTableXYDataset cashFlow = new DefaultTableXYDataset();
+	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
+	DefaultTableXYDataset cumulativeBalance = new DefaultTableXYDataset();
+	
+	DefaultTableXYDataset capitalExpense = new DefaultTableXYDataset();
+	DefaultTableXYDataset capitalExpenseTotal = new DefaultTableXYDataset();
+	DefaultTableXYDataset cumulativeCapitalExpense = new DefaultTableXYDataset();
 	
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -98,11 +106,25 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					"Decommission Expense", /*"Input Expense", */"Output Revenue");
 		}
 		for(String name : revenueNames) {
-			electricityRevenue.addSeries(new XYSeries(name, true, false));
+			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
-				"Electricity Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", 
-				electricityRevenue, PlottingUtils.getCashFlowColors(revenueNames), electricityNetRevenue));
+		if(getElectricitySystem() instanceof LocalElectricitySoS) {
+			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
+							"Cumulative Balance (" + getCurrencyUnits() + ")",
+							cumulativeBalance));
+			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
+					"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
+					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()), 
+					capitalExpenseTotal,
+					"Cumulative Investment (" + getCurrencyUnits() + ")", 
+					cumulativeCapitalExpense));
+		} else {
+			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
+		}
 		
 		List<String> electricitySourceNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
@@ -256,8 +278,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	public void initialize() {
 		renewableElectricityIndicatorPanel.initialize();
 		localElectricityIndicatorPanel.initialize();
-		electricityRevenue.removeAllSeries();
-		electricityNetRevenue.removeAllSeries();
+		cashFlow.removeAllSeries();
+		netCashFlow.removeAllSeries();
 		localElectricityData.removeAllSeries();
 		renewableElectricityData.removeAllSeries();
 		electricityProductCostData.removeAllSeries();
@@ -265,10 +287,14 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		electricityConsumptionPerCapita.removeAllSeries();
 		electricityUseData.removeAllSeries();
 		electricitySourceData.removeAllSeries();
-		electricityRevenue.removeAllSeries();
-		electricityNetRevenue.removeAllSeries();
 		petroleumUseData.removeAllSeries();
 		waterUseData.removeAllSeries();
+		cashFlow.removeAllSeries();
+		netCashFlow.removeAllSeries();
+		cumulativeBalance.removeAllSeries();
+		capitalExpense.removeAllSeries();
+		capitalExpenseTotal.removeAllSeries();
+		cumulativeCapitalExpense.removeAllSeries();
 	}
 
 	/* (non-Javadoc)
@@ -431,16 +457,16 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 							getElectricitySystem(), this));*/
 		}
 		
-		updateSeries(electricityRevenue, "Capital Expense", year, 
+		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getCapitalExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Operations Expense", year, 
+		updateSeries(cashFlow, "Operations Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getOperationsExpense()
 						-getElectricitySystem().getConsumptionExpense(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityRevenue, "Decommission Expense", year, 
+		updateSeries(cashFlow, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getElectricitySystem().getDecommissionExpense(), 
 						getElectricitySystem(), this));
@@ -449,22 +475,25 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 						-getElectricitySystem().getConsumptionExpense(), 
 						getElectricitySystem(), this));*/
 		if(!(getElectricitySystem().getSociety() instanceof Country)) {
-			updateSeries(electricityRevenue, "Distribution Expense", year, 
+			updateSeries(cashFlow, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(
 							-getElectricitySystem().getDistributionExpense(), 
 							getElectricitySystem(), this));
-			updateSeries(electricityRevenue, "Distribution Revenue", year, 
+			updateSeries(cashFlow, "Distribution Revenue", year, 
 					CurrencyUnits.convertFlow(
 							getElectricitySystem().getDistributionRevenue(), 
 							getElectricitySystem(), this));
 		}
-		updateSeries(electricityRevenue, "Output Revenue", year, 
+		updateSeries(cashFlow, "Output Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getSalesRevenue(), 
 						getElectricitySystem(), this));
-		updateSeries(electricityNetRevenue, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Cash Flow", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getCashFlow(), 
+						getElectricitySystem(), this));
+		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+				CurrencyUnits.convertFlow(getElectricitySystem().getCumulativeCashFlow(),
 						getElectricitySystem(), this));
 		updateSeries(electricityUseData, "Water Operations", year,  
 				ElectricityUnits.convertFlow(
@@ -482,6 +511,22 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				ElectricityUnits.convertFlow(
 						getElectricitySystem().getElectricityFromPrivateProduction(),
 						getElectricitySystem(), this));
+		
+		if(getElectricitySystem() instanceof LocalElectricitySoS) {
+			for(InfrastructureSystem nestedSystem : getNestedElectricitySystems()) {
+				updateSeries(capitalExpense, nestedSystem.getName(), year, 
+						CurrencyUnits.convertFlow(nestedSystem.getCapitalExpense(), 
+								nestedSystem, this));
+			}
+			updateSeries(capitalExpenseTotal, "Total Investment", year, 
+					CurrencyUnits.convertFlow(
+							((LocalElectricitySoS)getElectricitySystem())
+							.getCapitalExpense(), getSociety(), this));
+			updateSeries(cumulativeCapitalExpense, "Cumulative Investment", year, 
+					CurrencyUnits.convertFlow(
+							((LocalElectricitySoS)getElectricitySystem())
+							.getCumulativeCapitalExpense(), getSociety(), this));
+		}
 	}
 
 	/* (non-Javadoc)

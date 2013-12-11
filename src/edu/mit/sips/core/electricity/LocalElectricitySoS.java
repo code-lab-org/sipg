@@ -387,12 +387,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityDistribution()
 	 */
 	@Override
@@ -635,16 +629,4 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		}
 		return false;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
 }

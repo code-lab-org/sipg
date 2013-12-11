@@ -21,18 +21,19 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 	public DefaultInfrastructureSoS(String name) {
 		super(name);
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
 	 */
 	@Override
-	public String getName() {
-		if(getSociety() != null) {
-			return getSociety().getName() + " " + super.getName();
+	public double getCapitalExpense() {
+		double value = 0;
+		for(InfrastructureSystem system : getNestedSystems()) {
+			value += system.getCapitalExpense();
 		}
-		return super.getName();
+		return value;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
@@ -44,7 +45,7 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 		}
 		return value;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
 	 */
@@ -55,5 +56,16 @@ public abstract class DefaultInfrastructureSoS extends DefaultInfrastructureSyst
 			value += system.getCashFlow();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
+	 */
+	@Override
+	public String getName() {
+		if(getSociety() != null) {
+			return getSociety().getName() + " " + super.getName();
+		}
+		return super.getName();
 	}
 }
