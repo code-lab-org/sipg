@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -31,7 +32,7 @@ public class PetroleumElementPanel extends ElementPanel
 	private static final long serialVersionUID = -9048149807650177253L;
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.GWh;
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
@@ -40,12 +41,15 @@ public class PetroleumElementPanel extends ElementPanel
 	private final JFormattedTextField initialPetroleumProductionText;
 	private final JFormattedTextField reservoirIntensityOfPetroleumProductionText;
 	private final JFormattedTextField variableOperationsCostOfPetroleumProductionText;
+	private final JLabel maxVariableCostLabel, maxReservoirUseLabel;
 	
 	private final JFormattedTextField maxPetroleumInputText;
 	private final JFormattedTextField initialPetroleumInputText;
 	private final JFormattedTextField distributionEfficiencyText;
 	private final JFormattedTextField electricalIntensityOfPetroleumDistributionText;
 	private final JFormattedTextField variableOperationsCostOfPetroleumDistributionText;
+	private final JLabel maxOutputLabel, maxElectricityUseDistLabel, 
+			maxVariableCostDistLabel;
 	
 	/**
 	 * Instantiates a new petroleum element panel.
@@ -71,6 +75,14 @@ public class PetroleumElementPanel extends ElementPanel
 							element.setMaxPetroleumProduction(OilUnits.convertFlow(
 									(Double) maxPetroleumProductionText.getValue(),
 									thisPanel, element));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxPetroleumProduction() 
+											* element.getVariableOperationsCostOfPetroleumProduction(), 
+											element, thisPanel)));
+							maxReservoirUseLabel.setText(NumberFormat.getNumberInstance().format(
+									OilUnits.convertFlow(element.getMaxPetroleumProduction() 
+											* element.getReservoirIntensityOfPetroleumProduction(), 
+											element, thisPanel)));
 							maxPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxPetroleumProductionText.setForeground(Color.red);
@@ -105,6 +117,10 @@ public class PetroleumElementPanel extends ElementPanel
 						try {
 							element.setReservoirIntensityOfPetroleumProduction(
 									(Double) reservoirIntensityOfPetroleumProductionText.getValue());
+							maxReservoirUseLabel.setText(NumberFormat.getNumberInstance().format(
+									OilUnits.convertFlow(element.getMaxPetroleumProduction() 
+											* element.getReservoirIntensityOfPetroleumProduction(), 
+											element, thisPanel)));
 							reservoirIntensityOfPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							reservoirIntensityOfPetroleumProductionText.setForeground(Color.red);
@@ -126,12 +142,26 @@ public class PetroleumElementPanel extends ElementPanel
 									(Double) variableOperationsCostOfPetroleumProductionText.getValue(),
 									getCurrencyUnits(), getOilUnits(),
 									element.getCurrencyUnits(), element.getOilUnits()));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxPetroleumProduction() 
+											* element.getVariableOperationsCostOfPetroleumProduction(), 
+											element, thisPanel)));
 							variableOperationsCostOfPetroleumProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfPetroleumProductionText.setForeground(Color.red);
 						}
 					}
 				});
+		maxVariableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxPetroleumProduction() 
+						* element.getVariableOperationsCostOfPetroleumProduction(), 
+						element, this)), JLabel.RIGHT);
+		maxReservoirUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				OilUnits.convertFlow(element.getMaxPetroleumProduction() 
+						* element.getReservoirIntensityOfPetroleumProduction(), 
+						element, this)), JLabel.RIGHT);
+		
+		
 		maxPetroleumInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxPetroleumInputText.setColumns(10);
 		maxPetroleumInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -144,6 +174,18 @@ public class PetroleumElementPanel extends ElementPanel
 							element.setMaxPetroleumInput(OilUnits.convertFlow(
 									(Double) maxPetroleumInputText.getValue(),
 									thisPanel, element));
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									OilUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getVariableOperationsCostOfPetroleumDistribution(), 
+											element, thisPanel)));
+							maxElectricityUseDistLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getElectricalIntensityOfPetroleumDistribution(), 
+											element, thisPanel)));
 							maxPetroleumInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxPetroleumInputText.setForeground(Color.red);
@@ -179,6 +221,10 @@ public class PetroleumElementPanel extends ElementPanel
 						try {
 							element.setDistributionEfficiency(
 									(Double) distributionEfficiencyText.getValue());
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									OilUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -200,6 +246,10 @@ public class PetroleumElementPanel extends ElementPanel
 									(Double) electricalIntensityOfPetroleumDistributionText.getValue(),
 									getElectricityUnits(), getOilUnits(),
 									element.getElectricityUnits(), element.getOilUnits()));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getVariableOperationsCostOfPetroleumDistribution(), 
+											element, thisPanel)));
 							electricalIntensityOfPetroleumDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							electricalIntensityOfPetroleumDistributionText.setForeground(Color.red);
@@ -221,12 +271,28 @@ public class PetroleumElementPanel extends ElementPanel
 									(Double) variableOperationsCostOfPetroleumDistributionText.getValue(),
 									getCurrencyUnits(), getOilUnits(),
 									element.getCurrencyUnits(), element.getOilUnits()));
+							maxElectricityUseDistLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxPetroleumInput() 
+											* element.getElectricalIntensityOfPetroleumDistribution(), 
+											element, thisPanel)));
 							variableOperationsCostOfPetroleumDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfPetroleumDistributionText.setForeground(Color.red);
 						}
 					}
 				});
+		maxOutputLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				OilUnits.convertFlow(element.getMaxPetroleumInput() 
+						* element.getDistributionEfficiency(), 
+						element, this)), JLabel.RIGHT);
+		maxVariableCostDistLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxPetroleumInput() 
+						* element.getVariableOperationsCostOfPetroleumDistribution(), 
+						element, this)), JLabel.RIGHT);
+		maxElectricityUseDistLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				ElectricityUnits.convertFlow(element.getMaxPetroleumInput() 
+						* element.getElectricalIntensityOfPetroleumDistribution(), 
+						element, this)), JLabel.RIGHT);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());
@@ -243,14 +309,17 @@ public class PetroleumElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Petroleum Production", 
 					maxPetroleumProductionText,
 					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Initial Petroleum Production",
-					initialPetroleumProductionText,
+			// TODO addInput(elementPanel, c, "Initial Petroleum Production", initialPetroleumProductionText, oilUnits + "/" + oilTimeUnits);
+			addInput(elementPanel, c, "Specific Reservoir Consumption",
+					reservoirIntensityOfPetroleumProductionText, 
+					oilUnits + "/" + oilUnits,
+					"  max: ", maxReservoirUseLabel,
 					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Reservoir Intensity of Production",
-					reservoirIntensityOfPetroleumProductionText, "-");
 			addInput(elementPanel, c, "Variable Cost of Production",
 					variableOperationsCostOfPetroleumProductionText,
-					currencyUnits + "/" + oilUnits);
+					currencyUnits + "/" + oilUnits,
+					"  max: ", maxVariableCostLabel,
+					currencyUnits + "/" + currencyTimeUnits);
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -260,17 +329,22 @@ public class PetroleumElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Petroleum Input", 
 					maxPetroleumInputText,
 					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Initial Petroleum Input",
-					initialPetroleumInputText,
-					oilUnits + "/" + oilTimeUnits);
+			// TODO addInput(elementPanel, c, "Initial Petroleum Input", initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "-");
+					distributionEfficiencyText, 
+					oilUnits + "/" + oilUnits,
+					"  max: ", maxOutputLabel,
+					oilUnits + "/" + oilTimeUnits);
 			addInput(elementPanel, c, "Electrical Intensity of Distribution",
 					electricalIntensityOfPetroleumDistributionText,
-					electricityUnits + "/" + oilUnits);
+					electricityUnits + "/" + oilUnits,
+					"  max: ", maxElectricityUseDistLabel,
+					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Variable Cost of Distribution",
 					variableOperationsCostOfPetroleumDistributionText,
-					currencyUnits + "/" + oilUnits);
+					currencyUnits + "/" + oilUnits,
+					"  max: ", maxVariableCostDistLabel,
+					currencyUnits + "/" + currencyTimeUnits);
 		}
 		
 		// set input enabled state
