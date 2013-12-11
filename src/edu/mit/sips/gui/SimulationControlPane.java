@@ -1,6 +1,7 @@
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -217,10 +218,10 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 
-		buttonPanel.add(new JButton(toggleConnection));
+		// TODO buttonPanel.add(new JButton(toggleConnection));
 		buttonPanel.add(new JButton(initializeSim));
-		buttonPanel.add(new JButton(stepSim));
-		buttonPanel.add(new JButton(advanceSim));
+		// TODO buttonPanel.add(new JButton(stepSim));
+		// TODO buttonPanel.add(new JButton(advanceSim));
 		buttonPanel.add(new JButton(endSim));
 
 		add(buttonPanel, BorderLayout.CENTER);
@@ -248,6 +249,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		c.gridx++;
 		optimizationPanel.add(new JButton(runOptimization), c);
 		// TODO add(optimizationPanel, BorderLayout.SOUTH);
+		
+		setMinimumSize(new Dimension(300,1));
 		
 		updateActions();
 	}
@@ -384,7 +387,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		runOptimization.setEnabled(!working.get()
 				&& simulator.isInitialized() 
 				&& !simulator.isCompleted());
-		initializeSim.setEnabled(!working.get());
+		initializeSim.setEnabled(!working.get()
+				&& (!simulator.isInitialized() || simulator.isCompleted())); // TODO
 		stepSim.setEnabled(!working.get()
 				&& simulator.isInitialized() 
 				&& !simulator.isCompleted());

@@ -324,25 +324,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				new TreeSelectionListener() {
 					@Override
 					public void valueChanged(TreeSelectionEvent e) {
-						Society society = elementsTreeModel.getSociety(
-								elementsTree.getSelectionPath());
-						addElement.setEnabled(society != null);
-						addElementTemplate.setEnabled(society != null);
-						InfrastructureElement element = elementsTreeModel.getElement(
-								elementsTree.getSelectionPath());
-						editElement.setEnabled(element != null);
-						editElementOperations.setEnabled(element != null 
-								&& element.isOperational());
-						boolean canRemove = element != null;
-						// TODO temporary to disallow removing pre-1980 elements
-						if(element instanceof DefaultInfrastructureElement 
-								&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
-								instanceof SimpleLifecycleModel) {
-							SimpleLifecycleModel model = (SimpleLifecycleModel) 
-									((DefaultInfrastructureElement) element).getLifecycleModel();
-							canRemove = canRemove && model.getTimeInitialized() >= 1980;
-						}
-						removeElement.setEnabled(canRemove);
+						updateActions();
 					}
 		});
 		add(new JScrollPane(elementsTree), BorderLayout.CENTER);
@@ -432,11 +414,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	 */
 	public void initialize() {
 		elementsTreeModel.setState(simulator.getScenario().getCountry());
-		addElement.setEnabled(false);
-		addElementTemplate.setEnabled(false);
-		editElement.setEnabled(false);
-		editElementOperations.setEnabled(false);
-		removeElement.setEnabled(false);
+		updateActions();
 	}
 	
 	/**
@@ -555,19 +533,49 @@ public class ElementsPane extends JPanel implements UpdateListener {
 					elementsTree.getRowCount() - 1));
 		}
 	}
+	
+	private void updateActions() {		
+		Society society = elementsTreeModel.getSociety(
+				elementsTree.getSelectionPath());
+		addElement.setEnabled(!isSimulating && society != null);
+		addElementTemplate.setEnabled(!isSimulating && society != null);
+		InfrastructureElement element = elementsTreeModel.getElement(
+				elementsTree.getSelectionPath());
+		editElement.setEnabled(!isSimulating && element != null);
+		editElementOperations.setEnabled(!isSimulating && element != null 
+				&& element.isOperational());
+		boolean canRemove = !isSimulating && element != null;
+		// TODO temporary to disallow removing pre-1980 elements
+		if(element instanceof DefaultInfrastructureElement 
+				&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
+				instanceof SimpleLifecycleModel) {
+			SimpleLifecycleModel model = (SimpleLifecycleModel) 
+					((DefaultInfrastructureElement) element).getLifecycleModel();
+			canRemove = canRemove && model.getTimeInitialized() >= 1980;
+		}
+		removeElement.setEnabled(canRemove);
+	}
+	
+	private boolean isSimulating = false;
 
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		elementsTree.repaint();
+		isSimulating = false;
+		updateActions();
 	}
 
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		elementsTree.repaint();
+		isSimulating = false;
+		updateActions();
 	}
 
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		isSimulating = true;
 		elementsTree.repaint();
+		updateActions();
 	}
 }
