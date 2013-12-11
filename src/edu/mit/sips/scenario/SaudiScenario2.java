@@ -99,7 +99,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new LocalAgricultureSystem(8e3, 0.04,
 								Arrays.asList(
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, INDUSTRIAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 2008-1986, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL),
@@ -126,9 +126,9 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(65e9, 65e9,
 								Arrays.asList(
-										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1978-1940, INDUSTRIAL, URBAN),
-										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1940, 1990-1940, INDUSTRIAL, RURAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1950, 1978-1950, INDUSTRIAL, URBAN),
+										(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1950, 1990-1950, INDUSTRIAL, RURAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1950, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1955, INDUSTRIAL, INDUSTRIAL),
 										(PetroleumElement) SaudiElementTemplate2.OIL_WELL_1.createElement(1962, INDUSTRIAL, INDUSTRIAL),
@@ -192,9 +192,9 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new LocalAgricultureSystem(15e3, 0.40,
 								Arrays.asList(
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, RURAL, RURAL),
-										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, INDUSTRIAL),
-										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(0, RURAL, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1950, RURAL, RURAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(1950, RURAL, INDUSTRIAL),
+										(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_1.createElement(1950, RURAL, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1962, RURAL, RURAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL),
@@ -250,7 +250,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 				sectors.contains(Sector.AGRICULTURE)?
 						new LocalAgricultureSystem(10e3, 0.04,
 								Arrays.asList(
-										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(0, URBAN, URBAN),
+										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1950, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, URBAN, URBAN),
 										(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996-1986, URBAN, URBAN),

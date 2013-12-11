@@ -10,10 +10,10 @@ import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
 public enum SaudiElementTemplate2 implements ElementTemplate {
-	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			0,		9999),
-	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			0,		9999),
-	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 	0,		9999),
-	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	0,		9999),
+	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			1950,	100),
+	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			1950,	100),
+	FOOD_TRANSPORT_1(Sector.AGRICULTURE,	true, 	"Low-volume Food Transport", 	1950,	100),
+	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	1950,	100),
 	RO_PLANT_1		(Sector.WATER,			false,	"Small RO Plant",				1970,	50),
 	RO_PLANT_2		(Sector.WATER,			false,	"Large RO Plant",				1980,	50),
 	WATER_PIPELINE_1(Sector.WATER,			true, 	"Low-volume Water Pipeline", 	1950,	100),
