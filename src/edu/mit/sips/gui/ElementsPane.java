@@ -119,7 +119,20 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				}
 			} else if(value instanceof ElementTreeNode) {
 				ElementTreeNode node = (ElementTreeNode) value;
-				setText(node.getUserObject().getName());
+				if(node.getUserObject() instanceof DefaultInfrastructureElement) {
+					DefaultInfrastructureElement element = (DefaultInfrastructureElement) node.getUserObject();
+					if(element.getLifecycleModel() instanceof SimpleLifecycleModel) {
+						SimpleLifecycleModel model = (SimpleLifecycleModel) element.getLifecycleModel();
+						setText(element.getName() + " (" 
+								+ (model.getTimeInitialized() 
+										+ model.getInitializationDuration()) + "-" 
+								+ model.getTimeDecommissioned() + ")");
+					} else {
+						setText(element.getName());
+					}
+				} else {
+					setText(node.getUserObject().getName());
+				}
 				if(node.getUserObject() instanceof AgricultureElement) {
 					if(node.getUserObject().isOperational()) {
 						setIcon(Icons.AGRICULTURE);
