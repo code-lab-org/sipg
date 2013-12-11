@@ -69,7 +69,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 			waterImportPriceModel = new ConstantPriceModel(10), 
 			electricityDomesticPriceModel = new ConstantPriceModel(4), 
 			petroleumDomesticPriceModel = new ConstantPriceModel(8), 
-			petroleumImportPriceModel = new ConstantPriceModel(30), 
+			petroleumImportPriceModel = new ConstantPriceModel(35), 
 			petroleumExportPriceModel = new ConstantPriceModel(30);
 
 	/**
