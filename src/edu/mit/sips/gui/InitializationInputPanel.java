@@ -66,6 +66,9 @@ public class InitializationInputPanel extends JPanel {
 			}
 		});
 		add(endText, c);
+		
+		startText.setEnabled(false);
+		endText.setEnabled(false);
 	}
 	
 	/**

@@ -337,10 +337,10 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 *
 	 */
 	private void fireSimulationInitialize() {
-		// TODO final InitializationInputPanel input = new InitializationInputPanel();
-		if(true/* TODO JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
+		final InitializationInputPanel input = new InitializationInputPanel();
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
 				getTopLevelAncestor(), input, 
-				"Initialize Simulation", JOptionPane.OK_CANCEL_OPTION)*/) {
+				"Initialize Simulation", JOptionPane.OK_CANCEL_OPTION)) {
 			final JPanel panel = this;
 			working.set(true);
 			updateActions();
@@ -351,8 +351,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 					try {
 						simulator.initializeSimulation(
 								new SimulationControlEvent.Initialize(
-										panel, 1950,// TODO input.getStartTime(), 
-										2010)); // TODO input.getEndTime()));
+										panel, input.getStartTime(), 
+										input.getEndTime()));
 					} catch(Exception ex) {
 						JOptionPane.showMessageDialog(getTopLevelAncestor(), 
 								ex.getMessage(), "Error", 
