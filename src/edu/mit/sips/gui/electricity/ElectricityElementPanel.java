@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.text.NumberFormat;
 
 import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -45,11 +46,14 @@ public class ElectricityElementPanel extends ElementPanel
 	private final JFormattedTextField petroleumIntensityOfElectricityProductionText;
 	private final JFormattedTextField waterIntensityOfElectricityProductionText;
 	private final JFormattedTextField variableOperationsCostOfElectricityProductionText;
+	private final JLabel maxVariableCostLabel, maxPetroleumUseLabel, 
+			maxWaterUseLabel;
 	
 	private final JFormattedTextField maxElectricityInputText;
 	private final JFormattedTextField initialElectricityInputText;
 	private final JFormattedTextField distributionEfficiencyText;
 	private final JFormattedTextField variableOperationsCostOfElectricityDistributionText;
+	private final JLabel maxOutputLabel, maxVariableCostDistLabel;
 	
 	/**
 	 * Instantiates a new electricity element panel.
@@ -75,6 +79,18 @@ public class ElectricityElementPanel extends ElementPanel
 							element.setMaxElectricityProduction(ElectricityUnits.convertFlow(
 									(Double) maxElectricityProductionText.getValue(),
 									thisPanel, element));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getVariableOperationsCostOfElectricityProduction(), 
+											element, thisPanel)));
+							maxPetroleumUseLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getPetroleumIntensityOfElectricityProduction(), 
+											element, thisPanel)));
+							maxWaterUseLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getWaterIntensityOfElectricityProduction(), 
+											element, thisPanel)));
 							maxElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityProductionText.setForeground(Color.red);
@@ -114,6 +130,10 @@ public class ElectricityElementPanel extends ElementPanel
 									(Double) petroleumIntensityOfElectricityProductionText.getValue(),
 									getOilUnits(), getElectricityUnits(), 
 									element.getOilUnits(), element.getElectricityUnits()));
+							maxPetroleumUseLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getPetroleumIntensityOfElectricityProduction(), 
+											element, thisPanel)));
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							petroleumIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -135,6 +155,10 @@ public class ElectricityElementPanel extends ElementPanel
 									(Double) waterIntensityOfElectricityProductionText.getValue(),
 									getWaterUnits(), getElectricityUnits(),
 									element.getWaterUnits(), element.getElectricityUnits()));
+							maxWaterUseLabel.setText(NumberFormat.getNumberInstance().format(
+									WaterUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getWaterIntensityOfElectricityProduction(), 
+											element, thisPanel)));
 							waterIntensityOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							waterIntensityOfElectricityProductionText.setForeground(Color.red);
@@ -156,12 +180,29 @@ public class ElectricityElementPanel extends ElementPanel
 									(Double) variableOperationsCostOfElectricityProductionText.getValue(),
 									getCurrencyUnits(), getElectricityUnits(),
 									element.getCurrencyUnits(), element.getElectricityUnits()));
+							maxVariableCostLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxElectricityProduction() 
+											* element.getVariableOperationsCostOfElectricityProduction(), 
+											element, thisPanel)));
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityProductionText.setForeground(Color.red);
 						}
 					}
 				});
+		maxVariableCostLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxElectricityProduction() 
+						* element.getVariableOperationsCostOfElectricityProduction(), 
+						element, this)), JLabel.RIGHT);
+		maxPetroleumUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				ElectricityUnits.convertFlow(element.getMaxElectricityProduction() 
+						* element.getPetroleumIntensityOfElectricityProduction(), 
+						element, this)), JLabel.RIGHT);
+		maxWaterUseLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				WaterUnits.convertFlow(element.getMaxElectricityProduction() 
+						* element.getWaterIntensityOfElectricityProduction(), 
+						element, this)), JLabel.RIGHT);
+		
 		maxElectricityInputText = new JFormattedTextField(NumberFormat.getNumberInstance()); 
 		maxElectricityInputText.setColumns(10);
 		maxElectricityInputText.setHorizontalAlignment(JTextField.RIGHT);
@@ -174,6 +215,14 @@ public class ElectricityElementPanel extends ElementPanel
 							element.setMaxElectricityInput(ElectricityUnits.convertFlow(
 									(Double) maxElectricityInputText.getValue(),
 									thisPanel, element));
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxElectricityInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxElectricityInput() 
+											* element.getVariableOperationsCostOfElectricityDistribution(), 
+											element, thisPanel)));
 							maxElectricityInputText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							maxElectricityInputText.setForeground(Color.red);
@@ -209,6 +258,10 @@ public class ElectricityElementPanel extends ElementPanel
 						try {
 							element.setDistributionEfficiency(
 									(Double) distributionEfficiencyText.getValue());
+							maxOutputLabel.setText(NumberFormat.getNumberInstance().format(
+									ElectricityUnits.convertFlow(element.getMaxElectricityInput() 
+											* element.getDistributionEfficiency(), 
+											element, thisPanel)));
 							distributionEfficiencyText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							distributionEfficiencyText.setForeground(Color.red);
@@ -230,12 +283,24 @@ public class ElectricityElementPanel extends ElementPanel
 									(Double) variableOperationsCostOfElectricityDistributionText.getValue(),
 									getCurrencyUnits(), getElectricityUnits(),
 									element.getCurrencyUnits(), element.getElectricityUnits()));
+							maxVariableCostDistLabel.setText(NumberFormat.getNumberInstance().format(
+									CurrencyUnits.convertFlow(element.getMaxElectricityInput() 
+											* element.getVariableOperationsCostOfElectricityDistribution(), 
+											element, thisPanel)));
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
 							variableOperationsCostOfElectricityDistributionText.setForeground(Color.red);
 						}
 					}
 				});
+		maxOutputLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				ElectricityUnits.convertFlow(element.getMaxElectricityInput() 
+						* element.getDistributionEfficiency(), 
+						element, this)), JLabel.RIGHT);
+		maxVariableCostDistLabel = new JLabel(NumberFormat.getNumberInstance().format(
+				CurrencyUnits.convertFlow(element.getMaxElectricityInput() 
+						* element.getVariableOperationsCostOfElectricityDistribution(), 
+						element, this)), JLabel.RIGHT);
 		
 		JPanel elementPanel = new JPanel();
 		elementPanel.setLayout(new GridBagLayout());
@@ -249,21 +314,25 @@ public class ElectricityElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
-				addInput(elementPanel, c, "Max Electricity Production", 
+				addInput(elementPanel, c, "Maximum Electricity Production", 
 						maxElectricityProductionText, 
 						electricityUnits + "/" + electricityTimeUnits);
-				addInput(elementPanel, c, "Initial Electricity Production",
-						initialElectricityProductionText,
-						electricityUnits + "/" + electricityTimeUnits);
-				addInput(elementPanel, c, "Petroleum Intensity of Production",
+				// TODO addInput(elementPanel, c, "Initial Electricity Production", initialElectricityProductionText, electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Specific Petrolum Consumption",
 						petroleumIntensityOfElectricityProductionText,
-						oilUnits + "/" + electricityUnits);
-				addInput(elementPanel, c, "Water Intensity of Production",
+						oilUnits + "/" + electricityUnits,
+						"  max: ", maxPetroleumUseLabel,
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Specific Water Consumption",
 						waterIntensityOfElectricityProductionText,
-						waterUnits + "/" + electricityUnits);
-				addInput(elementPanel, c, "Variable Cost of Production",
+						waterUnits + "/" + electricityUnits,
+						"  max: ", maxWaterUseLabel,
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Variable Operations Cost",
 						variableOperationsCostOfElectricityProductionText,
-						currencyUnits + "/" + electricityUnits);
+						currencyUnits + "/" + electricityUnits,
+						"  max: ", maxVariableCostLabel,
+						currencyUnits + "/" + currencyTimeUnits);
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -273,14 +342,17 @@ public class ElectricityElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Electricity Input", 
 					maxElectricityInputText,
 					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Initial Electricity Input",
-					initialElectricityInputText,
-					electricityUnits + "/" + electricityTimeUnits);
+			// TODO addInput(elementPanel, c, "Initial Electricity Input", initialElectricityInputText, electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, "-");
+					distributionEfficiencyText, 
+					electricityUnits + "/" + electricityUnits,
+					"  max: ", maxOutputLabel,
+					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Variable Cost of Distribution",
 					variableOperationsCostOfElectricityDistributionText,
-					currencyUnits + "/" + electricityUnits);
+					currencyUnits + "/" + electricityUnits,
+					"  max: ", maxVariableCostDistLabel,
+					currencyUnits + "/" + currencyTimeUnits);
 		}
 
 		// set input enabled state
