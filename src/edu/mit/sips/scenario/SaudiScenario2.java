@@ -62,9 +62,9 @@ public final class SaudiScenario2 extends DefaultScenario {
 					ElectricityUnits.convertFlow(0, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year), 
 					ElectricityUnits.convertFlow(40, ElectricityUnits.kWh, TimeUnits.day, ElectricityUnits.MWh, TimeUnits.year)),
 			petroleumDemandModel = new LogisticTimeDemandModel(1970, 1, 0.07, 0, 9);
-	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(50), 
-			foodImportPriceModel = new ConstantPriceModel(50), 
-			foodExportPriceModel = new ConstantPriceModel(40),
+	private static PriceModel foodDomesticPriceModel = new ConstantPriceModel(60), 
+			foodImportPriceModel = new ConstantPriceModel(60), 
+			foodExportPriceModel = new ConstantPriceModel(50),
 			waterDomesticPriceModel = new ConstantPriceModel(0.05), 
 			waterImportPriceModel = new ConstantPriceModel(10), 
 			electricityDomesticPriceModel = new ConstantPriceModel(4), 
