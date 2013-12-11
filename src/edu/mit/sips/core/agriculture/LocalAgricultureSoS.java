@@ -33,6 +33,36 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
+	private double cumulativeFoodSecurity;
+	private transient double nextFoodSecurity;
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		cumulativeFoodSecurity = 0;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		nextFoodSecurity = getFoodSecurity();
+	}
+	
+	@Override
+	public void tock() {
+		super.tock();
+		cumulativeFoodSecurity += nextFoodSecurity;
+	}
+	
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+	
+	public double getCumulativeFoodSecurity() {
+		return cumulativeFoodSecurity;
+	}
+
 	/**
 	 * Instantiates a new local.
 	 */

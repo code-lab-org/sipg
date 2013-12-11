@@ -31,7 +31,37 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
-	private static final TimeUnits electricityTimeUnits = TimeUnits.year;	
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+
+	private double cumulativeAquiferSecurity;
+	private transient double nextAquiferSecurity;
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		cumulativeAquiferSecurity = 0;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		nextAquiferSecurity = getAquiferSecurity();
+	}
+	
+	@Override
+	public void tock() {
+		super.tock();
+		cumulativeAquiferSecurity += nextAquiferSecurity;
+	}
+	
+	public double getAquiferSecurity() {
+		return getReservoirWithdrawals() == 0 ? 1 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
+	
+	public double getCumulativeAquiferSecurity() {
+		return cumulativeAquiferSecurity;
+	}	
 
 	/**
 	 * Instantiates a new local.

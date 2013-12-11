@@ -32,6 +32,36 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
+	private double cumulativeReservoirSecurity;
+	private transient double nextReservoirSecurity;
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		cumulativeReservoirSecurity = 0;
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		nextReservoirSecurity = getReservoirSecurity();
+	}
+	
+	@Override
+	public void tock() {
+		super.tock();
+		cumulativeReservoirSecurity += nextReservoirSecurity;
+	}
+	
+	public double getReservoirSecurity() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
+	
+	public double getCumulativeReservoirSecurity() {
+		return cumulativeReservoirSecurity;
+	}
+
 	/**
 	 * Instantiates a new default petroleum so s.
 	 */
