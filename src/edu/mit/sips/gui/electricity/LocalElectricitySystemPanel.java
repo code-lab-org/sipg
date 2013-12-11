@@ -149,6 +149,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		} else {
 			oilUseNames.add(getSociety().getName() + " Operations");
 		}
+		oilUseNames.add("Private Operations");
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
 				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
@@ -385,6 +386,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				}
 			}
 		}
+		updateSeries(petroleumUseData, "Private Operations", year, 
+				OilUnits.convertFlow(getElectricitySystem().getPetroleumConsumptionFromPrivateProduction(),
+						getElectricitySystem(), this));
 		
 		if(getElectricitySystem() instanceof LocalElectricitySystem) {
 			updateSeries(electricitySourceData, "Production", year, 
