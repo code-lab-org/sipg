@@ -177,10 +177,8 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 */
 	public void disconnect() throws RTIexception {
 		logger.info("Disconnecting from the RTI.");
-		
-		if(initialized.get()) {
-			resignFederation();
-		}
+
+		resignFederation();
 		
 		rtiAmbassador.disconnect();
 		logger.trace("Disconnected from the RTI.");
