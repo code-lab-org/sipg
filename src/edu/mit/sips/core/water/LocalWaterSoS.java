@@ -715,7 +715,11 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 
 		try {
 			// Run optimization and get results.
-			PointValuePair output = new SimplexSolver().optimize(
+
+			// NOTE: reduce epsilon from 1e-6 (default) to 1e-3 to cope with 
+			// large magnitude differences between variables. Keep max ulps
+			// set at the default (10).
+			PointValuePair output = new SimplexSolver(1e-3, 10).optimize(
 					GoalType.MINIMIZE,
 					new MaxIter(1000),
 					new NonNegativeConstraint(true), 
