@@ -33,35 +33,56 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 
-	private double cumulativeAquiferSecurity;
-	private transient double nextAquiferSecurity;
+
+	private final List<Double> cumulativeAquiferSecurityScore = new ArrayList<Double>();
+	private transient double nextAquiferSecurityScore;
 	
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		cumulativeAquiferSecurity = 0;
+		cumulativeAquiferSecurityScore.clear();
+		cumulativeAquiferSecurityScore.add(getAquiferSecurityScore());
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
-		nextAquiferSecurity = getAquiferSecurity();
+		nextAquiferSecurityScore = getAquiferSecurityScore();
 	}
 	
 	@Override
 	public void tock() {
 		super.tock();
-		cumulativeAquiferSecurity += nextAquiferSecurity;
+		cumulativeAquiferSecurityScore.add(nextAquiferSecurityScore);
 	}
 	
-	public double getAquiferSecurity() {
-		return getReservoirWithdrawals() == 0 ? 1 
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
 				: (getWaterReservoirVolume() / getReservoirWithdrawals());
 	}
 	
-	public double getCumulativeAquiferSecurity() {
-		return cumulativeAquiferSecurity;
-	}	
+	public double getAquiferSecurityScore() {
+		double minLifetime = 20;
+		double maxLifetime = 200;
+		if(getAquiferLifetime() < minLifetime) {
+			return 0;
+		} else if(getAquiferLifetime() > maxLifetime) {
+			return 1;
+		} else {
+			return (getAquiferLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+	
+	public double getCumulativeAquiferSecurityScore() {
+		if(cumulativeAquiferSecurityScore.size() == 0) {
+			return 0;
+		}
+		double value = 0;
+		for(double score : cumulativeAquiferSecurityScore) {
+			value += score;
+		}
+		return value / cumulativeAquiferSecurityScore.size();
+	}
 
 	/**
 	 * Instantiates a new local.

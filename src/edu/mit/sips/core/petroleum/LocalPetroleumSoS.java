@@ -32,34 +32,54 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
-	private double cumulativeReservoirSecurity;
-	private transient double nextReservoirSecurity;
+	private final List<Double> cumulativeReservoirSecurityScore = new ArrayList<Double>();
+	private transient double nextReservoirSecurityScore;
 	
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		cumulativeReservoirSecurity = 0;
+		cumulativeReservoirSecurityScore.clear();
+		cumulativeReservoirSecurityScore.add(getReservoirSecurityScore());
 	}
 	
 	@Override
 	public void tick() {
 		super.tick();
-		nextReservoirSecurity = getReservoirSecurity();
+		nextReservoirSecurityScore = getReservoirSecurityScore();
 	}
 	
 	@Override
 	public void tock() {
 		super.tock();
-		cumulativeReservoirSecurity += nextReservoirSecurity;
+		cumulativeReservoirSecurityScore.add(nextReservoirSecurityScore);
 	}
 	
-	public double getReservoirSecurity() {
+	public double getReservoirLifetime() {
 		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
 				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
 	}
 	
-	public double getCumulativeReservoirSecurity() {
-		return cumulativeReservoirSecurity;
+	public double getReservoirSecurityScore() {
+		double minLifetime = 0;
+		double maxLifetime = 200;
+		if(getReservoirLifetime() < minLifetime) {
+			return 0;
+		} else if(getReservoirLifetime() > maxLifetime) {
+			return 1;
+		} else {
+			return (getReservoirLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+	
+	public double getCumulativeReservoirSecurityScore() {
+		if(cumulativeReservoirSecurityScore.size() == 0) {
+			return 0;
+		}
+		double value = 0;
+		for(double score : cumulativeReservoirSecurityScore) {
+			value += score;
+		}
+		return value / cumulativeReservoirSecurityScore.size();
 	}
 
 	/**

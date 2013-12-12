@@ -6,6 +6,8 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
+import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
+import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.io.Icons;
 
 public class ScorePanel extends InfrastructureSystemPanel {
@@ -13,8 +15,15 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 	private final Country country;
 	
+	
 	DefaultTableXYDataset foodSecurity = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodSecurityScore = new DefaultTableXYDataset();
+	
+	DefaultTableXYDataset aquiferLifetime = new DefaultTableXYDataset();
+	DefaultTableXYDataset aquiferLifetimeScore = new DefaultTableXYDataset();
+	
+	DefaultTableXYDataset reservoirLifetime = new DefaultTableXYDataset();
+	DefaultTableXYDataset reservoirLifetimeScore = new DefaultTableXYDataset();
 	
 	public ScorePanel(Country country) {
 		super(country.getSocialSystem());
@@ -24,7 +33,19 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			addTab("Food Security", Icons.AGRICULTURE, createStackedAreaChart(
 					"Food Security (-)", foodSecurity, 
 					new Color[]{PlottingUtils.getSystemColor(country.getAgricultureSystem())}, 
-					"Cumulative Score (-)", foodSecurityScore));
+					foodSecurityScore));
+		}
+		if(country.getWaterSystem() instanceof LocalWaterSoS) {
+			addTab("Aquifer Security", Icons.WATER, createStackedAreaChart(
+					"Aquifer Security (-)", aquiferLifetime, 
+					new Color[]{PlottingUtils.getSystemColor(country.getWaterSystem())},
+					aquiferLifetimeScore));
+		}
+		if(country.getPetroleumSystem() instanceof LocalPetroleumSoS) {
+			addTab("Reservoir Security", Icons.PETROLEUM, createStackedAreaChart(
+					"Reservoir Security (-)", reservoirLifetime, 
+					new Color[]{PlottingUtils.getSystemColor(country.getPetroleumSystem())},
+					reservoirLifetimeScore));
 		}
 	}
 
@@ -46,12 +67,28 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	@Override
 	public void update(int year) {
 		if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
-			updateSeries(foodSecurity, "Food Security", year, 
+			updateSeries(foodSecurity, "Annual Score", year, 
 					((LocalAgricultureSoS) country.getAgricultureSystem())
-					.getFoodSecurity());
+					.getFoodSecurityScore());
 			updateSeries(foodSecurityScore, "Cumulative Score", year, 
 					((LocalAgricultureSoS) country.getAgricultureSystem())
-					.getCumulativeFoodSecurity());
+					.getCumulativeFoodSecurityScore());
+		}
+		if(country.getWaterSystem() instanceof LocalWaterSoS) {
+			updateSeries(aquiferLifetime, "Annual Score", year, 
+					((LocalWaterSoS) country.getWaterSystem())
+					.getAquiferSecurityScore());
+			updateSeries(aquiferLifetimeScore, "Cumulative Score", year, 
+					((LocalWaterSoS) country.getWaterSystem())
+					.getCumulativeAquiferSecurityScore());
+		}
+		if(country.getPetroleumSystem() instanceof LocalPetroleumSoS) {
+			updateSeries(reservoirLifetime, "Annual Score", year, 
+					((LocalPetroleumSoS) country.getPetroleumSystem())
+					.getReservoirSecurityScore());
+			updateSeries(reservoirLifetimeScore, "Cumulative Score", year, 
+					((LocalPetroleumSoS) country.getPetroleumSystem())
+					.getCumulativeReservoirSecurityScore());
 		}
 	}
 }
