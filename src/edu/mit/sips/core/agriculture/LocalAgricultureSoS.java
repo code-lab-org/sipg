@@ -32,47 +32,10 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
-
-	private final List<Double> cumulativeFoodSecurityScore = new ArrayList<Double>();
-	private transient double nextFoodSecurityScore;
-	
-	@Override
-	public void initialize(long time) {
-		super.initialize(time);
-		cumulativeFoodSecurityScore.clear();
-		cumulativeFoodSecurityScore.add(getFoodSecurityScore());
-	}
-	
-	@Override
-	public void tick() {
-		super.tick();
-		nextFoodSecurityScore = getFoodSecurityScore();
-	}
-	
-	@Override
-	public void tock() {
-		super.tock();
-		cumulativeFoodSecurityScore.add(nextFoodSecurityScore);
-	}
 	
 	public double getFoodSecurity() {
 		return getTotalFoodSupply() == 0 ? 1 
 				: (getFoodProduction() / getTotalFoodSupply());
-	}
-	
-	public double getFoodSecurityScore() {
-		return Math.max(Math.min(getFoodSecurity(), 1), 0);
-	}
-	
-	public double getCumulativeFoodSecurityScore() {
-		if(cumulativeFoodSecurityScore.size() == 0) {
-			return 0;
-		}
-		double value = 0;
-		for(double score : cumulativeFoodSecurityScore) {
-			value += score;
-		}
-		return value / cumulativeFoodSecurityScore.size();
 	}
 
 	/**
