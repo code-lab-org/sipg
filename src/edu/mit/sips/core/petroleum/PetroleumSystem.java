@@ -29,6 +29,13 @@ public interface PetroleumSystem extends InfrastructureSystem,
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
 		public List<? extends PetroleumElement> getElements();
+		
+		/**
+		 * Gets the reservoir lifetime.
+		 *
+		 * @return the reservoir lifetime
+		 */
+		public double getReservoirLifetime();
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()

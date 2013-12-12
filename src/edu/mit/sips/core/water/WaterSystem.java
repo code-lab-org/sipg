@@ -53,6 +53,13 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		public List<? extends WaterElement> getInternalElements();
 		
 		/**
+		 * Gets the aquifer lifetime.
+		 *
+		 * @return the aquifer lifetime
+		 */
+		public double getAquiferLifetime();
+		
+		/**
 		 * Gets the local water fraction.
 		 *
 		 * @return the local water fraction

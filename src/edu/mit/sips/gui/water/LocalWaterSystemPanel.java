@@ -40,13 +40,13 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	private static final long serialVersionUID = -3665986046863585665L;
 	
 	private final LinearIndicatorPanel localWaterIndicatorPanel, 
-	waterReservoirIndicatorPanel, renewableWaterIndicatorPanel;
+	waterAquiferIndicatorPanel, renewableWaterIndicatorPanel;
 	
 	private final SpatialStatePanel waterStatePanel;
 
 	DefaultTableXYDataset waterSourceData = new DefaultTableXYDataset();
 	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
-	DefaultTableXYDataset waterReservoirDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset waterAquiferDataset = new DefaultTableXYDataset();
 	DefaultTableXYDataset electricityUseData = new DefaultTableXYDataset();
 	DefaultTableXYDataset cashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
@@ -83,11 +83,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		localWaterIndicatorPanel = new LinearIndicatorPanel(
 				"Water Independence", 0, 1);
 		indicatorsPanel.add(localWaterIndicatorPanel);
-		waterReservoirIndicatorPanel = new LinearIndicatorPanel(
-				"Water Reservoir", 0, WaterUnits.convertStock(
+		waterAquiferIndicatorPanel = new LinearIndicatorPanel(
+				"Water Aquifer", 0, WaterUnits.convertStock(
 						waterSystem.getMaxWaterReservoirVolume(), 
 						waterSystem, this));
-		indicatorsPanel.add(waterReservoirIndicatorPanel);
+		indicatorsPanel.add(waterAquiferIndicatorPanel);
 		renewableWaterIndicatorPanel = new LinearIndicatorPanel(
 				"Renewable Water", 0, 1);
 		indicatorsPanel.add(renewableWaterIndicatorPanel);
@@ -198,9 +198,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		} else {
 			societyColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		addTab("Reservoir", Icons.WATER_RESERVOIR, createStackedAreaChart(
-				"Water Reservoir Volume (" + waterUnits + ")", 
-				waterReservoirDataset, societyColors.toArray(new Color[0])));
+		addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
+				"Water Aquifer Volume (" + waterUnits + ")", 
+				waterAquiferDataset, societyColors.toArray(new Color[0])));
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/m^3)", 
@@ -293,7 +293,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		waterProductCostData.removeAllSeries();
 		waterSupplyProfitData.removeAllSeries();
 		waterConsumptionPerCapita.removeAllSeries();
-		waterReservoirDataset.removeAllSeries();
+		waterAquiferDataset.removeAllSeries();
 		waterUseData.removeAllSeries();
 		waterSourceData.removeAllSeries();
 		electricityUseData.removeAllSeries();
@@ -383,7 +383,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			}
 		}
 
-		waterReservoirIndicatorPanel.setValue(WaterUnits.convertStock(
+		waterAquiferIndicatorPanel.setValue(WaterUnits.convertStock(
 				getWaterSystem().getWaterReservoirVolume(), getWaterSystem(), this));
 
 		updateSeries(cashFlow, "Capital Expense", year, 
@@ -467,7 +467,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			updateSeries(waterSourceData, "Distribution", year, 
 					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(),
 							getWaterSystem(), this));
-			updateSeries(waterReservoirDataset, "Reservoir", year, 
+			updateSeries(waterAquiferDataset, "Aquifer", year, 
 					WaterUnits.convertStock(getWaterSystem().getWaterReservoirVolume(), 
 							getWaterSystem(), this));
 			updateSeries(waterSourceData, "Private Production", year, 
@@ -500,7 +500,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 								getWaterSystem(), this));
 			}
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeries(waterReservoirDataset, nestedSystem.getSociety().getName(), year, 
+				updateSeries(waterAquiferDataset, nestedSystem.getSociety().getName(), year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterReservoirVolume(), 
 								getWaterSystem(), this));
 			}

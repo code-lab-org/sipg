@@ -37,6 +37,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	private double waterReservoirVolume;
 	private transient double nextWaterReservoirVolume;
+	
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
 
 	/**
 	 * Instantiates a new local.

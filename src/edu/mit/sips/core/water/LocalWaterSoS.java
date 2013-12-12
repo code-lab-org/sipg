@@ -33,7 +33,6 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 
-
 	private final List<Double> cumulativeAquiferSecurityScore = new ArrayList<Double>();
 	private transient double nextAquiferSecurityScore;
 	

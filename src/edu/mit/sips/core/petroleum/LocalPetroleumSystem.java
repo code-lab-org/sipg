@@ -44,6 +44,11 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		this.maxPetroleumReservoirVolume = 0;
 		this.initialPetroleumReservoirVolume = 0;
 	}
+	
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
 
 	/**
 	 * Instantiates a new default petroleum system.
