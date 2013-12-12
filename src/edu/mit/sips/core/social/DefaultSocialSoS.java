@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.DefaultInfrastructureSoS;
+import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
@@ -15,7 +15,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class DefaultSocialSoS.
  */
-public class DefaultSocialSoS extends DefaultInfrastructureSoS implements SocialSoS {
+public class DefaultSocialSoS extends LocalSocialSystem implements SocialSoS {
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -29,7 +29,7 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	 * Instantiates a new default social so s.
 	 */
 	public DefaultSocialSoS() {
-		super("Society");
+		super();
 	}
 
 	/* (non-Javadoc)
@@ -179,5 +179,41 @@ public class DefaultSocialSoS extends DefaultInfrastructureSoS implements Social
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 */
+	@Override
+	public double getCapitalExpense() {
+		double value = 0;
+		for(InfrastructureSystem system : getNestedSystems()) {
+			value += system.getCapitalExpense();
+		}
+		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
+	 */
+	@Override
+	public double getCashFlow() {
+		double value = 0;
+		for(InfrastructureSystem system : getNestedSystems()) {
+			value += system.getCashFlow();
+		}
+		return value;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
+	 */
+	@Override
+	public double getDomesticProduction() {
+		double value = 0;
+		for(InfrastructureSystem system : getNestedSystems()) {
+			value += system.getCashFlow();
+		}
+		return value;
 	}
 }

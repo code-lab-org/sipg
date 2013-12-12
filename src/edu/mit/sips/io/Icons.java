@@ -62,6 +62,7 @@ public abstract class Icons {
 
 	public static final Icon NETWORK = loadIcon("resources/fugue/node-select-all.png");
 	public static final Icon INDICATORS = loadIcon("resources/silk/chart_bar.png");
+	public static final Icon METRICS = loadIcon("resources/silk/chart_curve.png");
 
 	public static final Icon RECALC = loadIcon("resources/fugue/arrow-circle.png");
 	

@@ -69,6 +69,12 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
 				infrastructureSystemNetRevenue,
 				"Cash Balance (" + getCurrencyUnits() + ")", cumulativeBalance));
+		addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
+				"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
+				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
+				capitalExpenseTotal,
+				"Cumulative Investment (" + getCurrencyUnits() + ")", 
+				cumulativeCapitalExpense));
 		if(getSociety() instanceof Country) {
 			addTab("Population", Icons.POPULATION, createStackedAreaChart(
 					"Population", populationDataset, 
@@ -77,12 +83,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		} else {
 			addTab("Population", Icons.POPULATION, createSingleLineChart(
 					"Population", populationTotalDataset));
-			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
-					"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
-					PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
-					capitalExpenseTotal,
-					"Cumulative Investment (" + getCurrencyUnits() + ")", 
-					cumulativeCapitalExpense));
 		}
 
 

@@ -40,6 +40,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	private final ElectricitySystemPanel electricityTab;
 	private final PetroleumSystemPanel petroleumTab;
 	private final SocialSystemPanel socialTab;
+	private final ScorePanel scoreTab;
 	private final JTabbedPane infraPane;
 
 	/**
@@ -57,11 +58,17 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 		 */
 
-		if(society instanceof Country || society.getSocialSystem() instanceof SocialSystem.Local) {
+		if(society instanceof Country) {
+			socialTab = new SocialSystemPanel(society.getSocialSystem());
+			scoreTab = new ScorePanel((Country) society);
+			addTab("Metrics", Icons.METRICS, scoreTab);
+		} else if(society.getSocialSystem() instanceof SocialSystem.Local) {
 			socialTab = new SocialSystemPanel(society.getSocialSystem());
 			addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
+			scoreTab = null;
 		} else {
 			socialTab = null;
+			scoreTab = null;
 		}
 
 		if(society instanceof City) { // || localSystemCount <= 1) {
@@ -71,7 +78,8 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		} else {
 			// otherwise create sub-tab for infrastructure
 			infraPane = new JTabbedPane();
-			addTab("Infrastructure", Icons.INFRASTRUCTURE, infraPane);
+			infraPane.addTab(society.getSocialSystem().getName(), getIcon(society), socialTab);
+			addTab(society.getName(), getIcon(society), infraPane);
 		}
 
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -143,6 +151,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * Initialize.
 	 */
 	public void initialize() {
+		if(scoreTab != null) {
+			scoreTab.initialize();
+		}
 
 		if(waterTab != null) {
 			waterTab.initialize();
@@ -182,6 +193,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
+		if(scoreTab != null) {
+			scoreTab.simulationInitialized(event);
+		}
 		if(waterTab != null) {
 			waterTab.simulationInitialized(event);
 		}
@@ -208,6 +222,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		if(scoreTab != null) {
+			scoreTab.simulationUpdated(event);
+		}
 		if(waterTab != null) {
 			waterTab.simulationUpdated(event);
 		}
@@ -236,6 +253,9 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param superSystem the system
 	 */
 	public void updateDatasets(int year) {
+		if(scoreTab != null) {
+			scoreTab.update(year);
+		}
 		if(waterTab != null) {
 			infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
 					waterTab.getInfrastructureSystem().getName());
@@ -261,8 +281,13 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 
 		if(socialTab != null) {
-			setTitleAt(indexOfComponent(socialTab), 
-					socialTab.getInfrastructureSystem().getName());
+			if(indexOfComponent(socialTab) >= 0) {
+				setTitleAt(indexOfComponent(socialTab), 
+						socialTab.getInfrastructureSystem().getName());
+			} else if(infraPane.indexOfComponent(socialTab) >= 0) {
+				infraPane.setTitleAt(infraPane.indexOfComponent(socialTab), 
+						socialTab.getInfrastructureSystem().getName());
+			}
 			socialTab.update(year);
 		}
 
