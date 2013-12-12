@@ -33,18 +33,6 @@ public class DefaultSocialSoS extends LocalSocialSystem implements SocialSoS {
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
-	 */
-	@Override
-	public double getDomesticProduct() {
-		double value = 0;
-		for(SocialSystem system : getNestedSystems()) {
-			value += system.getDomesticProduct();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
 	 */
 	@Override

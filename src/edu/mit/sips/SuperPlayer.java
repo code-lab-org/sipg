@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.SaudiScenario2g;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
@@ -29,7 +30,7 @@ public class SuperPlayer {
 		BasicConfigurator.configure();
 		
 		logger.debug("Creating scenario.");
-		Scenario scenario = new SaudiScenario2(
+		Scenario scenario = new SaudiScenario2g(
 				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
 						SaudiScenario2.URBAN, 
 						SaudiScenario2.RURAL),

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import org.jfree.data.xy.DefaultTableXYDataset;
 
+import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
@@ -16,12 +17,10 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private final Country country;
 
 	DefaultTableXYDataset agriculturePlayerScore = new DefaultTableXYDataset();
+	DefaultTableXYDataset agriculturePlayerTotalScore = new DefaultTableXYDataset();
 	
 	DefaultTableXYDataset foodSecurityScore = new DefaultTableXYDataset();
 	DefaultTableXYDataset foodSecurityTotalScore = new DefaultTableXYDataset();
-	DefaultTableXYDataset agricultureInvestmentTotalScore = new DefaultTableXYDataset();
-	DefaultTableXYDataset agricultureCashFlowScore = new DefaultTableXYDataset();
-	DefaultTableXYDataset agricultureCashFlowTotalScore = new DefaultTableXYDataset();
 	
 	DefaultTableXYDataset aquiferLifetimeScore = new DefaultTableXYDataset();
 	DefaultTableXYDataset aquiferLifetimeTotalScore = new DefaultTableXYDataset();
@@ -36,19 +35,12 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		
 		if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
 			addTab("Score", Icons.AGRICULTURE, createStackedAreaChart(
-					"Score (-)", agriculturePlayerScore, 
-					new Color[]{PlottingUtils.CORAL, PlottingUtils.INDIAN_RED, 
-							PlottingUtils.GREEN_YELLOW, PlottingUtils.BLACK}));
+					"Score (-)", agriculturePlayerScore, new Color[]{}, 
+					agriculturePlayerTotalScore));
 			addTab("Security", Icons.AGRICULTURE, createStackedAreaChart(
 					"Food Security (-)", foodSecurityScore, 
 					new Color[]{PlottingUtils.getSystemColor(country.getAgricultureSystem())}, 
 					foodSecurityTotalScore));
-			addTab("Investment", Icons.AGRICULTURE, createSingleLineChart(
-					"Investment (-)", agricultureInvestmentTotalScore));
-			addTab("Cash Flow", Icons.AGRICULTURE, createStackedAreaChart(
-					"Cash Flow (-)", agricultureCashFlowScore,
-					new Color[]{PlottingUtils.getSystemColor(country.getAgricultureSystem())}, 
-					agricultureCashFlowTotalScore));
 		}
 		if(country.getWaterSystem() instanceof LocalWaterSoS) {
 			addTab("Security", Icons.WATER, createStackedAreaChart(
@@ -76,12 +68,10 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	@Override
 	public void initialize() {
 		agriculturePlayerScore.removeAllSeries();
+		agriculturePlayerTotalScore.removeAllSeries();
 		
 		foodSecurityScore.removeAllSeries();
 		foodSecurityTotalScore.removeAllSeries();
-		agricultureInvestmentTotalScore.removeAllSeries();
-		agricultureCashFlowScore.removeAllSeries();
-		agricultureCashFlowTotalScore.removeAllSeries();
 		
 		aquiferLifetimeScore.removeAllSeries();
 		aquiferLifetimeTotalScore.removeAllSeries();
@@ -92,6 +82,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	
 	private double getFoodSecurityScore(double foodSecurity) {
 		return Math.max(Math.min(foodSecurity, 1), 0);
+		// return 0.5 + Math.atan(10*(foodSecurity - 0.3))/Math.PI;
 	}
 	
 	private double getAquiferSecurityScore(double aquiferLifetime) {
@@ -126,28 +117,61 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		}
 	}
 	
-	private double getAgricultureInvestmentScore(int year, double capitalExpense) {
-		double minExpense = 0 + (year-1950)*1e9/60; 	// distopia: 1 billion by 2010
-		double maxExpense = 1e9 + (year-1950)*9e9/60; 	// utopia: 9 billion by 2010
-		if(capitalExpense < minExpense) {
+	private double agricultureInvestmentGrowthRate = 0.03;
+	private double agricultureInvestmentDistopia = 0;
+	private double agricultureInvestmentUtopia = 10e9; // upper bound on total investment in 2010
+	private double agricultureProfitGrowthRate = 0.03;
+	private double agricultureProfitDistopia = 0;
+	private double agricultureProfitUtopia = 50e9; // upper bound on total profit in 2010
+	
+	private double getTotalScoreAtYear(int year, 
+			double value, double distopiaTotal, double utopiaTotal, double growthRate) {
+		double growthFactor = 70*Math.log(growthRate);
+		double minValue = distopiaTotal * (Math.exp(growthFactor*(year-1940)/70) - 1)/(Math.exp(growthFactor*1)-1); // 0 + Math.exp((year-1950)/60)*distopiaTotal;
+		double maxValue = utopiaTotal * (Math.exp(growthFactor*(year-1940)/70) - 1)/(Math.exp(growthFactor*1)-1); // (year-1950)*(utopiaTotal-distopiaTotal)/60;
+		if(value < minValue) {
 			return 0;
-		} else if(capitalExpense > maxExpense) {
+		} else if(value > maxValue) {
 			return 1;
 		} else {
-			return (capitalExpense - minExpense)/(maxExpense - minExpense);
+			return (value - minValue)/(maxValue - minValue);
 		}
 	}
 	
-	private double getAgricultureProfitScore(int year, double cashFlow) {
-		double minCashFlow = 0 + (year-1950)*0/60; 	// distopia: no profit by 2010
-		double maxCashFlow = 0 + (year-1950)*50e9/60; 	// utopia: 50 billion profit by 2010
-		if(cashFlow < minCashFlow) {
+	private static double getInvestmentDistopia(City city) {
+		switch(city.getName()) {
+		case "Industrial":
 			return 0;
-		} else if(cashFlow > maxCashFlow) {
-			return 1;
-		} else {
-			return (cashFlow - minCashFlow)/(maxCashFlow - minCashFlow);
+		case "Rural":
+			return 0;
+		case "Urban":
+			return 0;
 		}
+		return 0;
+	}
+	
+	private static double getInvestmentUtopia(City city) {
+		switch(city.getName()) {
+		case "Industrial":
+			return 40e9;
+		case "Rural":
+			return 10e9;
+		case "Urban":
+			return 20e9;
+		}
+		return 0;
+	}
+	
+	private static double getInvestmentGrowthRate(City city) {
+		switch(city.getName()) {
+		case "Industrial":
+			return 0.05;
+		case "Rural":
+			return 0.03;
+		case "Urban":
+			return 0.04;
+		}
+		return 0.03;
 	}
 
 	@Override
@@ -158,21 +182,31 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							country.getAgricultureSystem()).getFoodSecurity()));
 			updateSeries(foodSecurityTotalScore, "Total Score", year, 
 					getTotalScore(foodSecurityScore));
-			updateSeries(agricultureInvestmentTotalScore, "Investment Score", year, 
-					getAgricultureInvestmentScore(year, ((LocalAgricultureSoS) 
-							country.getAgricultureSystem()).getCumulativeCapitalExpense()));
-			updateSeries(agricultureCashFlowTotalScore, "Cash Flow Score", year, 
-					getAgricultureProfitScore(year, ((LocalAgricultureSoS) 
-							country.getAgricultureSystem()).getCumulativeCashFlow()));
+			
+			double security = getTotalScore(foodSecurityScore);
+			double sectorInvest = getTotalScoreAtYear(year, ((LocalAgricultureSoS) 
+					country.getAgricultureSystem()).getCumulativeCapitalExpense(),
+					agricultureInvestmentDistopia, agricultureInvestmentUtopia, 
+					agricultureInvestmentGrowthRate);
+			double sectorProfit = getTotalScoreAtYear(year, ((LocalAgricultureSoS) 
+					country.getAgricultureSystem()).getCumulativeCashFlow(),
+					agricultureProfitDistopia, agricultureProfitUtopia, 
+					agricultureProfitGrowthRate);
+			City city = country.getCity("Rural");
+			double regionInvest = getTotalScoreAtYear(year,
+					city.getCumulativeCapitalExpense(), getInvestmentDistopia(city),
+					getInvestmentUtopia(city), getInvestmentGrowthRate(city));
 
-			updateSeries(agriculturePlayerScore, "Security", year, 
-					getTotalScore(foodSecurityScore));
-			updateSeries(agriculturePlayerScore, "Investment", year, 
-					getAgricultureInvestmentScore(year, ((LocalAgricultureSoS) 
-							country.getAgricultureSystem()).getCumulativeCapitalExpense()));
-			updateSeries(agriculturePlayerScore, "Cash Flow", year, 
-					getAgricultureProfitScore(year, ((LocalAgricultureSoS) 
-							country.getAgricultureSystem()).getCumulativeCashFlow()));
+			updateSeries(agriculturePlayerScore, "Food Security", year, security);
+			updateSeries(agriculturePlayerScore, "Agricultural Investment", 
+					year, sectorInvest);
+			updateSeries(agriculturePlayerScore, "Agricultural Profit", 
+					year, sectorProfit);
+			updateSeries(agriculturePlayerScore, city.getName() + " Investment", 
+					year, regionInvest);
+			
+			updateSeries(agriculturePlayerTotalScore, "Total Score", year, 
+					0.3*security + 0.3*sectorProfit + 0.3*sectorInvest + 0.1*regionInvest);
 		}
 		if(country.getWaterSystem() instanceof LocalWaterSoS) {
 			updateSeries(aquiferLifetimeScore, "Annual Score", year, 

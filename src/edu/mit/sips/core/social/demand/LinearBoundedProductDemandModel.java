@@ -1,6 +1,6 @@
 package edu.mit.sips.core.social.demand;
 
-import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.Society;
 
 /**
  * The Class LinearBoundedProductDemandModel.
@@ -39,13 +39,13 @@ public class LinearBoundedProductDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.social.DemandModel#getDemand()
 	 */
 	@Override
-	public double getDemand(SocialSystem socialSystem) {
-		if(socialSystem.getPopulation() > 0) {
+	public double getDemand(Society society) {
+		if(society.getPopulation() > 0) {
 			double demand = minDemand + (maxDemand - minDemand) 
-					* (socialSystem.getDomesticProduct() / socialSystem.getPopulation() 
+					* (society.getDomesticProduct() / society.getPopulation() 
 							- minProduct)/(maxProduct - minProduct);
 			return Math.max(minDemand, Math.min(maxDemand, demand)) 
-					* socialSystem.getPopulation();
+					* society.getPopulation();
 		} else {
 			return minDemand;
 		}

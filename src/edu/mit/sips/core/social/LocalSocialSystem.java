@@ -7,7 +7,6 @@ import java.util.List;
 import edu.mit.sips.core.DefaultDomesticProductionModel;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
@@ -32,10 +31,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	private final DomesticProductionModel domesticProductionModel;
 	private final PopulationModel populationModel;
 	private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel;
-	private double cumulativeCapitalExpense;
-	private transient double nextTotalCapitalExpense;
-	private double domesticProduct;
-	private transient double nextDomesticProduct;
 
 	/**
 	 * Instantiates a new local.
@@ -141,14 +136,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.SocialSystem#getDomesticProduct()
-	 */
-	@Override
-	public double getDomesticProduct() {
-		return domesticProduct;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
 	 */
 	@Override
@@ -161,7 +148,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public double getElectricityConsumption() {
-		return electricityDemandModel.getDemand(this);
+		return electricityDemandModel.getDemand(getSociety());
 	}
 
 	/* (non-Javadoc)
@@ -211,7 +198,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public double getFoodConsumption() {
-		return foodDemandModel.getDemand(this);
+		return foodDemandModel.getDemand(getSociety());
 	}
 
 	/* (non-Javadoc)
@@ -247,19 +234,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 				new ArrayList<InfrastructureElement>());
 	}
 
-	/**
-	 * Gets the next domestic product.
-	 *
-	 * @return the next domestic product
-	 */
-	private double getNextDomesticProduct() {
-		double nextDomesticProduct = 0;
-		for(InfrastructureSystem s : getSociety().getInfrastructureSystems()) {
-			nextDomesticProduct += s.getDomesticProduction();
-		}
-		return nextDomesticProduct;
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
 	 */
@@ -281,7 +255,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public double getPetroleumConsumption() {
-		return petroleumDemandModel.getDemand(this);
+		return petroleumDemandModel.getDemand(getSociety());
 	}
 
 	/* (non-Javadoc)
@@ -305,7 +279,7 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public double getWaterConsumption() {
-		return waterDemandModel.getDemand(this);
+		return waterDemandModel.getDemand(getSociety());
 	}
 
 	/* (non-Javadoc)
@@ -337,8 +311,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 		waterDemandModel.initialize(time);
 		petroleumDemandModel.initialize(time);
 
-		domesticProduct = getDomesticProduction();
-		cumulativeCapitalExpense = 0;
 	}
 
 	/* (non-Javadoc)
@@ -346,8 +318,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public void tick() {
-		nextDomesticProduct = getNextDomesticProduct();
-		nextTotalCapitalExpense = getSociety().getTotalCapitalExpense();
 		populationModel.tick();
 		electricityDemandModel.tick();
 		foodDemandModel.tick();
@@ -360,20 +330,10 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	@Override
 	public void tock() {
-		domesticProduct = nextDomesticProduct;
-		cumulativeCapitalExpense += nextTotalCapitalExpense;
 		populationModel.tock();
 		electricityDemandModel.tock();
 		foodDemandModel.tock();
 		waterDemandModel.tock();
 		petroleumDemandModel.tock();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getTotalCapitalExpense()
-	 */
-	@Override
-	public double getCumulativeCapitalExpense() {
-		return cumulativeCapitalExpense;
 	}
 }

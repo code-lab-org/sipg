@@ -51,6 +51,10 @@ public abstract class DefaultSociety implements Society {
 
 	private double cumulativeCashFlow;
 	private transient double nextTotalCashFlow;
+	private double cumulativeCapitalExpense;
+	private transient double nextTotalCapitalExpense;
+	private double domesticProduct;
+	private transient double nextDomesticProduct;
 	
 	/**
 	 * Instantiates a new default society.
@@ -69,6 +73,30 @@ public abstract class DefaultSociety implements Society {
 		electricitySystem.setSociety(this);
 		this.socialSystem = new DefaultSocialSystem();
 		socialSystem.setSociety(this);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getTotalCapitalExpense()
+	 */
+	@Override
+	public double getCumulativeCapitalExpense() {
+		return cumulativeCapitalExpense;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.SocialSystem#getDomesticProduct()
+	 */
+	@Override
+	public double getDomesticProduct() {
+		return domesticProduct;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.Society#getPopulation()
+	 */
+	@Override
+	public long getPopulation() {
+		return socialSystem.getPopulation();
 	}
 	
 	/**
@@ -421,6 +449,8 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public void initialize(long time) {
 		cumulativeCashFlow = 0;
+		cumulativeCapitalExpense = 0;
+		domesticProduct = getNextDomesticProduct();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).initialize(time);
@@ -484,12 +514,27 @@ public abstract class DefaultSociety implements Society {
 		this.waterSystem = waterSystem;
 	}
 
+	/**
+	 * Gets the next domestic product.
+	 *
+	 * @return the next domestic product
+	 */
+	private double getNextDomesticProduct() {
+		double nextDomesticProduct = 0;
+		for(InfrastructureSystem s : getInfrastructureSystems()) {
+			nextDomesticProduct += s.getDomesticProduction();
+		}
+		return nextDomesticProduct;
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.SimEntity#tick()
 	 */
 	@Override
 	public void tick() {
 		nextTotalCashFlow = getTotalCashFlow();
+		nextTotalCapitalExpense = getTotalCapitalExpense();
+		nextDomesticProduct = getNextDomesticProduct();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).tick();
@@ -506,6 +551,8 @@ public abstract class DefaultSociety implements Society {
 	@Override
 	public void tock() {
 		cumulativeCashFlow += nextTotalCashFlow;
+		cumulativeCapitalExpense += nextTotalCapitalExpense;
+		domesticProduct = nextDomesticProduct;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).tock();

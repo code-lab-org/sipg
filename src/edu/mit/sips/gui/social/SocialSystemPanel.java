@@ -204,14 +204,14 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		
 		if(getSocialSystem().getPopulation() > 0) {
 			updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
-					year, DefaultUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
+					year, DefaultUnits.convertFlow(getSociety().getDomesticProduct(), 
 							getSociety().getCurrencyUnits(), 
 							getSociety().getCurrencyTimeUnits(), 
 							CurrencyUnits.sim,
 							TimeUnits.year) 
 					/ getSocialSystem().getPopulation());
 			domesticProductIndicatorPanel.setValue(
-					DefaultUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
+					DefaultUnits.convertFlow(getSociety().getDomesticProduct(), 
 							getSociety().getCurrencyUnits(), 
 							getSociety().getCurrencyTimeUnits(), 
 							CurrencyUnits.sim,
@@ -222,7 +222,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		if(getSocialSystem() instanceof SocialSoS) {
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(domesticProduct, nestedSociety.getName(), year, 
-						CurrencyUnits.convertFlow(nestedSociety.getSocialSystem().getDomesticProduct(), 
+						CurrencyUnits.convertFlow(nestedSociety.getDomesticProduct(), 
 								nestedSociety, this));
 			}
 
@@ -236,7 +236,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 							getSociety(), this));
 		} else {
 			updateSeries(domesticProduct, getSociety().getName(), year, 
-					CurrencyUnits.convertFlow(getSocialSystem().getDomesticProduct(), 
+					CurrencyUnits.convertFlow(getSociety().getDomesticProduct(), 
 							getSocialSystem(), this));
 		}
 
@@ -260,7 +260,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		if(getSociety().getSocialSystem() instanceof SocialSystem.Local) { 
 			updateSeries(cumulativeCapitalExpense, "Cumulative", year, 
 					CurrencyUnits.convertFlow(
-							((SocialSystem.Local)getSociety().getSocialSystem()).getCumulativeCapitalExpense(), 
+							getSociety().getCumulativeCapitalExpense(), 
 							getSociety().getSocialSystem(), this));
 		}
 	}

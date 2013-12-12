@@ -136,7 +136,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem implements SocialSy
 	private transient final HLAfloat64BE foodConsumption;
 	private transient final HLAfloat64BE waterConsumption;
 	private transient final HLAfloat64BE petroleumConsumption;
-	private transient final HLAfloat64BE domesticProduct;
+	private transient final HLAfloat64BE domesticProduct; // TODO unused -- now calculated locally
 	private transient final HLAinteger64BE population;
 	
 	/**
@@ -184,14 +184,6 @@ public class HLAsocialSystem extends HLAinfrastructureSystem implements SocialSy
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
-	 */
-	@Override
-	public double getDomesticProduct() {
-		return domesticProduct.getValue();
 	}
 
 	/* (non-Javadoc)
@@ -318,7 +310,6 @@ public class HLAsocialSystem extends HLAinfrastructureSystem implements SocialSy
 			foodConsumption.setValue(socialSystem.getFoodConsumption());
 			waterConsumption.setValue(socialSystem.getWaterConsumption());
 			petroleumConsumption.setValue(socialSystem.getPetroleumConsumption());
-			domesticProduct.setValue(socialSystem.getDomesticProduct());
 			population.setValue(socialSystem.getPopulation());
 		}
 	}

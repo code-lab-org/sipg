@@ -1,6 +1,6 @@
 package edu.mit.sips.core.social.demand;
 
-import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.Society;
 
 /**
  * The Class LogisticTimeDemandModel.
@@ -66,12 +66,12 @@ public class LogisticTimeDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand(SocialSystem socialSystem) {
+	public double getDemand(Society society) {
 		return (minimumDemand + (maximumDemand-minimumDemand) 
 				* (baselineDemand-minimumDemand) 
 				* Math.exp(growthRate * (time - baselineTime)) 
 				/ ((maximumDemand-minimumDemand) + (baselineDemand-minimumDemand) 
 						* (Math.exp(growthRate * (time - baselineTime)) - 1)))
-				* socialSystem.getPopulation();
+				* society.getPopulation();
 	}
 }

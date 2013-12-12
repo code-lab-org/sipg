@@ -21,14 +21,6 @@ public class DefaultSocialSystem extends DefaultInfrastructureSystem implements 
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getDomesticProduct()
-	 */
-	@Override
-	public double getDomesticProduct() {
-		return 0;
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
 	 */
 	@Override

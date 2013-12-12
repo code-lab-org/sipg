@@ -1,6 +1,6 @@
 package edu.mit.sips.core.social.demand;
 
-import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.Society;
 
 /**
  * The Class LinearTimeDemandModel.
@@ -60,8 +60,8 @@ public class LinearTimeDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand(SocialSystem socialSystem) {
+	public double getDemand(Society society) {
 		return baselineDemand + (time - baselineTime) * demandSlope 
-				* socialSystem.getPopulation();
+				* society.getPopulation();
 	}
 }

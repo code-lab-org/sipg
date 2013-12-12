@@ -1,6 +1,6 @@
 package edu.mit.sips.core.social.demand;
 
-import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.Society;
 
 /**
  * The Class ExponentialTimeDemandModel.
@@ -60,8 +60,8 @@ public class ExponentialTimeDemandModel implements DemandModel {
 	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
 	 */
 	@Override
-	public double getDemand(SocialSystem socialSystem) {
+	public double getDemand(Society society) {
 		return baselineDemand * Math.exp(growthRate * (time - baselineTime)) 
-				* socialSystem.getPopulation();
+				* society.getPopulation();
 	}
 }

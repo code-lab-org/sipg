@@ -23,6 +23,20 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 		OilUnitsOutput {
 	
 	/**
+	 * Gets the cumulative capital expense.
+	 *
+	 * @return the cumulative capital expense
+	 */
+	public double getCumulativeCapitalExpense();
+	
+	/**
+	 * Gets the domestic product.
+	 *
+	 * @return the domestic product
+	 */
+	public double getDomesticProduct();
+	
+	/**
 	 * Gets the agriculture system.
 	 *
 	 * @return the agriculture system
@@ -203,6 +217,13 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	 * @param society the new society
 	 */
 	public void setSociety(Society society);
+	
+	/**
+	 * Gets the population.
+	 *
+	 * @return the population
+	 */
+	public long getPopulation();
 	
 	/**
 	 * Sets the water system.

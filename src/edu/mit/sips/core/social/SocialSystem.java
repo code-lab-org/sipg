@@ -16,20 +16,7 @@ public interface SocialSystem extends InfrastructureSystem,
 	 */
 	public static interface Local extends SocialSystem, InfrastructureSystem.Local {
 		
-		/**
-		 * Gets the cumulative capital expense.
-		 *
-		 * @return the cumulative capital expense
-		 */
-		public double getCumulativeCapitalExpense();
 	}
-	
-	/**
-	 * Gets the domestic product.
-	 *
-	 * @return the domestic product
-	 */
-	public double getDomesticProduct();
 
 	/**
 	 * Gets the electricity consumption.
