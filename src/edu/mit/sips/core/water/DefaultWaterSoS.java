@@ -124,4 +124,28 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 		}
 		return 0;
 	}
+
+	@Override
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
+
+	@Override
+	public double getWaterReservoirVolume() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getWaterReservoirVolume();
+		}
+		return value;
+	}
+
+	@Override
+	public double getReservoirWithdrawals() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getReservoirWithdrawals();
+		}
+		return value;
+	}
 }

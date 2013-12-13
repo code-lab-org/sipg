@@ -77,4 +77,20 @@ public class DefaultAgricultureSystem extends DefaultInfrastructureSystem implem
 	public double getWaterConsumption() {
 		return 0;
 	}
+
+	@Override
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+
+	@Override
+	public double getFoodProduction() {
+		return 0;
+	}
+
+	@Override
+	public double getTotalFoodSupply() {
+		return 0;
+	}
 }

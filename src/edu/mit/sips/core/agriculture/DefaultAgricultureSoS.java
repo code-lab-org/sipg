@@ -133,4 +133,28 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
+
+	@Override
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+
+	@Override
+	public double getFoodProduction() {
+		double value = 0;
+		for(AgricultureSystem system : getNestedSystems()) {
+			value += system.getFoodProduction();
+		}
+		return value;
+	}
+
+	@Override
+	public double getTotalFoodSupply() {
+		double value = 0;
+		for(AgricultureSystem system : getNestedSystems()) {
+			value += system.getTotalFoodSupply();
+		}
+		return value;
+	}
 }

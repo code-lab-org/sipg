@@ -77,4 +77,20 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
+
+	@Override
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
+
+	@Override
+	public double getWaterReservoirVolume() {
+		return 0;
+	}
+
+	@Override
+	public double getReservoirWithdrawals() {
+		return 0;
+	}
 }

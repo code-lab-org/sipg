@@ -77,4 +77,20 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem implemen
 	public double getPetroleumImportPrice() {
 		return 0;
 	}
+
+	@Override
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
+
+	@Override
+	public double getPetroleumReservoirVolume() {
+		return 0;
+	}
+
+	@Override
+	public double getPetroleumWithdrawals() {
+		return 0;
+	}
 }

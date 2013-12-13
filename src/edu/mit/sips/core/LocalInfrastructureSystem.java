@@ -119,8 +119,8 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 	 */
 	@Override
 	public void initialize(long time) {
-		cumulativeCapitalExpense = 0;
-		cumulativeCashFlow = 0;
+		cumulativeCapitalExpense = getCapitalExpense();
+		cumulativeCashFlow = getCashFlow();
 	}
 
 	/* (non-Javadoc)

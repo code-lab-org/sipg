@@ -39,6 +39,8 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
+		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
 		PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE, 
 		PETROLEUM_IMPORT_PRICE_ATTRIBUTE,
@@ -251,6 +253,24 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 			petroleumDomesticPrice.setValue(petroleumSystem.getPetroleumDomesticPrice());
 			petroleumImportPrice.setValue(petroleumSystem.getPetroleumImportPrice());
 			petroleumExportPrice.setValue(petroleumSystem.getPetroleumExportPrice());
+			sustainabilityMetricNumerator.setValue(petroleumSystem.getPetroleumReservoirVolume());
+			sustainabilityMetricDenominator.setValue(petroleumSystem.getPetroleumWithdrawals());
 		}
+	}
+
+	@Override
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
+
+	@Override
+	public double getPetroleumReservoirVolume() {
+		return sustainabilityMetricNumerator.getValue();
+	}
+
+	@Override
+	public double getPetroleumWithdrawals() {
+		return sustainabilityMetricDenominator.getValue();
 	}
 }

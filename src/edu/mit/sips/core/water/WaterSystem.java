@@ -53,13 +53,6 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		public List<? extends WaterElement> getInternalElements();
 		
 		/**
-		 * Gets the aquifer lifetime.
-		 *
-		 * @return the aquifer lifetime
-		 */
-		public double getAquiferLifetime();
-		
-		/**
 		 * Gets the local water fraction.
 		 *
 		 * @return the local water fraction
@@ -86,13 +79,6 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		 * @return the renewable water production
 		 */
 		public double getRenewableWaterProduction();
-		
-		/**
-		 * Gets the reservoir withdrawals.
-		 *
-		 * @return the reservoir withdrawals
-		 */
-		public double getReservoirWithdrawals();
 		
 		/**
 		 * Gets the reservoir withdrawals from private production.
@@ -179,13 +165,6 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		public double getWaterReservoirRechargeRate();
 		
 		/**
-		 * Gets the water reservoir volume.
-		 *
-		 * @return the water reservoir volume
-		 */
-		public double getWaterReservoirVolume();
-		
-		/**
 		 * Gets the water wasted.
 		 *
 		 * @return the water wasted
@@ -207,6 +186,27 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		 */
 		public boolean removeElement(WaterElement element);
 	}
+	
+	/**
+	 * Gets the water reservoir volume.
+	 *
+	 * @return the water reservoir volume
+	 */
+	public double getWaterReservoirVolume();
+	
+	/**
+	 * Gets the reservoir withdrawals.
+	 *
+	 * @return the reservoir withdrawals
+	 */
+	public double getReservoirWithdrawals();
+	
+	/**
+	 * Gets the aquifer lifetime.
+	 *
+	 * @return the aquifer lifetime
+	 */
+	public double getAquiferLifetime();
 	
 	/**
 	 * Gets the energy consumption.

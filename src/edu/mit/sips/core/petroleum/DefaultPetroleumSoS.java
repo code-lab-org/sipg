@@ -136,4 +136,28 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		}
 		return 0;
 	}
+
+	@Override
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
+
+	@Override
+	public double getPetroleumReservoirVolume() {
+		double value = 0;
+		for(PetroleumSystem system : getNestedSystems()) {
+			value += system.getPetroleumReservoirVolume();
+		}
+		return value;
+	}
+
+	@Override
+	public double getPetroleumWithdrawals() {
+		double value = 0;
+		for(PetroleumSystem system : getNestedSystems()) {
+			value += system.getPetroleumWithdrawals();
+		}
+		return value;
+	}
 }

@@ -39,6 +39,8 @@ public class HLAwaterSystem extends HLAinfrastructureSystem implements WaterSyst
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
+		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		WATER_DOMESTIC_PRICE_ATTRIBUTE,
 		WATER_AGRICULTURAL_PRICE_ATTRIBUTE,
@@ -251,6 +253,24 @@ public class HLAwaterSystem extends HLAinfrastructureSystem implements WaterSyst
 			waterDomesticPrice.setValue(waterSystem.getWaterDomesticPrice());
 			waterAgriculturalPrice.setValue(waterSystem.getWaterAgriculturalPrice());
 			waterImportPrice.setValue(waterSystem.getWaterImportPrice());
+			sustainabilityMetricNumerator.setValue(waterSystem.getWaterReservoirVolume());
+			sustainabilityMetricDenominator.setValue(waterSystem.getReservoirWithdrawals());
 		}
+	}
+
+	@Override
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
+
+	@Override
+	public double getWaterReservoirVolume() {
+		return sustainabilityMetricNumerator.getValue();
+	}
+
+	@Override
+	public double getReservoirWithdrawals() {
+		return sustainabilityMetricDenominator.getValue();
 	}
 }

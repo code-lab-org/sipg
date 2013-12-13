@@ -445,30 +445,33 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		syncAchieved.set(false);
 		
-		// once all federates are joined, advance to start time - 1
-		
-		advance(); // advance to start time - 1
+		// once all federates are joined, save initial state
 		
 		if(firstFederate) {
+			logger.debug("Requesting federation save.");
 			rtiAmbassador.requestFederationSave("initialState");
 		}
-		
+
+		logger.debug("Waiting for federation save to be initiated...");
 		while(!saveInitiated.get()) {
 			Thread.yield();
 		}
 		saveInitiated.set(false);
 
+		logger.debug("Announcing federate save begun.");
 		rtiAmbassador.federateSaveBegun();
-		
+
+		logger.debug("Announcing federate save complete.");
 		rtiAmbassador.federateSaveComplete();
-		
+
+		logger.debug("Waiting for federation save complete...");
 		while(!saveCompleted.get()) {
 			Thread.yield();
 		}
 		saveCompleted.set(false);
 		
-		advance(); // advance to start time
-
+		advance(); // advance to start time - 1
+		
 		initialized.set(true);
 	}
 	

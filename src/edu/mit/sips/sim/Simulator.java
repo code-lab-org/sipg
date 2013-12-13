@@ -103,9 +103,10 @@ public class Simulator implements SimulationControlListener {
 		
 		long stopTime = Math.min(endTime, time + duration);
 
-		runAutoOptimization();
+		//runAutoOptimization();
 		
 		while(time <= stopTime) {
+			runAutoOptimization();
 			try {
 				simAmbassador.advance();
 			} catch (NotConnected ignored) {
@@ -122,11 +123,13 @@ public class Simulator implements SimulationControlListener {
 			time = time + 1;
 			logger.trace("The time is now " + time + ".");
 			
+			/* temporarily removed for non-interactive simulation
 			if(time <= endTime) {
 				logger.trace("Firing the first update for this time step.");
 				runAutoOptimization();
 				fireUpdateEvent(time);
 			}
+			*/
 		}
 		
 		if(time >= endTime) {

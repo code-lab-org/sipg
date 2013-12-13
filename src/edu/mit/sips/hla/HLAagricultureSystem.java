@@ -39,6 +39,8 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
+		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
 		FOOD_DOMESTIC_PRICE_ATTRIBUTE,
 		FOOD_IMPORT_PRICE_ATTRIBUTE,
@@ -252,6 +254,24 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 			foodDomesticPrice.setValue(agricultureSystem.getFoodDomesticPrice());
 			foodImportPrice.setValue(agricultureSystem.getFoodImportPrice());
 			foodExportPrice.setValue(agricultureSystem.getFoodExportPrice());
+			sustainabilityMetricNumerator.setValue(agricultureSystem.getFoodProduction());
+			sustainabilityMetricDenominator.setValue(agricultureSystem.getTotalFoodSupply());
 		}
+	}
+
+	@Override
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+
+	@Override
+	public double getFoodProduction() {
+		return sustainabilityMetricNumerator.getValue();
+	}
+
+	@Override
+	public double getTotalFoodSupply() {
+		return sustainabilityMetricDenominator.getValue();
 	}
 }

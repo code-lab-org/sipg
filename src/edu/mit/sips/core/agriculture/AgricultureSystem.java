@@ -75,13 +75,6 @@ public interface AgricultureSystem extends InfrastructureSystem,
 		 */
 		public double getFoodOutDistributionLosses();
 		
-		/**
-		 * Gets the food production.
-		 *
-		 * @return the food production
-		 */
-		public double getFoodProduction();
-		
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 		 */
@@ -123,13 +116,6 @@ public interface AgricultureSystem extends InfrastructureSystem,
 		public double getLocalFoodSupply();
 		
 		/**
-		 * Gets the total food supply.
-		 *
-		 * @return the total food supply
-		 */
-		public double getTotalFoodSupply();
-		
-		/**
 		 * Gets the unit production cost.
 		 *
 		 * @return the unit production cost
@@ -151,6 +137,27 @@ public interface AgricultureSystem extends InfrastructureSystem,
 		 */
 		public boolean removeElement(AgricultureElement element);
 	}
+	
+	/**
+	 * Gets the food security.
+	 *
+	 * @return the food security
+	 */
+	public double getFoodSecurity();
+	
+	/**
+	 * Gets the food production.
+	 *
+	 * @return the food production
+	 */
+	public double getFoodProduction();
+	
+	/**
+	 * Gets the total food supply.
+	 *
+	 * @return the total food supply
+	 */
+	public double getTotalFoodSupply();
 	
 	/**
 	 * Gets the food domestic price.

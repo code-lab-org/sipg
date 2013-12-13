@@ -29,13 +29,6 @@ public interface PetroleumSystem extends InfrastructureSystem,
 		 * @see edu.mit.sips.InfrastructureSystem#getElements()
 		 */
 		public List<? extends PetroleumElement> getElements();
-		
-		/**
-		 * Gets the reservoir lifetime.
-		 *
-		 * @return the reservoir lifetime
-		 */
-		public double getReservoirLifetime();
 
 		/* (non-Javadoc)
 		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
@@ -104,20 +97,6 @@ public interface PetroleumSystem extends InfrastructureSystem,
 		public double getPetroleumProduction();
 
 		/**
-		 * Gets the petroleum reservoir volume.
-		 *
-		 * @return the petroleum reservoir volume
-		 */
-		public double getPetroleumReservoirVolume();
-
-		/**
-		 * Gets the petroleum withdrawals.
-		 *
-		 * @return the petroleum withdrawals
-		 */
-		public double getPetroleumWithdrawals();
-
-		/**
 		 * Gets the total petroleum supply.
 		 *
 		 * @return the total petroleum supply
@@ -148,6 +127,13 @@ public interface PetroleumSystem extends InfrastructureSystem,
 	}
 	
 	/**
+	 * Gets the reservoir lifetime.
+	 *
+	 * @return the reservoir lifetime
+	 */
+	public double getReservoirLifetime();
+	
+	/**
 	 * Gets the electricity consumed.
 	 *
 	 * @return the electricity consumed
@@ -174,4 +160,18 @@ public interface PetroleumSystem extends InfrastructureSystem,
 	 * @return the petroleum import price
 	 */
 	public double getPetroleumImportPrice();
+
+	/**
+	 * Gets the petroleum reservoir volume.
+	 *
+	 * @return the petroleum reservoir volume
+	 */
+	public double getPetroleumReservoirVolume();
+
+	/**
+	 * Gets the petroleum withdrawals.
+	 *
+	 * @return the petroleum withdrawals
+	 */
+	public double getPetroleumWithdrawals();
 }

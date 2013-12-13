@@ -100,12 +100,17 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		agricultureScoreLabel.setText("");
 		agriculturePlayerScore.removeAllSeries();
 		foodSecurityHistory.clear();
+		
 		waterScoreLabel.setText("");
 		waterPlayerScore.removeAllSeries();
 		aquiferSecurityHistory.clear();
+		
 		energyScoreLabel.setText("");
 		energyPlayerScore.removeAllSeries();
 		reservoirSecurityHistory.clear();
+		
+		teamScoreLabel.setText("");
+		teamScore.removeAllSeries();
 	}
 	
 	private double getFoodSecurityScore(double foodSecurity) {
@@ -260,15 +265,20 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		if(year < 1980) {
 			return;
 		}
-		double foodSecurity = 0;
-		double aquiferSecurity = 0;
-		double reservoirSecurity = 0;
+
+		foodSecurityHistory.add(getFoodSecurityScore(
+				country.getAgricultureSystem().getFoodSecurity()));
+		double foodSecurity = getTotalScore(foodSecurityHistory);
+		
+		aquiferSecurityHistory.add(getAquiferSecurityScore(
+				country.getWaterSystem().getAquiferLifetime()));
+		double aquiferSecurity = getTotalScore(aquiferSecurityHistory);
+
+		reservoirSecurityHistory.add(getReservoirSecurityScore(
+				country.getPetroleumSystem().getReservoirLifetime()));
+		double reservoirSecurity = getTotalScore(reservoirSecurityHistory);
 		
 		if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
-			foodSecurityHistory.add(getFoodSecurityScore(((LocalAgricultureSoS) 
-					country.getAgricultureSystem()).getFoodSecurity()));
-			
-			foodSecurity = getTotalScore(foodSecurityHistory);
 			double sectorInvest = getTotalScoreAtYear(year, ((LocalAgricultureSoS) 
 					country.getAgricultureSystem()).getCumulativeCapitalExpense(),
 					getInvestmentDistopia("Agriculture"), getInvestmentUtopia("Agriculture"), 
@@ -300,10 +310,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 					+ NumberFormat.getIntegerInstance().format(totalScore));
 		}
 		if(country.getWaterSystem() instanceof LocalWaterSoS) {
-			aquiferSecurityHistory.add(getAquiferSecurityScore(((LocalWaterSoS) 
-					country.getWaterSystem()).getAquiferLifetime()));
-			
-			aquiferSecurity = getTotalScore(aquiferSecurityHistory);
 			double sectorInvest = getTotalScoreAtYear(year, ((LocalWaterSoS) 
 					country.getWaterSystem()).getCumulativeCapitalExpense(),
 					getInvestmentDistopia("Water"), getInvestmentUtopia("Water"), 
@@ -336,10 +342,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		}
 		if(country.getPetroleumSystem() instanceof LocalPetroleumSoS 
 				&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
-			reservoirSecurityHistory.add(getReservoirSecurityScore(((LocalPetroleumSoS) 
-					country.getPetroleumSystem()).getReservoirLifetime()));
-			
-			reservoirSecurity = getTotalScore(reservoirSecurityHistory);
 			double sectorInvest = getTotalScoreAtYear(year, ((LocalPetroleumSoS) 
 					country.getPetroleumSystem()).getCumulativeCapitalExpense() 
 					+ ((LocalElectricitySoS) country.getElectricitySystem()).getCumulativeCapitalExpense() ,

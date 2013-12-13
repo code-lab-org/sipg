@@ -163,7 +163,7 @@ public class HLAsocialSystem extends HLAinfrastructureSystem implements SocialSy
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
 		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
-				waterConsumption);
+				petroleumConsumption);
 		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCT_ATTRIBUTE), 
 				domesticProduct);
 		attributeValues.put(getAttributeHandle(POPULATION_ATTRIBUTE), 

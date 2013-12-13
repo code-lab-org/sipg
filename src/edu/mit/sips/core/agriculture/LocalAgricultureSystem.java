@@ -109,6 +109,11 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 					"Export price model cannot be null.");
 		}
 		this.exportPriceModel = exportPriceModel;
+	}	
+	
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
 	}
 
 	/* (non-Javadoc)

@@ -28,13 +28,17 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	public static final String NAME_ATTRIBUTE = "Name",
 			SOCIETY_NAME_ATTRIBUTE = "SocietyName",
 			NET_CASH_FLOW_ATTRIBUTE = "NetCashFlow",
-			DOMESTIC_PRODUCTION_ATTRIBUTE = "DomesticProduction";
+			DOMESTIC_PRODUCTION_ATTRIBUTE = "DomesticProduction",
+			SUSTAINABILITY_NUMERATOR_ATTRIBUTE = "SustainabilityMetricNumerator",
+			SUSTAINABILITY_DENOMINATOR_ATTRIBUTE = "SustainabilityMetricDenominator";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE
+		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
+		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE
 	};
 
 	/**
@@ -83,6 +87,8 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	private transient final HLAunicodeString societyName;
 	private transient final HLAfloat64BE netCashFlow;
 	private transient final HLAfloat64BE domesticProduction;
+	protected transient final HLAfloat64BE sustainabilityMetricNumerator;
+	protected transient final HLAfloat64BE sustainabilityMetricDenominator;
 	protected transient final Map<AttributeHandle,DataElement> attributeValues = 
 			new HashMap<AttributeHandle,DataElement>();
 	
@@ -101,6 +107,8 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 		societyName = encoderFactory.createHLAunicodeString();
 		netCashFlow = encoderFactory.createHLAfloat64BE();
 		domesticProduction = encoderFactory.createHLAfloat64BE();
+		sustainabilityMetricNumerator = encoderFactory.createHLAfloat64BE();
+		sustainabilityMetricDenominator = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(NAME_ATTRIBUTE), 
 				name);
 		attributeValues.put(getAttributeHandle(SOCIETY_NAME_ATTRIBUTE), 
@@ -109,6 +117,12 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 				netCashFlow);
 		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCTION_ATTRIBUTE), 
 				domesticProduction);
+		attributeValues.put(getAttributeHandle(
+				SUSTAINABILITY_NUMERATOR_ATTRIBUTE), 
+				sustainabilityMetricNumerator);
+		attributeValues.put(getAttributeHandle(
+				SUSTAINABILITY_DENOMINATOR_ATTRIBUTE), 
+				sustainabilityMetricDenominator);
 	}
 	
 	/* (non-Javadoc)

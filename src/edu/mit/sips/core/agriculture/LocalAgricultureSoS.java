@@ -32,17 +32,17 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
-	
-	public double getFoodSecurity() {
-		return getTotalFoodSupply() == 0 ? 1 
-				: (getFoodProduction() / getTotalFoodSupply());
-	}
 
 	/**
 	 * Instantiates a new local.
 	 */
 	public LocalAgricultureSoS() {
 		super("Agriculture");
+	}
+	
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
 	}
 
 	/* (non-Javadoc)
