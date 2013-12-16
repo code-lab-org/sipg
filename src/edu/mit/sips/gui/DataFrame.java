@@ -10,10 +10,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -132,24 +134,28 @@ public class DataFrame extends JFrame implements UpdateListener {
 			fileChooser.setFileFilter(
 					new FileNameExtensionFilter("JSON files","json"));
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(null)) {
-				try {
-					// create a file writer and buffered writer
-					FileWriter fw = new FileWriter(fileChooser.getSelectedFile());
-					BufferedWriter bw = new BufferedWriter(fw);
-					// write the JSON-ified experiment to file
-					bw.write(Serialization.serialize(simulator.getScenario()));
-					// flush and close writers
-					bw.flush();
-					bw.close();
-					fw.close();
-				} catch (IOException ex) {
-					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
-							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();
-				}
+				save(fileChooser.getSelectedFile());
 			}
 		}
 	};
+	
+	private void save(File file) {
+		try {
+			// create a file writer and buffered writer
+			FileWriter fw = new FileWriter(file);
+			BufferedWriter bw = new BufferedWriter(fw);
+			// write the JSON-ified experiment to file
+			bw.write(Serialization.serialize(simulator.getScenario()));
+			// flush and close writers
+			bw.flush();
+			bw.close();
+			fw.close();
+		} catch (IOException ex) {
+			JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
+					ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			ex.printStackTrace();
+		}
+	}
 	
 	private final Action closeScenario = new AbstractAction("Close") {
 		private static final long serialVersionUID = 4589751151727368209L;
@@ -307,7 +313,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			this.simulator.addUpdateListener(societyPane);
 			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
-			this.simulationPane = new SimulationControlPane(this.simulator);
+			this.simulationPane = new SimulationControlPane(this, this.simulator);
 			this.simulator.getConnection().addConnectionListener(simulationPane);
 			this.simulator.addUpdateListener(simulationPane);
 			nationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -346,7 +352,13 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		// nothing to do
+		File file = new File(new File("logs"), new Date().getTime() + "c" + ".json");
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		save(file);
 	}
 	
 	/* (non-Javadoc)
@@ -402,5 +414,16 @@ public class DataFrame extends JFrame implements UpdateListener {
 		} catch (InvocationTargetException e) {
 			e.printStackTrace();
 		}
+	}
+
+	protected void autoSave() {
+		File file = new File("autosave.json");
+		try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("auto-saving: " + file);
+		save(file);
 	}
 }

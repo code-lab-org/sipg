@@ -29,6 +29,7 @@ import edu.mit.sips.sim.Simulator;
 public class SimulationControlPane extends JPanel implements ConnectionListener, UpdateListener {
 	private static final long serialVersionUID = -7014074954503228524L;
 
+	private final DataFrame frame;
 	private final Simulator simulator;
 	private final JSlider timeSlider;
 	private final AtomicBoolean working = new AtomicBoolean(false);
@@ -182,12 +183,13 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 *
 	 * @param simulator the simulator
 	 */
-	public SimulationControlPane(Simulator simulator) {
+	public SimulationControlPane(DataFrame frame, Simulator simulator) {
 		if(simulator == null) {
 			throw new IllegalArgumentException(
 					"Simulator cannot be null.");
 		}
 		this.simulator = simulator;
+		this.frame = frame;
 		
 		toggleConnection.putValue(Action.SHORT_DESCRIPTION, 
 				"Toggle the network connection.");
@@ -340,6 +342,7 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 *
 	 */
 	private void fireSimulationInitialize() {
+		frame.autoSave();
 		final InitializationInputPanel input = new InitializationInputPanel();
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
 				getTopLevelAncestor(), input, 
