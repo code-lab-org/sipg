@@ -352,13 +352,18 @@ public class DataFrame extends JFrame implements UpdateListener {
 	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		File file = new File(new File("logs"), new Date().getTime() + "c" + ".json");
+		File logsDir = new File("logs");
+		if(!logsDir.exists()) {
+			logsDir.mkdir();
+		}
+		File finalState = new File(logsDir, System.getProperty("user.name") 
+				+ "_" + new Date().getTime() + ".json");
 		try {
-			file.createNewFile();
+			finalState.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		save(file);
+		save(finalState);
 	}
 	
 	/* (non-Javadoc)
