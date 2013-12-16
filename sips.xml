@@ -73,6 +73,30 @@
                     <order>TimeStamp</order>
                     <semantics>Domestic production (sim) contributed from this infrastructure system.</semantics>
                 </attribute>
+                <attribute>
+                    <name>SustainabilityMetricNumerator</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <updateCondition>Every time step.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Numerator of context-dependent metric for each infrastructure system.</semantics>
+                </attribute>
+                <attribute>
+                    <name>SustainabilityMetricDenominator</name>
+                    <dataType>HLAfloat64BE</dataType>
+                    <updateType>Periodic</updateType>
+                    <updateCondition>Every time step.</updateCondition>
+                    <ownership>NoTransfer</ownership>
+                    <sharing>PublishSubscribe</sharing>
+                    <dimensions/>
+                    <transportation>HLAreliable</transportation>
+                    <order>TimeStamp</order>
+                    <semantics>Denominator of context-dependent metric for each infrastructure system.</semantics>
+                </attribute>
                 <objectClass>
                     <name>WaterSystem</name>
                     <sharing>Neither</sharing>
