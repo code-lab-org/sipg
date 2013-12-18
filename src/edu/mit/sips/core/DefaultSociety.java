@@ -450,7 +450,6 @@ public abstract class DefaultSociety implements Society {
 	public void initialize(long time) {
 		cumulativeCashFlow = 0;
 		cumulativeCapitalExpense = 0;
-		domesticProduct = getNextDomesticProduct();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			if(system instanceof InfrastructureSystem.Local) {
 				((InfrastructureSystem.Local)system).initialize(time);
@@ -459,6 +458,7 @@ public abstract class DefaultSociety implements Society {
 		for(Society society : getNestedSocieties()) {
 			society.initialize(time);
 		}
+		domesticProduct = getNextDomesticProduct(); // TODO need initial value
 	}
 
 	/* (non-Javadoc)
