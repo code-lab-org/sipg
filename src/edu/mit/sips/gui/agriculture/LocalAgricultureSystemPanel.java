@@ -239,12 +239,8 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		}
 		return systems;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	
+	private void initialize() {
 		localFoodIndicatorPanel.initialize();
 		localFoodData.removeAllSeries();
 		foodProductCostData.removeAllSeries();
@@ -276,6 +272,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
+		initialize();
 		agricultureStatePanel.repaint();
 	}
 
@@ -284,14 +281,11 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		update((int)event.getTime());
 		agricultureStatePanel.repaint();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeriesCollection(localFoodData, getSociety().getName(), 
 				year, getAgricultureSystem().getLocalFoodFraction());
 		localFoodIndicatorPanel.setValue(

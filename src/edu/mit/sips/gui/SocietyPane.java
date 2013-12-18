@@ -147,45 +147,33 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		}
 	}
 
-	/**
-	 * Initialize.
-	 */
-	public void initialize() {
-		if(scoreTab != null) {
-			scoreTab.initialize();
-		}
-
-		if(waterTab != null) {
-			waterTab.initialize();
-		}
-
-		if(agricultureTab != null) {
-			agricultureTab.initialize();
-		}
-
-		if(electricityTab != null) {
-			electricityTab.initialize();
-		}
-
-		if(petroleumTab != null) {
-			petroleumTab.initialize();
-		}
-
-		if(socialTab != null) {
-			socialTab.initialize();
-		}
-
-		for(SocietyPane subPane : nestedPaneList) {			
-			subPane.initialize();
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		// nothing to do here
+		if(scoreTab != null) {
+			scoreTab.simulationCompleted(event);
+		}
+		if(waterTab != null) {
+			waterTab.simulationCompleted(event);
+		}
+		if(agricultureTab != null) {
+			agricultureTab.simulationCompleted(event);
+		}
+		if(electricityTab != null) {
+			electricityTab.simulationCompleted(event);
+		}
+		if(petroleumTab != null) {
+			petroleumTab.simulationCompleted(event);
+		}
+		if(socialTab != null) {
+			socialTab.simulationCompleted(event);
+		}
+
+		for(SocietyPane nestedPane : nestedPaneList) {
+			nestedPane.simulationCompleted(event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -226,60 +214,25 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 			scoreTab.simulationUpdated(event);
 		}
 		if(waterTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
+					waterTab.getInfrastructureSystem().getName());
 			waterTab.simulationUpdated(event);
 		}
 		if(agricultureTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
+					agricultureTab.getInfrastructureSystem().getName());
 			agricultureTab.simulationUpdated(event);
 		}
 		if(electricityTab != null) {
+			infraPane.setTitleAt(infraPane.indexOfComponent(electricityTab), 
+					electricityTab.getInfrastructureSystem().getName());
 			electricityTab.simulationUpdated(event);
 		}
 		if(petroleumTab != null) {
-			petroleumTab.simulationUpdated(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationUpdated(event);
-		}
-
-		for(SocietyPane nestedPane : nestedPaneList) {
-			nestedPane.simulationUpdated(event);
-		}
-	}
-
-	/**
-	 * Update datasets.
-	 *
-	 * @param year the year
-	 * @param superSystem the system
-	 */
-	public void updateDatasets(int year) {
-		if(scoreTab != null) {
-			scoreTab.update(year);
-		}
-		if(waterTab != null) {
-			infraPane.setTitleAt(infraPane.indexOfComponent(waterTab), 
-					waterTab.getInfrastructureSystem().getName());
-			waterTab.update(year);
-		}
-
-		if(agricultureTab != null) {
-			infraPane.setTitleAt(infraPane.indexOfComponent(agricultureTab), 
-					agricultureTab.getInfrastructureSystem().getName());
-			agricultureTab.update(year);
-		}
-
-		if(electricityTab != null) {
-			infraPane.setTitleAt(infraPane.indexOfComponent(electricityTab), 
-					electricityTab.getInfrastructureSystem().getName());
-			electricityTab.update(year);
-		}
-
-		if(petroleumTab != null) {
 			infraPane.setTitleAt(infraPane.indexOfComponent(petroleumTab), 
 					petroleumTab.getInfrastructureSystem().getName());
-			petroleumTab.update(year);
+			petroleumTab.simulationUpdated(event);
 		}
-
 		if(socialTab != null) {
 			if(indexOfComponent(socialTab) >= 0) {
 				setTitleAt(indexOfComponent(socialTab), 
@@ -288,11 +241,11 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 				infraPane.setTitleAt(infraPane.indexOfComponent(socialTab), 
 						socialTab.getInfrastructureSystem().getName());
 			}
-			socialTab.update(year);
+			socialTab.simulationUpdated(event);
 		}
 
-		for(SocietyPane subPane : nestedPaneList) {			
-			subPane.updateDatasets(year);
+		for(SocietyPane nestedPane : nestedPaneList) {
+			nestedPane.simulationUpdated(event);
 		}
 	}
 }

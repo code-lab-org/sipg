@@ -273,11 +273,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		return (PetroleumSystem.Local) getInfrastructureSystem();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		petroleumReservoirIndicatorPanel.initialize();
 		localPetroleumIndicatorPanel.initialize();
 		cashFlow.removeAllSeries();
@@ -311,6 +307,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
+		initialize();
 		petroleumStatePanel.repaint();
 	}
 	
@@ -319,14 +316,11 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		update((int)event.getTime());
 		petroleumStatePanel.repaint();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeriesCollection(petroleumProductCostData, 
 				getSociety().getName(), year, 
 				getPetroleumSystem().getUnitProductionCost());

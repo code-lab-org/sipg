@@ -283,11 +283,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		localWaterData.removeAllSeries();
 		renewableWaterData.removeAllSeries();
 		waterProductCostData.removeAllSeries();
@@ -318,6 +314,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
+		initialize();
 		waterStatePanel.repaint();
 	}
 
@@ -326,14 +323,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		update((int)event.getTime());
 		waterStatePanel.repaint();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeriesCollection(localWaterData, getWaterSystem().getSociety().getName(),
 				year, getWaterSystem().getLocalWaterFraction());
 		localWaterIndicatorPanel.setValue(getWaterSystem().getLocalWaterFraction());

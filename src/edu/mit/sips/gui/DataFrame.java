@@ -309,7 +309,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 			
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			societyPane = new SocietyPane(this.simulator.getScenario().getCountry());
-			societyPane.initialize();
 			this.simulator.addUpdateListener(societyPane);
 			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
@@ -383,8 +382,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					
 					setTitle("Data as of " + year);
 
-					societyPane.initialize();
-					societyPane.updateDatasets(year);
+					societyPane.simulationInitialized(event);
 				}
 			});
 		} catch (InterruptedException e) {
@@ -411,7 +409,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					
 					setTitle("Data as of " + year);
 					
-					societyPane.updateDatasets(year);
+					societyPane.simulationUpdated(event);
 				}
 			});
 		} catch (InterruptedException e) {

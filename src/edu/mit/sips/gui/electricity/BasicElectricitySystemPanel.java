@@ -41,11 +41,7 @@ public class BasicElectricitySystemPanel extends ElectricitySystemPanel {
 		return (ElectricitySystem) getInfrastructureSystem();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		electricityRevenue.removeAllSeries();
 		waterConsumption.removeAllSeries();
 		petroleumConsumption.removeAllSeries();
@@ -64,7 +60,7 @@ public class BasicElectricitySystemPanel extends ElectricitySystemPanel {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		// nothing to do here
+		initialize();
 	}
 
 	/* (non-Javadoc)
@@ -72,14 +68,10 @@ public class BasicElectricitySystemPanel extends ElectricitySystemPanel {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		// nothing to do here
+		update((int)event.getTime());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeries(electricityRevenue, "Revenue", year, 
 				getElectricitySystem().getCashFlow());
 		updateSeries(waterConsumption, "Consumption", year, 

@@ -78,16 +78,6 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	public Society getSociety() {
 		return infrastructureSystem.getSociety();
 	}
-
-	/**
-	 * Initialize.
-	 */
-	public abstract void initialize();
-	
-	/**
-	 * Update.
-	 */
-	public abstract void update(int year);
 	
 	private JFreeChart createChart(boolean isArea, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset, 

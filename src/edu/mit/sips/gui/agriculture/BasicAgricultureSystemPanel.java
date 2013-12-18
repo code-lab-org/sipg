@@ -38,20 +38,12 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 		return (AgricultureSystem) getInfrastructureSystem();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		agricultureRevenue.removeAllSeries();
 		waterConsumption.removeAllSeries();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeries(agricultureRevenue, "Revenue", year, 
 				getAgricultureSystem().getCashFlow());
 		updateSeries(waterConsumption, "Consumption", year, 
@@ -71,7 +63,7 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		// nothing to do here
+		initialize();
 	}
 
 	/* (non-Javadoc)
@@ -79,6 +71,6 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		// nothing to do here
+		update((int)event.getTime());
 	}
 }

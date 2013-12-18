@@ -271,11 +271,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		renewableElectricityIndicatorPanel.initialize();
 		localElectricityIndicatorPanel.initialize();
 		cashFlow.removeAllSeries();
@@ -310,6 +306,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
+		initialize();
 		electricityStatePanel.repaint();
 	}
 
@@ -318,14 +315,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
+		update((int)event.getTime());
 		electricityStatePanel.repaint();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeriesCollection(localElectricityData, getSociety().getName(), 
 				year, getElectricitySystem().getLocalElectricityFraction());
 		localElectricityIndicatorPanel.setValue(

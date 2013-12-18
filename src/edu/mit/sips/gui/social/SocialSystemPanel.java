@@ -133,11 +133,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		return (SocialSystem) getInfrastructureSystem(); 
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		cumulativeBalance.removeAllSeries();
 		infrastructureSystemRevenue.removeAllSeries();
 		infrastructureSystemNetRevenue.removeAllSeries();
@@ -166,7 +162,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		// nothing to do here
+		initialize();
 	}
 
 	/* (non-Javadoc)
@@ -174,14 +170,10 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		// nothing to do here
+		update((int)event.getTime());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		if(getSociety() instanceof Country) {
 			updateSeries(cumulativeBalance, getSociety().getName() + " Funds", year, 
 					CurrencyUnits.convertStock(((Country)getSociety()).getFunds(), 

@@ -38,11 +38,7 @@ public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 		return (PetroleumSystem) getInfrastructureSystem();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#initialize()
-	 */
-	@Override
-	public void initialize() {
+	private void initialize() {
 		petroleumRevenue.removeAllSeries();
 		electricityConsumption.removeAllSeries();
 	}
@@ -60,7 +56,7 @@ public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
-		// nothing to do here
+		initialize();
 	}
 
 	/* (non-Javadoc)
@@ -68,14 +64,10 @@ public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
-		// nothing to do here
+		update((int)event.getTime());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.InfrastructureSystemPanel#update(int)
-	 */
-	@Override
-	public void update(int year) {
+	private void update(int year) {
 		updateSeries(petroleumRevenue, "Revenue", year, 
 				getPetroleumSystem().getCashFlow());
 		updateSeries(electricityConsumption, "Consumption", year, 
