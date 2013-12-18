@@ -119,6 +119,12 @@ public class Simulator implements SimulationControlListener {
 			logger.trace("Tick/tocking the country (time = " + time + ").");
 			scenario.getCountry().tick();
 			fireUpdateEvent(time);
+			if(time >= endTime) {
+				logger.trace("Simulation is completed.");
+				completed.set(true);
+				fireCompleteEvent(time);
+				return;
+			}
 			scenario.getCountry().tock();
 			time = time + 1;
 			logger.trace("The time is now " + time + ".");
@@ -130,12 +136,6 @@ public class Simulator implements SimulationControlListener {
 				fireUpdateEvent(time);
 			}
 			*/
-		}
-		
-		if(time >= endTime) {
-			logger.trace("Simulation is completed.");
-			completed.set(true);
-			fireCompleteEvent(time);
 		}
 	}
 	
