@@ -52,7 +52,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Urban":
 			return 0.04;
 		case "Agriculture":
-			return 0.03;
+			return 0.05;
 		case "Water":
 			return 0.03;
 		case "Energy":
@@ -261,9 +261,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 	private double getTotalScoreAtYear(int year, 
 			double value, double distopiaTotal, double utopiaTotal, double growthRate) {
-		double growthFactor = 70*Math.log(growthRate);
-		double minValue = distopiaTotal * (Math.exp(growthFactor*(year-1940)/70) - 1)/(Math.exp(growthFactor*1)-1); // 0 + Math.exp((year-1950)/60)*distopiaTotal;
-		double maxValue = utopiaTotal * (Math.exp(growthFactor*(year-1940)/70) - 1)/(Math.exp(growthFactor*1)-1); // (year-1950)*(utopiaTotal-distopiaTotal)/60;
+		double minValue = distopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
 		if(value < minValue) {
 			return 0;
 		} else if(value > maxValue) {
