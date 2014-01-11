@@ -363,6 +363,19 @@ public class DataFrame extends JFrame implements UpdateListener {
 			e.printStackTrace();
 		}
 		save(finalState);
+
+		File userOutputDir = new File(System.getProperty("user.home"), "sips-g");
+		if(!userOutputDir.exists()) {
+			userOutputDir.mkdir();
+		}
+		File userFinalState = new File(userOutputDir, 
+				new Date().getTime() + "-scenario.json");
+		try {
+			userFinalState.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		save(userFinalState);
 	}
 	
 	/* (non-Javadoc)

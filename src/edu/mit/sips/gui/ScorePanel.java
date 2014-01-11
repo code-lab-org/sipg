@@ -2,6 +2,11 @@ package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,10 +15,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.City;
@@ -26,6 +34,8 @@ import edu.mit.sips.io.Icons;
 
 public class ScorePanel extends InfrastructureSystemPanel {
 	private static final long serialVersionUID = 355808870154994451L;
+	
+	private static boolean displayTeamScore = true;
 
 	private static double getInvestmentDistopia(String name) {
 		switch(name) {
@@ -128,21 +138,27 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	}
 
 	private final Country country;
+	
 	private final File outputFile;
+	private final File userOutputDir;
 
 	List<Double> foodSecurityHistory = new ArrayList<Double>();
 	List<Double> aquiferSecurityHistory = new ArrayList<Double>();
 	List<Double> reservoirSecurityHistory = new ArrayList<Double>();
-	
+
+	private JPanel agricultureScorePanel;
 	private final JLabel agricultureScoreLabel = new JLabel("");
 	DefaultTableXYDataset agriculturePlayerScore = new DefaultTableXYDataset();
 
+	private JPanel waterScorePanel;
 	private final JLabel waterScoreLabel = new JLabel("");
 	DefaultTableXYDataset waterPlayerScore = new DefaultTableXYDataset();
 
+	private JPanel energyScorePanel;
 	private final JLabel energyScoreLabel = new JLabel("");
 	DefaultTableXYDataset energyPlayerScore = new DefaultTableXYDataset();
 
+	private JPanel teamScorePanel;
 	private final JLabel teamScoreLabel = new JLabel("");
 	DefaultTableXYDataset teamScore = new DefaultTableXYDataset();
 	
@@ -160,6 +176,12 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		}
 		outputFile = new File(logDir, System.getProperty("user.name") 
 				+ "_" + new Date().getTime() + ".log");
+		
+		userOutputDir = new File(System.getProperty("user.home"), "sips-g");
+		if(!userOutputDir.exists()) {
+			userOutputDir.mkdir();
+		}
+		
 		try {
 			FileWriter fw = new FileWriter(outputFile);
 			fw.write("Time, ");
@@ -168,14 +190,14 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write("Reservoir Security, ");
 
 			if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
-				JPanel scorePanel = createStackedAreaChart("Score (-)", null,
+				agricultureScorePanel = createStackedAreaChart("Score (-)", null,
 						new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.PLUM, 
 						PlottingUtils.BLACK}, agriculturePlayerScore);
 				agricultureScoreLabel.setFont(getFont().deriveFont(20f));
 				agricultureScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				scorePanel.add(agricultureScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.AGRICULTURE, scorePanel);
+				agricultureScorePanel.add(agricultureScoreLabel, BorderLayout.NORTH);
+				addTab("Individual Score", Icons.AGRICULTURE, agricultureScorePanel);
 
 				fw.write("Agriculture Profit, ");
 				fw.write("Agriculture Investment, ");
@@ -183,14 +205,14 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Agriculture Score, ");
 			}
 			if(country.getWaterSystem() instanceof LocalWaterSoS) {
-				JPanel scorePanel = createStackedAreaChart("Score (-)", null,
+				waterScorePanel = createStackedAreaChart("Score (-)", null,
 						new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.PLUM, 
 						PlottingUtils.BLACK}, waterPlayerScore);
 				waterScoreLabel.setFont(getFont().deriveFont(20f));
 				waterScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				scorePanel.add(waterScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.WATER, scorePanel);
+				waterScorePanel.add(waterScoreLabel, BorderLayout.NORTH);
+				addTab("Individual Score", Icons.WATER, waterScorePanel);
 
 				fw.write("Water Profit, ");
 				fw.write("Water Investment, ");
@@ -199,14 +221,14 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			}
 			if(country.getPetroleumSystem() instanceof LocalPetroleumSoS
 					&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
-				JPanel scorePanel = createStackedAreaChart("Score (-)", null,
+				energyScorePanel = createStackedAreaChart("Score (-)", null,
 						new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.PLUM, 
 						PlottingUtils.BLACK}, energyPlayerScore);
 				energyScoreLabel.setFont(getFont().deriveFont(20f));
 				energyScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				scorePanel.add(energyScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.ENERGY, scorePanel);
+				energyScorePanel.add(energyScoreLabel, BorderLayout.NORTH);
+				addTab("Individual Score", Icons.ENERGY, energyScorePanel);
 
 				fw.write("Energy Profit, ");
 				fw.write("Energy Investment, ");
@@ -214,14 +236,16 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Energy Score, ");
 			}
 
-			JPanel scorePanel = createStackedAreaChart("Score (-)", null,
+			teamScorePanel = createStackedAreaChart("Score (-)", null,
 					new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.DODGER_BLUE, 
 					PlottingUtils.DIM_GRAY, PlottingUtils.GOLDENROD, 
 					PlottingUtils.BLACK}, teamScore);
 			teamScoreLabel.setFont(getFont().deriveFont(20f));
 			teamScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-			scorePanel.add(teamScoreLabel, BorderLayout.NORTH);
-			addTab("Team Score", Icons.COUNTRY, scorePanel);
+			teamScorePanel.add(teamScoreLabel, BorderLayout.NORTH);
+			if(displayTeamScore) {
+				addTab("Team Score", Icons.COUNTRY, teamScorePanel);
+			}
 
 			fw.write("Over Budget, ");
 			fw.write("National Profit, ");
@@ -444,6 +468,108 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			e.printStackTrace();
 		}
 		
+		// hack to save chart images
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				
+				if(agricultureScorePanel != null) {
+					for(Component c : agricultureScorePanel.getComponents()) {
+						if(c instanceof ChartPanel) {
+							ChartPanel chartPanel = (ChartPanel) c;
+							BufferedImage img = chartPanel.getChart().createBufferedImage(
+									chartPanel.getWidth(), chartPanel.getHeight());
+							Graphics2D g2d = img.createGraphics();
+							g2d.drawImage(img, 0, 0, null);
+							g2d.setPaint(Color.black);
+							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+							FontMetrics fm = g2d.getFontMetrics();
+							String text = agricultureScoreLabel.getText();
+							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.dispose();
+							File outputFile = new File(userOutputDir, 
+									new Date().getTime() + "-agriculture.png");
+							try {
+								ImageIO.write(img,  "png", outputFile);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				if(waterScorePanel != null) {
+					for(Component c : waterScorePanel.getComponents()) {
+						if(c instanceof ChartPanel) {
+							ChartPanel chartPanel = (ChartPanel) c;
+							BufferedImage img = chartPanel.getChart().createBufferedImage(
+									chartPanel.getWidth(), chartPanel.getHeight());
+							Graphics2D g2d = img.createGraphics();
+							g2d.drawImage(img, 0, 0, null);
+							g2d.setPaint(Color.black);
+							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+							FontMetrics fm = g2d.getFontMetrics();
+							String text = waterScoreLabel.getText();
+							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.dispose();
+							File outputFile = new File(userOutputDir, 
+									new Date().getTime() + "-water.png");
+							try {
+								ImageIO.write(img,  "png", outputFile);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				if(energyScorePanel != null) {
+					for(Component c : energyScorePanel.getComponents()) {
+						if(c instanceof ChartPanel) {
+							ChartPanel chartPanel = (ChartPanel) c;
+							BufferedImage img = chartPanel.getChart().createBufferedImage(
+									chartPanel.getWidth(), chartPanel.getHeight());
+							Graphics2D g2d = img.createGraphics();
+							g2d.drawImage(img, 0, 0, null);
+							g2d.setPaint(Color.black);
+							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+							FontMetrics fm = g2d.getFontMetrics();
+							String text = energyScoreLabel.getText();
+							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.dispose();
+							File outputFile = new File(userOutputDir, 
+									+ new Date().getTime() + "-energy.png");
+							try {
+								ImageIO.write(img,  "png", outputFile);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+				if(displayTeamScore) {
+					for(Component c : teamScorePanel.getComponents()) {
+						if(c instanceof ChartPanel) {
+							ChartPanel chartPanel = (ChartPanel) c;
+							BufferedImage img = chartPanel.getChart().createBufferedImage(
+									chartPanel.getWidth(), chartPanel.getHeight());
+							Graphics2D g2d = img.createGraphics();
+							g2d.drawImage(img, 0, 0, null);
+							g2d.setPaint(Color.black);
+							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
+							FontMetrics fm = g2d.getFontMetrics();
+							String text = teamScoreLabel.getText();
+							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.dispose();
+							File outputFile = new File(userOutputDir,  
+									+ new Date().getTime() + "-team.png");
+							try {
+								ImageIO.write(img,  "png", outputFile);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+		});
 		
 		if(overBudgetYear > 0) {
 			NumberFormat format = NumberFormat.getNumberInstance();
