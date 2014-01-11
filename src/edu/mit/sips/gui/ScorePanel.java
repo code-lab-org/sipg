@@ -146,10 +146,13 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private final double maxAnnualBudget = 4e9;
 	private double overBudgetValue = 0;
 	private int overBudgetYear = 0;
+	
+	private final JLabel scoreLabel;
 
-	public ScorePanel(Country country) {
+	public ScorePanel(Country country, JLabel scoreLabel) {
 		super(country.getSocialSystem());
 		this.country = country;
+		this.scoreLabel = scoreLabel;
 
 		File logDir = new File("logs");
 		if(!logDir.exists()) {
@@ -161,6 +164,17 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		userOutputDir = new File(System.getProperty("user.home"), "sips-g");
 		if(!userOutputDir.exists()) {
 			userOutputDir.mkdir();
+		}
+
+		teamScorePanel = createStackedAreaChart("Score (-)", null,
+				new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.DODGER_BLUE, 
+				PlottingUtils.DIM_GRAY, PlottingUtils.GOLDENROD, 
+				PlottingUtils.BLACK}, teamScore);
+		teamScoreLabel.setFont(getFont().deriveFont(20f));
+		teamScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+		teamScorePanel.add(teamScoreLabel, BorderLayout.NORTH);
+		if(displayTeamScore) {
+			addTab("Team Score", Icons.COUNTRY, teamScorePanel);
 		}
 		
 		try {
@@ -209,17 +223,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Energy Profit, ");
 				fw.write("Energy Investment, ");
 				fw.write("Energy Score, ");
-			}
-
-			teamScorePanel = createStackedAreaChart("Score (-)", null,
-					new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.DODGER_BLUE, 
-					PlottingUtils.DIM_GRAY, PlottingUtils.GOLDENROD, 
-					PlottingUtils.BLACK}, teamScore);
-			teamScoreLabel.setFont(getFont().deriveFont(20f));
-			teamScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-			teamScorePanel.add(teamScoreLabel, BorderLayout.NORTH);
-			if(displayTeamScore) {
-				addTab("Team Score", Icons.COUNTRY, teamScorePanel);
 			}
 
 			fw.write("Over Budget, ");
@@ -277,6 +280,8 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	}
 
 	private void initialize() {
+		scoreLabel.setText("");
+		
 		agricultureScoreLabel.setText("");
 		agriculturePlayerScore.removeAllSeries();
 		foodSecurityHistory.clear();
@@ -440,7 +445,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
 							FontMetrics fm = g2d.getFontMetrics();
 							String text = agricultureScoreLabel.getText();
-							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.drawString(text, img.getWidth()/2 - fm.stringWidth(text)/2, fm.getHeight() + 5);
 							g2d.dispose();
 							File outputFile = new File(userOutputDir, 
 									new Date().getTime() + "-agriculture.png");
@@ -464,7 +469,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
 							FontMetrics fm = g2d.getFontMetrics();
 							String text = waterScoreLabel.getText();
-							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.drawString(text, img.getWidth()/2 - fm.stringWidth(text)/2, fm.getHeight() + 5);
 							g2d.dispose();
 							File outputFile = new File(userOutputDir, 
 									new Date().getTime() + "-water.png");
@@ -488,7 +493,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
 							FontMetrics fm = g2d.getFontMetrics();
 							String text = energyScoreLabel.getText();
-							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.drawString(text, img.getWidth()/2 - fm.stringWidth(text)/2, fm.getHeight() + 5);
 							g2d.dispose();
 							File outputFile = new File(userOutputDir, 
 									+ new Date().getTime() + "-energy.png");
@@ -512,7 +517,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							g2d.setFont(new Font("SansSerif", Font.BOLD, 16));
 							FontMetrics fm = g2d.getFontMetrics();
 							String text = teamScoreLabel.getText();
-							g2d.drawString(text, img.getWidth() - fm.stringWidth(text) - 5, fm.getHeight() + 5);
+							g2d.drawString(text, img.getWidth()/2 - fm.stringWidth(text)/2, fm.getHeight() + 5);
 							g2d.dispose();
 							File outputFile = new File(userOutputDir,  
 									+ new Date().getTime() + "-team.png");
@@ -550,6 +555,8 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		if(year < 1980) {
 			return;
 		}
+		
+		scoreLabel.setText("");
 
 		foodSecurityHistory.add(getFoodSecurityScore(
 				country.getAgricultureSystem().getFoodSecurity()));
@@ -582,8 +589,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(agriculturePlayerScore, "Total Score", 
 					year, totalScore);
-			agricultureScoreLabel.setText("Individual Score: " 
-					+ NumberFormat.getIntegerInstance().format(totalScore));
+			String scoreText = "Agriculture Score: " 
+					+ NumberFormat.getIntegerInstance().format(totalScore);
+			agricultureScoreLabel.setText(scoreText);
+			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
+				scoreLabel.getText() + ", ") + scoreText);
 		}
 		if(country.getWaterSystem() instanceof LocalWaterSoS) {
 			double sectorInvest = getSectorInvestment(year,
@@ -603,8 +613,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(waterPlayerScore, "Total Score", 
 					year, totalScore);
-			waterScoreLabel.setText("Individual Score: " 
-					+ NumberFormat.getIntegerInstance().format(totalScore));
+			String scoreText = "Water Score: " 
+					+ NumberFormat.getIntegerInstance().format(totalScore);
+			waterScoreLabel.setText(scoreText);
+			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
+				scoreLabel.getText() + ", ") + scoreText);
 		}
 		if(country.getPetroleumSystem() instanceof LocalPetroleumSoS 
 				&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
@@ -627,8 +640,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(energyPlayerScore, "Total Score", 
 					year, totalScore);
-			energyScoreLabel.setText("Individual Score: " 
-					+ NumberFormat.getIntegerInstance().format(totalScore));
+			String scoreText = "Energy Score: " 
+					+ NumberFormat.getIntegerInstance().format(totalScore);
+			energyScoreLabel.setText(scoreText);
+			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
+				scoreLabel.getText() + ", ") + scoreText);
 		}
 		
 		if(country.getTotalCapitalExpense() > maxAnnualBudget) {
@@ -655,8 +671,13 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 		updateSeries(teamScore, "Total Score", 
 				year, totalScore);
-		teamScoreLabel.setText("Team Score: " 
+		String scoreText = "Team Score: " 
 				+ NumberFormat.getIntegerInstance().format(totalScore)
-				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":""));
+				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":"");
+		teamScoreLabel.setText(scoreText);
+		if(displayTeamScore) {
+			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
+				scoreLabel.getText() + ", ") + scoreText);
+		}
 	}
 }

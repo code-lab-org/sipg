@@ -181,8 +181,9 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 			final TableXYDataset areaDataset, final Color[] colors, final TableXYDataset lineDataset, 
 			final String valueAxis2, final TableXYDataset lineDataset2) {
 		final JPanel panel = new JPanel(new BorderLayout());
-		panel.add(new ChartPanel(createChart(true, valueAxis, areaDataset, 
-				colors, lineDataset, valueAxis2, lineDataset2)), BorderLayout.CENTER);
+		ChartPanel chartPanel = new ChartPanel(createChart(true, valueAxis, areaDataset, 
+				colors, lineDataset, valueAxis2, lineDataset2));
+		panel.add(chartPanel, BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		JButton exportAreaButton = new JButton(new AbstractAction("Export Data") {
 			private static final long serialVersionUID = -7171676288524836282L;
@@ -195,7 +196,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 				}
 			}
 		});
-		buttonPanel.add(exportAreaButton);
+		//TODO buttonPanel.add(exportAreaButton);
 		if(areaDataset != null) {
 			final JCheckBox areaToggle = new JCheckBox("Stacked Area", true);
 			areaToggle.addActionListener(new ActionListener() {
@@ -290,11 +291,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 		}
 		chart.setBackgroundPaint(new JPanel().getBackground());
 		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setMinimumDrawHeight(400);
-		chartPanel.setMaximumDrawHeight(1050);
-		chartPanel.setMinimumDrawWidth(600);
-		chartPanel.setMaximumDrawWidth(1680);
-
+		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(chartPanel, BorderLayout.CENTER);
 		JButton exportAreaButton = new JButton(new AbstractAction("Export Data") {
@@ -304,7 +301,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 				exportDataset(valueAxis, seriesCollection);
 			}
 		});
-		panel.add(exportAreaButton, BorderLayout.SOUTH);
+		//TODO panel.add(exportAreaButton, BorderLayout.SOUTH);
 		return panel;
 	}
 	

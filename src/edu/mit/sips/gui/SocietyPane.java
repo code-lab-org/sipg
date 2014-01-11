@@ -1,5 +1,9 @@
 package edu.mit.sips.gui;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import edu.mit.sips.core.Country;
@@ -21,7 +25,7 @@ import edu.mit.sips.io.Icons;
 /**
  * The Class SocietyPane.
  */
-public class SocietyPane extends JTabbedPane implements UpdateListener {
+public class SocietyPane extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = -2070963615190359867L;
 
 	private final WaterSystemPanel waterTab;
@@ -37,16 +41,25 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 	 * @param society the society
 	 */
 	public SocietyPane(Country country) {
-		socialTab = new SocialSystemPanel(country.getSocialSystem());
-		addTab(country.getName(), Icons.COUNTRY, socialTab);
+		setLayout(new BorderLayout());
 		
-		scoreTab = new ScorePanel(country);
-		addTab("Scores", Icons.METRICS, scoreTab);
+		JLabel scoreLabel = new JLabel("");
+		scoreLabel.setHorizontalAlignment(JLabel.CENTER);
+		add(scoreLabel, BorderLayout.NORTH);
+		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		add(tabbedPane, BorderLayout.CENTER);
+		
+		socialTab = new SocialSystemPanel(country.getSocialSystem());
+		tabbedPane.addTab(country.getName(), Icons.COUNTRY, socialTab);
+		
+		scoreTab = new ScorePanel(country, scoreLabel);
+		tabbedPane.addTab("Scores", Icons.METRICS, scoreTab);
 
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			agricultureTab = new LocalAgricultureSystemPanel(
 					(AgricultureSystem.Local)country.getAgricultureSystem());
-			addTab("Agriculture", Icons.AGRICULTURE, agricultureTab);
+			tabbedPane.addTab("Agriculture", Icons.AGRICULTURE, agricultureTab);
 		} else {
 			// agricultureTab = new BasicAgricultureSystemPanel(society.getAgricultureSystem());
 			agricultureTab = null;
@@ -55,7 +68,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(country.getWaterSystem() instanceof WaterSystem.Local) {
 			waterTab = new LocalWaterSystemPanel(
 					(WaterSystem.Local) country.getWaterSystem());	
-			addTab("Water", Icons.WATER, waterTab);		
+			tabbedPane.addTab("Water", Icons.WATER, waterTab);		
 		} else {
 			// waterTab = new BasicWaterSystemPanel(society.getWaterSystem());
 			waterTab = null;
@@ -64,7 +77,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(country.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			petroleumTab = new LocalPetroleumSystemPanel(
 					(PetroleumSystem.Local) country.getPetroleumSystem());
-			addTab("Petroleum", Icons.PETROLEUM, petroleumTab);
+			tabbedPane.addTab("Petroleum", Icons.PETROLEUM, petroleumTab);
 		} else {
 			// petroleumTab = new BasicPetroleumSystemPanel(society.getPetroleumSystem());
 			petroleumTab = null;
@@ -73,7 +86,7 @@ public class SocietyPane extends JTabbedPane implements UpdateListener {
 		if(country.getElectricitySystem() instanceof ElectricitySystem.Local) {
 			electricityTab = new LocalElectricitySystemPanel(
 					(ElectricitySystem.Local) country.getElectricitySystem());
-			addTab("Electricity", Icons.ELECTRICITY, electricityTab);
+			tabbedPane.addTab("Electricity", Icons.ELECTRICITY, electricityTab);
 		} else {
 			// electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
 			electricityTab = null;
