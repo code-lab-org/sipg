@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -131,23 +132,23 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 	List<Double> foodSecurityHistory = new ArrayList<Double>();
 	List<Double> aquiferSecurityHistory = new ArrayList<Double>();
-
 	List<Double> reservoirSecurityHistory = new ArrayList<Double>();
+	
 	private final JLabel agricultureScoreLabel = new JLabel("");
-
 	DefaultTableXYDataset agriculturePlayerScore = new DefaultTableXYDataset();
 
 	private final JLabel waterScoreLabel = new JLabel("");
-
 	DefaultTableXYDataset waterPlayerScore = new DefaultTableXYDataset();
 
 	private final JLabel energyScoreLabel = new JLabel("");
-
 	DefaultTableXYDataset energyPlayerScore = new DefaultTableXYDataset();
 
 	private final JLabel teamScoreLabel = new JLabel("");
-
 	DefaultTableXYDataset teamScore = new DefaultTableXYDataset();
+	
+	private final double maxAnnualBudget = 4e9;
+	private double overBudgetValue = 0;
+	private int overBudgetYear = 0;
 
 	public ScorePanel(Country country) {
 		super(country.getSocialSystem());
@@ -222,6 +223,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			scorePanel.add(teamScoreLabel, BorderLayout.NORTH);
 			addTab("Team Score", Icons.COUNTRY, scorePanel);
 
+			fw.write("Over Budget, ");
 			fw.write("National Profit, ");
 			fw.write("Team Score \n");
 			fw.close();
@@ -290,6 +292,9 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 		teamScoreLabel.setText("");
 		teamScore.removeAllSeries();
+		
+		overBudgetYear = 0;
+		overBudgetValue = 0;
 	}
 	
 	private double getAgricultureScore(double foodSecurity, double sectorProfit,
@@ -430,13 +435,25 @@ public class ScorePanel extends InfrastructureSystemPanel {
 					getProfitDistopia("Kingdom"), getProfitUtopia("Kingdom"), 
 					getProfitGrowthRate("Kingdom"));
 
-			
+			fw.write(overBudgetYear + ", ");
 			fw.write(nationalProfit + ", ");
 			fw.write(getTeamScore(foodSecurity, aquiferSecurity, 
 					reservoirSecurity, nationalProfit) + "\n");
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		
+		
+		if(overBudgetYear > 0) {
+			NumberFormat format = NumberFormat.getNumberInstance();
+			format.setMaximumFractionDigits(3);
+			JOptionPane.showMessageDialog(getTopLevelAncestor(), 
+					"Total capital expenditures in " + overBudgetYear 
+					+ " (\u00a7" + format.format(overBudgetValue/1e9) 
+					+ " billion) was over the limit of \u00a7" 
+					+ format.format(maxAnnualBudget/1e9) + " billion.", 
+					"Over-Budget Warning", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
@@ -543,6 +560,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			energyScoreLabel.setText("Individual Score: " 
 					+ NumberFormat.getIntegerInstance().format(totalScore));
 		}
+		
+		if(country.getTotalCapitalExpense() > maxAnnualBudget) {
+			overBudgetYear = year;
+			overBudgetValue = country.getTotalCapitalExpense();
+		}
 
 		double nationalProfit = getTotalScoreAtYear(year, 
 				country.getCumulativeCashFlow(),
@@ -564,6 +586,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		updateSeries(teamScore, "Total Score", 
 				year, totalScore);
 		teamScoreLabel.setText("Team Score: " 
-				+ NumberFormat.getIntegerInstance().format(totalScore));
+				+ NumberFormat.getIntegerInstance().format(totalScore)
+				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":""));
 	}
 }
