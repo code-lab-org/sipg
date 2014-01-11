@@ -71,7 +71,7 @@ public final class SaudiScenario1 extends DefaultScenario {
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
-				 Arrays.asList(SaudiElementTemplate.values()));
+				 Arrays.asList(SaudiElementTemplate.values()), true);
 	}
 
 	/**

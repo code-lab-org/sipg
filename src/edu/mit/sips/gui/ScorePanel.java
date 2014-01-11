@@ -30,11 +30,10 @@ import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
 import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.scenario.Scenario;
 
 public class ScorePanel extends InfrastructureSystemPanel {
 	private static final long serialVersionUID = 355808870154994451L;
-	
-	private static boolean displayTeamScore = true;
 
 	private static double getInvestmentDystopia(String name) {
 		switch(name) {
@@ -119,6 +118,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	}
 
 	private final Country country;
+	private final Scenario scenario;
 	
 	private final File outputFile;
 	private final File userOutputDir;
@@ -149,9 +149,10 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	
 	private final JLabel scoreLabel;
 
-	public ScorePanel(Country country, JLabel scoreLabel) {
-		super(country.getSocialSystem());
-		this.country = country;
+	public ScorePanel(Scenario scenario, JLabel scoreLabel) {
+		super(scenario.getCountry().getSocialSystem());
+		this.scenario = scenario;
+		this.country = scenario.getCountry();
 		this.scoreLabel = scoreLabel;
 
 		File logDir = new File("logs");
@@ -173,7 +174,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		teamScoreLabel.setFont(getFont().deriveFont(20f));
 		teamScoreLabel.setHorizontalAlignment(JLabel.CENTER);
 		teamScorePanel.add(teamScoreLabel, BorderLayout.NORTH);
-		if(displayTeamScore) {
+		if(scenario.isTeamScoreDisplayed()) {
 			addTab("Team Score", Icons.COUNTRY, teamScorePanel);
 		}
 		
@@ -505,7 +506,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 						}
 					}
 				}
-				if(displayTeamScore) {
+				if(scenario.isTeamScoreDisplayed()) {
 					for(Component c : teamScorePanel.getComponents()) {
 						if(c instanceof ChartPanel) {
 							ChartPanel chartPanel = (ChartPanel) c;
@@ -675,7 +676,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				+ NumberFormat.getIntegerInstance().format(totalScore)
 				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":"");
 		teamScoreLabel.setText(scoreText);
-		if(displayTeamScore) {
+		if(scenario.isTeamScoreDisplayed()) {
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
 				scoreLabel.getText() + ", ") + scoreText);
 		}

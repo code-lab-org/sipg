@@ -39,4 +39,11 @@ public interface Scenario {
 	 * @return the templates
 	 */
 	public List<? extends ElementTemplate> getTemplates();
+	
+	/**
+	 * Checks if is team score displayed.
+	 *
+	 * @return true, if is team score displayed
+	 */
+	public boolean isTeamScoreDisplayed();
 }

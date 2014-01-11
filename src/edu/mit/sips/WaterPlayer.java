@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.SaudiScenario2g;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
@@ -17,7 +18,7 @@ import edu.mit.sips.sim.Simulator;
 /**
  * The Class BalancingProgram.
  */
-public class Player2 {
+public class WaterPlayer {
 	private static Logger logger = Logger.getLogger("edu.mit.sips");
 	/**
 	 * The main method.
@@ -27,10 +28,13 @@ public class Player2 {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 
+		
+		boolean isTeamScoreDisplayed = true;
+
 		logger.debug("Creating scenario.");
-		Scenario scenario = new SaudiScenario2(
+		Scenario scenario = new SaudiScenario2g(
 				Arrays.asList(SaudiScenario2.URBAN),
-				Arrays.asList(Sector.WATER));
+				Arrays.asList(Sector.WATER), isTeamScoreDisplayed);
 
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);
@@ -52,6 +56,7 @@ public class Player2 {
 		}
 		
 		simulator.getConnection().setFederateName("Water Player");
+		simulator.getConnection().setFederateType("Water Ministry");
 		try {
 			simulator.getAmbassador().connect();
 		} catch (Exception e) {

@@ -12,11 +12,13 @@ import edu.mit.sips.core.Country;
 public class DefaultScenario implements Scenario {
 	private final Country country;
 	private final List<? extends ElementTemplate> templates;
+	private final boolean isTeamScoreDisplayed;
 	
 	/**
 	 * Instantiates a new default scenario.
 	 */
 	public DefaultScenario() {
+		this.isTeamScoreDisplayed = true;
 		country = new Country();
 		templates = new ArrayList<ElementTemplate>();
 	}
@@ -27,7 +29,10 @@ public class DefaultScenario implements Scenario {
 	 * @param country the country
 	 * @param templates the templates
 	 */
-	public DefaultScenario(Country country, List<? extends ElementTemplate> templates) {
+	public DefaultScenario(Country country, 
+			List<? extends ElementTemplate> templates, 
+			boolean isTeamScoreDisplayed) {
+		this.isTeamScoreDisplayed = isTeamScoreDisplayed;
 		this.country = country;
 		this.templates = templates;
 	}
@@ -73,5 +78,10 @@ public class DefaultScenario implements Scenario {
 	@Override
 	public List<? extends ElementTemplate> getTemplates() {
 		return new ArrayList<ElementTemplate>(templates);
+	}
+
+	@Override
+	public boolean isTeamScoreDisplayed() {
+		return isTeamScoreDisplayed;
 	}
 }

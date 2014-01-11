@@ -79,12 +79,12 @@ public final class SaudiScenario2g extends DefaultScenario {
 	 * @param assignedSectors the assigned sectors
 	 */
 	public SaudiScenario2g(Collection<String> assignedCityNames, 
-			List<Sector> assignedSectors) {
+			List<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
 		super(Country.buildCountry("Nation", 25e9, Arrays.asList(
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
-				Arrays.asList(SaudiElementTemplate2.values()));
+				Arrays.asList(SaudiElementTemplate2.values()), isTeamScoreDisplayed);
 	}
 
 	/**

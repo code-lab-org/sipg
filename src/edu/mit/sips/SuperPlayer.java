@@ -28,6 +28,8 @@ public class SuperPlayer {
 	 */
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
+
+		boolean isTeamScoreDisplayed = true;
 		
 		logger.debug("Creating scenario.");
 		Scenario scenario = new SaudiScenario2g(
@@ -37,7 +39,7 @@ public class SuperPlayer {
 				Arrays.asList(Sector.AGRICULTURE,
 						Sector.WATER,
 						Sector.ELECTRICITY,
-						Sector.PETROLEUM));
+						Sector.PETROLEUM), isTeamScoreDisplayed);
 		
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);

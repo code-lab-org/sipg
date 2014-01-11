@@ -21,6 +21,7 @@ import edu.mit.sips.gui.social.SocialSystemPanel;
 import edu.mit.sips.gui.water.LocalWaterSystemPanel;
 import edu.mit.sips.gui.water.WaterSystemPanel;
 import edu.mit.sips.io.Icons;
+import edu.mit.sips.scenario.Scenario;
 
 /**
  * The Class SocietyPane.
@@ -40,7 +41,9 @@ public class SocietyPane extends JPanel implements UpdateListener {
 	 *
 	 * @param society the society
 	 */
-	public SocietyPane(Country country) {
+	public SocietyPane(Scenario scenario) {
+		Country country = scenario.getCountry();
+		
 		setLayout(new BorderLayout());
 		
 		JLabel scoreLabel = new JLabel("");
@@ -53,7 +56,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		socialTab = new SocialSystemPanel(country.getSocialSystem());
 		tabbedPane.addTab(country.getName(), Icons.COUNTRY, socialTab);
 		
-		scoreTab = new ScorePanel(country, scoreLabel);
+		scoreTab = new ScorePanel(scenario, scoreLabel);
 		tabbedPane.addTab("Scores", Icons.METRICS, scoreTab);
 
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
