@@ -80,7 +80,7 @@ public final class SaudiScenario2 extends DefaultScenario {
 	 */
 	public SaudiScenario2(Collection<String> assignedCityNames, 
 			List<Sector> assignedSectors) {
-		super(Country.buildCountry("Kingdom", 25e9, Arrays.asList(
+		super(Country.buildCountry("Nation", 25e9, Arrays.asList(
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
