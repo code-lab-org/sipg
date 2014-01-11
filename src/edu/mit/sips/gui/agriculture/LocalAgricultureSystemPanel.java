@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -25,7 +26,6 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -40,7 +40,8 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	private static final long serialVersionUID = 569560127649283731L;
 
 	private final LinearIndicatorPanel localFoodIndicatorPanel;
-	
+	private final List<LocalAgricultureSystemPanel> nestedPanels = 
+			new ArrayList<LocalAgricultureSystemPanel>();
 	private final SpatialStatePanel agricultureStatePanel;
 	
 	private final FoodUnits foodUnits = FoodUnits.EJ;
@@ -83,21 +84,17 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				"Food Independence", 0, 1);
 		indicatorsPanel.add(localFoodIndicatorPanel);
 		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		
-		agricultureStatePanel = new SpatialStatePanel(
-				agricultureSystem.getSociety(), new AgricultureStateProvider());
-		addTab("Network Flow", Icons.NETWORK, agricultureStatePanel);
 
 		List<String> revenueNames;
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
 					"Import Expense", "Distribution Revenue", "Export Revenue", 
-					"Output Revenue");
+					"Domestic Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Import Expense", 
-					"Export Revenue", "Output Revenue");
+					"Export Revenue", "Domestic Revenue");
 		}
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
@@ -186,10 +183,28 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			landColors.add(PlottingUtils.getSocietySecondaryColor(getSociety()));
 			landColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		addTab("Arable Land", Icons.ARABLE_LAND, createStackedAreaChart(
+		addTab("Land", Icons.ARABLE_LAND, createStackedAreaChart(
 				"Arable Land (km^2)", landAvailableDataset, landColors.toArray(new Color[0])));
 		addTab("Labor", Icons.LABOR, createStackedAreaChart(
 				"Available Labor (people)", laborAvailableDataset, landColors.toArray(new Color[0])));
+
+		agricultureStatePanel = new SpatialStatePanel(
+				agricultureSystem.getSociety(), new AgricultureStateProvider());
+		addTab("Network", Icons.NETWORK, agricultureStatePanel);
+		
+		if(agricultureSystem instanceof LocalAgricultureSoS) {
+			JTabbedPane regionalData = new JTabbedPane();
+			for(AgricultureSystem.Local nestedSystem : 
+				((LocalAgricultureSoS) agricultureSystem).getNestedSystems()) {
+				LocalAgricultureSystemPanel nestedPanel = 
+						new LocalAgricultureSystemPanel(nestedSystem);
+				nestedPanels.add(nestedPanel);
+				regionalData.addTab(nestedSystem.getSociety().getName(), 
+						Icons.CITY, nestedPanel);
+			}
+			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+		}
+		
 		/* TODO
 		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
 				"Unit Production Cost (SAR/kcal/day)", 
@@ -265,6 +280,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		// nothing to do here
+		for(LocalAgricultureSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationCompleted(event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -273,6 +291,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
+		for(LocalAgricultureSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationInitialized(event);
+		}
 		agricultureStatePanel.repaint();
 	}
 
@@ -282,10 +303,14 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
+		for(LocalAgricultureSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationUpdated(event);
+		}
 		agricultureStatePanel.repaint();
 	}
 
 	private void update(int year) {
+		/* temporarily removed
 		updateSeriesCollection(localFoodData, getSociety().getName(), 
 				year, getAgricultureSystem().getLocalFoodFraction());
 		localFoodIndicatorPanel.setValue(
@@ -329,6 +354,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				}
 			}
 		}
+		*/
 		
 		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
 			updateSeries(landAvailableDataset, "Available", year, 
@@ -337,9 +363,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 					getAgricultureSystem().getLandAreaUsed());
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", 
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " Land Available", 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", 
+				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " Land Used", 
 						year, nestedSystem.getLandAreaUsed());
 			}
 		}
@@ -351,14 +377,13 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 					- getAgricultureSystem().getLaborUsed());
 			updateSeries(laborAvailableDataset, "Used", year, 
 					getAgricultureSystem().getLaborUsed());
-
 		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " (Available)", year,
+				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " Labor Available", year,
 						nestedSystem.getLaborParticipationRate() 
 						* nestedSystem.getSociety().getSocialSystem().getPopulation()
 						- nestedSystem.getLaborUsed());
-				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " (Used)", year,
+				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " Labor Used", year,
 						nestedSystem.getLaborUsed());
 			}
 		}
@@ -418,7 +443,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(cashFlow, "Export Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getExportRevenue(),
 						getAgricultureSystem(), this));
-		updateSeries(cashFlow, "Output Revenue", year, 
+		updateSeries(cashFlow, "Domestic Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getSalesRevenue(),
 						getAgricultureSystem(), this));
 		updateSeries(netCashFlow, "Net Cash Flow", year, 

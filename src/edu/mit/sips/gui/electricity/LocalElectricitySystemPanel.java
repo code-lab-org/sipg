@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -24,7 +25,6 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnits;
@@ -42,6 +42,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	
 	private final LinearIndicatorPanel renewableElectricityIndicatorPanel, 
 	localElectricityIndicatorPanel;
+	private final List<LocalElectricitySystemPanel> nestedPanels = 
+			new ArrayList<LocalElectricitySystemPanel>();
 	
 	private final SpatialStatePanel electricityStatePanel;
 	
@@ -91,19 +93,15 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		indicatorsPanel.add(renewableElectricityIndicatorPanel);
 		indicatorsPanel.add(localElectricityIndicatorPanel);
 		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		
-		electricityStatePanel = new SpatialStatePanel(
-				getSociety(), new ElectricityStateProvider());
-		addTab("Network Flow", Icons.NETWORK, electricityStatePanel);
 
 		List<String> revenueNames;
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
-					"Distribution Revenue", "Output Revenue");
+					"Distribution Revenue", "Domestic Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
-					"Decommission Expense", /*"Input Expense", */"Output Revenue");
+					"Decommission Expense", /*"Input Expense", */"Domestic Revenue");
 		}
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
@@ -197,6 +195,23 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				"Unit Supply Profit (SAR/toe)", 
 				electricitySupplyProfitData));
 		*/
+		
+		electricityStatePanel = new SpatialStatePanel(
+				getSociety(), new ElectricityStateProvider());
+		addTab("Network", Icons.NETWORK, electricityStatePanel);
+		
+		if(electricitySystem instanceof LocalElectricitySoS) {
+			JTabbedPane regionalData = new JTabbedPane();
+			for(ElectricitySystem.Local nestedSystem : 
+				((LocalElectricitySoS) electricitySystem).getNestedSystems()) {
+				LocalElectricitySystemPanel nestedPanel = 
+						new LocalElectricitySystemPanel(nestedSystem);
+				nestedPanels.add(nestedPanel);
+				regionalData.addTab(nestedSystem.getSociety().getName(), 
+						Icons.CITY, nestedPanel);
+			}
+			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -299,6 +314,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		// nothing to do here
+		for(LocalElectricitySystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationCompleted(event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -307,6 +325,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
+		for(LocalElectricitySystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationInitialized(event);
+		}
 		electricityStatePanel.repaint();
 	}
 
@@ -316,10 +337,14 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
+		for(LocalElectricitySystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationUpdated(event);
+		}
 		electricityStatePanel.repaint();
 	}
 
 	private void update(int year) {
+		/* temporarily removed
 		updateSeriesCollection(localElectricityData, getSociety().getName(), 
 				year, getElectricitySystem().getLocalElectricityFraction());
 		localElectricityIndicatorPanel.setValue(
@@ -378,7 +403,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				}
 			}
 		}
-		
+		*/
 		if(getNestedElectricitySystems().isEmpty()) {
 			updateSeries(electricityUseData, "Society", year, 
 					ElectricityUnits.convertFlow(getSociety().getSocialSystem().getElectricityConsumption(),
@@ -478,7 +503,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 							getElectricitySystem().getDistributionRevenue(), 
 							getElectricitySystem(), this));
 		}
-		updateSeries(cashFlow, "Output Revenue", year, 
+		updateSeries(cashFlow, "Domestic Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getSalesRevenue(), 
 						getElectricitySystem(), this));

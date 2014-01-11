@@ -325,7 +325,7 @@ public abstract class PlottingUtils {
 		if(name.contains("Export Revenue")) {
 			return MEDIUM_SLATE_BLUE;
 		}
-		if(name.contains("Output Revenue")) {
+		if(name.contains("Domestic Revenue")) {
 			return MEDIUM_SEA_GREEN;
 		}
 		return null;

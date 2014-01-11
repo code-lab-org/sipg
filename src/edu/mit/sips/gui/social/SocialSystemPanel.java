@@ -17,7 +17,6 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
@@ -64,17 +63,19 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		 * addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		 */
 
-		addTab("Finances", Icons.FUNDS, createStackedAreaChart(
-				"Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
+		addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+				"Annual Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
 				infrastructureSystemNetRevenue,
-				"Cash Balance (" + getCurrencyUnits() + ")", cumulativeBalance));
+				"Cumulative Net Revenue (" + getCurrencyUnits() + ")", cumulativeBalance));
 		addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
 				"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
 				capitalExpenseTotal,
 				"Cumulative Investment (" + getCurrencyUnits() + ")", 
 				cumulativeCapitalExpense));
+
+		/* temporarily removed
 		if(getSociety() instanceof Country) {
 			addTab("Population", Icons.POPULATION, createStackedAreaChart(
 					"Population", populationDataset, 
@@ -84,9 +85,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 			addTab("Population", Icons.POPULATION, createSingleLineChart(
 					"Population", populationTotalDataset));
 		}
-
-
-		/* temporarily removed
 		addTab("System Cash Flow", Icons.REVENUE, createStackedAreaChart(
 				"Cash Flow (" + getCurrencyUnits() 
 				+ "/" + getCurrencyTimeUnits() + ")", 
@@ -175,15 +173,15 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 
 	private void update(int year) {
 		if(getSociety() instanceof Country) {
-			updateSeries(cumulativeBalance, "Cash Balance", year, 
+			updateSeries(cumulativeBalance, "Cumulative Balance", year, 
 					CurrencyUnits.convertStock(((Country)getSociety()).getFunds(), 
 							getSociety(), this));
 		} else {
-			updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+			updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 					CurrencyUnits.convertStock(getSociety().getCumulativeCashFlow(), 
 							getSociety(), this));
 		}
-		updateSeries(infrastructureSystemNetRevenue, "Net Cash Flow", year, 
+		updateSeries(infrastructureSystemNetRevenue, "Annual Cash Flow", year, 
 				CurrencyUnits.convertFlow(getSociety().getTotalCashFlow(), 
 						getSociety(), this));
 
@@ -193,7 +191,8 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					CurrencyUnits.convertFlow(nestedSociety.getCashFlow(), 
 							nestedSociety, this));
 		}
-		
+
+		/* temporarily removed
 		if(getSocialSystem().getPopulation() > 0) {
 			updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
 					year, DefaultUnits.convertFlow(getSociety().getDomesticProduct(), 
@@ -210,13 +209,16 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 							TimeUnits.year) 
 					/ getSocialSystem().getPopulation());
 		}
+		*/
 		
 		if(getSocialSystem() instanceof SocialSoS) {
+			/* temporarily removed
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(domesticProduct, nestedSociety.getName(), year, 
 						CurrencyUnits.convertFlow(nestedSociety.getDomesticProduct(), 
 								nestedSociety, this));
 			}
+			*/
 
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(cashFlow, nestedSociety.getName(), year, 
@@ -227,30 +229,33 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					CurrencyUnits.convertFlow(getSociety().getTotalCashFlow(), 
 							getSociety(), this));
 		} else {
+			/* temporarily removed
 			updateSeries(domesticProduct, getSociety().getName(), year, 
 					CurrencyUnits.convertFlow(getSociety().getDomesticProduct(), 
 							getSocialSystem(), this));
+			*/
 		}
 
+		/* temporarily removed
 		for(Society nestedSociety : getSociety().getNestedSocieties()) {
 			updateSeries(populationDataset, nestedSociety.getName(), year, 
 					nestedSociety.getSocialSystem().getPopulation());
 		}
 		updateSeries(populationTotalDataset, getSociety().getName(), year, 
 				getSocialSystem().getPopulation());
+		*/
 
-		
 		for(InfrastructureSystem nestedSystem : getSociety().getInfrastructureSystems()) {
 			updateSeries(capitalExpense, nestedSystem.getName(), year, 
 					CurrencyUnits.convertFlow(nestedSystem.getCapitalExpense(), 
 							nestedSystem, this));
 		}
-		updateSeries(capitalExpenseTotal, "Total", year, 
+		updateSeries(capitalExpenseTotal, "Annual Total", year, 
 				CurrencyUnits.convertFlow(getSociety().getTotalCapitalExpense(), 
 						getSociety(), this));
 
 		if(getSociety().getSocialSystem() instanceof SocialSystem.Local) { 
-			updateSeries(cumulativeCapitalExpense, "Cumulative", year, 
+			updateSeries(cumulativeCapitalExpense, "Cumulative Total", year, 
 					CurrencyUnits.convertFlow(
 							getSociety().getCumulativeCapitalExpense(), 
 							getSociety().getSocialSystem(), this));

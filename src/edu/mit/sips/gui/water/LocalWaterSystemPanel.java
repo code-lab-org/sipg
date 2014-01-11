@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -25,7 +26,6 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -41,6 +41,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	
 	private final LinearIndicatorPanel localWaterIndicatorPanel, 
 	waterAquiferIndicatorPanel, renewableWaterIndicatorPanel;
+	private final List<LocalWaterSystemPanel> nestedPanels = 
+			new ArrayList<LocalWaterSystemPanel>();
 	
 	private final SpatialStatePanel waterStatePanel;
 
@@ -93,20 +95,16 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		indicatorsPanel.add(renewableWaterIndicatorPanel);
 		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		
-		waterStatePanel = new SpatialStatePanel(
-				waterSystem.getSociety(), new WaterStateProvider());
-		addTab("Network Flow", Icons.NETWORK, waterStatePanel);
-		
 		List<String> revenueNames;
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
 					"Import Expense", "Distribution Revenue", /*"Export Revenue", */
-					"Output Revenue");
+					"Domestic Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Import Expense", 
-					/*"Export Revenue",*/ "Output Revenue");
+					/*"Export Revenue",*/ "Domestic Revenue");
 		}
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
@@ -209,6 +207,23 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				"Unit Supply Profit (SAR/m^3)", 
 				waterSupplyProfitData));
 		*/
+		
+		waterStatePanel = new SpatialStatePanel(
+				waterSystem.getSociety(), new WaterStateProvider());
+		addTab("Network", Icons.NETWORK, waterStatePanel);
+		
+		if(waterSystem instanceof LocalWaterSoS) {
+			JTabbedPane regionalData = new JTabbedPane();
+			for(WaterSystem.Local nestedSystem : 
+				((LocalWaterSoS) waterSystem).getNestedSystems()) {
+				LocalWaterSystemPanel nestedPanel = 
+						new LocalWaterSystemPanel(nestedSystem);
+				nestedPanels.add(nestedPanel);
+				regionalData.addTab(nestedSystem.getSociety().getName(), 
+						Icons.CITY, nestedPanel);
+			}
+			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -307,6 +322,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		// nothing to do here
+		for(LocalWaterSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationCompleted(event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -315,6 +333,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
+		for(LocalWaterSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationInitialized(event);
+		}
 		waterStatePanel.repaint();
 	}
 
@@ -324,10 +345,14 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
+		for(LocalWaterSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationUpdated(event);
+		}
 		waterStatePanel.repaint();
 	}
 
 	private void update(int year) {
+		/* temporarily removed
 		updateSeriesCollection(localWaterData, getWaterSystem().getSociety().getName(),
 				year, getWaterSystem().getLocalWaterFraction());
 		localWaterIndicatorPanel.setValue(getWaterSystem().getLocalWaterFraction());
@@ -379,7 +404,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 
 		waterAquiferIndicatorPanel.setValue(WaterUnits.convertStock(
 				getWaterSystem().getWaterReservoirVolume(), getWaterSystem(), this));
-
+		*/
+		
 		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(
 						-getWaterSystem().getCapitalExpense(), 
@@ -413,7 +439,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 							-getWaterSystem().getDistributionExpense(), 
 							getWaterSystem(), this));
 		}
-		updateSeries(cashFlow, "Output Revenue", year, 
+		updateSeries(cashFlow, "Domestic Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getWaterSystem().getSalesRevenue(), 
 						getWaterSystem(), this));

@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -25,7 +26,6 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnits;
@@ -47,6 +47,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	
 	private final LinearIndicatorPanel petroleumReservoirIndicatorPanel, 
 	localPetroleumIndicatorPanel;
+	private final List<LocalPetroleumSystemPanel> nestedPanels = 
+			new ArrayList<LocalPetroleumSystemPanel>();
 	
 	private final SpatialStatePanel petroleumStatePanel;
 
@@ -87,21 +89,17 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		indicatorsPanel.add(petroleumReservoirIndicatorPanel);
 		indicatorsPanel.add(localPetroleumIndicatorPanel);
 		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-
-		petroleumStatePanel = new SpatialStatePanel(getSociety(), 
-				new PetroleumStateProvider());
-		addTab("Network Flow", Icons.NETWORK, petroleumStatePanel);
 		
 		List<String> revenueNames;
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
 					"Import Expense", "Distribution Revenue", "Export Revenue", 
-					"Output Revenue");
+					"Domestic Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
 					"Decommission Expense", /*"Input Expense", */"Import Expense", 
-					"Export Revenue", "Output Revenue");
+					"Export Revenue", "Domestic Revenue");
 		}
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
@@ -199,6 +197,23 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				"Unit Supply Profit (SAR/toe)", 
 				petroleumSupplyProfitData));
 		*/
+
+		petroleumStatePanel = new SpatialStatePanel(getSociety(), 
+				new PetroleumStateProvider());
+		addTab("Network", Icons.NETWORK, petroleumStatePanel);
+		
+		if(petroleumSystem instanceof LocalPetroleumSoS) {
+			JTabbedPane regionalData = new JTabbedPane();
+			for(PetroleumSystem.Local nestedSystem : 
+				((LocalPetroleumSoS) petroleumSystem).getNestedSystems()) {
+				LocalPetroleumSystemPanel nestedPanel = 
+						new LocalPetroleumSystemPanel(nestedSystem);
+				nestedPanels.add(nestedPanel);
+				regionalData.addTab(nestedSystem.getSociety().getName(), 
+						Icons.CITY, nestedPanel);
+			}
+			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+		}
 	}
 	
 	/* (non-Javadoc)
@@ -300,6 +315,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		// nothing to do here
+		for(LocalPetroleumSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationCompleted(event);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -308,6 +326,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
+		for(LocalPetroleumSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationInitialized(event);
+		}
 		petroleumStatePanel.repaint();
 	}
 	
@@ -317,10 +338,14 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
+		for(LocalPetroleumSystemPanel nestedPanel : nestedPanels) {
+			nestedPanel.simulationUpdated(event);
+		}
 		petroleumStatePanel.repaint();
 	}
 
 	private void update(int year) {
+		/* temporarily removed
 		updateSeriesCollection(petroleumProductCostData, 
 				getSociety().getName(), year, 
 				getPetroleumSystem().getUnitProductionCost());
@@ -371,6 +396,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					nestedSystem.getSociety().getName(), year, 
 					nestedSystem.getLocalPetroleumFraction());
 		}
+		*/
 
 		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(
@@ -409,7 +435,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				CurrencyUnits.convertFlow(
 						getPetroleumSystem().getExportRevenue(),
 						getPetroleumSystem(), this));
-		updateSeries(cashFlow, "Output Revenue", year,  
+		updateSeries(cashFlow, "Domestic Revenue", year,  
 				CurrencyUnits.convertFlow(
 						getPetroleumSystem().getSalesRevenue(),
 						getPetroleumSystem(), this));
