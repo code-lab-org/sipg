@@ -24,6 +24,8 @@ import javax.swing.JTabbedPane;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.LegendItemCollection;
+import org.jfree.chart.LegendItemSource;
 import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
@@ -31,6 +33,7 @@ import org.jfree.chart.plot.DatasetRenderingOrder;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.UnknownKeyException;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
@@ -82,7 +85,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	private JFreeChart createChart(boolean isArea, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset, 
 			final String valueAxis2, final TableXYDataset lineDataset2) {
-		JFreeChart chart;
+		final JFreeChart chart;
 		if(isArea && areaDataset != null) {
 			chart = ChartFactory.createStackedXYAreaChart(
 					null, "Year", valueAxis, areaDataset, 
@@ -97,8 +100,24 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 			chart = ChartFactory.createXYLineChart(
 					null, "Year", valueAxis, lineDataset, 
 					PlotOrientation.VERTICAL, true, false, false);
-			chart.getLegend().setPosition(RectangleEdge.RIGHT);
 		}
+		LegendTitle lt = new LegendTitle(new LegendItemSource() {
+			@Override
+			public LegendItemCollection getLegendItems() {
+				LegendItemCollection c = new LegendItemCollection();
+				for(int i = chart.getXYPlot().getLegendItems().getItemCount() - 1; i >= 0; i--) {
+					c.add(chart.getXYPlot().getLegendItems().get(i));
+				}
+				return c;
+			}
+		});
+		lt.setItemFont(chart.getLegend().getItemFont());
+		lt.setItemPaint(chart.getLegend().getItemPaint());
+		lt.setBackgroundPaint(chart.getLegend().getBackgroundPaint());
+		lt.setBorder(1, 1, 1, 1);
+		lt.setPosition(RectangleEdge.RIGHT);
+		chart.removeLegend();
+		chart.addLegend(lt);
 		chart.setBackgroundPaint(new JPanel().getBackground());
 		
 		if(chart.getPlot() instanceof XYPlot) {
