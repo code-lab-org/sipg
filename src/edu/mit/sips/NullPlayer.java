@@ -28,10 +28,12 @@ public class NullPlayer {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 
+		boolean isTeamScoreDisplayed = true;
+
 		logger.debug("Creating scenario.");
 		Scenario scenario = new SaudiScenario2(
 				new ArrayList<String>(), 
-				new ArrayList<Sector>());
+				new ArrayList<Sector>(), isTeamScoreDisplayed);
 
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);

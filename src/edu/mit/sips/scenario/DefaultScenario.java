@@ -13,6 +13,7 @@ public class DefaultScenario implements Scenario {
 	private final Country country;
 	private final List<? extends ElementTemplate> templates;
 	private final boolean isTeamScoreDisplayed;
+	private final double maxAnnualInvestment = 4e9;
 	
 	/**
 	 * Instantiates a new default scenario.
@@ -83,5 +84,10 @@ public class DefaultScenario implements Scenario {
 	@Override
 	public boolean isTeamScoreDisplayed() {
 		return isTeamScoreDisplayed;
+	}
+
+	@Override
+	public double getMaxAnnualInvestment() {
+		return maxAnnualInvestment;
 	}
 }

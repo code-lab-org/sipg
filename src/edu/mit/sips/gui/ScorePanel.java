@@ -143,7 +143,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private final JLabel teamScoreLabel = new JLabel("");
 	DefaultTableXYDataset teamScore = new DefaultTableXYDataset();
 	
-	private final double maxAnnualBudget = 4e9;
 	private double overBudgetValue = 0;
 	private int overBudgetYear = 0;
 	
@@ -540,7 +539,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 					"Total capital expenditures in " + overBudgetYear 
 					+ " (\u00a7" + format.format(overBudgetValue/1e9) 
 					+ " billion) was over the limit of \u00a7" 
-					+ format.format(maxAnnualBudget/1e9) + " billion.", 
+					+ format.format(scenario.getMaxAnnualInvestment()/1e9) + " billion.", 
 					"Over-Budget Warning", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -648,7 +647,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				scoreLabel.getText() + ", ") + scoreText);
 		}
 		
-		if(country.getTotalCapitalExpense() > maxAnnualBudget) {
+		if(country.getTotalCapitalExpense() > scenario.getMaxAnnualInvestment()) {
 			overBudgetYear = year;
 			overBudgetValue = country.getTotalCapitalExpense();
 		}
