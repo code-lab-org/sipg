@@ -49,11 +49,11 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private static double getInvestmentGrowthRate(String name) {
 		switch(name) {
 		case "Agriculture":
-			return 0.08;
+			return 0.06;
 		case "Water":
 			return 0.08;
 		case "Energy":
-			return 0.04;
+			return 0.03;
 		}
 		return 0;
 	}
@@ -89,7 +89,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Water":
 			return 0.08;
 		case "Energy":
-			return 0.05;
+			return 0.04;
 		case "Country":
 			return 0.04;
 		}
@@ -101,7 +101,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 50e9;
 		case "Water":
-			return 5e9;
+			return 0e9;
 		case "Energy":
 			return 500e9;
 		case "Country":
