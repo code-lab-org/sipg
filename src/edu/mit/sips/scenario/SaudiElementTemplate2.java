@@ -179,14 +179,14 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, operationsDuration, 1, 
-							200e6, 1e6, 2e6, true), 
+							200e6, 3e6, 2e6, true), 
 					2e6, 2e6, 0, 0, 0);
 		case PV_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
 					new SimpleLifecycleModel(timeAvailable, year, 2, 
 							maxOperations, operationsDuration, 1, 
-							900e6, 4.5e6, 9e6, true), 
+							900e6, 13.5e6, 9e6, true), 
 					10e6, 10e6, 0, 0, 0);
 		case POWER_LINE_1:
 			return DefaultElectricityElement.createDistributionElement(
