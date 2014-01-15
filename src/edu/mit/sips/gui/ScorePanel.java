@@ -49,13 +49,13 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private static double getInvestmentGrowthRate(String name) {
 		switch(name) {
 		case "Agriculture":
-			return 0.05;
+			return 0.08;
 		case "Water":
-			return 0.03;
+			return 0.08;
 		case "Energy":
-			return 0.05;
+			return 0.04;
 		}
-		return 0.03;
+		return 0;
 	}
 
 	private static double getInvestmentUtopia(String name) {
@@ -74,7 +74,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 0;
 		case "Water":
-			return -5e9;
+			return -8e9;
 		case "Energy":
 			return 0e9;
 		case "Country":
@@ -85,13 +85,13 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	private static double getProfitGrowthRate(String name) {
 		switch(name) {
 		case "Agriculture":
-			return 0.03;
+			return 0.05;
 		case "Water":
-			return 0.03;
+			return 0.08;
 		case "Energy":
-			return 0.08;
+			return 0.05;
 		case "Country":
-			return 0.08;
+			return 0.04;
 		}
 		return 0;
 	}
@@ -105,7 +105,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Energy":
 			return 500e9;
 		case "Country":
-			return 800e9;
+			return 600e9;
 		}
 		return 0;
 	}
@@ -247,7 +247,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	}
 
 	private double getFoodSecurityScore(double foodSecurity) {
-		return 1000 * Math.max(Math.min(foodSecurity, 1), 0);
+		return 1000 / 0.75 * Math.max(Math.min(foodSecurity, 0.75), 0);
 		// return 0.5 + Math.atan(10*(foodSecurity - 0.3))/Math.PI;
 	}
 
