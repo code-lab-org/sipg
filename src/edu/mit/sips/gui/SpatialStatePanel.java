@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.RenderingHints;
@@ -15,9 +16,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import edu.mit.sips.core.City;
+import edu.mit.sips.core.Country;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
 
@@ -31,7 +34,12 @@ public class SpatialStatePanel extends JPanel {
 	private final Society society;
 	private final SpatialStateProvider stateProvider;
 	private final Map<Society,Point> societyLocations = new HashMap<Society,Point>();
-	private final Map<InfrastructureElement,Point> elementLocations = new HashMap<InfrastructureElement,Point>();
+	private final Map<InfrastructureElement,Point> elementLocations = 
+			new HashMap<InfrastructureElement,Point>();
+	
+	private static final Image backgroundMap = new ImageIcon(
+			SpatialStatePanel.class.getClassLoader()
+			.getResource("resources/idas-abara-map.png")).getImage();
 	
 	private static final int MIN_ELEMENT_RADIUS = 30;
 	private static final int MIN_SOCIETY_RADIUS = 40;
@@ -169,10 +177,16 @@ public class SpatialStatePanel extends JPanel {
 		g.fill(societyEllipse);
 		g.setColor(getNeutralColor());
 		g.draw(societyEllipse);
-		g.drawString(society.getName(), 
-				getCenterX() - (int)Math.round(g.getFontMetrics().stringWidth(society.getName())/2), 
-				getCenterY() + g.getFontMetrics().getHeight()/2);
 		
+		if(society instanceof Country) {
+			g.drawImage(backgroundMap, 0, 0, getWidth(), getHeight(), null);
+			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING,RenderingHints.VALUE_RENDER_QUALITY);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+			g.drawString(society.getName(), 
+					getCenterX() - (int)Math.round(g.getFontMetrics().stringWidth(society.getName())/2), 
+					getCenterY() + g.getFontMetrics().getHeight()/2);
+		}
 		
 		g.dispose();
 	}
