@@ -106,7 +106,6 @@ public class Simulator implements SimulationControlListener {
 		//runAutoOptimization();
 		
 		while(time <= stopTime) {
-			runAutoOptimization();
 			try {
 				simAmbassador.advance();
 			} catch (NotConnected ignored) {
@@ -388,7 +387,7 @@ public class Simulator implements SimulationControlListener {
 	/**
 	 * Run auto optimization.
 	 */
-	private void runAutoOptimization() {
+	public void runAutoOptimization() {
 		if(autoOptimizeProductionAndDistribution) {
 			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
 				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())

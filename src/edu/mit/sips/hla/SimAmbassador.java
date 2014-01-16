@@ -124,6 +124,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		for(int i = 0; i < numberIterations; i++) {
 			logger.trace("Performing iteration number " + (i+1) 
 					+ " of " + numberIterations + ".");
+			simulator.runAutoOptimization();
 			synchronized(localObjects) {
 				for(InfrastructureSystem system : localObjects.keySet()) {
 					localObjects.get(system).setAttributes(system);
