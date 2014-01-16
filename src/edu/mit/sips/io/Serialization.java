@@ -13,6 +13,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
+import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.InfrastructureSystem;
@@ -20,26 +21,36 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.MutableAgricultureElement;
+import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.MutableElectricityElement;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
 import edu.mit.sips.core.petroleum.MutablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.price.PriceModel;
+import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.PopulationModel;
+import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.hla.HLAagricultureSystem;
+import edu.mit.sips.hla.HLAelectricitySystem;
+import edu.mit.sips.hla.HLApetroleumSystem;
+import edu.mit.sips.hla.HLAsocialSystem;
+import edu.mit.sips.hla.HLAwaterSystem;
 import edu.mit.sips.scenario.ElementTemplate;
 import edu.mit.sips.scenario.Scenario;
 
@@ -128,6 +139,25 @@ public final class Serialization {
 		Scenario scenario = getGson().fromJson(json, ScenarioWrapper.class).scenario;
 		Country country = scenario.getCountry();
 		recursiveReplaceCircularReferences(country);
+		// replace HLA datatypes; they will need to be re-created
+		// to get the proper data members
+		for(City city : country.getCities()) {
+			if(city.getAgricultureSystem() instanceof HLAagricultureSystem) {
+				city.setAgricultureSystem(new DefaultAgricultureSystem());
+			}
+			if(city.getWaterSystem() instanceof HLAwaterSystem) {
+				city.setWaterSystem(new DefaultWaterSystem());
+			}
+			if(city.getPetroleumSystem() instanceof HLApetroleumSystem) {
+				city.setPetroleumSystem(new DefaultPetroleumSystem());
+			}
+			if(city.getElectricitySystem() instanceof HLAelectricitySystem) {
+				city.setElectricitySystem(new DefaultElectricitySystem());
+			}
+			if(city.getSocialSystem() instanceof HLAsocialSystem) {
+				city.setSocialSystem(new DefaultSocialSystem());
+			}
+		}
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local){
 			List<? extends AgricultureElement> elements = ((AgricultureSystem.Local)country.getAgricultureSystem()).getInternalElements();
 			for(AgricultureElement element : elements) {
