@@ -1,5 +1,7 @@
 package edu.mit.sips.gui;
 
+import hla.rti1516e.exceptions.RTIexception;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -110,8 +112,14 @@ public class DataFrame extends JFrame implements UpdateListener {
 					// closer readers
 					br.close();
 					fr.close();
+					Simulator sim = new Simulator(Serialization.deserialize(jsonBuilder.toString()));
+					initialize(sim);
+					try {
+						sim.getAmbassador().connect();
+					} catch (RTIexception e1) {
+						e1.printStackTrace();
+					}
 					
-					initialize(new Simulator(Serialization.deserialize(jsonBuilder.toString())));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
 							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
