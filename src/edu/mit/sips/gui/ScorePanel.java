@@ -556,7 +556,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			return;
 		}
 		
-		scoreLabel.setText("");
+		scoreLabel.setText(" ");
 
 		foodSecurityHistory.add(getFoodSecurityScore(
 				country.getAgricultureSystem().getFoodSecurity()));
