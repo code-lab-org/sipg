@@ -72,6 +72,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private SimulationControlPane simulationPane;
 	private ElementsPane elementsPane;
 	private SocietyPane societyPane;
+	private final JFileChooser fileChooser;
 	
 	private final Action newScenario = new AbstractAction("New") {
 		private static final long serialVersionUID = 7259597700641022096L;
@@ -92,10 +93,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 		public void actionPerformed(ActionEvent e) {
 			close();
 			
-			// create file chooser to browse for json file
-			JFileChooser fileChooser = new JFileChooser(".");
-			fileChooser.setFileFilter(
-					new FileNameExtensionFilter("JSON files","json"));
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(null)) {
 				// load experiment from file
 				try {
@@ -129,10 +126,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// create file chooser to browse for json file
-			JFileChooser fileChooser = new JFileChooser(".");
-			fileChooser.setFileFilter(
-					new FileNameExtensionFilter("JSON files","json"));
 			if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(null)) {
 				save(fileChooser.getSelectedFile());
 			}
@@ -190,6 +183,14 @@ public class DataFrame extends JFrame implements UpdateListener {
 	public DataFrame() {
 		super("Data Viewer");
 		setIconImage(Icons.SYSTEM_MONITOR);
+		
+		File userOutputDir = new File(System.getProperty("user.home"), "sips-g");
+		if(!userOutputDir.exists()) {
+			userOutputDir.mkdir();
+		}
+		fileChooser = new JFileChooser(userOutputDir);
+		fileChooser.setFileFilter(
+				new FileNameExtensionFilter("JSON files","json"));
 		
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
