@@ -243,7 +243,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		contentPane.setLayout(new BorderLayout());
 		contentPane.setBackground(Color.gray);
 		setContentPane(contentPane);
-		setPreferredSize(new Dimension(1024,768));
+		setPreferredSize(new Dimension(1280,720));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
