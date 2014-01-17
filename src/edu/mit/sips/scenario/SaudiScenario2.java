@@ -115,10 +115,10 @@ public final class SaudiScenario2 extends DefaultScenario {
 						new LocalWaterSystem(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1978, INDUSTRIAL, INDUSTRIAL),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1982, INDUSTRIAL, INDUSTRIAL),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1988, INDUSTRIAL, INDUSTRIAL),
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1994, INDUSTRIAL, INDUSTRIAL),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
 										),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
@@ -267,9 +267,9 @@ public final class SaudiScenario2 extends DefaultScenario {
 								Arrays.asList(
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1980, URBAN, URBAN),
 										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1982, URBAN, URBAN),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, URBAN, URBAN),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1990, URBAN, URBAN),
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, URBAN, URBAN)
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1988, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1992, URBAN, URBAN),
+										(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2002, URBAN, URBAN)
 										),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
