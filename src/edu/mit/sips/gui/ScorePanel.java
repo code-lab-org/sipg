@@ -51,7 +51,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 0.06;
 		case "Water":
-			return 0.08;
+			return 0.06;
 		case "Energy":
 			return 0.03;
 		}
@@ -63,7 +63,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 10e9;
 		case "Water":
-			return 10e9;
+			return 15e9;
 		case "Energy":
 			return 50e9;
 		}
@@ -74,7 +74,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 0;
 		case "Water":
-			return -8e9;
+			return -10e9;
 		case "Energy":
 			return 0e9;
 		case "Country":
@@ -87,7 +87,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Agriculture":
 			return 0.05;
 		case "Water":
-			return 0.08;
+			return 0.06;
 		case "Energy":
 			return 0.04;
 		case "Country":
