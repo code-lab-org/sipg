@@ -469,7 +469,6 @@ public class SimAmbassador extends NullFederateAmbassador {
 		while(!saveCompleted.get()) {
 			Thread.yield();
 		}
-		saveCompleted.set(false);
 		
 		advance(); // advance to start time - 1
 		
@@ -573,6 +572,13 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		System.out.println("Providing attribute updates for " 
 				+ hlaObjects.get(theObject));
+		
+		if(!saveCompleted.get()) {
+			logger.debug("Waiting for federation save complete...");
+			while(!saveCompleted.get()) {
+				Thread.yield();
+			}
+		}
 		
 		HLAinfrastructureSystem localSystem;
 		synchronized(hlaObjects) {
