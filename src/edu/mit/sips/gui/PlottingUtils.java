@@ -297,6 +297,16 @@ public abstract class PlottingUtils {
 			}
 			return LIME_GREEN;
 		} 
+
+		if(name.contains("Industrial")) {
+			return DARK_KHAKI;
+		}
+		if(name.contains("Urban")) {
+			return OLIVE;
+		}
+		if(name.contains("Rural")) {
+			return OLIVE_DRAB;
+		}
 		return null;
 	}
 	

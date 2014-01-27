@@ -130,13 +130,13 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		List<String> waterSourceNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				waterSourceNames.add(society.getName() + " Production");
+				waterSourceNames.add(society.getName());
 			}
 		} else {
 			waterSourceNames.add(getSociety().getName() + " Production");
+			waterSourceNames.add("Private Operations");
 			waterSourceNames.add("In-Distribution");
 		}
-		waterSourceNames.add("Private Operations");
 		waterSourceNames.add("Import");
 		for(String name : waterSourceNames) {
 			waterSourceData.addSeries(new XYSeries(name, true, false));
@@ -148,14 +148,14 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		List<String> waterUseNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				waterUseNames.add(society.getName() + " Society");
+				waterUseNames.add(society.getName());
 			}
 			// waterUseNames.add("Losses");
 		} else {
 			waterUseNames.add(getSociety().getName()  + " Society");
+			waterUseNames.add("Agriculture Operations");
 			waterUseNames.add("Out-Distribution");
 		}
-		waterUseNames.add("Agriculture Operations");
 		//waterUseNames.add("Electricity Operations");
 		for(String name : waterUseNames) {
 			waterUseData.addSeries(new XYSeries(name, true, false));
@@ -451,11 +451,29 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
 				CurrencyUnits.convertFlow(getWaterSystem().getCumulativeCashFlow(),
 						getWaterSystem(), this));
-
-		if(getNestedWaterSystems().isEmpty()) {
+		
+		if(getWaterSystem() instanceof LocalWaterSystem) {
+			updateSeries(waterSourceData, "Production", year, 
+					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
+							getWaterSystem(), this));
+			updateSeries(waterSourceData, "Private Operations", year, 
+					WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
+							getWaterSystem(), this));
+			updateSeries(waterSourceData, "Distribution", year, 
+					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
+							getWaterSystem(), this));
 			updateSeries(waterUseData, "Society", year, 
 					WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem(), this));
+			updateSeries(waterUseData, "Agriculture Operations", year, 
+					WaterUnits.convertFlow(getSociety().getAgricultureSystem().getWaterConsumption(), 
+							getSociety().getAgricultureSystem(), this));
+			updateSeries(waterUseData, "Distribution", year,
+					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
+							getWaterSystem(), this));
+			updateSeries(waterAquiferDataset, "Aquifer", year, 
+					WaterUnits.convertStock(getWaterSystem().getWaterReservoirVolume(), 
+							getWaterSystem(), this));
 			/* temporarily removed
 			updateSeries(electricityUseData, "Operations", year, 
 					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPublicProduction(),
@@ -463,59 +481,33 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			*/
 		} else {
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Society", year,
-						WaterUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
-								nestedSystem.getSociety().getSocialSystem(), this));
-				/* temporarily removed
-				updateSeries(electricityUseData, nestedSystem.getName(), year, 
-						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPublicProduction(),
-								nestedSystem, this));
-			 	*/
+					updateSeries(waterSourceData, nestedSystem.getSociety().getName(), year,
+							WaterUnits.convertFlow(nestedSystem.getTotalWaterSupply()
+									+ nestedSystem.getWaterOutDistribution()
+									- nestedSystem.getWaterInDistribution()
+									+ nestedSystem.getWaterFromPrivateProduction()
+									- nestedSystem.getWaterImport(), nestedSystem, this));
+					updateSeries(waterUseData, nestedSystem.getSociety().getName(), year,
+							WaterUnits.convertFlow(nestedSystem.getSociety().getTotalWaterDemand(), 
+									nestedSystem.getSociety(), this));
+					/* temporarily removed
+					updateSeries(electricityUseData, nestedSystem.getName(), year, 
+							ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPublicProduction(),
+									nestedSystem, this));
+				 	*/
 			}
-		}
-		
-		if(getWaterSystem() instanceof LocalWaterSystem) {
-			updateSeries(waterSourceData, "Production", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
-							getWaterSystem(), this));
-			updateSeries(waterUseData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
-							getWaterSystem(), this));
-			updateSeries(waterSourceData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(),
-							getWaterSystem(), this));
-			updateSeries(waterAquiferDataset, "Aquifer", year, 
-					WaterUnits.convertStock(getWaterSystem().getWaterReservoirVolume(), 
-							getWaterSystem(), this));
-			updateSeries(waterSourceData, "Private Production", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
-							getWaterSystem(), this));
-			updateSeries(waterSourceData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
-							getWaterSystem(), this));
-			updateSeries(waterUseData, "Distribution", year,
-					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
-							getWaterSystem(), this));
-		} else {
-			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-					updateSeries(waterSourceData, nestedSystem.getSociety().getName() + " Production", year,
-							WaterUnits.convertFlow(nestedSystem.getWaterProduction(), nestedSystem, this));
-			}
-			updateSeries(waterSourceData, "Private Production", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
-							getWaterSystem(), this));
 			/*updateSeries(waterSourceData, "Production", year, 
 					WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
 							getWaterSystem(), this));*/
 
-			if(!getWaterSystem().getExternalElements().isEmpty()) {
+			/*if(!getWaterSystem().getExternalElements().isEmpty()) {
 				updateSeries(waterUseData, "Distribution", year, 
 						WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
 								getWaterSystem(), this));
 				updateSeries(waterSourceData, "Distribution", year, 
 						WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(),
 								getWaterSystem(), this));
-			}
+			}*/
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterAquiferDataset, nestedSystem.getSociety().getName(), year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterReservoirVolume(), 
@@ -529,9 +521,6 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		updateSeries(electricityUseData, "Private Operations", year, 
 				ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
 						getWaterSystem(), this));
-		updateSeries(waterUseData, "Agriculture Operations", year, 
-				WaterUnits.convertFlow(getSociety().getAgricultureSystem().getWaterConsumption(), 
-						getSociety().getAgricultureSystem(), this));
 		/*updateSeries(waterUseData, "Electricity Operations", year, 
 				WaterUnits.convertFlow(getSociety().getElectricitySystem().getWaterConsumption(), 
 						getSociety().getElectricitySystem(), this));*/
