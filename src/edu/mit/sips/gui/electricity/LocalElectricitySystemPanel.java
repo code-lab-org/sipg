@@ -449,8 +449,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			*/
 		} else {
 			for(ElectricitySystem.Local nestedSystem : getNestedElectricitySystems()) {
-				updateSeries(electricitySourceData, nestedSystem.getSociety().getName() 
-						+ " Production", year,
+				updateSeries(electricitySourceData, nestedSystem.getSociety().getName(), year,
 						ElectricityUnits.convertFlow(nestedSystem.getTotalElectricitySupply()
 								+ nestedSystem.getElectricityFromPrivateProduction()
 								+ nestedSystem.getElectricityOutDistribution()
