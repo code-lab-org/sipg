@@ -29,7 +29,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 	
 	private NumberFormat timeFormat;
 	
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits timeUnits = TimeUnits.year;
 	
 	private final JFormattedTextField timeAvailableText, timeInitializedText, 
