@@ -325,7 +325,9 @@ public class AgricultureElementPanel extends ElementPanel
 			c.gridx = 0;
 			addInput(elementPanel, c, "Maximum Land Area", 
 					maxLandAreaText, "km^2");
-			// TODO addInput(elementPanel, c, "Initial Land Area", initialLandAreaText, "km^2");
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Land Area", 
+					initialLandAreaText, "km^2");
 			addInput(elementPanel, c, "Specific Food Yield", 
 					foodIntensityText, 	
 					foodUnits + "/" + foodTimeUnits + "/km^2",
@@ -343,6 +345,7 @@ public class AgricultureElementPanel extends ElementPanel
 					laborIntensityText, "people/km^2",
 					"  max: ", 
 					maxLaborUseLabel, "people");
+			*/
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -351,7 +354,9 @@ public class AgricultureElementPanel extends ElementPanel
 			c.gridy = 0;
 			addInput(elementPanel, c, "Maximum Food Input", 
 					maxFoodInput, foodUnits + "/" + foodTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Food Input", initialFoodInput, foodUnits + "/" + foodTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Food Input", 
+			  		initialFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency", 
 					distributionEfficiency, foodUnits + "/" + foodUnits,
 					"  max: ", maxOutputLabel, 
@@ -361,6 +366,7 @@ public class AgricultureElementPanel extends ElementPanel
 					currencyUnits + "/" + foodUnits,
 					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
+			*/
 		}
 
 		// set input enabled state

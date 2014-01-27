@@ -317,7 +317,10 @@ public class ElectricityElementPanel extends ElementPanel
 				addInput(elementPanel, c, "Maximum Electricity Production", 
 						maxElectricityProductionText, 
 						electricityUnits + "/" + electricityTimeUnits);
-				// TODO addInput(elementPanel, c, "Initial Electricity Production", initialElectricityProductionText, electricityUnits + "/" + electricityTimeUnits);
+				/* TODO removed temporarily
+				addInput(elementPanel, c, "Initial Electricity Production", 
+						initialElectricityProductionText, 
+						electricityUnits + "/" + electricityTimeUnits);
 				addInput(elementPanel, c, "Specific Petrolum Consumption",
 						petroleumIntensityOfElectricityProductionText,
 						oilUnits + "/" + electricityUnits,
@@ -333,6 +336,7 @@ public class ElectricityElementPanel extends ElementPanel
 						currencyUnits + "/" + electricityUnits,
 						"  max: ", maxVariableCostLabel,
 						currencyUnits + "/" + currencyTimeUnits);
+				*/
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -342,7 +346,10 @@ public class ElectricityElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Electricity Input", 
 					maxElectricityInputText,
 					electricityUnits + "/" + electricityTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Electricity Input", initialElectricityInputText, electricityUnits + "/" + electricityTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Electricity Input", 
+					initialElectricityInputText, 
+					electricityUnits + "/" + electricityTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
 					distributionEfficiencyText, 
 					electricityUnits + "/" + electricityUnits,
@@ -353,6 +360,7 @@ public class ElectricityElementPanel extends ElementPanel
 					currencyUnits + "/" + electricityUnits,
 					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
+			*/
 		}
 
 		// set input enabled state

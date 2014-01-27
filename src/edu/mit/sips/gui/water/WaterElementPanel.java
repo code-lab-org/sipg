@@ -357,7 +357,10 @@ public class WaterElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Maximum Water Production", 
 					maxWaterProductionText, 
 					waterUnits + "/" + waterTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Water Production", initialWaterProductionText, waterUnits + "/" + waterTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Water Production", 
+					initialWaterProductionText, 
+					waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Specific Aquifer Consumption",
 					reservoirIntensityOfWaterProductionText, 
 					waterUnits + "/" + waterUnits,
@@ -373,13 +376,13 @@ public class WaterElementPanel extends ElementPanel
 					currencyUnits + "/" + waterUnits,
 					"  max: ", maxVariableCostLabel,
 					currencyUnits + "/" + currencyTimeUnits);
-			
 			c.gridwidth = 3;
 			c.anchor = GridBagConstraints.LINE_END;
 			c.fill = GridBagConstraints.HORIZONTAL;
 			elementPanel.add(coastalAccessRequiredCheck, c);
 			c.gridwidth = 1;
 			c.gridy++;
+			*/
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -389,7 +392,10 @@ public class WaterElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Maximum Water Input", 
 					maxWaterInputText, 
 					waterUnits + "/" + waterTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Water Input", initialWaterInputText, waterUnits + "/" + waterTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Water Input", 
+					initialWaterInputText, 
+					waterUnits + "/" + waterTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
 					distributionEfficiencyText, 
 					waterUnits + "/" + waterUnits,
@@ -405,6 +411,7 @@ public class WaterElementPanel extends ElementPanel
 					currencyUnits + "/" + waterUnits,
 					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
+			*/
 		}
 		
 		// set input enabled state

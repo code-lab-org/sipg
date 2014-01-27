@@ -309,7 +309,10 @@ public class PetroleumElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Petroleum Production", 
 					maxPetroleumProductionText,
 					oilUnits + "/" + oilTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Petroleum Production", initialPetroleumProductionText, oilUnits + "/" + oilTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Petroleum Production", 
+					initialPetroleumProductionText, 
+					oilUnits + "/" + oilTimeUnits);
 			addInput(elementPanel, c, "Specific Reservoir Consumption",
 					reservoirIntensityOfPetroleumProductionText, 
 					oilUnits + "/" + oilUnits,
@@ -320,6 +323,7 @@ public class PetroleumElementPanel extends ElementPanel
 					currencyUnits + "/" + oilUnits,
 					"  max: ", maxVariableCostLabel,
 					currencyUnits + "/" + currencyTimeUnits);
+			*/
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -329,7 +333,9 @@ public class PetroleumElementPanel extends ElementPanel
 			addInput(elementPanel, c, "Max Petroleum Input", 
 					maxPetroleumInputText,
 					oilUnits + "/" + oilTimeUnits);
-			// TODO addInput(elementPanel, c, "Initial Petroleum Input", initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
+			/* TODO removed temporarily
+			addInput(elementPanel, c, "Initial Petroleum Input", 
+					initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",
 					distributionEfficiencyText, 
 					oilUnits + "/" + oilUnits,
@@ -345,6 +351,7 @@ public class PetroleumElementPanel extends ElementPanel
 					currencyUnits + "/" + oilUnits,
 					"  max: ", maxVariableCostDistLabel,
 					currencyUnits + "/" + currencyTimeUnits);
+			*/
 		}
 		
 		// set input enabled state
