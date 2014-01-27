@@ -167,9 +167,11 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		} else {
 			electricityUseNames.add(getSociety().getName() + " Operations");
 		}
+		/* temporarily removed
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
+		*/
 
 		/* addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Petroleum Use Fraction (-)", 
@@ -450,17 +452,21 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 			updateSeries(petroleumUseData, "Society", year, 
 					OilUnits.convertFlow(getSociety().getSocialSystem().getPetroleumConsumption(),
 							getSociety().getSocialSystem(), this));
+			/* temporarily removed
 			updateSeries(electricityUseData, "Operations", year, 
 					ElectricityUnits.convertFlow(getPetroleumSystem().getElectricityConsumption(),
 							getPetroleumSystem(), this));
+			*/
 		} else {
 			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
 				updateSeries(petroleumUseData, nestedSystem.getSociety().getName() + " Society", year,
 						OilUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getPetroleumConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
+				/* temporarily removed
 				updateSeries(electricityUseData, nestedSystem.getName(), year, 
 						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
 								nestedSystem, this));
+				 */
 			}
 		}
 

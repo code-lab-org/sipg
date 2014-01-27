@@ -170,9 +170,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			oilUseNames.add(getSociety().getName() + " Operations");
 		}
 		oilUseNames.add("Private Operations");
+		/* temporarily removed
 		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
 				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
+		*/
 		
 		/*
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
@@ -408,9 +410,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			updateSeries(electricityUseData, "Society", year, 
 					ElectricityUnits.convertFlow(getSociety().getSocialSystem().getElectricityConsumption(),
 							getSociety().getSocialSystem(), this));
+			/* temporarily removed
 			updateSeries(petroleumUseData, "Operations", year, 
 					OilUnits.convertFlow(getElectricitySystem().getPetroleumConsumptionFromPublicProduction(),
 							getElectricitySystem(), this));
+			*/
 			updateSeries(waterUseData, "Operations", year, 
 					WaterUnits.convertFlow(getElectricitySystem().getWaterConsumption(),
 							getElectricitySystem(), this));
@@ -419,11 +423,13 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				updateSeries(electricityUseData, nestedSystem.getSociety().getName() + " Society", year,
 						ElectricityUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getElectricityConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
+				/* temporarily removed
 				if(nestedSystem.getPetroleumConsumption() > 0) {
 					updateSeries(petroleumUseData, nestedSystem.getName(), year, 
 							OilUnits.convertFlow(nestedSystem.getPetroleumConsumptionFromPublicProduction(),
 									nestedSystem, this));
 				}
+				*/
 				if(nestedSystem.getWaterConsumption() > 0) {
 					updateSeries(waterUseData, nestedSystem.getName(), year, 
 							WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),

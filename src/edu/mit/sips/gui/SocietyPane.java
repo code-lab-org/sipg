@@ -54,7 +54,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		socialTab = new SocialSystemPanel(country.getSocialSystem());
-		tabbedPane.addTab(country.getName(), Icons.COUNTRY, socialTab);
+		// TODO tabbedPane.addTab(country.getName(), Icons.COUNTRY, socialTab);
 		
 		scoreTab = new ScorePanel(scenario, scoreLabel);
 		tabbedPane.addTab("Scores", Icons.METRICS, scoreTab);
@@ -62,7 +62,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		if(country.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			agricultureTab = new LocalAgricultureSystemPanel(
 					(AgricultureSystem.Local)country.getAgricultureSystem());
-			tabbedPane.addTab("Agriculture", Icons.AGRICULTURE, agricultureTab);
+			tabbedPane.addTab("Agriculture Sector", Icons.AGRICULTURE, agricultureTab);
 		} else {
 			// agricultureTab = new BasicAgricultureSystemPanel(society.getAgricultureSystem());
 			agricultureTab = null;
@@ -71,7 +71,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		if(country.getWaterSystem() instanceof WaterSystem.Local) {
 			waterTab = new LocalWaterSystemPanel(
 					(WaterSystem.Local) country.getWaterSystem());	
-			tabbedPane.addTab("Water", Icons.WATER, waterTab);		
+			tabbedPane.addTab("Water Sector", Icons.WATER, waterTab);		
 		} else {
 			// waterTab = new BasicWaterSystemPanel(society.getWaterSystem());
 			waterTab = null;
@@ -80,7 +80,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		if(country.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 			petroleumTab = new LocalPetroleumSystemPanel(
 					(PetroleumSystem.Local) country.getPetroleumSystem());
-			tabbedPane.addTab("Petroleum", Icons.PETROLEUM, petroleumTab);
+			tabbedPane.addTab("Petroleum Sector", Icons.PETROLEUM, petroleumTab);
 		} else {
 			// petroleumTab = new BasicPetroleumSystemPanel(society.getPetroleumSystem());
 			petroleumTab = null;
@@ -89,7 +89,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		if(country.getElectricitySystem() instanceof ElectricitySystem.Local) {
 			electricityTab = new LocalElectricitySystemPanel(
 					(ElectricitySystem.Local) country.getElectricitySystem());
-			tabbedPane.addTab("Electricity", Icons.ELECTRICITY, electricityTab);
+			tabbedPane.addTab("Electricity Sector", Icons.ELECTRICITY, electricityTab);
 		} else {
 			// electricityTab = new BasicElectricitySystemPanel(society.getElectricitySystem());
 			electricityTab = null;

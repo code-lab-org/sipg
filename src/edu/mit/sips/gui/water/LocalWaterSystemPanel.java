@@ -173,9 +173,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			electricityUseNames.add(getSociety().getName() + " Operations");
 		}
 		electricityUseNames.add("Private Operations");
+		/* temporarily removed
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
+		*/
 
 		/* temporarily removed
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -454,17 +456,21 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			updateSeries(waterUseData, "Society", year, 
 					WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 							getSociety().getSocialSystem(), this));
+			/* temporarily removed
 			updateSeries(electricityUseData, "Operations", year, 
 					ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPublicProduction(),
 							getWaterSystem(), this));
+			*/
 		} else {
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Society", year,
 						WaterUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getWaterConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
+				/* temporarily removed
 				updateSeries(electricityUseData, nestedSystem.getName(), year, 
 						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumptionFromPublicProduction(),
 								nestedSystem, this));
+			 	*/
 			}
 		}
 		

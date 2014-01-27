@@ -161,9 +161,11 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		} else {
 			waterUseNames.add(getSociety().getName() + " Operations");
 		}
+		/* temporarily removed
 		addTab("Use", Icons.WATER_USE,
 				createStackedAreaChart("Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
 						waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
+		*/
 		
 		/* temporarily removed
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -392,9 +394,11 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			updateSeries(foodUseData, "Society", year, 
 					FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
 							getSociety().getSocialSystem(), this));
+			/* temporarily removed
 			updateSeries(waterUseData, "Operations", year, 
 					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
 							getAgricultureSystem(), this));
+			 */
 			/* temporarily removed
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getWaterConsumption() > 0) {
@@ -409,9 +413,11 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				updateSeries(foodUseData, nestedSystem.getSociety().getName() + " Society", year,
 						FoodUnits.convertFlow(nestedSystem.getSociety().getSocialSystem().getFoodConsumption(), 
 								nestedSystem.getSociety().getSocialSystem(), this));
+				/* temporarily removed
 				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Operations", year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
 								nestedSystem, this));
+				*/
 			}
 		}
 		updateSeries(cashFlow, "Capital Expense", year, 
