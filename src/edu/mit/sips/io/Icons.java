@@ -28,6 +28,9 @@ public abstract class Icons {
 	public static final Icon ELECTRICITY = loadIcon("resources/fugue/light-bulb.png");
 	public static final Icon ELECTRICITY_PLANNED  = loadIcon("resources/fugue/light-bulb--faded.png");
 	
+
+	public static final Icon WATER_ELECTRICITY = loadIcon("resources/fugue/water-electricity.png");
+	
 	public static final Icon PRODUCT = loadIcon("resources/silk/cog.png");
 	public static final Icon POPULATION = loadIcon("resources/silk/group.png");
 	public static final Icon REVENUE = loadIcon("resources/fugue/money.png");
