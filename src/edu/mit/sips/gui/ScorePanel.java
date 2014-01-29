@@ -145,6 +145,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	
 	private double overBudgetValue = 0;
 	private int overBudgetYear = 0;
+	private int roundNumber = 0;
 	
 	private final JLabel scoreLabel;
 
@@ -180,6 +181,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		try {
 			FileWriter fw = new FileWriter(outputFile);
 			fw.write("Time, ");
+			fw.write("Round, ");
 			fw.write("Food Security, ");
 			fw.write("Aquifer Security, ");
 			fw.write("Reservoir Security, ");
@@ -369,6 +371,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		try {
 			FileWriter fw = new FileWriter(outputFile, true);
 			fw.write(new Date().getTime() + ", ");
+			fw.write(roundNumber + ", ");
 			
 			double foodSecurity = getTotalScore(foodSecurityHistory);
 			double aquiferSecurity = getTotalScore(aquiferSecurityHistory);
@@ -547,6 +550,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize(); 
+		roundNumber++;
 	}
 
 	@Override
@@ -589,7 +593,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(agriculturePlayerScore, "Total Score", 
 					year, totalScore);
-			String scoreText = "Agriculture Score: " 
+			String scoreText = "Round " + roundNumber + " Agriculture Score: " 
 					+ NumberFormat.getIntegerInstance().format(totalScore);
 			agricultureScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
@@ -613,7 +617,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(waterPlayerScore, "Total Score", 
 					year, totalScore);
-			String scoreText = "Water Score: " 
+			String scoreText = "Round " + roundNumber + " Water Score: " 
 					+ NumberFormat.getIntegerInstance().format(totalScore);
 			waterScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
@@ -640,7 +644,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			updateSeries(energyPlayerScore, "Total Score", 
 					year, totalScore);
-			String scoreText = "Energy Score: " 
+			String scoreText = "Round " + roundNumber + " Energy Score: " 
 					+ NumberFormat.getIntegerInstance().format(totalScore);
 			energyScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
@@ -671,7 +675,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 		updateSeries(teamScore, "Total Score", 
 				year, totalScore);
-		String scoreText = "Team Score: " 
+		String scoreText = "Round " + roundNumber + " Team Score: " 
 				+ NumberFormat.getIntegerInstance().format(totalScore)
 				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":"");
 		teamScoreLabel.setText(scoreText);
