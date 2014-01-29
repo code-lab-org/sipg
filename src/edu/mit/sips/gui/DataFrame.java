@@ -403,8 +403,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 					int year = (int) event.getTime();
 					
 					setTitle("Data as of " + year);
-
-					societyPane.simulationInitialized(event);
 				}
 			});
 		} catch (InterruptedException e) {
@@ -430,8 +428,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 					int year = (int) event.getTime();
 					
 					setTitle("Data as of " + year);
-					
-					societyPane.simulationUpdated(event);
 				}
 			});
 		} catch (InterruptedException e) {

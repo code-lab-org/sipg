@@ -1,10 +1,12 @@
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -100,24 +102,39 @@ public class SocietyPane extends JPanel implements UpdateListener {
 	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
-	public void simulationCompleted(UpdateEvent event) {
-		if(scoreTab != null) {
-			scoreTab.simulationCompleted(event);
-		}
-		if(waterTab != null) {
-			waterTab.simulationCompleted(event);
-		}
-		if(agricultureTab != null) {
-			agricultureTab.simulationCompleted(event);
-		}
-		if(electricityTab != null) {
-			electricityTab.simulationCompleted(event);
-		}
-		if(petroleumTab != null) {
-			petroleumTab.simulationCompleted(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationCompleted(event);
+	public void simulationCompleted(final UpdateEvent event) {
+		// Note: must use SwingUtilities.invokeAndWait method here because
+		// the UpdateEvent passes the "active" Country instance. If we don't
+		// wait for the GUI to update, the simulation will race ahead, causing
+		// it to display data for future time periods!
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					if(scoreTab != null) {
+						scoreTab.simulationCompleted(event);
+					}
+					if(waterTab != null) {
+						waterTab.simulationCompleted(event);
+					}
+					if(agricultureTab != null) {
+						agricultureTab.simulationCompleted(event);
+					}
+					if(electricityTab != null) {
+						electricityTab.simulationCompleted(event);
+					}
+					if(petroleumTab != null) {
+						petroleumTab.simulationCompleted(event);
+					}
+					if(socialTab != null) {
+						socialTab.simulationCompleted(event);
+					}
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -125,24 +142,39 @@ public class SocietyPane extends JPanel implements UpdateListener {
 	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
-	public void simulationInitialized(UpdateEvent event) {
-		if(scoreTab != null) {
-			scoreTab.simulationInitialized(event);
-		}
-		if(waterTab != null) {
-			waterTab.simulationInitialized(event);
-		}
-		if(agricultureTab != null) {
-			agricultureTab.simulationInitialized(event);
-		}
-		if(electricityTab != null) {
-			electricityTab.simulationInitialized(event);
-		}
-		if(petroleumTab != null) {
-			petroleumTab.simulationInitialized(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationInitialized(event);
+	public void simulationInitialized(final UpdateEvent event) {
+		// Note: must use SwingUtilities.invokeAndWait method here because
+		// the UpdateEvent passes the "active" Country instance. If we don't
+		// wait for the GUI to update, the simulation will race ahead, causing
+		// it to display data for future time periods!
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					if(scoreTab != null) {
+						scoreTab.simulationInitialized(event);
+					}
+					if(waterTab != null) {
+						waterTab.simulationInitialized(event);
+					}
+					if(agricultureTab != null) {
+						agricultureTab.simulationInitialized(event);
+					}
+					if(electricityTab != null) {
+						electricityTab.simulationInitialized(event);
+					}
+					if(petroleumTab != null) {
+						petroleumTab.simulationInitialized(event);
+					}
+					if(socialTab != null) {
+						socialTab.simulationInitialized(event);
+					}
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -150,24 +182,39 @@ public class SocietyPane extends JPanel implements UpdateListener {
 	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
 	 */
 	@Override
-	public void simulationUpdated(UpdateEvent event) {
-		if(scoreTab != null) {
-			scoreTab.simulationUpdated(event);
-		}
-		if(waterTab != null) {
-			waterTab.simulationUpdated(event);
-		}
-		if(agricultureTab != null) {
-			agricultureTab.simulationUpdated(event);
-		}
-		if(electricityTab != null) {
-			electricityTab.simulationUpdated(event);
-		}
-		if(petroleumTab != null) {
-			petroleumTab.simulationUpdated(event);
-		}
-		if(socialTab != null) {
-			socialTab.simulationUpdated(event);
+	public void simulationUpdated(final UpdateEvent event) {
+		// Note: must use SwingUtilities.invokeAndWait method here because
+		// the UpdateEvent passes the "active" Country instance. If we don't
+		// wait for the GUI to update, the simulation will race ahead, causing
+		// it to display data for future time periods!
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					if(scoreTab != null) {
+						scoreTab.simulationUpdated(event);
+					}
+					if(waterTab != null) {
+						waterTab.simulationUpdated(event);
+					}
+					if(agricultureTab != null) {
+						agricultureTab.simulationUpdated(event);
+					}
+					if(electricityTab != null) {
+						electricityTab.simulationUpdated(event);
+					}
+					if(petroleumTab != null) {
+						petroleumTab.simulationUpdated(event);
+					}
+					if(socialTab != null) {
+						socialTab.simulationUpdated(event);
+					}
+				}
+			});
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
 		}
 	}
 }
