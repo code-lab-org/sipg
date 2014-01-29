@@ -78,7 +78,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Energy":
 			return 0e9;
 		case "Country":
-			return 0e9;
+			return -10e9;
 		}
 		return 0;
 	}
@@ -105,7 +105,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		case "Energy":
 			return 500e9;
 		case "Country":
-			return 600e9;
+			return 550e9;
 		}
 		return 0;
 	}
