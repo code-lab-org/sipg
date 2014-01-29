@@ -12,7 +12,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;

@@ -40,7 +40,8 @@ public class LifecycleModelPanel extends JPanel {
 		} else if(lifecycleModel instanceof DefaultLifecycleModel) {
 			return new LifecycleModelPanel(lifecycleModel);
 		} else if(lifecycleModel instanceof MutableSimpleLifecycleModel) {
-			return new SimpleLifecycleModelPanel((MutableSimpleLifecycleModel)lifecycleModel);
+			//TODO return new SimpleLifecycleModelPanel((MutableSimpleLifecycleModel)lifecycleModel);
+			return new SimpleLifecycleModelPanel2((MutableSimpleLifecycleModel)lifecycleModel);
 		} else {
 			throw new IllegalArgumentException("Lifecycle model panel not implemented.");
 		}
