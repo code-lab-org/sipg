@@ -164,7 +164,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	};
 
 	private final Action addElementTemplate = new AbstractAction(
-			"Add from Template",Icons.ADD) { // TODO  Icons.ADD_WIZARD) {
+			"Add Project",Icons.ADD) { // TODO  Icons.ADD_WIZARD) {
 		private static final long serialVersionUID = -6723630338741885195L;
 
 		@Override
@@ -184,7 +184,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	};
 	
 	private final Action editElement = new AbstractAction( 
-			"Edit Static Properties", Icons.EDIT) {
+			"Edit Project", Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
 
 		@Override
@@ -244,15 +244,15 @@ public class ElementsPane extends JPanel implements UpdateListener {
 		elementPopup = new ElementPopup(simulator);
 		
 		addElementTemplate.putValue(Action.SHORT_DESCRIPTION, 
-				"Add element from a template.");
+				"Add a new infrastructure project.");
 		addElement.putValue(Action.SHORT_DESCRIPTION, 
 				"Add custom element.");
 		editElement.putValue(Action.SHORT_DESCRIPTION, 
-				"Edit element's static parameters.");
+				"Edit an existing infrastructure project.");
 		editElementOperations.putValue(Action.SHORT_DESCRIPTION, 
 				"Edit element's operational parameters.");
 		removeElement.putValue(Action.SHORT_DESCRIPTION, 
-				"Remove element.");
+				"Remove an existing infrastructure project.");
 		
 		setLayout(new BorderLayout());
 		setPreferredSize(new Dimension(150,100));
