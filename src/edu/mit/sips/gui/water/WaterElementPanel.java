@@ -354,10 +354,10 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Water Production", 
 					maxWaterProductionText, 
 					waterUnits + "/" + waterTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Water Production", 
 					initialWaterProductionText, 
 					waterUnits + "/" + waterTimeUnits);
@@ -389,10 +389,10 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Water Input", 
 					maxWaterInputText, 
 					waterUnits + "/" + waterTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Water Input", 
 					initialWaterInputText, 
 					waterUnits + "/" + waterTimeUnits);

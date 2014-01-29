@@ -314,10 +314,10 @@ public class ElectricityElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			/* TODO removed temporarily
 				addInput(elementPanel, c, "Maximum Electricity Production", 
 						maxElectricityProductionText, 
 						electricityUnits + "/" + electricityTimeUnits);
-				/* TODO removed temporarily
 				addInput(elementPanel, c, "Initial Electricity Production", 
 						initialElectricityProductionText, 
 						electricityUnits + "/" + electricityTimeUnits);
@@ -343,10 +343,10 @@ public class ElectricityElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Max Electricity Input", 
 					maxElectricityInputText,
 					electricityUnits + "/" + electricityTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Electricity Input", 
 					initialElectricityInputText, 
 					electricityUnits + "/" + electricityTimeUnits);

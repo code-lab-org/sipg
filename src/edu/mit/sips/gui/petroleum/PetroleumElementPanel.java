@@ -306,10 +306,10 @@ public class PetroleumElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Max Petroleum Production", 
 					maxPetroleumProductionText,
 					oilUnits + "/" + oilTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Petroleum Production", 
 					initialPetroleumProductionText, 
 					oilUnits + "/" + oilTimeUnits);
@@ -330,10 +330,10 @@ public class PetroleumElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Max Petroleum Input", 
 					maxPetroleumInputText,
 					oilUnits + "/" + oilTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Petroleum Input", 
 					initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency",

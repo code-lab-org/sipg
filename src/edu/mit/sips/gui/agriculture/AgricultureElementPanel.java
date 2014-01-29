@@ -323,9 +323,9 @@ public class AgricultureElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Land Area", 
 					maxLandAreaText, "km^2");
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Land Area", 
 					initialLandAreaText, "km^2");
 			addInput(elementPanel, c, "Specific Food Yield", 
@@ -352,9 +352,9 @@ public class AgricultureElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Food Input", 
 					maxFoodInput, foodUnits + "/" + foodTimeUnits);
-			/* TODO removed temporarily
 			addInput(elementPanel, c, "Initial Food Input", 
 			  		initialFoodInput, foodUnits + "/" + foodTimeUnits);
 			addInput(elementPanel, c, "Distribution Efficiency", 
