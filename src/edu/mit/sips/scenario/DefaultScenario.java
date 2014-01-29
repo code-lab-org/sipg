@@ -52,7 +52,7 @@ public class DefaultScenario implements Scenario {
 	@Override
 	public List<? extends ElementTemplate> getTemplates(Collection<Sector> sectors) {
 		List<ElementTemplate> filteredTemplates = new ArrayList<ElementTemplate>();
-		for(ElementTemplate template : templates) {
+		for(ElementTemplate template : getTemplates()) {
 			if(sectors.contains(template.getSector())) {
 				filteredTemplates.add(template);
 			}

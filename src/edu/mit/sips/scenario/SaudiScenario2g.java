@@ -157,7 +157,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1970, INDUSTRIAL, RURAL)
+										//,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1970, INDUSTRIAL, RURAL)
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1974, INDUSTRIAL, INDUSTRIAL)
 										/*,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1984, INDUSTRIAL, INDUSTRIAL)
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1992, INDUSTRIAL, INDUSTRIAL)
@@ -176,6 +176,23 @@ public final class SaudiScenario2g extends DefaultScenario {
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
+	}
+	
+	@Override
+	public List<? extends ElementTemplate> getTemplates(Collection<Sector> sectors) {
+		ArrayList<ElementTemplate> filteredTemplates = new ArrayList<ElementTemplate>(super.getTemplates(sectors));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.FOOD_TRANSPORT_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.OIL_PIPELINE_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.OIL_WELL_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.POWER_LINE_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.POWER_LINE_2.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.POWER_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.PV_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.RO_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.WATER_PIPELINE_1.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.WATER_PIPELINE_2.getName()));
+		filteredTemplates.remove(getTemplate(SaudiElementTemplate2.WHEAT_1.getName()));
+		return filteredTemplates;
 	}
 
 	/**
@@ -282,7 +299,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1950, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1972, URBAN, RURAL)
+										//,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1972, URBAN, RURAL)
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1972, URBAN, URBAN)
 										/*,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1982, URBAN, URBAN)
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1988, URBAN, URBAN)										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1990, URBAN, URBAN)
