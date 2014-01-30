@@ -16,6 +16,7 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 	FOOD_TRANSPORT_2(Sector.AGRICULTURE,	true, 	"High-volume Food Transport", 	1950,	100),
 	RO_PLANT_1		(Sector.WATER,			false,	"Small RO Plant",				1970,	50),
 	RO_PLANT_2		(Sector.WATER,			false,	"Large RO Plant",				1980,	50),
+	RO_PLANT_3		(Sector.WATER,			false,	"Huge RO Plant",				1980,	50),
 	WATER_PIPELINE_1(Sector.WATER,			true, 	"Low-volume Water Pipeline", 	1950,	100),
 	WATER_PIPELINE_2(Sector.WATER,			true, 	"High-volume Water Pipeline", 	1950,	100),
 	OIL_WELL_1		(Sector.PETROLEUM,		false,	"Small Oil Well",				1940,	100),
@@ -118,6 +119,13 @@ public enum SaudiElementTemplate2 implements ElementTemplate {
 							maxOperations, operationsDuration, 1, 
 							500e6, 2.5e6, 12.5e6, true), 
 					0.0, 150e6, 150e6, 4.5e-3, 0.012, true);
+		case RO_PLANT_3:
+			return DefaultWaterElement.createProductionElement(
+					name, name + " " + getInstanceId(RO_PLANT_3), location, location, 
+					new SimpleLifecycleModel(timeAvailable, year, 2, 
+							maxOperations, operationsDuration, 1, 
+							2e9, 10e6, 50e6, true), 
+					0.0, 600e6, 600e6, 4.5e-3, 0.012, true);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_1), location, destination, 
