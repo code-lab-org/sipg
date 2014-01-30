@@ -1,5 +1,6 @@
 package edu.mit.sips.core;
 
+import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
 
@@ -27,7 +28,7 @@ public interface InfrastructureElement extends SimEntity, CurrencyUnitsOutput {
 	 * @return the capital expense
 	 */
 	public double getCapitalExpense();
-	
+
 	/**
 	 * Gets the decommission expense.
 	 *
@@ -48,6 +49,13 @@ public interface InfrastructureElement extends SimEntity, CurrencyUnitsOutput {
 	 * @return the fixed operations expense
 	 */
 	public double getFixedOperationsExpense();
+	
+	/**
+	 * Gets the lifecycle model.
+	 *
+	 * @return the lifecycle model
+	 */
+	public LifecycleModel getLifecycleModel();
 	
 	/**
 	 * Gets the mutable element.

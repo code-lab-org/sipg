@@ -136,11 +136,10 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		return lifecycleModel.getFixedOperationsExpense();
 	}
 	
-	/**
-	 * Gets the lifecycle model.
-	 *
-	 * @return the lifecycle model
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureElement#getLifecycleModel()
 	 */
+	@Override
 	public LifecycleModel getLifecycleModel() {
 		return lifecycleModel;
 	}
