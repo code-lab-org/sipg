@@ -414,6 +414,11 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	 */
 	public void initialize() {
 		elementsTreeModel.setState(simulator.getScenario().getCountry());
+		
+		for(int i = 0; i < elementsTree.getRowCount(); i++) {
+			elementsTree.expandRow(i);
+		}
+		
 		updateActions();
 	}
 	
