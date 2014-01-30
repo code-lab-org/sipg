@@ -112,12 +112,14 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Balance (" + getCurrencyUnits() + ")",
 							cumulativeBalance));
+			/* temporarily removed
 			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
 					"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
 					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()), 
 					capitalExpenseTotal,
 					"Cumulative Investment (" + getCurrencyUnits() + ")", 
 					cumulativeCapitalExpense));
+			*/
 		} else {
 			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
