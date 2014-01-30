@@ -8,6 +8,7 @@ import javax.swing.tree.MutableTreeNode;
 
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
 
 /**
  * The Class LocationTreeNode.
@@ -20,6 +21,14 @@ public class SocietyTreeNode extends DefaultMutableTreeNode {
 		@Override
 		public int compare(InfrastructureElement o1,
 				InfrastructureElement o2) {
+			if(o1.getLifecycleModel() instanceof SimpleLifecycleModel 
+					&& o2.getLifecycleModel() instanceof SimpleLifecycleModel) {
+				int delta = (int) (((SimpleLifecycleModel)o1.getLifecycleModel()).getTimeInitialized() - 
+					((SimpleLifecycleModel)o2.getLifecycleModel()).getTimeInitialized());
+				if(delta != 0) {
+					return delta;
+				}
+			}
 			return o1.getName().toLowerCase().compareTo(o2.getName().toLowerCase());
 		}
 	};
