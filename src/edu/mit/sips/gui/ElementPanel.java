@@ -164,7 +164,7 @@ public class ElementPanel extends JPanel {
 		if(element.getLifecycleModel() instanceof MutableSimpleLifecycleModel) {
 			timeInitialized = ((MutableSimpleLifecycleModel)element.getLifecycleModel()).getTimeInitialized();
 		}
-		nameText.setEnabled(timeInitialized >= 1980);
+		nameText.setEnabled(element.getTemplateName()  == null);
 		originCombo.setEnabled(timeInitialized >= 1980);
 		destinationCombo.setEnabled(timeInitialized >= 1980 
 				&& (element.getTemplateName() == null 
