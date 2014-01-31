@@ -143,7 +143,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterSourceNames) {
 			waterSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
+		addTab("Supply", Icons.WATER_SOURCE, createStackedAreaChart(
 				"Water Source (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterSourceData, PlottingUtils.getResourceColors(waterSourceNames)));
 		
@@ -162,7 +162,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterUseNames) {
 			waterUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+		addTab("Demand", Icons.WATER_USE, createStackedAreaChart(
 				"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
 		

@@ -137,7 +137,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilSourceNames) {
 			petroleumSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
+		addTab("Supply", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
 				"Petroleum Source (" + oilUnits + "/" + oilTimeUnits + ")",
 				petroleumSourceData, PlottingUtils.getResourceColors(oilSourceNames)));
 		
@@ -156,7 +156,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilUseNames) {
 			petroleumUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
+		addTab("Demand", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
 				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
 		

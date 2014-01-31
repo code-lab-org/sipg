@@ -139,7 +139,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricitySourceNames) {
 			electricitySourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
+		addTab("Supply", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
 				"Electricity Source (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricitySourceData, PlottingUtils.getResourceColors(electricitySourceNames)));
 		
@@ -159,7 +159,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricityUseNames) {
 			electricityUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+		addTab("Demand", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
 		

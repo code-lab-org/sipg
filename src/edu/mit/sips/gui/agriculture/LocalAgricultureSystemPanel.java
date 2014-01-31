@@ -133,7 +133,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodSourceNames) {
 			foodSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.AGRICULTURE_SOURCE,
+		addTab("Supply", Icons.AGRICULTURE_SOURCE,
 				createStackedAreaChart("Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodSourceData, PlottingUtils.getResourceColors(foodSourceNames)));
 		
@@ -151,7 +151,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodUseNames) {
 			foodUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.AGRICULTURE_USE,
+		addTab("Demand", Icons.AGRICULTURE_USE,
 				createStackedAreaChart("Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodUseData, PlottingUtils.getResourceColors(foodUseNames)));
 		
