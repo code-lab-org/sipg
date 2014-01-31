@@ -472,28 +472,28 @@ public class ElementsPane extends JPanel implements UpdateListener {
 					&& newCity.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 				((AgricultureSystem.Local) oldCity.getAgricultureSystem())
 					.removeElement((AgricultureElement)element);
-				((AgricultureSystem.Local) oldCity.getAgricultureSystem())
+				((AgricultureSystem.Local) newCity.getAgricultureSystem())
 					.addElement((AgricultureElement)newElement);
 			} else if(element instanceof WaterElement
 					&& oldCity.getWaterSystem() instanceof WaterSystem.Local
 					&& newCity.getWaterSystem() instanceof WaterSystem.Local) {
 				((WaterSystem.Local) oldCity.getWaterSystem())
 					.removeElement((WaterElement)element);
-				((WaterSystem.Local) oldCity.getWaterSystem())
+				((WaterSystem.Local) newCity.getWaterSystem())
 					.addElement((WaterElement)newElement);
 			} else if(element instanceof ElectricityElement
 					&& oldCity.getElectricitySystem() instanceof ElectricitySystem.Local
 					&& newCity.getElectricitySystem() instanceof ElectricitySystem.Local) {
 				((ElectricitySystem.Local) oldCity.getElectricitySystem())
 					.removeElement((ElectricityElement)element);
-				((ElectricitySystem.Local) oldCity.getElectricitySystem())
+				((ElectricitySystem.Local) newCity.getElectricitySystem())
 					.addElement((ElectricityElement)newElement);
 			} else if(element instanceof PetroleumElement
 					&& oldCity.getPetroleumSystem() instanceof PetroleumSystem.Local
 					&& newCity.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 				((PetroleumSystem.Local) oldCity.getPetroleumSystem())
 					.removeElement((PetroleumElement)element);
-				((PetroleumSystem.Local) oldCity.getPetroleumSystem())
+				((PetroleumSystem.Local) newCity.getPetroleumSystem())
 					.addElement((PetroleumElement)newElement);
 			} else {
 				throw new IllegalStateException(
