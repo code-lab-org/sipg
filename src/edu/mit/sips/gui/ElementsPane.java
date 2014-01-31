@@ -465,31 +465,36 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	private void openElementDialog(InfrastructureElement element) {
 		InfrastructureElement newElement = editElementDialog(element.getMutableElement());
 		if(newElement != null) {
-			City city = ((City)elementsTreeModel.getSociety(elementsTree.getSelectionPath()));
+			City oldCity = simulator.getScenario().getCountry().getCity(element.getOrigin());
+			City newCity = simulator.getScenario().getCountry().getCity(newElement.getOrigin());
 			if(element instanceof AgricultureElement 
-					&& city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				AgricultureSystem.Local agricultureSystem = 
-						(AgricultureSystem.Local) city.getAgricultureSystem();
-				agricultureSystem.removeElement((AgricultureElement)element);
-				agricultureSystem.addElement((AgricultureElement)newElement);
+					&& oldCity.getAgricultureSystem() instanceof AgricultureSystem.Local
+					&& newCity.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+				((AgricultureSystem.Local) oldCity.getAgricultureSystem())
+					.removeElement((AgricultureElement)element);
+				((AgricultureSystem.Local) oldCity.getAgricultureSystem())
+					.addElement((AgricultureElement)newElement);
 			} else if(element instanceof WaterElement
-					&& city.getWaterSystem() instanceof WaterSystem.Local) {
-				WaterSystem.Local waterSystem = 
-						(WaterSystem.Local) city.getWaterSystem();
-				waterSystem.removeElement((WaterElement)element);
-				waterSystem.addElement((WaterElement)newElement);
+					&& oldCity.getWaterSystem() instanceof WaterSystem.Local
+					&& newCity.getWaterSystem() instanceof WaterSystem.Local) {
+				((WaterSystem.Local) oldCity.getWaterSystem())
+					.removeElement((WaterElement)element);
+				((WaterSystem.Local) oldCity.getWaterSystem())
+					.addElement((WaterElement)newElement);
 			} else if(element instanceof ElectricityElement
-					&& city.getElectricitySystem() instanceof ElectricitySystem.Local) {
-				ElectricitySystem.Local energySystem = 
-						(ElectricitySystem.Local) city.getElectricitySystem();
-				energySystem.removeElement((ElectricityElement)element);
-				energySystem.addElement((ElectricityElement)newElement);
+					&& oldCity.getElectricitySystem() instanceof ElectricitySystem.Local
+					&& newCity.getElectricitySystem() instanceof ElectricitySystem.Local) {
+				((ElectricitySystem.Local) oldCity.getElectricitySystem())
+					.removeElement((ElectricityElement)element);
+				((ElectricitySystem.Local) oldCity.getElectricitySystem())
+					.addElement((ElectricityElement)newElement);
 			} else if(element instanceof PetroleumElement
-					&& city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
-				PetroleumSystem.Local energySystem = 
-						(PetroleumSystem.Local) city.getPetroleumSystem();
-				energySystem.removeElement((PetroleumElement)element);
-				energySystem.addElement((PetroleumElement)newElement);
+					&& oldCity.getPetroleumSystem() instanceof PetroleumSystem.Local
+					&& newCity.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+				((PetroleumSystem.Local) oldCity.getPetroleumSystem())
+					.removeElement((PetroleumElement)element);
+				((PetroleumSystem.Local) oldCity.getPetroleumSystem())
+					.addElement((PetroleumElement)newElement);
 			} else {
 				throw new IllegalStateException(
 						"Element was not a known element type.");
