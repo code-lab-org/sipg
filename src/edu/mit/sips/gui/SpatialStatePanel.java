@@ -195,7 +195,7 @@ public class SpatialStatePanel extends JPanel {
 		return PlottingUtils.YELLOW_GREEN;
 	}
 	
-	private Color getDefecitColor() {
+	private Color getDeficitColor() {
 		return PlottingUtils.CRIMSON;
 	}
 	
@@ -216,7 +216,7 @@ public class SpatialStatePanel extends JPanel {
 		
 		double consumptionValue = stateProvider.getConsumption(city);
 		if(consumptionValue > eps) {
-			g.setColor(getDefecitColor());
+			g.setColor(getDeficitColor());
 		} else {
 			g.setColor(Color.WHITE);
 		}
@@ -253,7 +253,7 @@ public class SpatialStatePanel extends JPanel {
 		if(stateProvider.isExportAllowed()) {
 			double exportValue = stateProvider.getExport(city);
 			if(exportValue > eps) {
-				g.setColor(getDefecitColor());
+				g.setColor(getDeficitColor());
 			} else {
 				g.setColor(getNeutralColor());
 			}
@@ -322,7 +322,7 @@ public class SpatialStatePanel extends JPanel {
 		double dist = Math.sqrt(Math.pow(p2.x - p1.x,2) + Math.pow(p2.y - p1.y,2));
 		double distribOutValue = stateProvider.getDistributionOut(society, dest);
 		if(distribOutValue > eps) {
-			g.setColor(getDefecitColor());
+			g.setColor(getDeficitColor());
 		} else {
 			g.setColor(getNeutralColor());
 		}
@@ -426,7 +426,7 @@ public class SpatialStatePanel extends JPanel {
 	
 			double distribOutValue = city.getName().equals(element.getOrigin()) ? stateProvider.getInput(element) : 0;
 			if(distribOutValue > eps) {
-				g.setColor(getDefecitColor());
+				g.setColor(getDeficitColor());
 			} else {
 				g.setColor(getNeutralColor());
 			}
@@ -449,7 +449,7 @@ public class SpatialStatePanel extends JPanel {
 		this.drawArrowLineWithHeadLabel(g, new Line2D.Float(
 				5, g.getFontMetrics().getHeight()/2 + 2, 
 				25, g.getFontMetrics().getHeight()/2 + 2), "In-flow");
-		g.setColor(getDefecitColor());
+		g.setColor(getDeficitColor());
 		this.drawArrowLineWithHeadLabel(g, new Line2D.Float(
 				5, 3*g.getFontMetrics().getHeight()/2 + 2, 
 				25, 3*g.getFontMetrics().getHeight()/2 + 2), "Out-flow");
@@ -458,10 +458,10 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(Color.BLACK);
 		g.drawString("Surplus", 30, 3*g.getFontMetrics().getHeight() + 4);
 		g.drawOval(10, 5*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
-		g.setColor(getDefecitColor());
+		g.setColor(getDeficitColor());
 		g.fillOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.setColor(Color.BLACK);
-		g.drawString("Defecit", 30, 4*g.getFontMetrics().getHeight() + 4);
+		g.drawString("Deficit", 30, 4*g.getFontMetrics().getHeight() + 4);
 		g.drawOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.dispose();
 	}
@@ -500,7 +500,7 @@ public class SpatialStatePanel extends JPanel {
 		if(netFlowValue > eps) {
 			g.setColor(getSurplusColor());
 		} else if(netFlowValue < -eps) {
-			g.setColor(getDefecitColor());
+			g.setColor(getDeficitColor());
 		} else {
 			g.setColor(Color.WHITE);
 		}
@@ -518,7 +518,7 @@ public class SpatialStatePanel extends JPanel {
 		if(!society.getCountry().equals(society.getSociety())) {
 			double domesticExport = stateProvider.getOtherDistributionOut(society);
 			if(domesticExport > 0) {
-				g.setColor(getDefecitColor());
+				g.setColor(getDeficitColor());
 			} else {
 				g.setColor(getNeutralColor());
 			}
@@ -543,7 +543,7 @@ public class SpatialStatePanel extends JPanel {
 		if(stateProvider.isExportAllowed()) {
 			double exportValue = stateProvider.getExport(society);
 			if(exportValue > eps) {
-				g.setColor(getDefecitColor());
+				g.setColor(getDeficitColor());
 			} else {
 				g.setColor(getNeutralColor());
 			}
