@@ -170,7 +170,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		} else if(levelizeCosts 
 				&& initializationDuration > 0
 				&& time >= timeInitialized 
-				&& time <= timeInitialized + initializationDuration) {
+				&& time < timeInitialized + initializationDuration) {
 			return capitalCost / initializationDuration;
 		} else {
 			return 0;
@@ -222,7 +222,7 @@ public class SimpleLifecycleModel implements LifecycleModel {
 		} else if(levelizeCosts 
 				&& decommissionDuration > 0
 				&& time >= getTimeDecommissioned() 
-				&& time <= getTimeDecommissioned() + decommissionDuration) {
+				&& time < getTimeDecommissioned() + decommissionDuration) {
 			return decommissionCost / decommissionDuration;
 		} else {
 			return 0;
