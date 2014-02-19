@@ -215,7 +215,7 @@ public final class Serialization {
 					mutable.setMaxWaterProduction(template.getMaxWaterProduction());
 					mutable.setReservoirIntensityOfWaterProduction(template.getReservoirIntensityOfWaterProduction());
 					mutable.setVariableOperationsCostOfWaterDistribution(template.getVariableOperationsCostOfWaterDistribution());
-					mutable.setVariableOperationsCostOfWaterProduction(template.getVariableOperationsCostOfWaterDistribution());
+					mutable.setVariableOperationsCostOfWaterProduction(template.getVariableOperationsCostOfWaterProduction());
 					((WaterSystem.Local)city.getWaterSystem()).addElement(mutable.createElement());
 				}
 			}
@@ -271,7 +271,7 @@ public final class Serialization {
 					mutable.setMaxPetroleumProduction(template.getMaxPetroleumProduction());
 					mutable.setReservoirIntensityOfPetroleumProduction(template.getReservoirIntensityOfPetroleumProduction());
 					mutable.setVariableOperationsCostOfPetroleumDistribution(template.getVariableOperationsCostOfPetroleumDistribution());
-					mutable.setVariableOperationsCostOfPetroleumProduction(template.getVariableOperationsCostOfPetroleumDistribution());
+					mutable.setVariableOperationsCostOfPetroleumProduction(template.getVariableOperationsCostOfPetroleumProduction());
 					((PetroleumSystem.Local)city.getPetroleumSystem()).addElement(mutable.createElement());
 				}
 			}
