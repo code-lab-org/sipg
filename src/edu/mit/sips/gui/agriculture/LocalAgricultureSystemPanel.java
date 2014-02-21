@@ -133,7 +133,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodSourceNames) {
 			foodSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Supply", Icons.AGRICULTURE_SOURCE,
+		addTab("Source", Icons.AGRICULTURE_SOURCE,
 				createStackedAreaChart("Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodSourceData, PlottingUtils.getResourceColors(foodSourceNames)));
 		
@@ -151,7 +151,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodUseNames) {
 			foodUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Demand", Icons.AGRICULTURE_USE,
+		addTab("Use", Icons.AGRICULTURE_USE,
 				createStackedAreaChart("Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodUseData, PlottingUtils.getResourceColors(foodUseNames)));
 		
@@ -163,11 +163,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		} else {
 			waterUseNames.add(getSociety().getName() + " Operations");
 		}
-		/* temporarily removed
 		addTab("Use", Icons.WATER_USE,
 				createStackedAreaChart("Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
 						waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
-		*/
 		
 		/* temporarily removed
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -464,11 +462,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				}
 			}
 			*/
-			/* temporarily removed
 			updateSeries(waterUseData, "Operations", year, 
 					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
 							getAgricultureSystem(), this));
-			 */
 			/* temporarily removed
 			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
 				if(element.getWaterConsumption() > 0) {
@@ -489,11 +485,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				updateSeries(foodUseData, nestedSystem.getSociety().getName(), year,
 						FoodUnits.convertFlow(nestedSystem.getSociety().getTotalFoodDemand(), 
 								nestedSystem.getSociety(), this));
-				/* temporarily removed
-				updateSeries(waterUseData, nestedSystem.getSociety().getName() + " Operations", year, 
+				updateSeries(waterUseData, nestedSystem.getSociety().getName(), year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
 								nestedSystem, this));
-				*/
 			}
 			/*updateSeries(foodSourceData, "Production", year, 
 					FoodUnits.convert(getAgricultureSystem().getFoodProduction(),

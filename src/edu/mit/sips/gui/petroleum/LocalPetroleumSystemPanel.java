@@ -137,7 +137,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilSourceNames) {
 			petroleumSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Supply", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
+		addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
 				"Petroleum Source (" + oilUnits + "/" + oilTimeUnits + ")",
 				petroleumSourceData, PlottingUtils.getResourceColors(oilSourceNames)));
 		
@@ -156,7 +156,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilUseNames) {
 			petroleumUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Demand", Icons.PETROLEUM_USE, createStackedAreaChart(
+		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
 				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
 		
@@ -168,11 +168,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		} else {
 			electricityUseNames.add(getSociety().getName() + " Operations");
 		}
-		/* temporarily removed
 		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
-		*/
 
 		/* addTab("Local", Icons.LOCAL, createTimeSeriesChart(
 				"Local Petroleum Use Fraction (-)", 
@@ -470,11 +468,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					OilUnits.convertStock(
 							getPetroleumSystem().getPetroleumReservoirVolume(), 
 							getPetroleumSystem(), this));
-			/* temporarily removed
 			updateSeries(electricityUseData, "Operations", year, 
 					ElectricityUnits.convertFlow(getPetroleumSystem().getElectricityConsumption(),
 							getPetroleumSystem(), this));
-			*/
 		} else {
 			for(PetroleumSystem.Local nestedSystem : getNestedPetroleumSystems()) {
 				updateSeries(petroleumSourceData, nestedSystem.getSociety().getName(), year,
@@ -486,11 +482,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				updateSeries(petroleumUseData, nestedSystem.getSociety().getName(), year,
 						OilUnits.convertFlow(nestedSystem.getSociety().getTotalPetroleumDemand(), 
 								nestedSystem.getSociety(), this));
-				/* temporarily removed
-				updateSeries(electricityUseData, nestedSystem.getName(), year, 
+				updateSeries(electricityUseData, nestedSystem.getSociety().getName(), year, 
 						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
 								nestedSystem, this));
-				 */
 			}
 			/*updateSeries(petroleumSourceData, "Production", year, 
 					OilUnits.convertStock(
