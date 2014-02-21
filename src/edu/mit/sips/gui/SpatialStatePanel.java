@@ -223,7 +223,7 @@ public class SpatialStatePanel extends JPanel {
 		g.fillOval(p.x - getElementRadius(), p.y - getElementRadius(),
 				2*getElementRadius(), 2*getElementRadius());
 		g.setColor(Color.BLACK);
-		g.drawString(city.getName(),
+		g.drawString(city.getSocialSystem().getName(),
 				p.x + (int)Math.round((getElementRadius() + 5)*Math.cos(Math.PI/4)), 
 				p.y + (int)Math.round((getElementRadius() + 5 + g.getFontMetrics().getHeight())*Math.cos(Math.PI/4)));
 		
@@ -456,12 +456,12 @@ public class SpatialStatePanel extends JPanel {
 		g.setColor(getSurplusColor());
 		g.fillOval(10, 5*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.setColor(Color.BLACK);
-		g.drawString("Surplus", 30, 3*g.getFontMetrics().getHeight() + 4);
+		g.drawString("Producer/Provider", 30, 3*g.getFontMetrics().getHeight() + 4);
 		g.drawOval(10, 5*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.setColor(getDeficitColor());
 		g.fillOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.setColor(Color.BLACK);
-		g.drawString("Deficit", 30, 4*g.getFontMetrics().getHeight() + 4);
+		g.drawString("Consumer", 30, 4*g.getFontMetrics().getHeight() + 4);
 		g.drawOval(10, 7*g.getFontMetrics().getHeight()/2 + 2, 10, 10);
 		g.dispose();
 	}
