@@ -103,7 +103,7 @@ public class ElementPanel extends JPanel {
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
-		c.gridwidth = 5;
+		c.gridwidth = 2;
 		defaultElementPanel.add(nameText, c);
 		c.gridy++;
 		c.gridx--;
@@ -125,10 +125,7 @@ public class ElementPanel extends JPanel {
 				}
 			}
 		});
-		addInput(defaultElementPanel, c, "Location", originCombo, "");
-		
-		c.gridy--;
-		c.gridx = 3;
+
 		destinationCombo = new JComboBox(scenario.getCountry().getCities().toArray());
 		destinationCombo.setRenderer(cityRenderer);
 		destinationCombo.setSelectedItem(scenario.getCountry().getCity(element.getDestination()));
@@ -140,10 +137,16 @@ public class ElementPanel extends JPanel {
 				}
 			}
 		});
-		addInput(defaultElementPanel, c, "Destination", destinationCombo, "");
+		if(element.getTemplateName() == null 
+				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
+			addInput(defaultElementPanel, c, "Origin", originCombo, "");
+			addInput(defaultElementPanel, c, "Destination", destinationCombo, "");
+		} else {
+			addInput(defaultElementPanel, c, "Location", originCombo, "");
+		}
 		
 		c.gridx = 0;
-		c.gridwidth = 6;
+		c.gridwidth = 3;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		lifecycleModelContainer = new JPanel();
 		lifecycleModelContainer.setBorder(
