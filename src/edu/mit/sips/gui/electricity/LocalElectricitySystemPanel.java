@@ -106,8 +106,18 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
+
+		JTabbedPane nationalData;
+		if(electricitySystem instanceof LocalElectricitySoS) {
+			nationalData = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+		} else {
+			nationalData = this;
+		}
+		
 		if(getElectricitySystem() instanceof LocalElectricitySoS) {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getElectricitySystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Balance (" + getCurrencyUnits() + ")",
@@ -121,7 +131,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getElectricitySystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
@@ -139,7 +150,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricitySourceNames) {
 			electricitySourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
+		nationalData.addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
+				getElectricitySystem().getName() + " Source",
 				"Electricity Source (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricitySourceData, PlottingUtils.getResourceColors(electricitySourceNames)));
 		
@@ -159,7 +171,8 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricityUseNames) {
 			electricityUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+		nationalData.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				getElectricitySystem().getName() + " Use",
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
 		
@@ -200,10 +213,10 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		
 		electricityStatePanel = new SpatialStatePanel(
 				getSociety(), new ElectricityStateProvider());
-		addTab("Network", Icons.NETWORK, electricityStatePanel);
+		nationalData.addTab("Network", Icons.NETWORK, electricityStatePanel);
 		
 		if(electricitySystem instanceof LocalElectricitySoS) {
-			JTabbedPane regionalData = new JTabbedPane();
+			JTabbedPane regionalData = this; // new JTabbedPane();
 			for(ElectricitySystem.Local nestedSystem : 
 				((LocalElectricitySoS) electricitySystem).getNestedSystems()) {
 				LocalElectricitySystemPanel nestedPanel = 
@@ -212,7 +225,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
 			}
-			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+			// addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
 		}
 	}
 	

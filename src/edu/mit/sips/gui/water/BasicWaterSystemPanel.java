@@ -24,8 +24,10 @@ public class BasicWaterSystemPanel extends WaterSystemPanel {
 		super(waterSystem);
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
+				getWaterSystem().getName() + " Cash Flow",
 				"Water Revenue (SAR/year)", waterRevenue));
 		addTab("Electricity Consumption", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				getWaterSystem().getName() + " Electricity Use",
 				"Electricity Consumed (m^3/year)", electricityConsumption));
 	}
 	

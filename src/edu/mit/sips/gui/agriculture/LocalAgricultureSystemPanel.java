@@ -99,9 +99,18 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
+		
+		JTabbedPane nationalData;
+		if(agricultureSystem instanceof LocalAgricultureSoS) {
+			nationalData = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+		} else {
+			nationalData = this;
+		}
 
 		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Balance (" + getCurrencyUnits() + ")",
@@ -115,7 +124,8 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
@@ -133,8 +143,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodSourceNames) {
 			foodSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.AGRICULTURE_SOURCE,
-				createStackedAreaChart("Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
+		nationalData.addTab("Source", Icons.AGRICULTURE_SOURCE,
+				createStackedAreaChart(getAgricultureSystem().getName() + " Food Source",
+						"Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodSourceData, PlottingUtils.getResourceColors(foodSourceNames)));
 		
 		List<String> foodUseNames = new ArrayList<String>();
@@ -151,8 +162,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		for(String name : foodUseNames) {
 			foodUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.AGRICULTURE_USE,
-				createStackedAreaChart("Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
+		nationalData.addTab("Use", Icons.AGRICULTURE_USE,
+				createStackedAreaChart(getAgricultureSystem().getName() + " Food Use",
+						"Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
 						foodUseData, PlottingUtils.getResourceColors(foodUseNames)));
 		
 		List<String> waterUseNames = new ArrayList<String>();
@@ -163,8 +175,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		} else {
 			waterUseNames.add(getSociety().getName() + " Operations");
 		}
-		addTab("Use", Icons.WATER_USE,
-				createStackedAreaChart("Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
+		nationalData.addTab("Use", Icons.WATER_USE,
+				createStackedAreaChart(getAgricultureSystem().getName() + " Water Use",
+						"Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
 						waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
 		
 		/* temporarily removed
@@ -185,17 +198,19 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			landColors.add(PlottingUtils.getSocietySecondaryColor(getSociety()));
 			landColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		addTab("Land", Icons.ARABLE_LAND, createStackedAreaChart(
+		nationalData.addTab("Land", Icons.ARABLE_LAND, createStackedAreaChart(
+				getAgricultureSystem().getName() + " Land",
 				"Arable Land (km^2)", landAvailableDataset, landColors.toArray(new Color[0])));
-		addTab("Labor", Icons.LABOR, createStackedAreaChart(
+		nationalData.addTab("Labor", Icons.LABOR, createStackedAreaChart(
+				getAgricultureSystem().getName() + " Labor",
 				"Available Labor (people)", laborAvailableDataset, landColors.toArray(new Color[0])));
 
 		agricultureStatePanel = new SpatialStatePanel(
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
-		addTab("Network", Icons.NETWORK, agricultureStatePanel);
+		nationalData.addTab("Network", Icons.NETWORK, agricultureStatePanel);
 		
 		if(agricultureSystem instanceof LocalAgricultureSoS) {
-			JTabbedPane regionalData = new JTabbedPane();
+			JTabbedPane regionalData = this; // new JTabbedPane();
 			for(AgricultureSystem.Local nestedSystem : 
 				((LocalAgricultureSoS) agricultureSystem).getNestedSystems()) {
 				LocalAgricultureSystemPanel nestedPanel = 
@@ -204,7 +219,7 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
 			}
-			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+			// addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
 		}
 		
 		/* TODO

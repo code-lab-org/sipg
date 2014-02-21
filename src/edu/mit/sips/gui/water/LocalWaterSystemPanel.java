@@ -109,8 +109,18 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
+		
+		JTabbedPane nationalData;
+		if(waterSystem instanceof LocalWaterSoS) {
+			nationalData = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+		} else {
+			nationalData = this;
+		}
+		
 		if(getWaterSystem() instanceof LocalWaterSoS) {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getWaterSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Balance (" + getCurrencyUnits() + ")",
@@ -124,7 +134,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getWaterSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
@@ -143,7 +154,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterSourceNames) {
 			waterSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
+		nationalData.addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
+				getWaterSystem().getName() + " Source",
 				"Water Source (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterSourceData, PlottingUtils.getResourceColors(waterSourceNames)));
 		
@@ -162,7 +174,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterUseNames) {
 			waterUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+		nationalData.addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+				getWaterSystem().getName() + " Use",
 				"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
 		
@@ -175,7 +188,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			electricityUseNames.add(getSociety().getName() + " Operations");
 		}
 		electricityUseNames.add("Private Operations");
-		addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+		nationalData.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				getWaterSystem().getName() + " Electricity Use",
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
 
@@ -198,7 +212,8 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		} else {
 			societyColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
+		nationalData.addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
+				getWaterSystem().getName() + " Aquifer",
 				"Water Aquifer Volume (" + waterUnits + ")", 
 				waterAquiferDataset, societyColors.toArray(new Color[0])));
 		/* TODO
@@ -212,10 +227,10 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		
 		waterStatePanel = new SpatialStatePanel(
 				waterSystem.getSociety(), new WaterStateProvider());
-		addTab("Network", Icons.NETWORK, waterStatePanel);
+		nationalData.addTab("Network", Icons.NETWORK, waterStatePanel);
 		
 		if(waterSystem instanceof LocalWaterSoS) {
-			JTabbedPane regionalData = new JTabbedPane();
+			JTabbedPane regionalData = this; // new JTabbedPane();
 			for(WaterSystem.Local nestedSystem : 
 				((LocalWaterSoS) waterSystem).getNestedSystems()) {
 				LocalWaterSystemPanel nestedPanel = 
@@ -224,7 +239,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
 			}
-			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+			// addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
 		}
 	}
 	

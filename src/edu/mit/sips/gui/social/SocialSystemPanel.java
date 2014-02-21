@@ -64,16 +64,15 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		 */
 
 		addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+				getSocialSystem().getName() + " Cash Flow",
 				"Annual Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
 				infrastructureSystemNetRevenue,
 				"Cumulative Net Revenue (" + getCurrencyUnits() + ")", cumulativeBalance));
-		addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
-				"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
-				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
-				capitalExpenseTotal,
-				"Cumulative Investment (" + getCurrencyUnits() + ")", 
-				cumulativeCapitalExpense));
+		addTab("Budget", Icons.INVESTMENT, createStackedAreaChart(
+				getSocialSystem().getName() + " Budget",
+				"Annual Capital Expenses (" + getCurrencyUnits() + ")", capitalExpense, 
+				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems())));
 
 		/* temporarily removed
 		if(getSociety() instanceof Country) {

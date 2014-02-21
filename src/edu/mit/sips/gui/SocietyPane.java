@@ -56,7 +56,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 		add(tabbedPane, BorderLayout.CENTER);
 		
 		socialTab = new SocialSystemPanel(country.getSocialSystem());
-		tabbedPane.addTab(country.getName(), Icons.COUNTRY, socialTab);
+		tabbedPane.addTab("Finances", Icons.FUNDS, socialTab);
 		
 		scoreTab = new ScorePanel(scenario, scoreLabel);
 		tabbedPane.addTab("Scores", Icons.METRICS, scoreTab);

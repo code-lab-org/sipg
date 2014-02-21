@@ -3,6 +3,7 @@ package edu.mit.sips.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedWriter;
@@ -82,23 +83,23 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 		return infrastructureSystem.getSociety();
 	}
 	
-	private JFreeChart createChart(boolean isArea, final String valueAxis,
+	private JFreeChart createChart(String title, boolean isArea, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset, 
 			final String valueAxis2, final TableXYDataset lineDataset2) {
 		final JFreeChart chart;
 		if(isArea && areaDataset != null) {
 			chart = ChartFactory.createStackedXYAreaChart(
-					null, "Year", valueAxis, areaDataset, 
+					title, "Year", valueAxis, areaDataset, 
 					PlotOrientation.VERTICAL, true, false, false);
 			chart.getLegend().setPosition(RectangleEdge.RIGHT);
 		} else if(areaDataset != null) {
 			chart = ChartFactory.createXYLineChart(
-					null, "Year", valueAxis, areaDataset, 
+					title, "Year", valueAxis, areaDataset, 
 					PlotOrientation.VERTICAL, true, false, false);
 			chart.getLegend().setPosition(RectangleEdge.RIGHT);
 		} else {
 			chart = ChartFactory.createXYLineChart(
-					null, "Year", valueAxis, lineDataset, 
+					title, "Year", valueAxis, lineDataset, 
 					PlotOrientation.VERTICAL, true, false, false);
 		}
 		LegendTitle lt = new LegendTitle(new LegendItemSource() {
@@ -111,6 +112,10 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 				return c;
 			}
 		});
+		if(chart.getTitle() != null) {
+			chart.getTitle().setFont(
+					chart.getTitle().getFont().deriveFont(Font.PLAIN));
+		}
 		lt.setItemFont(chart.getLegend().getItemFont());
 		lt.setItemPaint(chart.getLegend().getItemPaint());
 		lt.setBackgroundPaint(chart.getLegend().getBackgroundPaint());
@@ -177,11 +182,11 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @param areaDataset the dataset
 	 * @return the j free chart
 	 */
-	protected JPanel createStackedAreaChart(final String valueAxis,
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final Color[] colors, final TableXYDataset lineDataset, 
 			final String valueAxis2, final TableXYDataset lineDataset2) {
 		final JPanel panel = new JPanel(new BorderLayout());
-		ChartPanel chartPanel = new ChartPanel(createChart(true, valueAxis, areaDataset, 
+		ChartPanel chartPanel = new ChartPanel(createChart(title, true, valueAxis, areaDataset, 
 				colors, lineDataset, valueAxis2, lineDataset2));
 		panel.add(chartPanel, BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -208,7 +213,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 							break;
 						}
 					}
-					panel.add(new ChartPanel(createChart(areaToggle.isSelected(), valueAxis, areaDataset, 
+					panel.add(new ChartPanel(createChart(title, areaToggle.isSelected(), valueAxis, areaDataset, 
 							colors, lineDataset, valueAxis2, lineDataset2)), BorderLayout.CENTER);
 					panel.validate();
 				}
@@ -226,26 +231,26 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @param areaDataset the dataset
 	 * @return the j free chart
 	 */
-	protected JPanel createStackedAreaChart(final String valueAxis,
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final String valueAxis2, 
 			final TableXYDataset lineDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, colors, null, valueAxis2, lineDataset);
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, valueAxis2, lineDataset);
 	}
 	
-	protected JPanel createStackedAreaChart(final String valueAxis,
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, colors, lineDataset, null, null);
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, lineDataset, null, null);
 	}
 	
-	protected JPanel createStackedAreaChart(final String valueAxis,
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final TableXYDataset lineDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, null, lineDataset, null, null);
+		return createStackedAreaChart(title, valueAxis, areaDataset, null, lineDataset, null, null);
 	}
 	
-	protected JPanel createStackedAreaChart(final String valueAxis,
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final String valueAxis2, 
 			final TableXYDataset lineDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, null, null, valueAxis2, lineDataset);
+		return createStackedAreaChart(title, valueAxis, areaDataset, null, null, valueAxis2, lineDataset);
 	}
 	
 	/**
@@ -255,19 +260,19 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @param areaDataset the area dataset
 	 * @return the chart panel
 	 */
-	protected JPanel createStackedAreaChart(String valueAxis,
+	protected JPanel createStackedAreaChart(String title, String valueAxis,
 			TableXYDataset areaDataset, Color[] colors) {
-		return createStackedAreaChart(valueAxis, areaDataset, colors, null, null);
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, null);
 	}
 
-	protected JPanel createStackedAreaChart(String valueAxis,
+	protected JPanel createStackedAreaChart(String title, String valueAxis,
 			TableXYDataset areaDataset) {
-		return createStackedAreaChart(valueAxis, areaDataset, null, null, null, null);
+		return createStackedAreaChart(title, valueAxis, areaDataset, null, null, null, null);
 	}
 
-	protected JPanel createSingleLineChart(String valueAxis,
+	protected JPanel createSingleLineChart(String title, String valueAxis,
 			TableXYDataset lineDataset) {
-		return createStackedAreaChart(valueAxis, null, null, lineDataset, null, null);
+		return createStackedAreaChart(title, valueAxis, null, null, lineDataset, null, null);
 	}
 	
 	/**
@@ -277,10 +282,10 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @param seriesCollection the series collection
 	 * @return the j free chart
 	 */
-	protected JPanel createTimeSeriesChart(final String valueAxis, 
+	protected JPanel createTimeSeriesChart(final String title, final String valueAxis, 
 			final TimeSeriesCollection seriesCollection) {
 		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-				null, "Year", valueAxis, seriesCollection, 
+				title, "Year", valueAxis, seriesCollection, 
 				true, false, false);
 		if(chart.getPlot() instanceof XYPlot) {
 			XYPlot xyPlot = (XYPlot) chart.getPlot();

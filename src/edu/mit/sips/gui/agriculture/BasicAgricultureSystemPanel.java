@@ -22,13 +22,15 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 	 */
 	public BasicAgricultureSystemPanel(AgricultureSystem agricultureSystem) {
 		super(agricultureSystem);
-		
+
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
+				getAgricultureSystem().getName() + " Cash Flow",
 				"Agriculture Revenue (SAR/year)", agricultureRevenue));
 		addTab("Water Consumption", Icons.WATER_USE, createStackedAreaChart(
+				getAgricultureSystem().getName() + " Water Use",
 				"Water Consumed (m^3/year)", waterConsumption));
 	}
-	
+
 	/**
 	 * Gets the agriculture system.
 	 *
@@ -49,7 +51,7 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 		updateSeries(waterConsumption, "Consumption", year, 
 				getAgricultureSystem().getWaterConsumption());
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
 	 */

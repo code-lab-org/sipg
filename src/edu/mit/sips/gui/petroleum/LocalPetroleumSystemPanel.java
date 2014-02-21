@@ -104,8 +104,18 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
+		
+		JTabbedPane nationalData;
+		if(petroleumSystem instanceof LocalPetroleumSoS) {
+			nationalData = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+		} else {
+			nationalData = this;
+		}
+		
 		if(getPetroleumSystem() instanceof LocalPetroleumSoS) {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getPetroleumSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Balance (" + getCurrencyUnits() + ")",
@@ -119,7 +129,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
+					getPetroleumSystem().getName() + " Cash Flow",
 					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
@@ -137,7 +148,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilSourceNames) {
 			petroleumSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
+		nationalData.addTab("Source", Icons.PETROLEUM_SOURCE, createStackedAreaChart(
+				getPetroleumSystem().getName() + " Oil Source",
 				"Petroleum Source (" + oilUnits + "/" + oilTimeUnits + ")",
 				petroleumSourceData, PlottingUtils.getResourceColors(oilSourceNames)));
 		
@@ -156,7 +168,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		for(String name : oilUseNames) {
 			petroleumUseData.addSeries(new XYSeries(name, true, false));
 		}
-		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
+		nationalData.addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
+				getPetroleumSystem().getName() + " Oil Use",
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
 				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
 		
@@ -187,7 +200,8 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		} else {
 			societyColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
+		nationalData.addTab("Reservoir", Icons.PETROLEUM_RESERVOIR, createStackedAreaChart(
+				getPetroleumSystem().getName() + " Oil Reservoir",
 				"Oil Reservoir Volume (" + oilUnits + ")",
 				petroleumReservoirDataset, societyColors.toArray(new Color[0])), "Reservoir");
 		/* TODO
@@ -201,10 +215,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 
 		petroleumStatePanel = new SpatialStatePanel(getSociety(), 
 				new PetroleumStateProvider());
-		addTab("Network", Icons.NETWORK, petroleumStatePanel);
+		nationalData.addTab("Network", Icons.NETWORK, petroleumStatePanel);
 		
 		if(petroleumSystem instanceof LocalPetroleumSoS) {
-			JTabbedPane regionalData = new JTabbedPane();
+			JTabbedPane regionalData = this; // new JTabbedPane();
 			for(PetroleumSystem.Local nestedSystem : 
 				((LocalPetroleumSoS) petroleumSystem).getNestedSystems()) {
 				LocalPetroleumSystemPanel nestedPanel = 
@@ -213,7 +227,7 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
 			}
-			addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
+			// addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
 		}
 	}
 	

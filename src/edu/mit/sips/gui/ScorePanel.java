@@ -167,7 +167,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			userOutputDir.mkdir();
 		}
 
-		teamScorePanel = createStackedAreaChart("Score (-)", null,
+		teamScorePanel = createStackedAreaChart(null, "Score", null,
 				new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.DODGER_BLUE, 
 				PlottingUtils.DIM_GRAY, PlottingUtils.GOLDENROD, 
 				PlottingUtils.BLACK}, teamScore);
@@ -187,7 +187,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write("Reservoir Security, ");
 
 			if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
-				agricultureScorePanel = createStackedAreaChart("Score (-)", null,
+				agricultureScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, agriculturePlayerScore);
 				agricultureScoreLabel.setFont(getFont().deriveFont(20f));
@@ -200,7 +200,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Agriculture Score, ");
 			}
 			if(country.getWaterSystem() instanceof LocalWaterSoS) {
-				waterScorePanel = createStackedAreaChart("Score (-)", null,
+				waterScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, waterPlayerScore);
 				waterScoreLabel.setFont(getFont().deriveFont(20f));
@@ -214,7 +214,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			}
 			if(country.getPetroleumSystem() instanceof LocalPetroleumSoS
 					&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
-				energyScorePanel = createStackedAreaChart("Score (-)", null,
+				energyScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, energyPlayerScore);
 				energyScoreLabel.setFont(getFont().deriveFont(20f));

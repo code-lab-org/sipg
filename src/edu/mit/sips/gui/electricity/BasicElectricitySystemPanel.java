@@ -25,10 +25,13 @@ public class BasicElectricitySystemPanel extends ElectricitySystemPanel {
 		super(electricitySystem);
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
+				getElectricitySystem().getName() + " Cash Flow",
 				"Electricity Revenue (SAR/year)", electricityRevenue));
 		addTab("Water Consumption", Icons.WATER_USE, createStackedAreaChart(
+				getElectricitySystem().getName() + " Water Use",
 				"Water Consumed (m^3/year)", waterConsumption));
 		addTab("Petroleum Consumption", Icons.PETROLEUM_USE, createStackedAreaChart(
+				getElectricitySystem().getName() + " Oil Use",
 				"Petroleum Consumed (toe/year)", petroleumConsumption));
 	}
 	

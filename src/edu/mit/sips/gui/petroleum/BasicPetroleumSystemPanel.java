@@ -24,8 +24,10 @@ public class BasicPetroleumSystemPanel extends PetroleumSystemPanel {
 		super(petroleumSystem);
 		
 		addTab("Revenue", Icons.REVENUE, createStackedAreaChart(
+				getPetroleumSystem().getName() + " Cash Flow",
 				"Petroleum Revenue (SAR/year)", petroleumRevenue));
 		addTab("Electricity Consumption", Icons.ELECTRICITY_USE, createStackedAreaChart(
+				getPetroleumSystem().getName() + " Electricity Use",
 				"Electricity Consumed (toe/year)", electricityConsumption));
 	}
 	
