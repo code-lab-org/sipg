@@ -8,9 +8,6 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import edu.mit.sips.core.City;
-import edu.mit.sips.core.agriculture.PlaceholderAgricultureSystem;
-import edu.mit.sips.core.water.PlaceholderWaterSystem;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
 import edu.mit.sips.scenario.SaudiScenario2g;
@@ -40,11 +37,6 @@ public class EnergyPlayer {
 						SaudiScenario2.RURAL),
 				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM),
 				isTeamScoreDisplayed);
-		
-		for(City city : scenario.getCountry().getCities()) {
-			city.setAgricultureSystem(new PlaceholderAgricultureSystem());
-			city.setWaterSystem(new PlaceholderWaterSystem());
-		}
 
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);

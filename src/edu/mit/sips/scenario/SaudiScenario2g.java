@@ -10,16 +10,16 @@ import edu.mit.sips.core.Country;
 import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystemDomesticProductionModel;
-import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
-import edu.mit.sips.core.electricity.DefaultElectricitySystem;
+import edu.mit.sips.core.agriculture.PlaceholderAgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystemDomesticProductionModel;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
-import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
+import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystemDomesticProductionModel;
+import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
 import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
@@ -28,8 +28,8 @@ import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
-import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
+import edu.mit.sips.core.water.PlaceholderWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystemDomesticProductionModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
@@ -110,7 +110,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem(),
+							new PlaceholderAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
 								Arrays.asList(
@@ -122,7 +122,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem(),
+							new PlaceholderWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(65e9, 65e9,
 								Arrays.asList(
@@ -152,7 +152,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem(),
+							new PlaceholderPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
@@ -169,7 +169,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
-							new DefaultElectricitySystem(),
+							new PlaceholderElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
@@ -222,18 +222,18 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem(),
+							new PlaceholderAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
 								new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem(),
+							new PlaceholderWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem(),
+							new PlaceholderPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
@@ -244,7 +244,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
-							new DefaultElectricitySystem(),
+							new PlaceholderElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
@@ -276,7 +276,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new DefaultAgricultureSystem(),
+							new PlaceholderAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
 								/*Arrays.asList(
@@ -288,13 +288,13 @@ public final class SaudiScenario2g extends DefaultScenario {
 										)*/ new ArrayList<WaterElement>(),
 								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
-							new DefaultWaterSystem(),
+							new PlaceholderWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, 
 								new ArrayList<PetroleumElement>(),
 								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new DefaultPetroleumSystem(),
+							new PlaceholderPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
@@ -312,7 +312,7 @@ public final class SaudiScenario2g extends DefaultScenario {
 										),
 								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
-							new DefaultElectricitySystem(),
+							new PlaceholderElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								socialSystemDomesticProductionModel,
