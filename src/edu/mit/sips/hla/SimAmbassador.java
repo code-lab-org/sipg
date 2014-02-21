@@ -191,6 +191,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		joinFederation();
 		
 		connected.set(true);
+		initialized.set(false);
 	}
 
 	/* (non-Javadoc)
@@ -661,15 +662,20 @@ public class SimAmbassador extends NullFederateAmbassador {
 						HLAinfrastructureSystem.SOCIETY_NAME_ATTRIBUTE))) {
 					for(Society society : simulator.getScenario().getCountry().getSocieties()) {
 						if(society.getName().equals(system.getSocietyName())) {
-							if(system instanceof AgricultureSystem) {
+							if(!(society.getAgricultureSystem() instanceof AgricultureSystem.Local)
+									&& system instanceof AgricultureSystem) {
 								society.setAgricultureSystem((AgricultureSystem)system);
-							} else if(system instanceof WaterSystem) {
+							} else if(!(society.getWaterSystem() instanceof WaterSystem.Local)
+									&& system instanceof WaterSystem) {
 								society.setWaterSystem((WaterSystem)system);
-							} else if(system instanceof PetroleumSystem) {
+							} else if(!(society.getPetroleumSystem() instanceof PetroleumSystem.Local)
+									&& system instanceof PetroleumSystem) {
 								society.setPetroleumSystem((PetroleumSystem)system);
-							} else if(system instanceof ElectricitySystem) {
+							} else if(!(society.getElectricitySystem() instanceof ElectricitySystem.Local)
+									&& system instanceof ElectricitySystem) {
 								society.setElectricitySystem((ElectricitySystem)system);
-							} else if(system instanceof SocialSystem) {
+							} else if(!(society.getSocialSystem() instanceof SocialSystem.Local)
+									&& system instanceof SocialSystem) {
 								society.setSocialSystem((SocialSystem)system);
 							} else {
 								logger.warn("Unknown infrastructure class, skipping.");
