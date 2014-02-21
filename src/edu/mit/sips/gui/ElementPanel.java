@@ -153,7 +153,7 @@ public class ElementPanel extends JPanel {
 				createLifecycleModelPanel(element.getLifecycleModel());
 		lifecycleModelContainer.add(lifecycleModelPanel, BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-		buttonPanel.add(new JButton(selectLifecycleModel));
+		// TODO disabled buttonPanel.add(new JButton(selectLifecycleModel));
 		lifecycleModelContainer.add(buttonPanel, BorderLayout.SOUTH);
 		defaultElementPanel.add(lifecycleModelContainer, c);
 		
