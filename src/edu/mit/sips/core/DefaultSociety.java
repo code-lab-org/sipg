@@ -451,9 +451,7 @@ public abstract class DefaultSociety implements Society {
 		cumulativeCashFlow = 0;
 		cumulativeCapitalExpense = 0;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				((InfrastructureSystem.Local)system).initialize(time);
-			}
+			system.initialize(time);
 		}
 		for(Society society : getNestedSocieties()) {
 			society.initialize(time);
@@ -536,9 +534,7 @@ public abstract class DefaultSociety implements Society {
 		nextTotalCapitalExpense = getTotalCapitalExpense();
 		nextDomesticProduct = getNextDomesticProduct();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				((InfrastructureSystem.Local)system).tick();
-			}
+			system.tick();
 		}
 		for(Society society : getNestedSocieties()) {
 			society.tick();
@@ -554,9 +550,7 @@ public abstract class DefaultSociety implements Society {
 		cumulativeCapitalExpense += nextTotalCapitalExpense;
 		domesticProduct = nextDomesticProduct;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			if(system instanceof InfrastructureSystem.Local) {
-				((InfrastructureSystem.Local)system).tock();
-			}
+			system.tock();
 		}
 		for(Society society : getNestedSocieties()) {
 			society.tock();

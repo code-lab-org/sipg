@@ -172,9 +172,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			oilUseNames.add(getSociety().getName() + " Operations");
 		}
 		oilUseNames.add("Private Operations");
-		addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
+		/* addTab("Use", Icons.PETROLEUM_USE, createStackedAreaChart(
 				"Petroleum Use (" + oilUnits + "/" + oilTimeUnits + ")", 
-				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames)));
+				petroleumUseData, PlottingUtils.getResourceColors(oilUseNames))); */
 		
 		/*
 		addTab("Use", Icons.WATER_USE, createStackedAreaChart(

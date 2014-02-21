@@ -28,6 +28,15 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getAquiferLifetime()
+	 */
+	@Override
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 	 */
 	@Override
@@ -68,6 +77,33 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getReservoirWithdrawals()
+	 */
+	@Override
+	public double getReservoirWithdrawals() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getReservoirWithdrawals();
+		}
+		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
+	 */
+	@Override
+	public double getWaterAgriculturalPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
 	@Override
@@ -98,6 +134,18 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterReservoirVolume()
+	 */
+	@Override
+	public double getWaterReservoirVolume() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getWaterReservoirVolume();
+		}
+		return value;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
@@ -111,41 +159,5 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
-	}
-
-	@Override
-	public double getWaterAgriculturalPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	@Override
-	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
-	}
-
-	@Override
-	public double getWaterReservoirVolume() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += system.getWaterReservoirVolume();
-		}
-		return value;
-	}
-
-	@Override
-	public double getReservoirWithdrawals() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += system.getReservoirWithdrawals();
-		}
-		return value;
 	}
 }

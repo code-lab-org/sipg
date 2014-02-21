@@ -8,6 +8,10 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import edu.mit.sips.core.City;
+import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
+import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
+import edu.mit.sips.core.water.PlaceholderWaterSystem;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
 import edu.mit.sips.scenario.SaudiScenario2g;
@@ -28,12 +32,20 @@ public class AgriculturePlayer {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 		
-		boolean isTeamScoreDisplayed = true;
+		boolean isTeamScoreDisplayed = false;
 
 		logger.debug("Creating scenario.");
 		Scenario scenario = new SaudiScenario2g(
-				Arrays.asList(SaudiScenario2.RURAL),
+				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
+						SaudiScenario2.URBAN, 
+						SaudiScenario2.RURAL),
 				Arrays.asList(Sector.AGRICULTURE), isTeamScoreDisplayed);
+		
+		for(City city : scenario.getCountry().getCities()) {
+			city.setWaterSystem(new PlaceholderWaterSystem());
+			city.setPetroleumSystem(new PlaceholderPetroleumSystem());
+			city.setElectricitySystem(new PlaceholderElectricitySystem());
+		}
 
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);
@@ -57,7 +69,7 @@ public class AgriculturePlayer {
 		simulator.getConnection().setFederateName("Agriculture Player");
 		simulator.getConnection().setFederateType("Agriculture Ministry");
 		try {
-			simulator.getAmbassador().connect();
+			// simulator.getAmbassador().connect();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();

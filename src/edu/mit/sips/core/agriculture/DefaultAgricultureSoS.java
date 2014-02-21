@@ -79,13 +79,34 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodProduction()
+	 */
+	@Override
+	public double getFoodProduction() {
+		double value = 0;
+		for(AgricultureSystem system : getNestedSystems()) {
+			value += system.getFoodProduction();
+		}
+		return value;
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodSecurity()
+	 */
+	@Override
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
 	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodUnits()
 	 */
@@ -93,7 +114,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
 	 */
@@ -104,6 +125,18 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 			systems.add(society.getAgricultureSystem());
 		}
 		return Collections.unmodifiableList(systems);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getTotalFoodSupply()
+	 */
+	@Override
+	public double getTotalFoodSupply() {
+		double value = 0;
+		for(AgricultureSystem system : getNestedSystems()) {
+			value += system.getTotalFoodSupply();
+		}
+		return value;
 	}
 
 	/* (non-Javadoc)
@@ -132,29 +165,5 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
-	}
-
-	@Override
-	public double getFoodSecurity() {
-		return getTotalFoodSupply() == 0 ? 1 
-				: (getFoodProduction() / getTotalFoodSupply());
-	}
-
-	@Override
-	public double getFoodProduction() {
-		double value = 0;
-		for(AgricultureSystem system : getNestedSystems()) {
-			value += system.getFoodProduction();
-		}
-		return value;
-	}
-
-	@Override
-	public double getTotalFoodSupply() {
-		double value = 0;
-		for(AgricultureSystem system : getNestedSystems()) {
-			value += system.getTotalFoodSupply();
-		}
-		return value;
 	}
 }

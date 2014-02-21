@@ -3,7 +3,9 @@ package edu.mit.sips.core.petroleum;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultDomesticProductionModel;
@@ -16,6 +18,9 @@ import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
+/**
+ * The Class LocalPetroleumSystem.
+ */
 public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements PetroleumSystem.Local {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
@@ -31,6 +36,10 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	private double petroleumReservoirVolume;
 	private transient double nextPetroleumReservoirVolume;
 
+	private transient final Map<Long, Double> electricityConsumptionMap = 
+			new HashMap<Long, Double>();
+	
+
 	/**
 	 * Instantiates a new default petroleum system.
 	 *
@@ -43,11 +52,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		this.exportPriceModel = new DefaultPriceModel();
 		this.maxPetroleumReservoirVolume = 0;
 		this.initialPetroleumReservoirVolume = 0;
-	}
-	
-	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
 	}
 
 	/**
@@ -119,7 +123,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		}
 		this.exportPriceModel = exportPriceModel;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#addElement(edu.mit.sips.core.petroleum.PetroleumElement)
 	 */
@@ -133,7 +137,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	public synchronized boolean addElement(PetroleumElement element) {
 		return elements.add(element);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 	 */
@@ -145,7 +149,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 				getSociety().getElectricitySystem().getElectricityUnits(),
 				getCurrencyUnits(), getElectricityUnits());
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 	 */
@@ -181,6 +185,15 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 			consumption += ElectricityUnits.convertFlow(e.getElectricityConsumption(), e, this);
 		}
 		return consumption;
+	}
+
+	/**
+	 * Gets the electricity consumption map.
+	 *
+	 * @return the electricity consumption map
+	 */
+	public Map<Long, Double> getElectricityConsumptionMap() {
+		return new HashMap<Long, Double>(electricityConsumptionMap);
 	}
 
 	/* (non-Javadoc)
@@ -305,7 +318,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	@Override
 	public double getPetroleumDomesticPrice() {
 		return domesticPriceModel.getUnitPrice();
-	}			
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumExport()
@@ -335,7 +348,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 				+ getPetroleumOutDistribution()
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
-	}
+	}			
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
@@ -397,7 +410,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		return petroleumProduction;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumReservoirVolume()
 	 */
@@ -417,6 +429,15 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		}
 		return petroleumWithdrawals;
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getReservoirLifetime()
+	 */
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
@@ -471,12 +492,13 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
 	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
 		petroleumReservoirVolume = initialPetroleumReservoirVolume;
+		electricityConsumptionMap.clear();
 	}
 
 	/* (non-Javadoc)
@@ -488,13 +510,14 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
 	 */
 	@Override
 	public void tick() {
 		super.tick();
 		nextPetroleumReservoirVolume = Math.min(maxPetroleumReservoirVolume, 
 				petroleumReservoirVolume - getPetroleumWithdrawals());
+		electricityConsumptionMap.put(time, getElectricityConsumption());
 	}
 
 	/* (non-Javadoc)

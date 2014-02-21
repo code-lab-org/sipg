@@ -8,6 +8,9 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import edu.mit.sips.core.City;
+import edu.mit.sips.core.agriculture.PlaceholderAgricultureSystem;
+import edu.mit.sips.core.water.PlaceholderWaterSystem;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
 import edu.mit.sips.scenario.SaudiScenario2g;
@@ -28,13 +31,20 @@ public class EnergyPlayer {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 		
-		boolean isTeamScoreDisplayed = true;
+		boolean isTeamScoreDisplayed = false;
 
 		logger.debug("Creating scenario.");
 		Scenario scenario = new SaudiScenario2g(
-				Arrays.asList(SaudiScenario2.INDUSTRIAL),
+				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
+						SaudiScenario2.URBAN, 
+						SaudiScenario2.RURAL),
 				Arrays.asList(Sector.ELECTRICITY, Sector.PETROLEUM),
 				isTeamScoreDisplayed);
+		
+		for(City city : scenario.getCountry().getCities()) {
+			city.setAgricultureSystem(new PlaceholderAgricultureSystem());
+			city.setWaterSystem(new PlaceholderWaterSystem());
+		}
 
 		logger.debug("Creating simulator.");
 		final Simulator simulator = new Simulator(scenario);
@@ -58,7 +68,7 @@ public class EnergyPlayer {
 		simulator.getConnection().setFederateName("Energy Player");
 		simulator.getConnection().setFederateType("Energy Ministry");
 		try {
-			simulator.getAmbassador().connect();
+			// simulator.getAmbassador().connect();
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();

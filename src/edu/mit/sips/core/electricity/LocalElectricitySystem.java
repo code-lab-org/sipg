@@ -3,7 +3,9 @@ package edu.mit.sips.core.electricity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultDomesticProductionModel;
@@ -17,6 +19,9 @@ import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
+/**
+ * The Class LocalElectricitySystem.
+ */
 public class LocalElectricitySystem extends LocalInfrastructureSystem implements ElectricitySystem.Local {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
@@ -30,6 +35,11 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	private final PriceModel domesticPriceModel;
 	private final List<ElectricityElement> elements = 
 			Collections.synchronizedList(new ArrayList<ElectricityElement>());
+	
+	private transient final Map<Long, Double> petroleumConsumptionMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> waterConsumptionMap = 
+			new HashMap<Long, Double>();
 
 	/**
 	 * Instantiates a new default electricity system.
@@ -80,7 +90,7 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		}
 		this.domesticPriceModel = domesticPriceModel;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#addElement(edu.mit.sips.core.electricity.ElectricityElement)
 	 */
@@ -88,7 +98,7 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	public synchronized boolean addElement(ElectricityElement element) {
 		return elements.add(element);
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
 	 */
@@ -349,6 +359,15 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return petroleumConsumption;
 	}
 
+	/**
+	 * Gets the petroleum consumption map.
+	 *
+	 * @return the petroleum consumption map
+	 */
+	public Map<Long, Double> getPetroleumConsumptionMap() {
+		return new HashMap<Long, Double>(petroleumConsumptionMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
 	 */
@@ -446,6 +465,15 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return waterConsumption;
 	}
 
+	/**
+	 * Gets the water consumption map.
+	 *
+	 * @return the water consumption map
+	 */
+	public Map<Long, Double> getWaterConsumptionMap() {
+		return new HashMap<Long, Double>(waterConsumptionMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
 	 */
@@ -463,10 +491,30 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
+	 */
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		petroleumConsumptionMap.clear();
+		waterConsumptionMap.clear();
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#removeElement(edu.mit.sips.core.electricity.ElectricityElement)
 	 */
 	@Override
 	public synchronized boolean removeElement(ElectricityElement element) {
 		return elements.remove(element);
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
+	 */
+	@Override
+	public void tick() {
+		super.tick();
+		petroleumConsumptionMap.put(time, getPetroleumConsumption());
+		waterConsumptionMap.put(time, getWaterConsumption());
 	}
 }

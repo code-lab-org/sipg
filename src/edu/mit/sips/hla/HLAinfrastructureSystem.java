@@ -142,13 +142,21 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 */
+	@Override
+	public double getCapitalExpense() {
+		return domesticProduction.getValue(); // TODO using existing variable for capex
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
 	@Override
 	public double getCashFlow() {
 		return netCashFlow.getValue();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
 	 */
@@ -156,7 +164,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
 	 */
@@ -206,6 +214,13 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 		return societyName.getValue();
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
+	 */
+	@Override
+	public void initialize(long time) {
+	}
+	
 	/**
 	 * Sets the infrastructure system.
 	 *
@@ -219,7 +234,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 		// TODO domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
 		domesticProduction.setValue(infrastructureSystem.getCapitalExpense()); // TODO using existing variable for capex
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#setSociety(edu.mit.sips.core.Society)
 	 */
@@ -227,12 +242,18 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	public void setSociety(Society society) {
 		this.society = society;
 	}
-	
+
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 * @see edu.mit.sips.core.SimEntity#tick()
 	 */
 	@Override
-	public double getCapitalExpense() {
-		return domesticProduction.getValue(); // TODO using existing variable for capex
+	public void tick() {
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
 	}
 }

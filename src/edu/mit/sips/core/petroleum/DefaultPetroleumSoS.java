@@ -137,12 +137,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		return 0;
 	}
 
-	@Override
-	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
-	}
-
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumReservoirVolume()
+	 */
 	@Override
 	public double getPetroleumReservoirVolume() {
 		double value = 0;
@@ -152,6 +149,9 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 		return value;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumWithdrawals()
+	 */
 	@Override
 	public double getPetroleumWithdrawals() {
 		double value = 0;
@@ -159,5 +159,14 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			value += system.getPetroleumWithdrawals();
 		}
 		return value;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getReservoirLifetime()
+	 */
+	@Override
+	public double getReservoirLifetime() {
+		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
 	}
 }

@@ -3,7 +3,9 @@ package edu.mit.sips.core.agriculture;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.DefaultDomesticProductionModel;
@@ -32,6 +34,9 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	private final List<AgricultureElement> elements = 
 			Collections.synchronizedList(new ArrayList<AgricultureElement>());
 
+	private transient final Map<Long, Double> waterConsumptionMap = 
+			new HashMap<Long, Double>();
+	
 	/**
 	 * Instantiates a new local.
 	 */
@@ -111,11 +116,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		this.exportPriceModel = exportPriceModel;
 	}	
 	
-	public double getFoodSecurity() {
-		return getTotalFoodSupply() == 0 ? 1 
-				: (getFoodProduction() / getTotalFoodSupply());
-	}
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
 	 */
@@ -290,7 +290,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 	 */
@@ -313,6 +312,30 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 			foodProduction += FoodUnits.convertFlow(e.getFoodProduction(), e, this);
 		}
 		return foodProduction;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodSecurity()
+	 */
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 */
+	@Override
+	public TimeUnits getFoodTimeUnits() {
+		return foodTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+	 */
+	@Override
+	public FoodUnits getFoodUnits() {
+		return foodUnits;
 	}
 
 	/* (non-Javadoc)
@@ -432,7 +455,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return 0;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 	 */
@@ -445,14 +468,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return waterConsumption;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
+	/**
+	 * Gets the water consumption map.
+	 *
+	 * @return the water consumption map
 	 */
-	@Override
-	public synchronized boolean removeElement(AgricultureElement element) {
-		return elements.remove(element);
+	public Map<Long, Double> getWaterConsumptionMap() {
+		return new HashMap<Long, Double>(waterConsumptionMap);
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
@@ -468,20 +492,30 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
-
+	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
 	 */
 	@Override
-	public TimeUnits getFoodTimeUnits() {
-		return foodTimeUnits;
+	public void initialize(long time) {
+		super.initialize(time);
+		waterConsumptionMap.clear();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
+	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
 	 */
 	@Override
-	public FoodUnits getFoodUnits() {
-		return foodUnits;
+	public synchronized boolean removeElement(AgricultureElement element) {
+		return elements.remove(element);
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
+	 */
+	@Override
+	public void tick() {
+		super.tick();
+		waterConsumptionMap.put(time, getWaterConsumption());
 	}
 }

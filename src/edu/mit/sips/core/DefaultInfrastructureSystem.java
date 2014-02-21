@@ -34,12 +34,21 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
+	 */
+	@Override
+	public double getCapitalExpense() {
+		return 0;
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
 	 */
 	@Override
 	public double getCashFlow() {
 		return 0;
 	}
+
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
@@ -49,7 +58,6 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 		return currencyTimeUnits;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
 	 */
@@ -57,7 +65,7 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
 	 */
@@ -73,14 +81,6 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public String getName() {
 		return name;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
-	 */
-	@Override
-	public double getCapitalExpense() {
-		return 0;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
@@ -91,10 +91,31 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#initialize(long)
+	 */
+	@Override
+	public void initialize(long time) {
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
 	 */
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tick()
+	 */
+	@Override
+	public void tick() {
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.SimEntity#tock()
+	 */
+	@Override
+	public void tock() {
 	}
 }

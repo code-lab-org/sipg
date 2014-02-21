@@ -7,11 +7,11 @@ import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 /**
  * The Interface InfrastructureSystem.
  */
-public interface InfrastructureSystem extends CurrencyUnitsOutput {
+public interface InfrastructureSystem extends SimEntity, CurrencyUnitsOutput {
 	/**
 	 * The Interface Local.
 	 */
-	public static interface Local extends InfrastructureSystem, SimEntity {
+	public static interface Local extends InfrastructureSystem {
 
 
 		/**
