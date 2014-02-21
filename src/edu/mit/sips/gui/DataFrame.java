@@ -412,7 +412,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 		if(exportData(data)) {
 			JOptionPane.showMessageDialog(this, 
-					"Exported agriculture data.", null, 
+					"Saved agriculture data.", null, 
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
@@ -474,7 +474,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 		if(exportData(data)) {
 			JOptionPane.showMessageDialog(this, 
-					"Exported energy data.", null, 
+					"Saved energy data.", null, 
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
@@ -494,7 +494,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 		if(exportData(data)) {
 			JOptionPane.showMessageDialog(this, 
-					"Exported water data.", null, 
+					"Saved water data.", null, 
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
