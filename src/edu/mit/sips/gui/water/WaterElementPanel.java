@@ -51,11 +51,11 @@ public class WaterElementPanel extends ElementPanel
 	private final JLabel maxOutputLabel, maxElectricityUseDistLabel, 
 			maxVariableCostDistLabel;
 
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.kWh;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.m3;
+	private final WaterUnits waterUnits = WaterUnits.km3;
 	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
@@ -354,6 +354,11 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			addInput(elementPanel, c, "Maximum Water Production", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							WaterUnits.convertFlow(element.getMaxWaterProduction(), 
+									element, this)), JLabel.RIGHT), 
+									waterUnits + "/" + waterTimeUnits);
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Water Production", 
 					maxWaterProductionText, 
@@ -389,6 +394,11 @@ public class WaterElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			addInput(elementPanel, c, "Maximum Water Throughput", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							WaterUnits.convertFlow(element.getMaxWaterInput(), 
+									element, this)), JLabel.RIGHT), 
+									waterUnits + "/" + waterTimeUnits);
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Water Input", 
 					maxWaterInputText, 

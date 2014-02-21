@@ -46,11 +46,11 @@ public class AgricultureElementPanel extends ElementPanel
 	private final JFormattedTextField variableOperationsCostOfFoodDistribution;
 	private final JLabel maxOutputLabel, maxVariableCostDistLabel;
 
-	private final CurrencyUnits currencyUnits = CurrencyUnits.sim;
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final FoodUnits foodUnits = FoodUnits.TJ;
+	private final FoodUnits foodUnits = FoodUnits.EJ;
 	private final TimeUnits foodTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.MCM;
+	private final WaterUnits waterUnits = WaterUnits.km3;
 	private final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
@@ -323,6 +323,19 @@ public class AgricultureElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			addInput(elementPanel, c, "Maximum Food Production", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							FoodUnits.convertFlow(element.getMaxLandArea() 
+									* element.getFoodIntensityOfLandUsed(), 
+									element, this)), JLabel.RIGHT), 
+									foodUnits + "/" + foodTimeUnits);
+			addInput(elementPanel, c, "Maximum Land Use", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							element.getMaxLandArea()), JLabel.RIGHT), "km^2");
+			addInput(elementPanel, c, "Maximum Labor Use", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							element.getMaxLandArea() *
+							element.getLaborIntensityOfLandUsed()), JLabel.RIGHT), "people");
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Land Area", 
 					maxLandAreaText, "km^2");
@@ -341,10 +354,6 @@ public class AgricultureElementPanel extends ElementPanel
 					waterIntensityText, waterUnits + "/km^2",
 					"  max: ", 
 					maxWaterUseLabel, waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Specific Labor Use", 
-					laborIntensityText, "people/km^2",
-					"  max: ", 
-					maxLaborUseLabel, "people");
 			*/
 		}
 		if(element.getTemplateName() == null 
@@ -352,6 +361,11 @@ public class AgricultureElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			addInput(elementPanel, c, "Maximum Food Throughput", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							FoodUnits.convertFlow(element.getMaxFoodInput(), 
+									element, this)), JLabel.RIGHT), 
+									foodUnits + "/" + foodTimeUnits);
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Maximum Food Input", 
 					maxFoodInput, foodUnits + "/" + foodTimeUnits);

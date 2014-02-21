@@ -32,7 +32,7 @@ public class PetroleumElementPanel extends ElementPanel
 	private static final long serialVersionUID = -9048149807650177253L;
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.GWh;
+	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
 	private final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
@@ -306,6 +306,11 @@ public class PetroleumElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()) == null
 				|| !scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 0;
+			addInput(elementPanel, c, "Maximum Oil Production", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							OilUnits.convertFlow(element.getMaxPetroleumProduction(), 
+									element, this)), JLabel.RIGHT), 
+									oilUnits + "/" + oilTimeUnits);
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Max Petroleum Production", 
 					maxPetroleumProductionText,
@@ -330,6 +335,11 @@ public class PetroleumElementPanel extends ElementPanel
 				|| scenario.getTemplate(element.getTemplateName()).isTransport()) {
 			c.gridx = 3;
 			c.gridy = 0;
+			addInput(elementPanel, c, "Maximum Oil Throughput", 
+					new JLabel(NumberFormat.getNumberInstance().format(
+							OilUnits.convertFlow(element.getMaxPetroleumInput(), 
+									element, this)), JLabel.RIGHT), 
+									oilUnits + "/" + oilTimeUnits);
 			/* TODO removed temporarily
 			addInput(elementPanel, c, "Max Petroleum Input", 
 					maxPetroleumInputText,
