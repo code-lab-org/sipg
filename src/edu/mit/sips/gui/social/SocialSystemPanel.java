@@ -72,7 +72,8 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		addTab("Budget", Icons.INVESTMENT, createStackedAreaChart(
 				getSocialSystem().getName() + " Budget",
 				"Annual Capital Expenses (" + getCurrencyUnits() + ")", capitalExpense, 
-				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems())));
+				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()),
+				capitalExpenseTotal));
 
 		/* temporarily removed
 		if(getSociety() instanceof Country) {
