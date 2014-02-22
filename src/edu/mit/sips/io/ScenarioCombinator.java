@@ -28,49 +28,42 @@ import edu.mit.sips.sim.Simulator;
 
 public class ScenarioCombinator {
 	public static void main(String[] args) {
-		String basePath = "C:\\Users\\Paul T Grogan\\Dropbox\\research\\cces\\sirs\\sips-g\\";
+		String basePath = "C:\\Users\\Paul\\Dropbox\\research\\cces\\sirs\\sips-g\\";
 		String agricultureBasePath = "green\\";
 		String waterBasePath = "blue\\";
 		String energyBasePath = "red\\";
 		
-		String sessionPath = "session03\\";
+		String sessionPath = "session13\\";
 		String[] agriculturePaths = new String[]{
-				"CCES-02_1391031439653.json",
-				"CCES-02_1391033019224.json",
-				"CCES-02_1391033767220.json",
-				"CCES-02_1391034229352.json",
-				"CCES-02_1391034466079.json",
-				"CCES-02_1391035118352.json",
-				"CCES-02_1391035461911.json",
-				"CCES-02_1391035568328.json"
 		};
 		String[] waterPaths = new String[]{
-				"CCES-03_1391031453782.json",
-				"CCES-03_1391033033352.json",
-				"CCES-03_1391033781297.json",
-				"CCES-03_1391034243434.json",
-				"CCES-03_1391034484887.json",
-				"CCES-03_1391035133834.json",
-				"CCES-03_1391035477352.json",
-				"CCES-03_1391035573072.json"
 		};
 		String[] energyPaths = new String[]{
-				"CCES-01_1391031444932.json",
-				"CCES-01_1391033024432.json",
-				"CCES-01_1391033772429.json",
-				"CCES-01_1391034234576.json",
-				"CCES-01_1391034474130.json",
-				"CCES-01_1391035126394.json",
-				"CCES-01_1391035467034.json",
-				"CCES-01_1391035568586.json"
 		};
+
+		/*
+		for(int i=0; i < agriculturePaths.length; i++) {
+			runSimulation(getScenario(
+					basePath+sessionPath+agricultureBasePath+agriculturePaths[i]));
+		}
+
+		for(int i=0; i < waterPaths.length; i++) {
+			runSimulation(getScenario(
+					basePath+sessionPath+waterBasePath+waterPaths[i]));
+		}
+
+		for(int i=0; i < energyPaths.length; i++) {
+			runSimulation(getScenario(
+					basePath+sessionPath+energyBasePath+energyPaths[i]));
+		}
 		
-
 		for(int i = 0; i < agriculturePaths.length; i++) {
-
-			Scenario agricultureScenario = getScenario(basePath+sessionPath+agricultureBasePath+agriculturePaths[i]);
-			Scenario waterScenario = getScenario(basePath+sessionPath+waterBasePath+waterPaths[i]);
-			Scenario energyScenario = getScenario(basePath+sessionPath+energyBasePath+energyPaths[i]);
+			Scenario agricultureScenario = getScenario(
+					basePath+sessionPath+agricultureBasePath+agriculturePaths[i]);
+			Scenario waterScenario = getScenario(
+					basePath+sessionPath+waterBasePath+waterPaths[i]);
+			Scenario energyScenario = getScenario(
+					basePath+sessionPath+energyBasePath+energyPaths[i]);
 
 			Scenario masterScenario = new SaudiScenario2g(
 					Arrays.asList(SaudiScenario2.INDUSTRIAL, 
@@ -127,22 +120,27 @@ public class ScenarioCombinator {
 				e.printStackTrace();
 			}
 			
-			final Simulator simulator = new Simulator(masterScenario);
-			try {
-				SwingUtilities.invokeAndWait(new Runnable() {
-					public void run() {
-						DataFrame frame = new DataFrame();
-						frame.initialize(simulator);
-						frame.pack();
-						frame.setVisible(true);
-					}
-				});
-			} catch (InterruptedException | InvocationTargetException e) {
-				e.printStackTrace();
-			}
-			simulator.initializeSimulation(new SimulationControlEvent.Initialize(simulator, 1950, 2010));
-			simulator.executeSimulation(new SimulationControlEvent.Execute(simulator, 1950, 2010));
+			runSimulation(masterScenario);
 		}
+		*/
+	}
+	
+	private static void runSimulation(Scenario scenario) {
+		final Simulator simulator = new Simulator(scenario);
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				public void run() {
+					DataFrame frame = new DataFrame();
+					frame.initialize(simulator);
+					frame.pack();
+					frame.setVisible(true);
+				}
+			});
+		} catch (InterruptedException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		simulator.initializeSimulation(new SimulationControlEvent.Initialize(simulator, 1950, 2010));
+		simulator.executeSimulation(new SimulationControlEvent.Execute(simulator, 1950, 2010));
 	}
 
 	private static Scenario getScenario(String filePath) {
