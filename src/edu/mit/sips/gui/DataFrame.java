@@ -450,6 +450,22 @@ public class DataFrame extends JFrame implements UpdateListener {
 				e.printStackTrace();
 				return false;
 			}
+
+			File userOutputDir = new File("logs");
+			if(!userOutputDir.exists()) {
+				userOutputDir.mkdir();
+			}
+			File userState = new File(userOutputDir, 
+					System.getProperty("user.name") + "-export-" + 
+							new Date().getTime() + ".json");
+			try {
+				userState.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+			save(userState);
+			
 			return true;
 		}
 		return false;
@@ -513,7 +529,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
-
+	
 	private void importAgricultureData() {
 		Map<?,?> map = importData();
 		if(map != null) {
@@ -772,7 +788,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			logsDir.mkdir();
 		}
 		File finalState = new File(logsDir, System.getProperty("user.name") 
-				+ "_" + new Date().getTime() + ".json");
+				+ "-" + new Date().getTime() + ".json");
 		try {
 			finalState.createNewFile();
 		} catch (IOException e) {
