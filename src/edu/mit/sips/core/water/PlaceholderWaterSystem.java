@@ -15,7 +15,9 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> waterReservoirVolumeMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> reservoirWithdrawalsMap = new HashMap<Long, Double>();
-	
+	private final Map<Long, Double> waterDomesticPriceMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> waterImportPriceMap = new HashMap<Long, Double>();
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
 	 */
@@ -39,7 +41,7 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getElectricityConsumption()
 	 */
@@ -65,6 +67,30 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getWaterDomesticPrice()
+	 */
+	@Override
+	public double getWaterDomesticPrice() {
+		if(waterDomesticPriceMap.containsKey(time)) {
+			return waterDomesticPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getWaterImportPrice()
+	 */
+	@Override
+	public double getWaterImportPrice() {
+		if(waterImportPriceMap.containsKey(time)) {
+			return waterImportPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getWaterReservoirVolume()
 	 */
 	@Override
@@ -74,8 +100,8 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 		} else {
 			return 0;
 		}
-	}	
-
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -92,8 +118,8 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	public void setCapitalExpenseMap(Map<Long, Double> captialExpenseMap) {
 		this.captialExpenseMap.clear();
 		this.captialExpenseMap.putAll(captialExpenseMap);
-	}
-	
+	}	
+
 	/**
 	 * Sets the cash flow map.
 	 *
@@ -122,6 +148,26 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	public void setReservoirWithdrawalsMap(Map<Long, Double> reservoirWithdrawalsMap) {
 		this.reservoirWithdrawalsMap.clear();
 		this.reservoirWithdrawalsMap.putAll(reservoirWithdrawalsMap);
+	}
+	
+	/**
+	 * Sets the water domestic price map.
+	 *
+	 * @param waterDomesticPriceMap the water domestic price map
+	 */
+	public void setWaterDomesticPriceMap(Map<Long, Double> waterDomesticPriceMap) {
+		this.waterDomesticPriceMap.clear();
+		this.waterDomesticPriceMap.putAll(waterDomesticPriceMap);
+	}
+	
+	/**
+	 * Sets the water import price map.
+	 *
+	 * @param waterImportPriceMap the water import price map
+	 */
+	public void setWaterImportPriceMap(Map<Long, Double> waterImportPriceMap) {
+		this.waterImportPriceMap.clear();
+		this.waterImportPriceMap.putAll(waterImportPriceMap);
 	}
 	
 	/**

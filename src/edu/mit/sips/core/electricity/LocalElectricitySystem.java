@@ -40,6 +40,8 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 			new HashMap<Long, Double>();
 	private transient final Map<Long, Double> waterConsumptionMap = 
 			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> electricityDomesticPriceMap = 
+			new HashMap<Long, Double>();
 
 	/**
 	 * Instantiates a new default electricity system.
@@ -142,6 +144,15 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	@Override
 	public double getElectricityDomesticPrice() {
 		return domesticPriceModel.getUnitPrice();
+	}
+
+	/**
+	 * Gets the electricity domestic price map.
+	 *
+	 * @return the electricity domestic price map
+	 */
+	public Map<Long, Double> getElectricityDomesticPriceMap() {
+		return new HashMap<Long, Double>(electricityDomesticPriceMap);
 	}
 
 	/* (non-Javadoc)
@@ -498,8 +509,9 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		super.initialize(time);
 		petroleumConsumptionMap.clear();
 		waterConsumptionMap.clear();
+		electricityDomesticPriceMap.clear();
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#removeElement(edu.mit.sips.core.electricity.ElectricityElement)
 	 */
@@ -516,5 +528,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		super.tick();
 		petroleumConsumptionMap.put(time, getPetroleumConsumption());
 		waterConsumptionMap.put(time, getWaterConsumption());
+		electricityDomesticPriceMap.put(time, getElectricityDomesticPrice());
 	}
 }

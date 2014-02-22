@@ -15,6 +15,9 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> totalFoodSupplyMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> foodProductionMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> foodDomesticPriceMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> foodImportPriceMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> foodExportPriceMap = new HashMap<Long, Double>();
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
@@ -41,6 +44,42 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getFoodDomesticPrice()
+	 */
+	@Override
+	public double getFoodDomesticPrice() {
+		if(foodDomesticPriceMap.containsKey(time)) {
+			return foodDomesticPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getFoodExportPrice()
+	 */
+	@Override
+	public double getFoodExportPrice() {
+		if(foodExportPriceMap.containsKey(time)) {
+			return foodExportPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getFoodImportPrice()
+	 */
+	@Override
+	public double getFoodImportPrice() {
+		if(foodImportPriceMap.containsKey(time)) {
+			return foodImportPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getFoodProduction()
 	 */
 	@Override
@@ -51,7 +90,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getTotalFoodSupply()
 	 */
@@ -63,8 +102,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 			return 0;
 		}
 	}
-	
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getWaterConsumption()
 	 */
@@ -76,7 +114,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -84,7 +122,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	public void initialize(long time) {
 		this.time = time;
 	}
-	
+
 	/**
 	 * Sets the capital expense map.
 	 *
@@ -95,6 +133,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 		this.capitalExpenseMap.putAll(captialExpenseMap);
 	}
 	
+	
 	/**
 	 * Sets the cash flow map.
 	 *
@@ -103,6 +142,36 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	public void setCashFlowMap(Map<Long, Double> cashFlowMap) {
 		this.cashFlowMap.clear();
 		this.cashFlowMap.putAll(cashFlowMap);
+	}
+
+	/**
+	 * Sets the food domestic price map.
+	 *
+	 * @param foodDomesticPriceMap the food domestic price map
+	 */
+	public void setFoodDomesticPriceMap(Map<Long, Double> foodDomesticPriceMap) {
+		this.foodDomesticPriceMap.clear();
+		this.foodDomesticPriceMap.putAll(foodDomesticPriceMap);
+	}
+	
+	/**
+	 * Sets the food export price map.
+	 *
+	 * @param foodExportPriceMap the food export price map
+	 */
+	public void setFoodExportPriceMap(Map<Long, Double> foodExportPriceMap) {
+		this.foodExportPriceMap.clear();
+		this.foodExportPriceMap.putAll(foodExportPriceMap);
+	}
+	
+	/**
+	 * Sets the food import price map.
+	 *
+	 * @param foodImportPriceMap the food import price map
+	 */
+	public void setFoodImportPriceMap(Map<Long, Double> foodImportPriceMap) {
+		this.foodImportPriceMap.clear();
+		this.foodImportPriceMap.putAll(foodImportPriceMap);
 	}
 	
 	/**

@@ -40,6 +40,12 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 			new HashMap<Long, Double>();
 	private transient final Map<Long, Double> foodProductionMap = 
 			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> foodDomesticPriceMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> foodImportPriceMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> foodExportPriceMap = 
+			new HashMap<Long, Double>();
 	
 	/**
 	 * Instantiates a new local.
@@ -229,6 +235,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return domesticPriceModel.getUnitPrice();
 	}
 
+	/**
+	 * Gets the food domestic price map.
+	 *
+	 * @return the food domestic price map
+	 */
+	public Map<Long, Double> getFoodDomesticPriceMap() {
+		return new HashMap<Long, Double>(foodDomesticPriceMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.AgricultureSystem#getFoodExport()
 	 */
@@ -248,6 +263,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return exportPriceModel.getUnitPrice();
 	}
 
+	/**
+	 * Gets the food export price map.
+	 *
+	 * @return the food export price map
+	 */
+	public Map<Long, Double> getFoodExportPriceMap() {
+		return new HashMap<Long, Double>(foodExportPriceMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.AgricultureSystem#getFoodImport()
 	 */
@@ -265,6 +289,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	@Override
 	public double getFoodImportPrice() {
 		return importPriceModel.getUnitPrice();
+	}
+
+	/**
+	 * Gets the food import price map.
+	 *
+	 * @return the food import price map
+	 */
+	public Map<Long, Double> getFoodImportPriceMap() {
+		return new HashMap<Long, Double>(foodImportPriceMap);
 	}
 
 	/* (non-Javadoc)
@@ -293,7 +326,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return distribution;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
 	 */
@@ -305,7 +338,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return distribution;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.AgricultureSystem#getFoodProduction()
 	 */
@@ -317,7 +350,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return foodProduction;
 	}
-
+	
 	/**
 	 * Gets the food production map.
 	 *
@@ -524,6 +557,9 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		waterConsumptionMap.clear();
 		totalFoodSupplyMap.clear();
 		foodProductionMap.clear();
+		foodDomesticPriceMap.clear();
+		foodImportPriceMap.clear();
+		foodExportPriceMap.clear();
 	}
 
 	/* (non-Javadoc)
@@ -543,5 +579,8 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		waterConsumptionMap.put(time, getWaterConsumption());
 		totalFoodSupplyMap.put(time, getTotalFoodSupply());
 		foodProductionMap.put(time, getFoodProduction());
+		foodDomesticPriceMap.put(time, getFoodDomesticPrice());
+		foodImportPriceMap.put(time, getFoodImportPrice());
+		foodExportPriceMap.put(time, getFoodExportPrice());
 	}
 }

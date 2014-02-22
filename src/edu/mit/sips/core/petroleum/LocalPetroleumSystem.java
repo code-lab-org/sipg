@@ -42,6 +42,12 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 			new HashMap<Long, Double>();
 	private transient final Map<Long, Double> petroleumWithdrawalsMap = 
 			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> petroleumDomesticPriceMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> petroleumImportPriceMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> petroleumExportPriceMap = 
+			new HashMap<Long, Double>();
 	
 
 	/**
@@ -326,6 +332,15 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		return domesticPriceModel.getUnitPrice();
 	}
 
+	/**
+	 * Gets the petroleum domestic price map.
+	 *
+	 * @return the petroleum domestic price map
+	 */
+	public Map<Long, Double> getPetroleumDomesticPriceMap() {
+		return new HashMap<Long, Double>(petroleumDomesticPriceMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumExport()
 	 */
@@ -345,6 +360,15 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		return exportPriceModel.getUnitPrice();
 	}
 
+	/**
+	 * Gets the petroleum export price map.
+	 *
+	 * @return the petroleum export price map
+	 */
+	public Map<Long, Double> getPetroleumExportPriceMap() {
+		return new HashMap<Long, Double>(petroleumExportPriceMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumImport()
 	 */
@@ -354,7 +378,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 				+ getPetroleumOutDistribution()
 				- getPetroleumInDistribution()
 				- getPetroleumProduction());
-	}
+	}			
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
@@ -362,6 +386,15 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	@Override
 	public double getPetroleumImportPrice() {
 		return importPriceModel.getUnitPrice();
+	}
+
+	/**
+	 * Gets the petroleum import price map.
+	 *
+	 * @return the petroleum import price map
+	 */
+	public Map<Long, Double> getPetroleumImportPriceMap() {
+		return new HashMap<Long, Double>(petroleumImportPriceMap);
 	}
 
 	/* (non-Javadoc)
@@ -374,7 +407,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 			distribution += OilUnits.convertFlow(e.getPetroleumOutput(), e, this);
 		}
 		return distribution;
-	}			
+	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistribution()
@@ -433,6 +466,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		return new HashMap<Long, Double>(petroleumReservoirVolumeMap);
 	}
 
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
 	 */
@@ -461,7 +495,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
 				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
 	}
-
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
@@ -525,6 +558,9 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		electricityConsumptionMap.clear();
 		petroleumReservoirVolumeMap.clear();
 		petroleumWithdrawalsMap.clear();
+		petroleumDomesticPriceMap.clear();
+		petroleumImportPriceMap.clear();
+		petroleumExportPriceMap.clear();
 	}
 
 	/* (non-Javadoc)
@@ -546,8 +582,11 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		electricityConsumptionMap.put(time, getElectricityConsumption());
 		petroleumReservoirVolumeMap.put(time, getPetroleumReservoirVolume());
 		petroleumWithdrawalsMap.put(time, getPetroleumWithdrawals());
+		petroleumDomesticPriceMap.put(time, getPetroleumDomesticPrice());
+		petroleumImportPriceMap.put(time, getPetroleumImportPrice());
+		petroleumExportPriceMap.put(time, getPetroleumExportPrice());
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#tock()
 	 */

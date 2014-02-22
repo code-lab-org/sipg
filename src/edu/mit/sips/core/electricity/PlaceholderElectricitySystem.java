@@ -14,7 +14,8 @@ public class PlaceholderElectricitySystem extends DefaultElectricitySystem imple
 	private final Map<Long, Double> waterConsumptionMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> capitalExpenseMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
-	
+	private final Map<Long, Double> electricityDomesticPriceMap = new HashMap<Long, Double>();
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
 	 */
@@ -26,7 +27,7 @@ public class PlaceholderElectricitySystem extends DefaultElectricitySystem imple
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCashFlow()
 	 */
@@ -39,6 +40,18 @@ public class PlaceholderElectricitySystem extends DefaultElectricitySystem imple
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.electricity.DefaultElectricitySystem#getElectricityDomesticPrice()
+	 */
+	@Override
+	public double getElectricityDomesticPrice() {
+		if(electricityDomesticPriceMap.containsKey(time)) {
+			return electricityDomesticPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.electricity.DefaultElectricitySystem#getPetroleumConsumption()
 	 */
@@ -89,6 +102,16 @@ public class PlaceholderElectricitySystem extends DefaultElectricitySystem imple
 	public void setCashFlowMap(Map<Long, Double> cashFlowMap) {
 		this.cashFlowMap.clear();
 		this.cashFlowMap.putAll(cashFlowMap);
+	}
+	
+	/**
+	 * Sets the electricity domestic price map.
+	 *
+	 * @param electricityDomesticPriceMap the electricity domestic price map
+	 */
+	public void setElectricityDomesticPriceMap(Map<Long, Double> electricityDomesticPriceMap) {
+		this.electricityDomesticPriceMap.clear();
+		this.electricityDomesticPriceMap.putAll(electricityDomesticPriceMap);
 	}
 	
 	/**

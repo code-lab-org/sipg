@@ -15,7 +15,10 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> petroleumReservoirVolumeMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> petroleumWithdrawalsMap = new HashMap<Long, Double>();
-	
+	private final Map<Long, Double> petroleumDomesticPriceMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> petroleumImportPriceMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> petroleumExportPriceMap = new HashMap<Long, Double>();
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
 	 */
@@ -39,7 +42,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getElectricityConsumption()
 	 */
@@ -51,7 +54,43 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 			return 0;
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumDomesticPrice()
+	 */
+	@Override
+	public double getPetroleumDomesticPrice() {
+		if(petroleumDomesticPriceMap.containsKey(time)) {
+			return petroleumDomesticPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
 
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumExportPrice()
+	 */
+	@Override
+	public double getPetroleumExportPrice() {
+		if(petroleumExportPriceMap.containsKey(time)) {
+			return petroleumExportPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumImportPrice()
+	 */
+	@Override
+	public double getPetroleumImportPrice() {
+		if(petroleumImportPriceMap.containsKey(time)) {
+			return petroleumImportPriceMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumReservoirVolume()
 	 */
@@ -75,7 +114,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -83,7 +122,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	public void initialize(long time) {
 		this.time = time;
 	}
-	
+
 	/**
 	 * Sets the capital expense map.
 	 *
@@ -103,7 +142,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 		this.cashFlowMap.clear();
 		this.cashFlowMap.putAll(cashFlowMap);
 	}
-	
+
 	/**
 	 * Sets the electricity consumption map.
 	 *
@@ -112,6 +151,36 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	public void setElectricityConsumptionMap(Map<Long, Double> electricityConsumptionMap) {
 		this.electricityConsumptionMap.clear();
 		this.electricityConsumptionMap.putAll(electricityConsumptionMap);
+	}
+	
+	/**
+	 * Sets the petroleum domestic price map.
+	 *
+	 * @param petroleumDomesticPriceMap the petroleum domestic price map
+	 */
+	public void setPetroleumDomesticPriceMap(Map<Long, Double> petroleumDomesticPriceMap) {
+		this.petroleumDomesticPriceMap.clear();
+		this.petroleumDomesticPriceMap.putAll(petroleumDomesticPriceMap);
+	}
+	
+	/**
+	 * Sets the petroleum export price map.
+	 *
+	 * @param petroleumExportPriceMap the petroleum export price map
+	 */
+	public void setPetroleumExportPriceMap(Map<Long, Double> petroleumExportPriceMap) {
+		this.petroleumExportPriceMap.clear();
+		this.petroleumExportPriceMap.putAll(petroleumExportPriceMap);
+	}
+	
+	/**
+	 * Sets the petroleum import price map.
+	 *
+	 * @param petroleumImportPriceMap the petroleum import price map
+	 */
+	public void setPetroleumImportPriceMap(Map<Long, Double> petroleumImportPriceMap) {
+		this.petroleumImportPriceMap.clear();
+		this.petroleumImportPriceMap.putAll(petroleumImportPriceMap);
 	}
 	
 	/**

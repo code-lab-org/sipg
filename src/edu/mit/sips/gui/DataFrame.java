@@ -409,6 +409,9 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setCashFlowMap(system.getCashFlowMap());
 				placeholder.setFoodProductionMap(system.getFoodProductionMap());
 				placeholder.setTotalFoodSupplyMap(system.getTotalFoodSupplyMap());
+				placeholder.setFoodDomesticPriceMap(system.getFoodDomesticPriceMap());
+				placeholder.setFoodImportPriceMap(system.getFoodImportPriceMap());
+				placeholder.setFoodExportPriceMap(system.getFoodExportPriceMap());
 				data.put(city.getName(), placeholder);
 			}
 		}
@@ -464,6 +467,9 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setCashFlowMap(system.getCashFlowMap());
 				placeholder.setPetroleumReservoirVolumeMap(system.getPetroleumReservoirVolumeMap());
 				placeholder.setPetroleumWithdrawalsMap(system.getPetroleumWithdrawalsMap());
+				placeholder.setPetroleumDomesticPriceMap(system.getPetroleumDomesticPriceMap());
+				placeholder.setPetroleumImportPriceMap(system.getPetroleumImportPriceMap());
+				placeholder.setPetroleumExportPriceMap(system.getPetroleumExportPriceMap());
 				data.get(city.getName())[0] = placeholder;
 			}
 			if(city.getElectricitySystem() instanceof LocalElectricitySystem) {
@@ -473,6 +479,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
 				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
 				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setElectricityDomesticPriceMap(system.getElectricityDomesticPriceMap());
 				data.get(city.getName())[1] = placeholder;
 			}
 		}
@@ -495,6 +502,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setCashFlowMap(system.getCashFlowMap());
 				placeholder.setWaterReservoirVolumeMap(system.getWaterReservoirVolumeMap());
 				placeholder.setReservoirWithdrawalsMap(system.getReservoirWithdrawalsMap());
+				placeholder.setWaterDomesticPriceMap(system.getWaterDomesticPriceMap());
+				placeholder.setWaterImportPriceMap(system.getWaterImportPriceMap());
 				data.put(city.getName(), placeholder);
 			}
 		}
