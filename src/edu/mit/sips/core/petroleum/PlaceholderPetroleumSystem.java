@@ -63,7 +63,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 		if(petroleumDomesticPriceMap.containsKey(time)) {
 			return petroleumDomesticPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 8;
 		}
 	}
 
@@ -75,7 +75,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 		if(petroleumExportPriceMap.containsKey(time)) {
 			return petroleumExportPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 30;
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 		if(petroleumImportPriceMap.containsKey(time)) {
 			return petroleumImportPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 35;
 		}
 	}
 	

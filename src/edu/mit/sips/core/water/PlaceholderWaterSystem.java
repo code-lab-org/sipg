@@ -74,7 +74,7 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 		if(waterDomesticPriceMap.containsKey(time)) {
 			return waterDomesticPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 0.05;
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 		if(waterImportPriceMap.containsKey(time)) {
 			return waterImportPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 10;
 		}
 	}
 	

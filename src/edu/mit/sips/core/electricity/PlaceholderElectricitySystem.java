@@ -48,7 +48,7 @@ public class PlaceholderElectricitySystem extends DefaultElectricitySystem imple
 		if(electricityDomesticPriceMap.containsKey(time)) {
 			return electricityDomesticPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 4;
 		}
 	}
 

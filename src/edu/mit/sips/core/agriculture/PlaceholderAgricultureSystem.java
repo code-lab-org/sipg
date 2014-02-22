@@ -51,7 +51,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 		if(foodDomesticPriceMap.containsKey(time)) {
 			return foodDomesticPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 60;
 		}
 	}
 
@@ -63,7 +63,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 		if(foodExportPriceMap.containsKey(time)) {
 			return foodExportPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // eturn 50;
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 		if(foodImportPriceMap.containsKey(time)) {
 			return foodImportPriceMap.get(time);
 		} else {
-			return 0;
+			return 0; // return 70;
 		}
 	}
 
