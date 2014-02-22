@@ -2,6 +2,7 @@ package edu.mit.sips;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.SwingUtilities;
 
@@ -10,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.SaudiScenario2;
+import edu.mit.sips.scenario.SaudiScenario2g;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
@@ -31,8 +33,10 @@ public class NullPlayer {
 		boolean isTeamScoreDisplayed = true;
 
 		logger.debug("Creating scenario.");
-		Scenario scenario = new SaudiScenario2(
-				new ArrayList<String>(), 
+		Scenario scenario = new SaudiScenario2g(
+				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
+						SaudiScenario2.URBAN, 
+						SaudiScenario2.RURAL),
 				new ArrayList<Sector>(), isTeamScoreDisplayed);
 
 		logger.debug("Creating simulator.");
