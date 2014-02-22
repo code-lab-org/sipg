@@ -13,6 +13,8 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	private final Map<Long, Double> electricityConsumptionMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> captialExpenseMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> waterReservoirVolumeMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> reservoirWithdrawalsMap = new HashMap<Long, Double>();
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
@@ -24,8 +26,8 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 		} else {
 			return 0;
 		}
-	}	
-
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCashFlow()
 	 */
@@ -50,6 +52,30 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getReservoirWithdrawals()
+	 */
+	@Override
+	public double getReservoirWithdrawals() {
+		if(reservoirWithdrawalsMap.containsKey(time)) {
+			return reservoirWithdrawalsMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getWaterReservoirVolume()
+	 */
+	@Override
+	public double getWaterReservoirVolume() {
+		if(waterReservoirVolumeMap.containsKey(time)) {
+			return waterReservoirVolumeMap.get(time);
+		} else {
+			return 0;
+		}
+	}	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -86,6 +112,26 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	public void setElectricityConsumptionMap(Map<Long, Double> electricityConsumptionMap) {
 		this.electricityConsumptionMap.clear();
 		this.electricityConsumptionMap.putAll(electricityConsumptionMap);
+	}
+	
+	/**
+	 * Sets the reservoir withdrawals map.
+	 *
+	 * @param reservoirWithdrawalsMap the reservoir withdrawals map
+	 */
+	public void setReservoirWithdrawalsMap(Map<Long, Double> reservoirWithdrawalsMap) {
+		this.reservoirWithdrawalsMap.clear();
+		this.reservoirWithdrawalsMap.putAll(reservoirWithdrawalsMap);
+	}
+	
+	/**
+	 * Sets the water reservoir volume map.
+	 *
+	 * @param waterReservoirVolumeMap the water reservoir volume map
+	 */
+	public void setWaterReservoirVolumeMap(Map<Long, Double> waterReservoirVolumeMap) {
+		this.waterReservoirVolumeMap.clear();
+		this.waterReservoirVolumeMap.putAll(waterReservoirVolumeMap);
 	}
 	
 	/* (non-Javadoc)

@@ -407,6 +407,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
 				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
 				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setFoodProductionMap(system.getFoodProductionMap());
+				placeholder.setTotalFoodSupplyMap(system.getTotalFoodSupplyMap());
 				data.put(city.getName(), placeholder);
 			}
 		}
@@ -460,6 +462,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
 				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
 				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setPetroleumReservoirVolumeMap(system.getPetroleumReservoirVolumeMap());
+				placeholder.setPetroleumWithdrawalsMap(system.getPetroleumWithdrawalsMap());
 				data.get(city.getName())[0] = placeholder;
 			}
 			if(city.getElectricitySystem() instanceof LocalElectricitySystem) {
@@ -489,6 +493,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
 				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
 				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setWaterReservoirVolumeMap(system.getWaterReservoirVolumeMap());
+				placeholder.setReservoirWithdrawalsMap(system.getReservoirWithdrawalsMap());
 				data.put(city.getName(), placeholder);
 			}
 		}

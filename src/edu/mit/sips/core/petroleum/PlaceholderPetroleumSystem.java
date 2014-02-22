@@ -13,6 +13,8 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	private final Map<Long, Double> electricityConsumptionMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> captialExpenseMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> petroleumReservoirVolumeMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> petroleumWithdrawalsMap = new HashMap<Long, Double>();
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
@@ -25,7 +27,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 			return 0;
 		}
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCashFlow()
 	 */
@@ -49,7 +51,31 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 			return 0;
 		}
 	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumReservoirVolume()
+	 */
+	@Override
+	public double getPetroleumReservoirVolume() {
+		if(petroleumReservoirVolumeMap.containsKey(time)) {
+			return petroleumReservoirVolumeMap.get(time);
+		} else {
+			return 0;
+		}
+	}
 	
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumWithdrawals()
+	 */
+	@Override
+	public double getPetroleumWithdrawals() {
+		if(petroleumWithdrawalsMap.containsKey(time)) {
+			return petroleumWithdrawalsMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -86,6 +112,26 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	public void setElectricityConsumptionMap(Map<Long, Double> electricityConsumptionMap) {
 		this.electricityConsumptionMap.clear();
 		this.electricityConsumptionMap.putAll(electricityConsumptionMap);
+	}
+	
+	/**
+	 * Sets the petroleum reservoir volume map.
+	 *
+	 * @param petroleumReservoirVolumeMap the petroleum reservoir volume map
+	 */
+	public void setPetroleumReservoirVolumeMap(Map<Long, Double> petroleumReservoirVolumeMap) {
+		this.petroleumReservoirVolumeMap.clear();
+		this.petroleumReservoirVolumeMap.putAll(petroleumReservoirVolumeMap);
+	}
+	
+	/**
+	 * Sets the petroleum withdrawals map.
+	 *
+	 * @param petroleumWithdrawalsMap the petroleum withdrawals map
+	 */
+	public void setPetroleumWithdrawalsMap(Map<Long, Double> petroleumWithdrawalsMap) {
+		this.petroleumWithdrawalsMap.clear();
+		this.petroleumWithdrawalsMap.putAll(petroleumWithdrawalsMap);
 	}
 	
 	/* (non-Javadoc)

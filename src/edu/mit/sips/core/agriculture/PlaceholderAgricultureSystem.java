@@ -13,6 +13,8 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	private final Map<Long, Double> waterConsumptionMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> capitalExpenseMap = new HashMap<Long, Double>();
 	private final Map<Long, Double> cashFlowMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> totalFoodSupplyMap = new HashMap<Long, Double>();
+	private final Map<Long, Double> foodProductionMap = new HashMap<Long, Double>();
 	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
@@ -39,6 +41,31 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	}
 	
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getFoodProduction()
+	 */
+	@Override
+	public double getFoodProduction() {
+		if(foodProductionMap.containsKey(time)) {
+			return foodProductionMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getTotalFoodSupply()
+	 */
+	@Override
+	public double getTotalFoodSupply() {
+		if(totalFoodSupplyMap.containsKey(time)) {
+			return totalFoodSupplyMap.get(time);
+		} else {
+			return 0;
+		}
+	}
+	
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.DefaultAgricultureSystem#getWaterConsumption()
 	 */
 	@Override
@@ -49,7 +76,7 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#initialize(long)
 	 */
@@ -76,6 +103,26 @@ public class PlaceholderAgricultureSystem extends DefaultAgricultureSystem imple
 	public void setCashFlowMap(Map<Long, Double> cashFlowMap) {
 		this.cashFlowMap.clear();
 		this.cashFlowMap.putAll(cashFlowMap);
+	}
+	
+	/**
+	 * Sets the food production map.
+	 *
+	 * @param foodProductionMap the food production map
+	 */
+	public void setFoodProductionMap(Map<Long, Double> foodProductionMap) {
+		this.foodProductionMap.clear();
+		this.foodProductionMap.putAll(foodProductionMap);
+	}
+	
+	/**
+	 * Sets the total food supply map.
+	 *
+	 * @param totalFoodSupplyMap the total food supply map
+	 */
+	public void setTotalFoodSupplyMap(Map<Long, Double> totalFoodSupplyMap) {
+		this.totalFoodSupplyMap.clear();
+		this.totalFoodSupplyMap.putAll(totalFoodSupplyMap);
 	}
 	
 	/**

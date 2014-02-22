@@ -36,6 +36,10 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 
 	private transient final Map<Long, Double> waterConsumptionMap = 
 			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> totalFoodSupplyMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> foodProductionMap = 
+			new HashMap<Long, Double>();
 	
 	/**
 	 * Instantiates a new local.
@@ -314,6 +318,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return foodProduction;
 	}
 
+	/**
+	 * Gets the food production map.
+	 *
+	 * @return the food production map
+	 */
+	public Map<Long, Double> getFoodProductionMap() {
+		return new HashMap<Long, Double>(foodProductionMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodSecurity()
 	 */
@@ -433,6 +446,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return getLocalFoodSupply() + getFoodImport() - getFoodExport();
 	}
 
+	/**
+	 * Gets the total food supply map.
+	 *
+	 * @return the total food supply map
+	 */
+	public Map<Long, Double> getTotalFoodSupplyMap() {
+		return new HashMap<Long, Double>(totalFoodSupplyMap);
+	}
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
 	 */
@@ -444,7 +466,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return 0;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#geUnitSupplyCost()
 	 */
@@ -455,7 +477,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
 	 */
@@ -467,7 +489,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return waterConsumption;
 	}
-	
+
 	/**
 	 * Gets the water consumption map.
 	 *
@@ -500,6 +522,8 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	public void initialize(long time) {
 		super.initialize(time);
 		waterConsumptionMap.clear();
+		totalFoodSupplyMap.clear();
+		foodProductionMap.clear();
 	}
 
 	/* (non-Javadoc)
@@ -517,5 +541,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	public void tick() {
 		super.tick();
 		waterConsumptionMap.put(time, getWaterConsumption());
+		totalFoodSupplyMap.put(time, getTotalFoodSupply());
+		foodProductionMap.put(time, getFoodProduction());
 	}
 }

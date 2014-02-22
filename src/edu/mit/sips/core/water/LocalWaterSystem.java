@@ -45,6 +45,10 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	
 	private transient final Map<Long, Double> electricityConsumptionMap = 
 			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> waterReservoirVolumeMap = 
+			new HashMap<Long, Double>();
+	private transient final Map<Long, Double> reservoirWithdrawalsMap = 
+			new HashMap<Long, Double>();
 	
 	/**
 	 * Instantiates a new local.
@@ -152,6 +156,12 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#addElement(edu.mit.sips.core.water.WaterElement)
 	 */
+	/**
+	 * Adds the element.
+	 *
+	 * @param element the element
+	 * @return true, if successful
+	 */
 	@Override
 	public synchronized boolean addElement(WaterElement element) {
 		return elements.add(element);
@@ -160,6 +170,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getAquiferLifetime()
 	 */
+	/**
+	 * Gets the aquifer lifetime.
+	 *
+	 * @return the aquifer lifetime
+	 */
 	public double getAquiferLifetime() {
 		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
 				: (getWaterReservoirVolume() / getReservoirWithdrawals());
@@ -167,6 +182,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
+	 */
+	/**
+	 * Gets the consumption expense.
+	 *
+	 * @return the consumption expense
 	 */
 	@Override
 	public double getConsumptionExpense() {
@@ -180,6 +200,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
 	 */
+	/**
+	 * Gets the distribution expense.
+	 *
+	 * @return the distribution expense
+	 */
 	@Override
 	public double getDistributionExpense() {
 		return getWaterDomesticPrice() * getWaterInDistribution();
@@ -187,6 +212,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
+	 */
+	/**
+	 * Gets the distribution revenue.
+	 *
+	 * @return the distribution revenue
 	 */
 	@Override
 	public double getDistributionRevenue() {
@@ -197,6 +227,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
 	 */
+	/**
+	 * Gets the domestic production.
+	 *
+	 * @return the domestic production
+	 */
 	@Override
 	public double getDomesticProduction() {
 		return domesticProductionModel.getDomesticProduction(this);
@@ -204,6 +239,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getEnergyConsumption()
+	 */
+	/**
+	 * Gets the electricity consumption.
+	 *
+	 * @return the electricity consumption
 	 */
 	@Override
 	public double getElectricityConsumption() {
@@ -214,6 +254,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPrivateProduction()
 	 */
+	/**
+	 * Gets the electricity consumption from private production.
+	 *
+	 * @return the electricity consumption from private production
+	 */
 	@Override
 	public double getElectricityConsumptionFromPrivateProduction() {
 		return getWaterFromPrivateProduction() * electricalIntensityOfPrivateProduction;
@@ -221,6 +266,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getElectricityConsumptionFromPublicProduction()
+	 */
+	/**
+	 * Gets the electricity consumption from public production.
+	 *
+	 * @return the electricity consumption from public production
 	 */
 	@Override
 	public double getElectricityConsumptionFromPublicProduction() {
@@ -248,6 +298,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
 	 */
+	/**
+	 * Gets the electricity time units.
+	 *
+	 * @return the electricity time units
+	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
@@ -256,6 +311,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
 	 */
+	/**
+	 * Gets the electricity units.
+	 *
+	 * @return the electricity units
+	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
@@ -263,6 +323,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getElements()
+	 */
+	/**
+	 * Gets the elements.
+	 *
+	 * @return the elements
 	 */
 	@Override
 	public List<WaterElement> getElements() {
@@ -275,6 +340,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
 	 */
+	/**
+	 * Gets the export revenue.
+	 *
+	 * @return the export revenue
+	 */
 	@Override
 	public double getExportRevenue() {
 		return 0;
@@ -282,6 +352,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
+	 */
+	/**
+	 * Gets the external elements.
+	 *
+	 * @return the external elements
 	 */
 	@Override
 	public List<WaterElement> getExternalElements() {
@@ -312,6 +387,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
 	 */
+	/**
+	 * Gets the import expense.
+	 *
+	 * @return the import expense
+	 */
 	@Override
 	public double getImportExpense() {
 		return getWaterImportPrice() * getWaterImport();
@@ -320,14 +400,23 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
 	 */
+	/**
+	 * Gets the internal elements.
+	 *
+	 * @return the internal elements
+	 */
 	@Override
 	public List<WaterElement> getInternalElements() {
 		return Collections.unmodifiableList(elements);
 	}
 
-
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getLocalWaterFraction()
+	 */
+	/**
+	 * Gets the local water fraction.
+	 *
+	 * @return the local water fraction
 	 */
 	@Override
 	public double getLocalWaterFraction() {
@@ -341,13 +430,24 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getMaxWaterReservoirVolume()
 	 */
+	/**
+	 * Gets the max water reservoir volume.
+	 *
+	 * @return the max water reservoir volume
+	 */
 	@Override
 	public double getMaxWaterReservoirVolume() {
 		return maxWaterReservoirVolume;
 	}
 
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
+	 */
+	/**
+	 * Gets the operations expense.
+	 *
+	 * @return the operations expense
 	 */
 	@Override
 	public double getOperationsExpense() {
@@ -365,6 +465,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getRenewableWaterFraction()
 	 */
+	/**
+	 * Gets the renewable water fraction.
+	 *
+	 * @return the renewable water fraction
+	 */
 	@Override
 	public double getRenewableWaterFraction() {
 		if(getSocietyDemand() > 0) {
@@ -376,6 +481,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getRenewableWaterProduction()
+	 */
+	/**
+	 * Gets the renewable water production.
+	 *
+	 * @return the renewable water production
 	 */
 	@Override
 	public double getRenewableWaterProduction() {
@@ -395,6 +505,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterWithdrawals()
 	 */
+	/**
+	 * Gets the reservoir withdrawals.
+	 *
+	 * @return the reservoir withdrawals
+	 */
 	@Override
 	public double getReservoirWithdrawals() {
 		return getReservoirWithdrawalsFromPublicProduction() + 
@@ -403,6 +518,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPrivateProduction()
+	 */
+	/**
+	 * Gets the reservoir withdrawals from private production.
+	 *
+	 * @return the reservoir withdrawals from private production
 	 */
 	@Override
 	public double getReservoirWithdrawalsFromPrivateProduction() {
@@ -413,6 +533,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
 	 */
+	/**
+	 * Gets the reservoir withdrawals from public production.
+	 *
+	 * @return the reservoir withdrawals from public production
+	 */
 	@Override
 	public double getReservoirWithdrawalsFromPublicProduction() {
 		double waterWithdrawals = 0;
@@ -422,8 +547,22 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 		return waterWithdrawals;
 	}
 
+	/**
+	 * Gets the reservoir withdrawals map.
+	 *
+	 * @return the reservoir withdrawals map
+	 */
+	public Map<Long, Double> getReservoirWithdrawalsMap() {
+		return new HashMap<Long, Double>(reservoirWithdrawalsMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
+	 */
+	/**
+	 * Gets the sales revenue.
+	 *
+	 * @return the sales revenue
 	 */
 	@Override
 	public double getSalesRevenue() {
@@ -456,6 +595,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getTotalWaterSupply()
 	 */
+	/**
+	 * Gets the total water supply.
+	 *
+	 * @return the total water supply
+	 */
 	public double getTotalWaterSupply() {
 		return getWaterProduction() 
 				+ getWaterInDistribution()
@@ -465,6 +609,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getProductionCost()
+	 */
+	/**
+	 * Gets the unit production cost.
+	 *
+	 * @return the unit production cost
 	 */
 	@Override
 	public double getUnitProductionCost() {
@@ -478,6 +627,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getSupplyCost()
 	 */
+	/**
+	 * Gets the unit supply profit.
+	 *
+	 * @return the unit supply profit
+	 */
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalWaterSupply() > 0) {
@@ -488,6 +642,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
+	 */
+	/**
+	 * Gets the water agricultural price.
+	 *
+	 * @return the water agricultural price
 	 */
 	@Override
 	public double getWaterAgriculturalPrice() {
@@ -501,6 +660,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
+	/**
+	 * Gets the water domestic price.
+	 *
+	 * @return the water domestic price
+	 */
 	@Override
 	public double getWaterDomesticPrice() {
 		return domesticPriceModel.getUnitPrice();
@@ -508,6 +672,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterFromArtesianWell()
+	 */
+	/**
+	 * Gets the water from private production.
+	 *
+	 * @return the water from private production
 	 */
 	@Override
 	public double getWaterFromPrivateProduction() {
@@ -521,6 +690,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterImport()
+	 */
+	/**
+	 * Gets the water import.
+	 *
+	 * @return the water import
 	 */
 	@Override
 	public double getWaterImport() {
@@ -536,6 +710,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
 	 */
+	/**
+	 * Gets the water import price.
+	 *
+	 * @return the water import price
+	 */
 	@Override
 	public double getWaterImportPrice() {
 		return importPriceModel.getUnitPrice();
@@ -543,6 +722,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.WaterSystem#getWaterInDistribution()
+	 */
+	/**
+	 * Gets the water in distribution.
+	 *
+	 * @return the water in distribution
 	 */
 	@Override
 	public double getWaterInDistribution() {
@@ -555,6 +739,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistribution()
+	 */
+	/**
+	 * Gets the water out distribution.
+	 *
+	 * @return the water out distribution
 	 */
 	@Override
 	public double getWaterOutDistribution() {
@@ -571,6 +760,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.energy.WaterSystem#getWaterOutDistributionLosses()
 	 */
+	/**
+	 * Gets the water out distribution losses.
+	 *
+	 * @return the water out distribution losses
+	 */
 	@Override
 	public double getWaterOutDistributionLosses() {
 		double distribution = 0;
@@ -582,6 +776,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterProduction()
+	 */
+	/**
+	 * Gets the water production.
+	 *
+	 * @return the water production
 	 */
 	@Override
 	public double getWaterProduction() {
@@ -599,6 +798,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
 	 */
+	/**
+	 * Gets the water reservoir recharge rate.
+	 *
+	 * @return the water reservoir recharge rate
+	 */
 	@Override
 	public double getWaterReservoirRechargeRate() {
 		return waterReservoirRechargeRate;
@@ -607,13 +811,32 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterReservoirVolume()
 	 */
+	/**
+	 * Gets the water reservoir volume.
+	 *
+	 * @return the water reservoir volume
+	 */
 	@Override
 	public double getWaterReservoirVolume() {
 		return waterReservoirVolume;
 	}
 
+	/**
+	 * Gets the water reservoir volume map.
+	 *
+	 * @return the water reservoir volume map
+	 */
+	public Map<Long, Double> getWaterReservoirVolumeMap() {
+		return new HashMap<Long, Double>(waterReservoirVolumeMap);
+	}
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
+	 */
+	/**
+	 * Gets the water time units.
+	 *
+	 * @return the water time units
 	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
@@ -623,6 +846,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
 	 */
+	/**
+	 * Gets the water units.
+	 *
+	 * @return the water units
+	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
@@ -630,6 +858,11 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.WaterSystem#getWaterWasted()
+	 */
+	/**
+	 * Gets the water wasted.
+	 *
+	 * @return the water wasted
 	 */
 	@Override
 	public double getWaterWasted() {
@@ -644,15 +877,27 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
 	 */
+	/**
+	 * Initialize.
+	 *
+	 * @param time the time
+	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
 		waterReservoirVolume = initialWaterReservoirVolume;
 		electricityConsumptionMap.clear();
+		waterReservoirVolumeMap.clear();
+		reservoirWithdrawalsMap.clear();
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#isCoastalAccess()
+	 */
+	/**
+	 * Checks if is coastal access.
+	 *
+	 * @return true, if is coastal access
 	 */
 	@Override
 	public boolean isCoastalAccess() {
@@ -662,6 +907,12 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#removeElement(edu.mit.sips.core.water.WaterElement)
 	 */
+	/**
+	 * Removes the element.
+	 *
+	 * @param element the element
+	 * @return true, if successful
+	 */
 	@Override
 	public synchronized boolean removeElement(WaterElement element) {
 		return elements.remove(element);
@@ -669,6 +920,9 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
+	 */
+	/**
+	 * Tick.
 	 */
 	@Override
 	public void tick() {
@@ -681,10 +935,15 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 					"Water reservoir volume cannot be negative.");
 		}
 		electricityConsumptionMap.put(time, getElectricityConsumption());
+		waterReservoirVolumeMap.put(time, getWaterReservoirVolume());
+		reservoirWithdrawalsMap.put(time, getReservoirWithdrawals());
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.SimEntity#tick()
+	 */
+	/**
+	 * Tock.
 	 */
 	@Override
 	public void tock() {
