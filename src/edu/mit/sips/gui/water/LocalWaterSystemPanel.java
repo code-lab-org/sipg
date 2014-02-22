@@ -119,11 +119,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		}
 		
 		if(getWaterSystem() instanceof LocalWaterSoS) {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getWaterSystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getWaterSystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
-							"Cumulative Balance (" + getCurrencyUnits() + ")",
+							"Cumulative Net Revenue (" + getCurrencyUnits() + ")",
 							cumulativeBalance));
 			/* temporarily removed
 			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(

@@ -114,11 +114,11 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 		}
 		
 		if(getPetroleumSystem() instanceof LocalPetroleumSoS) {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getPetroleumSystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getPetroleumSystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
-							"Cumulative Balance (" + getCurrencyUnits() + ")",
+							"Cumulative Net Revenue (" + getCurrencyUnits() + ")",
 							cumulativeBalance));
 			/* temporarily removed
 			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(

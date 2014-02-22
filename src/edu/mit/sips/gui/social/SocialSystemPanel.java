@@ -63,9 +63,9 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		 * addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
 		 */
 
-		addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-				getSocialSystem().getName() + " Cash Flow",
-				"Annual Cash Flow (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
+		addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+				getSocialSystem().getName() + " Net Revenue",
+				"Annual Net Revenue (" + getCurrencyUnits() + ")", infrastructureSystemRevenue, 
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()), 
 				infrastructureSystemNetRevenue,
 				"Cumulative Net Revenue (" + getCurrencyUnits() + ")", cumulativeBalance));

@@ -116,11 +116,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		}
 		
 		if(getElectricitySystem() instanceof LocalElectricitySoS) {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getElectricitySystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getElectricitySystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
-							"Cumulative Balance (" + getCurrencyUnits() + ")",
+							"Cumulative Net Revenue (" + getCurrencyUnits() + ")",
 							cumulativeBalance));
 			/* temporarily removed
 			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
