@@ -8,6 +8,8 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -110,16 +112,16 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
 		
-		JTabbedPane nationalData;
+		final JTabbedPane nationalPane;
 		if(waterSystem instanceof LocalWaterSoS) {
-			nationalData = new JTabbedPane();
-			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+			nationalPane = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalPane);
 		} else {
-			nationalData = this;
+			nationalPane = this;
 		}
 		
 		if(getWaterSystem() instanceof LocalWaterSoS) {
-			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
 					getWaterSystem().getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
@@ -134,7 +136,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
 					getWaterSystem().getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
@@ -154,7 +156,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterSourceNames) {
 			waterSourceData.addSeries(new XYSeries(name, true, false));
 		}
-		nationalData.addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
+		nationalPane.addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
 				getWaterSystem().getName() + " Source",
 				"Water Source (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterSourceData, PlottingUtils.getResourceColors(waterSourceNames)));
@@ -174,7 +176,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterUseNames) {
 			waterUseData.addSeries(new XYSeries(name, true, false));
 		}
-		nationalData.addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+		nationalPane.addTab("Use", Icons.WATER_USE, createStackedAreaChart(
 				getWaterSystem().getName() + " Use",
 				"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", 
 				waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
@@ -188,7 +190,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			electricityUseNames.add(getSociety().getName() + " Operations");
 		}
 		electricityUseNames.add("Private Operations");
-		nationalData.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+		nationalPane.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				getWaterSystem().getName() + " Electricity Use",
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
@@ -212,7 +214,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		} else {
 			societyColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		nationalData.addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
+		nationalPane.addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
 				getWaterSystem().getName() + " Aquifer",
 				"Water Aquifer Volume (" + waterUnits + ")", 
 				waterAquiferDataset, societyColors.toArray(new Color[0])));
@@ -227,7 +229,24 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		
 		waterStatePanel = new SpatialStatePanel(
 				waterSystem.getSociety(), new WaterStateProvider());
-		nationalData.addTab("Network", Icons.NETWORK, waterStatePanel);
+		nationalPane.addTab("Network", Icons.NETWORK, waterStatePanel);
+		
+		ChangeListener tabSynchronizer = new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(e.getSource() instanceof JTabbedPane) {
+					JTabbedPane pane = ((JTabbedPane)e.getSource());
+					if(e.getSource() == nationalPane) {
+						for(LocalWaterSystemPanel panel : nestedPanels) {
+							panel.setSelectedIndex(pane.getSelectedIndex());
+						}
+					} else {
+						nationalPane.setSelectedIndex(pane.getSelectedIndex());
+					}
+				}
+			}
+		};
+		nationalPane.addChangeListener(tabSynchronizer);
 		
 		if(waterSystem instanceof LocalWaterSoS) {
 			JTabbedPane regionalData = this; // new JTabbedPane();
@@ -235,6 +254,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				((LocalWaterSoS) waterSystem).getNestedSystems()) {
 				LocalWaterSystemPanel nestedPanel = 
 						new LocalWaterSystemPanel(nestedSystem);
+				nestedPanel.addChangeListener(tabSynchronizer);
 				nestedPanels.add(nestedPanel);
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);

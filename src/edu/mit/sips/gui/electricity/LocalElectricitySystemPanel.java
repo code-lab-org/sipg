@@ -7,6 +7,8 @@ import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
@@ -107,16 +109,16 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 			cashFlow.addSeries(new XYSeries(name, true, false));
 		}
 
-		JTabbedPane nationalData;
+		final JTabbedPane nationalPane;
 		if(electricitySystem instanceof LocalElectricitySoS) {
-			nationalData = new JTabbedPane();
-			addTab(getSociety().getName(), Icons.COUNTRY, nationalData);
+			nationalPane = new JTabbedPane();
+			addTab(getSociety().getName(), Icons.COUNTRY, nationalPane);
 		} else {
-			nationalData = this;
+			nationalPane = this;
 		}
 		
 		if(getElectricitySystem() instanceof LocalElectricitySoS) {
-			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
 					getElectricitySystem().getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
@@ -131,7 +133,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
 					getElectricitySystem().getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
@@ -150,7 +152,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricitySourceNames) {
 			electricitySourceData.addSeries(new XYSeries(name, true, false));
 		}
-		nationalData.addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
+		nationalPane.addTab("Source", Icons.ELECTRICITY_SOURCE, createStackedAreaChart(
 				getElectricitySystem().getName() + " Source",
 				"Electricity Source (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricitySourceData, PlottingUtils.getResourceColors(electricitySourceNames)));
@@ -171,7 +173,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		for(String name : electricityUseNames) {
 			electricityUseData.addSeries(new XYSeries(name, true, false));
 		}
-		nationalData.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
+		nationalPane.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
 				getElectricitySystem().getName() + " Use",
 				"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")", 
 				electricityUseData, PlottingUtils.getResourceColors(electricityUseNames)));
@@ -213,7 +215,24 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 		
 		electricityStatePanel = new SpatialStatePanel(
 				getSociety(), new ElectricityStateProvider());
-		nationalData.addTab("Network", Icons.NETWORK, electricityStatePanel);
+		nationalPane.addTab("Network", Icons.NETWORK, electricityStatePanel);
+		
+		ChangeListener tabSynchronizer = new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				if(e.getSource() instanceof JTabbedPane) {
+					JTabbedPane pane = ((JTabbedPane)e.getSource());
+					if(e.getSource() == nationalPane) {
+						for(LocalElectricitySystemPanel panel : nestedPanels) {
+							panel.setSelectedIndex(pane.getSelectedIndex());
+						}
+					} else {
+						nationalPane.setSelectedIndex(pane.getSelectedIndex());
+					}
+				}
+			}
+		};
+		nationalPane.addChangeListener(tabSynchronizer);
 		
 		if(electricitySystem instanceof LocalElectricitySoS) {
 			JTabbedPane regionalData = this; // new JTabbedPane();
@@ -221,6 +240,7 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				((LocalElectricitySoS) electricitySystem).getNestedSystems()) {
 				LocalElectricitySystemPanel nestedPanel = 
 						new LocalElectricitySystemPanel(nestedSystem);
+				nestedPanel.addChangeListener(tabSynchronizer);
 				nestedPanels.add(nestedPanel);
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
