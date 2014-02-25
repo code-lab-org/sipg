@@ -124,9 +124,9 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getAgricultureSystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
 		

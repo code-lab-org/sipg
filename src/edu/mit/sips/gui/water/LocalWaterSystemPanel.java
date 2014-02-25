@@ -134,9 +134,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getWaterSystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getWaterSystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
 		

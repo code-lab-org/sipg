@@ -129,9 +129,9 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getPetroleumSystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getPetroleumSystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
 		

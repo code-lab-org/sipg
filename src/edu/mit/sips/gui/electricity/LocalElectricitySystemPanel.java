@@ -131,9 +131,9 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 					cumulativeCapitalExpense));
 			*/
 		} else {
-			nationalData.addTab("Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					getElectricitySystem().getName() + " Cash Flow",
-					"Annual Cash Flow (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
+			nationalData.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
+					getElectricitySystem().getName() + " Net Revenue",
+					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
 		
