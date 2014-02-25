@@ -480,10 +480,10 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				CurrencyUnits.convertFlow(
 						getWaterSystem().getSalesRevenue(), 
 						getWaterSystem(), this));
-		updateSeries(netCashFlow, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Revenue", year, 
 				CurrencyUnits.convertFlow(getWaterSystem().getCashFlow(),
 						getWaterSystem(), this));
-		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 				CurrencyUnits.convertFlow(getWaterSystem().getCumulativeCashFlow(),
 						getWaterSystem(), this));
 		

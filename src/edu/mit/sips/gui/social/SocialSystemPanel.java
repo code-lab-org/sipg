@@ -173,7 +173,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 
 	private void update(int year) {
 		if(getSociety() instanceof Country) {
-			updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+			updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 					CurrencyUnits.convertStock(((Country)getSociety()).getFunds(), 
 							getSociety(), this));
 		} else {
@@ -181,7 +181,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					CurrencyUnits.convertStock(getSociety().getCumulativeCashFlow(), 
 							getSociety(), this));
 		}
-		updateSeries(infrastructureSystemNetRevenue, "Annual Cash Flow", year, 
+		updateSeries(infrastructureSystemNetRevenue, "Annual Net Revenue", year, 
 				CurrencyUnits.convertFlow(getSociety().getTotalCashFlow(), 
 						getSociety(), this));
 

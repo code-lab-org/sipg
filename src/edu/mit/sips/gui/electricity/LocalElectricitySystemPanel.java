@@ -564,11 +564,11 @@ public class LocalElectricitySystemPanel extends ElectricitySystemPanel
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getSalesRevenue(), 
 						getElectricitySystem(), this));
-		updateSeries(netCashFlow, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Revenue", year, 
 				CurrencyUnits.convertFlow(
 						getElectricitySystem().getCashFlow(), 
 						getElectricitySystem(), this));
-		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 				CurrencyUnits.convertFlow(getElectricitySystem().getCumulativeCashFlow(),
 						getElectricitySystem(), this));
 		

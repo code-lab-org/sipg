@@ -474,10 +474,10 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 				CurrencyUnits.convertFlow(
 						getPetroleumSystem().getSalesRevenue(),
 						getPetroleumSystem(), this));
-		updateSeries(netCashFlow, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Revenue", year, 
 				CurrencyUnits.convertFlow(getPetroleumSystem().getCashFlow(),
 						getPetroleumSystem(), this));
-		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 				CurrencyUnits.convertFlow(getPetroleumSystem().getCumulativeCashFlow(),
 						getPetroleumSystem(), this));
 

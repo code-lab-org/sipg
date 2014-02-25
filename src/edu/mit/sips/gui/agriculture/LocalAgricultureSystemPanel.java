@@ -457,10 +457,10 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(cashFlow, "Domestic Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getSalesRevenue(),
 						getAgricultureSystem(), this));
-		updateSeries(netCashFlow, "Net Cash Flow", year, 
+		updateSeries(netCashFlow, "Net Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getCashFlow(),
 						getAgricultureSystem(), this));
-		updateSeries(cumulativeBalance, "Cumulative Balance", year, 
+		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getCumulativeCashFlow(),
 						getAgricultureSystem(), this));
 		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
