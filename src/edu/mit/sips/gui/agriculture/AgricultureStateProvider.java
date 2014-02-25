@@ -95,7 +95,8 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 			AgricultureSystem.Local agricultureSystem = (AgricultureSystem.Local) 
 					society.getAgricultureSystem(); 
-			return agricultureSystem.getFoodExport();
+			return FoodUnits.convertFlow(
+					agricultureSystem.getFoodExport(), agricultureSystem, this);
 		}
 		return 0;
 	}
