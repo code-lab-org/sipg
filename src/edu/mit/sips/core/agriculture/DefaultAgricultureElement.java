@@ -330,7 +330,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	@Override
 	public double getMaxFoodProduction() {
 		if(isOperational()) {
-			return getMaxLandArea() + getFoodIntensityOfLandUsed();
+			return getMaxLandArea() * getFoodIntensityOfLandUsed();
 		} else {
 			return 0;
 		}
