@@ -74,6 +74,13 @@ public interface AgricultureElement extends InfrastructureElement,
 	public double getMaxFoodInput();
 	
 	/**
+	 * Gets the max food production.
+	 *
+	 * @return the max food production
+	 */
+	public double getMaxFoodProduction();
+	
+	/**
 	 * Gets the max land area.
 	 *
 	 * @return the max land area

@@ -325,6 +325,18 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodProduction()
+	 */
+	@Override
+	public double getMaxFoodProduction() {
+		if(isOperational()) {
+			return getMaxLandArea() + getFoodIntensityOfLandUsed();
+		} else {
+			return 0;
+		}
+	}
+	
+	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxLandArea()
 	 */
 	@Override
@@ -335,7 +347,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			return 0;
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */

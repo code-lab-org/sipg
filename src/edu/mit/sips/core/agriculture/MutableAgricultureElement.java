@@ -133,6 +133,15 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	}
 	
 	/**
+	 * Gets the max food production.
+	 *
+	 * @return the max food production
+	 */
+	public double getMaxFoodProduction() {
+		return maxLandArea * foodIntensityOfLandUsed;
+	}
+	
+	/**
 	 * Gets the max land area.
 	 *
 	 * @return the max land area
