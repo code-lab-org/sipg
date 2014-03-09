@@ -712,7 +712,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		newScenario.setEnabled(simulator == null);
 		saveScenario.setEnabled(simulator != null);
 		closeScenario.setEnabled(simulator != null);
-		/* TODO */ editConnection.setEnabled(false && simulator != null);
+		editConnection.setEnabled(simulator != null);// && false); // TODO
 
 		exportAgriculture.setEnabled(simulator != null 
 				&& simulator.getScenario().getCountry().getAgricultureSystem() 
