@@ -81,11 +81,11 @@ public class DefaultElement implements Element {
 		location = nextLocation = initialLocation;
 	}
 	
-	public void stateTick() {
-		state.iterateTick(this);
+	public void iterateTick(long duration) {
+		state.iterateTick(this, duration);
 	}
 	
-	public void stateTock() {
+	public void iterateTock() {
 		state.iterateTock();
 	}
 	
@@ -93,39 +93,43 @@ public class DefaultElement implements Element {
 		nextContents = contents.copy();
 		if(state instanceof ResourceStoring) {
 			ResourceStoring res = (ResourceStoring) state;
-			storeResources(res.getStorageRate().multiply(duration), 
-					res.getRetrievalRate().multiply(duration));
+			store(res.getStored(duration), 
+					res.getRetrieved(duration));
 		}
 		if(state instanceof ResourceTransforming) {
 			ResourceTransforming ref = (ResourceTransforming) state;
-			transformResources(ref.getConsumptionRate().multiply(duration),
-					ref.getProductionRate().multiply(duration));
+			transform(ref.getConsumed(duration),
+					ref.getProduced(duration));
 		}
 		if(state instanceof ResourceTransporting) {
 			ResourceTransporting rep = (ResourceTransporting) state;
-			transportResources(rep.getInputRate().multiply(duration), 
-					rep.getOutputRate().multiply(duration));
+			transport(rep.getInput(duration), 
+					rep.getOutput(duration));
 		}
 		if(state instanceof ResourceExchanging) {
 			ResourceExchanging rex = (ResourceExchanging) state;
-			exchangeResources(rex.getSendingRate().multiply(duration),
-					rex.getReceivingRate().multiply(duration));
+			exchange(rex.getSent(duration),
+					rex.getReceived(duration));
 		}
 	}
-	
-	protected void storeResources(Resource stored, Resource retrieved) {
+
+	@Override
+	public void store(Resource stored, Resource retrieved) {
 		nextContents = nextContents.add(stored).subtract(retrieved);
 	}
-	
-	protected void transformResources(Resource consumed, Resource produced) {
+
+	@Override
+	public void transform(Resource consumed, Resource produced) {
 		nextContents = nextContents.subtract(consumed).add(produced);
 	}
-	
-	protected void transportResources(Resource input, Resource output) {
+
+	@Override
+	public void transport(Resource input, Resource output) {
 		nextContents = nextContents.add(input).subtract(output);
 	}
-	
-	protected void exchangeResources(Resource sent, Resource received) {
+
+	@Override
+	public void exchange(Resource sent, Resource received) {
 		nextContents = nextContents.subtract(sent).add(received);
 	}
 	

@@ -82,30 +82,30 @@ public class StateHistory {
 		flowHistory.get(time).put(location, flow);
 	}
 	
-	public void logElement(long time, Element element) {
+	public void logElement(long time, long timeStep, Element element) {
 		locationHistory.get(time).put(element.getName(), element.getLocation());
 		stateHistory.get(time).put(element.getName(), element.getState());
 		contentsHistory.get(time).put(element.getName(), element.getContents());
 		parentHistory.get(time).put(element.getName(), element.getParent().getName());
 		if(element.getState() instanceof ResourceTransforming) {
 			ResourceTransforming ref = (ResourceTransforming) element.getState();
-			consumedHistory.get(time).put(element.getName(), ref.getConsumptionRate());
-			producedHistory.get(time).put(element.getName(), ref.getProductionRate());
+			consumedHistory.get(time).put(element.getName(), ref.getConsumed(timeStep));
+			producedHistory.get(time).put(element.getName(), ref.getProduced(timeStep));
 		}
 		if(element.getState() instanceof ResourceStoring) {
 			ResourceStoring res = (ResourceStoring) element.getState();
-			storedHistory.get(time).put(element.getName(), res.getStorageRate());
-			retrievedHistory.get(time).put(element.getName(), res.getRetrievalRate());
+			storedHistory.get(time).put(element.getName(), res.getStored(timeStep));
+			retrievedHistory.get(time).put(element.getName(), res.getRetrieved(timeStep));
 		}
 		if(element.getState() instanceof ResourceTransporting) {
 			ResourceTransporting rep = (ResourceTransporting) element.getState();
-			inputHistory.get(time).put(element.getName(), rep.getInputRate());
-			outputHistory.get(time).put(element.getName(), rep.getOutputRate());
+			inputHistory.get(time).put(element.getName(), rep.getInput(timeStep));
+			outputHistory.get(time).put(element.getName(), rep.getOutput(timeStep));
 		}
 		if(element.getState() instanceof ResourceExchanging) {
 			ResourceExchanging rex = (ResourceExchanging) element.getState();
-			sentHistory.get(time).put(element.getName(), rex.getSendingRate());
-			receivedHistory.get(time).put(element.getName(), rex.getReceivingRate());
+			sentHistory.get(time).put(element.getName(), rex.getSent(timeStep));
+			receivedHistory.get(time).put(element.getName(), rex.getReceived(timeStep));
 		}
 	}
 	
@@ -117,7 +117,7 @@ public class StateHistory {
 		for(long time : timeHistory) {
 			System.out.println("Time = " + time);
 			System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s", 
-					"Element", "State", "Location", "Parent", "Contents", "Sending Rate", "Receiving Rate", "Consumption Rate", "Production Rate"));
+					"Element", "State", "Location", "Parent", "Contents", "Sent", "Received", "Consumed", "Produced"));
 			for(String element : contentsHistory.get(time).keySet()) {
 
 				System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s", 
@@ -135,7 +135,7 @@ public class StateHistory {
 
 			if(flowOutputs) {
 				System.out.println(String.format("%-19s %-59s", 
-						"Location", "Flow Rate"));
+						"Location", "Net Flow"));
 				for(Location location : flowHistory.get(time).keySet()) {
 					System.out.println(String.format("%-19s %-59s", 
 							location, 

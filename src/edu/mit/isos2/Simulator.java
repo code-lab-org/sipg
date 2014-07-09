@@ -38,43 +38,43 @@ public class Simulator {
 		
 		final ExchangingState e1s = new ExchangingState("Default") {
 			@Override
-			public Resource getStorageRate() {
-				return getConsumptionRate().get(ResourceType.AQUIFER);
+			public Resource getStored(long duration) {
+				return getConsumed(duration).get(ResourceType.AQUIFER);
 			}
 			@Override
-			public Resource getConsumptionRate() {
+			public Resource getConsumed(long duration) {
 				return ResourceFactory.createResource(ResourceType.AQUIFER, "0.1")
-						.add(ResourceFactory.createResource(ResourceType.ELECTRICITY, "0.5"));
+						.add(ResourceFactory.createResource(ResourceType.ELECTRICITY, "0.5")).multiply(duration);
 			}
 			@Override
-			public Resource getProductionRate() {
-				return ResourceFactory.createResource(ResourceType.WATER, "0.1");
+			public Resource getProduced(long duration) {
+				return ResourceFactory.createResource(ResourceType.WATER, "0.1").multiply(duration);
 			}
 			@Override
-			public Resource getReceivingRate() {
-				return getConsumptionRate().get(ResourceType.ELECTRICITY);
+			public Resource getReceived(long duration) {
+				return getConsumed(duration).get(ResourceType.ELECTRICITY);
 			}
 		};
 		DefaultState e2s = new DefaultState("Default") {
 			@Override
-			public Resource getRetrievalRate() {
-				return e1s.getConsumptionRate().get(ResourceType.AQUIFER);
+			public Resource getRetrieved(long duration) {
+				return e1s.getConsumed(duration).get(ResourceType.AQUIFER);
 			}
 		};
 		
 		ExchangingState e3s = new ExchangingState("Default") {
 			@Override
-			public Resource getConsumptionRate() {
-				return getProductionRate().get(ResourceType.ELECTRICITY)
+			public Resource getConsumed(long duration) {
+				return getProduced(duration).get(ResourceType.ELECTRICITY)
 						.swap(ResourceType.ELECTRICITY, ResourceType.OIL).multiply(0.75);
 			}
 			@Override
-			public Resource getProductionRate() {
-				return getSendingRate();
+			public Resource getProduced(long duration) {
+				return getSent(duration);
 			}
 			@Override
-			public Resource getReceivingRate() {
-				return getConsumptionRate().get(ResourceType.OIL);
+			public Resource getReceived(long duration) {
+				return getConsumed(duration).get(ResourceType.OIL);
 			}
 		};
 		
@@ -137,10 +137,10 @@ public class Simulator {
 		while(time <= scenario.getInitialTime() + duration) {
 			for(int i = 0; i < iterationsPerTimestep; i++) {
 				for(Element element : scenario.getElements()) {
-					element.stateTick();
+					element.iterateTick(timeStep);
 				}
 				for(Element element : scenario.getElements()) {
-					element.stateTock();
+					element.iterateTock();
 				}
 			}
 			if(outputs) {
@@ -154,17 +154,17 @@ public class Simulator {
 						if(element.getState() instanceof ResourceStoring) {
 							ResourceStoring res = (ResourceStoring) element.getState();
 							if(element.getLocation().equals(location)) {
-								flowRate = flowRate.subtract(res.getStorageRate())
-										.add(res.getRetrievalRate());
+								flowRate = flowRate.subtract(res.getStored(timeStep))
+										.add(res.getRetrieved(timeStep));
 							}
 						}
 						if(element.getState() instanceof ResourceTransporting) {
 							ResourceTransporting rep = (ResourceTransporting) element.getState();
 							if(location.isNodal() && element.getLocation().getDestination().equals(location.getOrigin())) {
-								flowRate = flowRate.add(rep.getOutputRate());
+								flowRate = flowRate.add(rep.getOutput(timeStep));
 							} 
 							if(location.isNodal() && element.getLocation().getOrigin().equals(location.getOrigin())) {
-								flowRate = flowRate.subtract(rep.getInputRate());
+								flowRate = flowRate.subtract(rep.getInput(timeStep));
 							}
 						}
 					}
@@ -186,20 +186,20 @@ public class Simulator {
 						for(Element e2 : scenario.getElements()) {
 							if(e2.getState() instanceof ResourceExchanging) {
 								ResourceExchanging rex2 = (ResourceExchanging) e2.getState();
-								if(!rex1.getSendingRateTo(e2).equals(
-										rex2.getReceivingRateFrom(e1))) {
+								if(!rex1.getSentTo(e2, timeStep).equals(
+										rex2.getReceivedFrom(e1, timeStep))) {
 									logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
-											e1.getName() + "->" + rex1.getSendingRateTo(e2) + "->" + e2.getName() + ", " + 
-											e2.getName() + "<-" + rex2.getReceivingRateFrom(e1) + "<-" + e1.getName());
+											e1.getName() + "->" + rex1.getSentTo(e2, timeStep) + "->" + e2.getName() + ", " + 
+											e2.getName() + "<-" + rex2.getReceivedFrom(e1, timeStep) + "<-" + e1.getName());
 								}
-								if(!rex1.getSendingRateTo(e2).isZero()
+								if(!rex1.getSentTo(e2, timeStep).isZero()
 										&& !e1.getLocation().getDestination().equals(
 												e2.getLocation().getOrigin())) {
 									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
 											e1.getName() + " destination " + e1.getLocation().getDestination() + " =/= " + 
 											e2.getName() + " origin " + e2.getLocation().getOrigin());
 								}
-								if(!rex1.getReceivingRateFrom(e2).isZero()
+								if(!rex1.getReceivedFrom(e2, timeStep).isZero()
 										&& !e1.getLocation().getOrigin().equals(
 												e2.getLocation().getDestination())) {
 									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
@@ -214,7 +214,7 @@ public class Simulator {
 			
 			if(outputs) {
 				for(Element element : scenario.getElements()) {
-					history.logElement(time, element);
+					history.logElement(time, timeStep, element);
 				}
 			}
 			

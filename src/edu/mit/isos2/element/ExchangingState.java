@@ -34,57 +34,57 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 
 	@Override
-	public final Resource getSendingRateTo(Element element) {
-		Resource sendingRate = ResourceFactory.createResource();
+	public final Resource getSentTo(Element element, long duration) {
+		Resource sent = ResourceFactory.createResource();
 		if(customers.contains(element)) {
 			if(demand.get(element) != null) {
-				sendingRate = sendingRate.add(demand.get(element));
+				sent = sent.add(demand.get(element));
 			}
 		}
-		return sendingRate;
+		return sent;
 	}
 	
 	@Override
-	public final Resource getSendingRate() {
-		Resource sendingRate = ResourceFactory.createResource();
+	public final Resource getSent(long duration) {
+		Resource sent = ResourceFactory.createResource();
 		for(Element customer : customers) {
-			sendingRate = sendingRate.add(getSendingRateTo(customer));
+			sent = sent.add(getSentTo(customer, duration));
 		}
-		return sendingRate;
+		return sent;
 	}
 	
 	@Override
-	public final Resource getReceivingRateFrom(Element element) {
-		Resource receivingRate = ResourceFactory.createResource();
+	public final Resource getReceivedFrom(Element element, long duration) {
+		Resource received = ResourceFactory.createResource();
 		if(suppliers.containsValue(element)) {
 			for(ResourceType t : ResourceType.values()) {
 				if(suppliers.get(t) != null && suppliers.get(t).equals(element)) {
-					receivingRate = receivingRate.add(getReceivingRate()).get(t);
+					received = received.add(getReceived(duration)).get(t);
 				}
 			}
 		}
-		return receivingRate;
+		return received;
 	}
 	
 	@Override
-	public Resource getReceivingRate() {
+	public Resource getReceived(long duration) {
 		return ResourceFactory.createResource();
 	}
 	
 	@Override
-	public final void iterateTick(Element element) {
+	public final void iterateTick(Element element, long duration) {
 		nextDemand.clear();
 		for(Element customer : customers) {
 			if(customer.getState() instanceof ResourceExchanging) {
 				ResourceExchanging rex = (ResourceExchanging) customer.getState();
-				nextDemand.put(customer, rex.getReceivingRateFrom(element));
+				nextDemand.put(customer, rex.getReceivedFrom(element, duration));
 			}
 		}
 		nextSupply.clear();
 		for(Element supplier : suppliers.values()) {
 			if(supplier.getState() instanceof ResourceExchanging) {
 				ResourceExchanging rex = (ResourceExchanging) supplier.getState();
-				nextSupply.put(supplier, rex.getSendingRateTo(element));
+				nextSupply.put(supplier, rex.getSentTo(element, duration));
 			}
 		}
 	}

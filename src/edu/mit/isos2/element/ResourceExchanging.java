@@ -3,8 +3,8 @@ package edu.mit.isos2.element;
 import edu.mit.isos2.resource.Resource;
 
 public interface ResourceExchanging {
-	public Resource getSendingRate();
-	public Resource getSendingRateTo(Element element);
-	public Resource getReceivingRate();
-	public Resource getReceivingRateFrom(Element element);
+	public Resource getSent(long duration);
+	public Resource getSentTo(Element element, long duration);
+	public Resource getReceived(long duration);
+	public Resource getReceivedFrom(Element element, long duration);
 }

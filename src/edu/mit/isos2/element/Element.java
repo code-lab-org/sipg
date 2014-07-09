@@ -15,10 +15,15 @@ public interface Element {
 	public State getState();
 
 	public void initialize(long initialTime);
-	public void stateTick();
-	public void stateTock();
+	public void iterateTick(long duration);
+	public void iterateTock();
 	public void tick(long duration);
 	public void tock();
+	
+	public void store(Resource stored, Resource retrieved);
+	public void transform(Resource consumed, Resource produced);
+	public void transport(Resource input, Resource output);
+	public void exchange(Resource sent, Resource received);
 	
 	public void transport(Location nextLocation);
 	public void transform(State nextState);
