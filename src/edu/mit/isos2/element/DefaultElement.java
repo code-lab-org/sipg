@@ -11,7 +11,7 @@ public class DefaultElement implements Element, ResourceStoring, ResourceTransfo
 		initialParent = this;
 		initialLocation = null;
 		initialContents = ResourceFactory.createResource();
-		initialState = new State();
+		initialState = new DefaultState();
 	}
 	
 	public DefaultElement(String name, Location initialLocation) {
@@ -19,7 +19,7 @@ public class DefaultElement implements Element, ResourceStoring, ResourceTransfo
 		initialParent = this;
 		this.initialLocation = initialLocation;
 		initialContents = ResourceFactory.createResource();
-		initialState = new State("Default");
+		initialState = new DefaultState("Default");
 	}
 
 	private String name;
