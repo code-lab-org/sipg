@@ -4,7 +4,7 @@ import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
-public class DefaultElement implements ResourceStore, ResourceTransformer, ResourceTransporter {
+public class DefaultElement implements Element, ResourceStoring, ResourceTransforming, ResourceTransporting {
 
 	protected DefaultElement() {
 		name = "";
@@ -89,14 +89,14 @@ public class DefaultElement implements ResourceStore, ResourceTransformer, Resou
 		
 	}
 	
-	public void tick(long timeStep) {
+	public void tick(long duration) {
 		nextContents = contents.copy();
-		storeResources(getStorageRate().multiply(timeStep), 
-				getRetrievalRate().multiply(timeStep));
-		transformResources(getConsumptionRate().multiply(timeStep),
-				getProductionRate().multiply(timeStep));
-		transportResources(getInputRate().multiply(timeStep), 
-				getOutputRate().multiply(timeStep));
+		storeResources(getStorageRate().multiply(duration), 
+				getRetrievalRate().multiply(duration));
+		transformResources(getConsumptionRate().multiply(duration),
+				getProductionRate().multiply(duration));
+		transportResources(getInputRate().multiply(duration), 
+				getOutputRate().multiply(duration));
 	}
 	
 	protected void storeResources(Resource stored, Resource retrieved) {

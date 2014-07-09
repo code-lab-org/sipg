@@ -10,19 +10,19 @@ import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceType;
 
-public class ExchangingElement extends DefaultElement implements ResourceExchanger {
-	private Map<ResourceType, ResourceExchanger> suppliers = 
-			new HashMap<ResourceType, ResourceExchanger>();
-	private Set<ResourceExchanger> customers = 
-			new HashSet<ResourceExchanger>();
-	private Map<ResourceExchanger, Resource> demand = 
-			new HashMap<ResourceExchanger, Resource>();
-	private Map<ResourceExchanger, Resource> nextDemand = 
-			new HashMap<ResourceExchanger, Resource>();
-	private Map<ResourceExchanger, Resource> supply = 
-			new HashMap<ResourceExchanger, Resource>();
-	private Map<ResourceExchanger, Resource> nextSupply = 
-			new HashMap<ResourceExchanger, Resource>();
+public class ExchangingElement extends DefaultElement implements ResourceExchanging {
+	private Map<ResourceType, Element> suppliers = 
+			new HashMap<ResourceType, Element>();
+	private Set<Element> customers = 
+			new HashSet<Element>();
+	private Map<Element, Resource> demand = 
+			new HashMap<Element, Resource>();
+	private Map<Element, Resource> nextDemand = 
+			new HashMap<Element, Resource>();
+	private Map<Element, Resource> supply = 
+			new HashMap<Element, Resource>();
+	private Map<Element, Resource> nextSupply = 
+			new HashMap<Element, Resource>();
 	
 	protected ExchangingElement() {
 		super();
@@ -32,16 +32,16 @@ public class ExchangingElement extends DefaultElement implements ResourceExchang
 		super(name, initialLocation);
 	}
 	
-	public void setSupplier(ResourceType type, ResourceExchanger supplier) {
+	public void setSupplier(ResourceType type, Element supplier) {
 		suppliers.put(type, supplier);
 	}
 	
-	public void addCustomer(ResourceExchanger customer) {
+	public void addCustomer(Element customer) {
 		customers.add(customer);
 	}
 
 	@Override
-	public final Resource getSendingRateTo(ResourceExchanger element) {
+	public final Resource getSendingRateTo(Element element) {
 		Resource sendingRate = ResourceFactory.createResource();
 		if(customers.contains(element)) {
 			sendingRate = sendingRate.add(demand.get(element));
@@ -52,14 +52,14 @@ public class ExchangingElement extends DefaultElement implements ResourceExchang
 	@Override
 	public final Resource getSendingRate() {
 		Resource sendingRate = ResourceFactory.createResource();
-		for(ResourceExchanger customer : customers) {
+		for(Element customer : customers) {
 			sendingRate = sendingRate.add(getSendingRateTo(customer));
 		}
 		return sendingRate;
 	}
 	
 	@Override
-	public final Resource getReceivingRateFrom(ResourceExchanger element) {
+	public final Resource getReceivingRateFrom(Element element) {
 		Resource receivingRate = ResourceFactory.createResource();
 		if(suppliers.containsValue(element)) {
 			for(ResourceType t : ResourceType.values()) {
@@ -81,33 +81,39 @@ public class ExchangingElement extends DefaultElement implements ResourceExchang
 		super.initialize(initialTime);
 		demand.clear();
 		nextDemand.clear();
-		for(ResourceExchanger customer : customers) {
+		for(Element customer : customers) {
 			demand.put(customer, ResourceFactory.createResource());
 			nextDemand.put(customer, ResourceFactory.createResource());
 		}
 		supply.clear();
 		nextSupply.clear();
-		for(ResourceExchanger supplier : suppliers.values()) {
+		for(Element supplier : suppliers.values()) {
 			supply.put(supplier, ResourceFactory.createResource());
 			nextSupply.put(supplier, ResourceFactory.createResource());
 		}
 	}
 	
-	public void tick(long timeStep) {
-		super.tick(timeStep);
-		exchangeResources(getSendingRate().multiply(timeStep),
-				getReceivingRate().multiply(timeStep));
+	public void tick(long duration) {
+		super.tick(duration);
+		exchangeResources(getSendingRate().multiply(duration),
+				getReceivingRate().multiply(duration));
 	}
 	
 	@Override
 	public final void iterateTick() {
 		nextDemand.clear();
-		for(ResourceExchanger customer : customers) {
-			nextDemand.put(customer, customer.getReceivingRateFrom(this));
+		for(Element customer : customers) {
+			if(customer instanceof ResourceExchanging) {
+				ResourceExchanging rex = (ResourceExchanging) customer;
+				nextDemand.put(customer, rex.getReceivingRateFrom(this));
+			}
 		}
 		nextSupply.clear();
-		for(ResourceExchanger supplier : suppliers.values()) {
-			nextSupply.put(supplier, supplier.getSendingRateTo(this));
+		for(Element supplier : suppliers.values()) {
+			if(supplier instanceof ResourceExchanging) {
+				ResourceExchanging rex = (ResourceExchanging) supplier;
+				nextSupply.put(supplier, rex.getSendingRateTo(this));
+			}
 		}
 	}
 	

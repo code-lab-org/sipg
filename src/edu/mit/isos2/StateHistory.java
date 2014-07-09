@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.isos2.element.Element;
-import edu.mit.isos2.element.ResourceExchanger;
-import edu.mit.isos2.element.ResourceStore;
-import edu.mit.isos2.element.ResourceTransformer;
-import edu.mit.isos2.element.ResourceTransporter;
+import edu.mit.isos2.element.ResourceExchanging;
+import edu.mit.isos2.element.ResourceStoring;
+import edu.mit.isos2.element.ResourceTransforming;
+import edu.mit.isos2.element.ResourceTransporting;
 import edu.mit.isos2.element.State;
 import edu.mit.isos2.resource.Resource;
 
@@ -87,23 +87,23 @@ public class StateHistory {
 		stateHistory.get(time).put(element.getName(), element.getState());
 		contentsHistory.get(time).put(element.getName(), element.getContents());
 		parentHistory.get(time).put(element.getName(), element.getParent().getName());
-		if(element instanceof ResourceTransformer) {
-			ResourceTransformer ref = (ResourceTransformer) element;
+		if(element instanceof ResourceTransforming) {
+			ResourceTransforming ref = (ResourceTransforming) element;
 			consumedHistory.get(time).put(element.getName(), ref.getConsumptionRate());
 			producedHistory.get(time).put(element.getName(), ref.getProductionRate());
 		}
-		if(element instanceof ResourceStore) {
-			ResourceStore res = (ResourceStore) element;
+		if(element instanceof ResourceStoring) {
+			ResourceStoring res = (ResourceStoring) element;
 			storedHistory.get(time).put(element.getName(), res.getStorageRate());
 			retrievedHistory.get(time).put(element.getName(), res.getRetrievalRate());
 		}
-		if(element instanceof ResourceTransporter) {
-			ResourceTransporter rep = (ResourceTransporter) element;
+		if(element instanceof ResourceTransporting) {
+			ResourceTransporting rep = (ResourceTransporting) element;
 			inputHistory.get(time).put(element.getName(), rep.getInputRate());
 			outputHistory.get(time).put(element.getName(), rep.getOutputRate());
 		}
-		if(element instanceof ResourceExchanger) {
-			ResourceExchanger rex = (ResourceExchanger) element;
+		if(element instanceof ResourceExchanging) {
+			ResourceExchanging rex = (ResourceExchanging) element;
 			sentHistory.get(time).put(element.getName(), rex.getSendingRate());
 			receivedHistory.get(time).put(element.getName(), rex.getReceivingRate());
 		}

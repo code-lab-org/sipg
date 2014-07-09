@@ -9,9 +9,9 @@ import org.apache.log4j.Logger;
 import edu.mit.isos2.element.DefaultElement;
 import edu.mit.isos2.element.Element;
 import edu.mit.isos2.element.ExchangingElement;
-import edu.mit.isos2.element.ResourceExchanger;
-import edu.mit.isos2.element.ResourceStore;
-import edu.mit.isos2.element.ResourceTransporter;
+import edu.mit.isos2.element.ResourceExchanging;
+import edu.mit.isos2.element.ResourceStoring;
+import edu.mit.isos2.element.ResourceTransporting;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceType;
@@ -143,15 +143,15 @@ public class Simulator {
 				for(Location location : scenario.getLocations()) {
 					Resource flowRate = ResourceFactory.createResource();
 					for(Element element : scenario.getElements()) {
-						if(element instanceof ResourceStore) {
-							ResourceStore res = (ResourceStore) element;
+						if(element instanceof ResourceStoring) {
+							ResourceStoring res = (ResourceStoring) element;
 							if(element.getLocation().equals(location)) {
 								flowRate = flowRate.subtract(res.getStorageRate())
 										.add(res.getRetrievalRate());
 							}
 						}
-						if(element instanceof ResourceTransporter) {
-							ResourceTransporter rep = (ResourceTransporter) element;
+						if(element instanceof ResourceTransporting) {
+							ResourceTransporting rep = (ResourceTransporting) element;
 							if(location.isNodal() && element.getLocation().getDestination().equals(location.getOrigin())) {
 								flowRate = flowRate.add(rep.getOutputRate());
 							} 
@@ -173,25 +173,25 @@ public class Simulator {
 			
 			if(verifyExchange) {
 				for(Element e1 : scenario.getElements()) {
-					if(e1 instanceof ResourceExchanger) {
-						ResourceExchanger rex1 = (ResourceExchanger) e1;
+					if(e1 instanceof ResourceExchanging) {
+						ResourceExchanging rex1 = (ResourceExchanging) e1;
 						for(Element e2 : scenario.getElements()) {
-							if(e2 instanceof ResourceExchanger) {
-								ResourceExchanger rex2 = (ResourceExchanger) e2;
-								if(!rex1.getSendingRateTo(rex2).equals(
-										rex2.getReceivingRateFrom(rex1))) {
+							if(e2 instanceof ResourceExchanging) {
+								ResourceExchanging rex2 = (ResourceExchanging) e2;
+								if(!rex1.getSendingRateTo(e2).equals(
+										rex2.getReceivingRateFrom(e1))) {
 									logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
-											e1.getName() + "->" + rex1.getSendingRateTo(rex2) + "->" + e2.getName() + ", " + 
-											e2.getName() + "<-" + rex2.getReceivingRateFrom(rex1) + "<-" + e1.getName());
+											e1.getName() + "->" + rex1.getSendingRateTo(e2) + "->" + e2.getName() + ", " + 
+											e2.getName() + "<-" + rex2.getReceivingRateFrom(e1) + "<-" + e1.getName());
 								}
-								if(!rex1.getSendingRateTo(rex2).isZero()
+								if(!rex1.getSendingRateTo(e2).isZero()
 										&& !e1.getLocation().getDestination().equals(
 												e2.getLocation().getOrigin())) {
 									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
 											e1.getName() + " destination " + e1.getLocation().getDestination() + " =/= " + 
 											e2.getName() + " origin " + e2.getLocation().getOrigin());
 								}
-								if(!rex1.getReceivingRateFrom(rex2).isZero()
+								if(!rex1.getReceivingRateFrom(e2).isZero()
 										&& !e1.getLocation().getOrigin().equals(
 												e2.getLocation().getDestination())) {
 									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
