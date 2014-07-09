@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.mit.isos2.resource.Resource;
+
 public class StateHistory {
 	private final List<Long> timeHistory = new ArrayList<Long>();
 	private final Map<Long,Map<Location, Resource>> flowHistory = 

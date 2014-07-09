@@ -1,5 +1,8 @@
 package edu.mit.isos2;
 
+import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.resource.ResourceFactory;
+
 public class DefaultElement extends Element {
 	protected DefaultElement() {
 		super();
@@ -11,43 +14,43 @@ public class DefaultElement extends Element {
 
 	@Override
 	public Resource getInputRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getOutputRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getProductionRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getConsumptionRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getStorageRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getRetrievalRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getSendingRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getSendingRateTo(Element element) {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getReceivingRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	@Override
 	public Resource getReceivingRateFrom(Element element) {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 
 }

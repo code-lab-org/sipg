@@ -5,7 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import edu.mit.isos2.Resource.ResourceType;
+import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.resource.ResourceFactory;
+import edu.mit.isos2.resource.ResourceType;
 
 public class ExchangingElement extends DefaultElement {
 	private Map<ResourceType, Element> suppliers = new HashMap<ResourceType, Element>();
@@ -33,7 +35,7 @@ public class ExchangingElement extends DefaultElement {
 
 	@Override
 	public final Resource getSendingRateTo(Element element) {
-		Resource sendingRate = new BigDecimalArrayResource();
+		Resource sendingRate = ResourceFactory.createResource();
 		if(customers.contains(element)) {
 			sendingRate = sendingRate.add(demand.get(element));
 		}
@@ -42,7 +44,7 @@ public class ExchangingElement extends DefaultElement {
 	
 	@Override
 	public final Resource getSendingRate() {
-		Resource sendingRate = new BigDecimalArrayResource();
+		Resource sendingRate = ResourceFactory.createResource();
 		for(Element customer : customers) {
 			sendingRate = sendingRate.add(getSendingRateTo(customer));
 		}
@@ -51,7 +53,7 @@ public class ExchangingElement extends DefaultElement {
 	
 	@Override
 	public final Resource getReceivingRateFrom(Element element) {
-		Resource receivingRate = new BigDecimalArrayResource();
+		Resource receivingRate = ResourceFactory.createResource();
 		if(suppliers.containsValue(element)) {
 			for(ResourceType t : ResourceType.values()) {
 				if(suppliers.get(t) != null && suppliers.get(t).equals(element)) {
@@ -64,7 +66,7 @@ public class ExchangingElement extends DefaultElement {
 	
 	@Override
 	public Resource getReceivingRate() {
-		return new BigDecimalArrayResource();
+		return ResourceFactory.createResource();
 	}
 	
 	@Override
@@ -73,14 +75,14 @@ public class ExchangingElement extends DefaultElement {
 		demand.clear();
 		nextDemand.clear();
 		for(Element customer : customers) {
-			demand.put(customer, new BigDecimalArrayResource());
-			nextDemand.put(customer, new BigDecimalArrayResource());
+			demand.put(customer, ResourceFactory.createResource());
+			nextDemand.put(customer, ResourceFactory.createResource());
 		}
 		supply.clear();
 		nextSupply.clear();
 		for(Element supplier : suppliers.values()) {
-			supply.put(supplier, new BigDecimalArrayResource());
-			nextSupply.put(supplier, new BigDecimalArrayResource());
+			supply.put(supplier, ResourceFactory.createResource());
+			nextSupply.put(supplier, ResourceFactory.createResource());
 		}
 	}
 	

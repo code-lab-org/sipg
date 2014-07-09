@@ -1,5 +1,7 @@
 package edu.mit.isos2;
 
+import edu.mit.isos2.resource.Resource;
+
 public class CustomerElement extends DefaultElement {
 	private Element supplier;
 	

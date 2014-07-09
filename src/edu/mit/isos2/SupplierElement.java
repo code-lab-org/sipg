@@ -1,5 +1,8 @@
 package edu.mit.isos2;
 
+import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.resource.ResourceFactory;
+
 public class SupplierElement extends DefaultElement {
 	private Element customer;
 	private Resource demand;
@@ -34,7 +37,7 @@ public class SupplierElement extends DefaultElement {
 	@Override
 	public void initialize(long initialTime) {
 		super.initialize(initialTime);
-		demand = nextDemand = new BigDecimalArrayResource();
+		demand = nextDemand = ResourceFactory.createResource();
 	}
 	
 	@Override

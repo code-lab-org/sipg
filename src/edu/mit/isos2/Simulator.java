@@ -6,7 +6,9 @@ import java.util.Date;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import edu.mit.isos2.Resource.ResourceType;
+import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.resource.ResourceFactory;
+import edu.mit.isos2.resource.ResourceType;
 
 public class Simulator {
 	private static Logger logger = Logger.getLogger("edu.mit.isos");
@@ -34,12 +36,12 @@ public class Simulator {
 			}
 			@Override
 			public Resource getConsumptionRate() {
-				return new BigDecimalArrayResource(ResourceType.AQUIFER, "0.1")
-						.add(new BigDecimalArrayResource(ResourceType.ELECTRICITY, "0.5"));
+				return ResourceFactory.createResource(ResourceType.AQUIFER, "0.1")
+						.add(ResourceFactory.createResource(ResourceType.ELECTRICITY, "0.5"));
 			}
 			@Override
 			public Resource getProductionRate() {
-				return new BigDecimalArrayResource(ResourceType.WATER, "0.1");
+				return ResourceFactory.createResource(ResourceType.WATER, "0.1");
 			}
 			@Override
 			public Resource getReceivingRate() {
@@ -51,7 +53,7 @@ public class Simulator {
 			public Resource getRetrievalRate() {
 				return e1.getConsumptionRate().get(ResourceType.AQUIFER);
 			}
-		}.initialContents(new BigDecimalArrayResource(ResourceType.AQUIFER, "100"));
+		}.initialContents(ResourceFactory.createResource(ResourceType.AQUIFER, "100"));
 		
 		ExchangingElement e3 = new ExchangingElement("Power Plant", w) {
 			@Override
@@ -70,7 +72,7 @@ public class Simulator {
 		};
 		
 		ExchangingElement e4 = (ExchangingElement) new ExchangingElement("Fuel Tank", w)
-			.initialContents(new BigDecimalArrayResource(ResourceType.OIL, "1000"));
+			.initialContents(ResourceFactory.createResource(ResourceType.OIL, "1000"));
 		
 		// federation agreement		
 		e1.setSupplier(ResourceType.ELECTRICITY, e3);
@@ -133,7 +135,7 @@ public class Simulator {
 			
 			if(verifyFlow) {
 				for(Location location : scenario.getLocations()) {
-					Resource flowRate = new BigDecimalArrayResource();
+					Resource flowRate = ResourceFactory.createResource();
 					for(Element element : scenario.getElements()) {
 						if(element.getLocation().equals(location)) {
 							flowRate = flowRate.subtract(element.getStorageRate())

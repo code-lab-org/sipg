@@ -1,5 +1,8 @@
 package edu.mit.isos2;
 
+import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.resource.ResourceFactory;
+
 public abstract class Element {
 	private String name;
 	private Element initialParent;
@@ -21,7 +24,7 @@ public abstract class Element {
 		name = "";
 		initialParent = this;
 		initialLocation = null;
-		initialContents = new BigDecimalArrayResource();
+		initialContents = ResourceFactory.createResource();
 		initialState = new State();
 	}
 	
@@ -44,7 +47,7 @@ public abstract class Element {
 		this.name = name;
 		initialParent = this;
 		this.initialLocation = initialLocation;
-		initialContents = new BigDecimalArrayResource();
+		initialContents = ResourceFactory.createResource();
 		initialState = new State("Default");
 	}
 
