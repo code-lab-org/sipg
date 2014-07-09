@@ -35,7 +35,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 
 	@Override
 	public final Resource getSentTo(Element element, long duration) {
-		Resource sent = ResourceFactory.createResource();
+		Resource sent = ResourceFactory.create();
 		if(customers.contains(element)) {
 			if(demand.get(element) != null) {
 				sent = sent.add(demand.get(element));
@@ -46,7 +46,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	
 	@Override
 	public final Resource getSent(long duration) {
-		Resource sent = ResourceFactory.createResource();
+		Resource sent = ResourceFactory.create();
 		for(Element customer : customers) {
 			sent = sent.add(getSentTo(customer, duration));
 		}
@@ -55,7 +55,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	
 	@Override
 	public final Resource getReceivedFrom(Element element, long duration) {
-		Resource received = ResourceFactory.createResource();
+		Resource received = ResourceFactory.create();
 		if(suppliers.containsValue(element)) {
 			for(ResourceType t : ResourceType.values()) {
 				if(suppliers.get(t) != null && suppliers.get(t).equals(element)) {
@@ -68,7 +68,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	
 	@Override
 	public Resource getReceived(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 	
 	@Override

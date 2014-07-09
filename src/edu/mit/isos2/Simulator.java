@@ -43,12 +43,12 @@ public class Simulator {
 			}
 			@Override
 			public Resource getConsumed(long duration) {
-				return ResourceFactory.createResource(ResourceType.AQUIFER, "0.1")
-						.add(ResourceFactory.createResource(ResourceType.ELECTRICITY, "0.5")).multiply(duration);
+				return ResourceFactory.create(ResourceType.AQUIFER, "0.1")
+						.add(ResourceFactory.create(ResourceType.ELECTRICITY, "0.5")).multiply(duration);
 			}
 			@Override
 			public Resource getProduced(long duration) {
-				return ResourceFactory.createResource(ResourceType.WATER, "0.1").multiply(duration);
+				return ResourceFactory.create(ResourceType.WATER, "0.1").multiply(duration);
 			}
 			@Override
 			public Resource getReceived(long duration) {
@@ -83,10 +83,10 @@ public class Simulator {
 
 		Element e1 = new DefaultElement("Desal. Plant", w).initialState(e1s);
 		Element e2 = new DefaultElement("Aquifer", w).initialState(e2s)
-				.initialContents(ResourceFactory.createResource(ResourceType.AQUIFER, "100"));
+				.initialContents(ResourceFactory.create(ResourceType.AQUIFER, "100"));
 		Element e3 = new DefaultElement("Power Plant", w).initialState(e3s);
 		Element e4 = new DefaultElement("Fuel Tank", w).initialState(e4s)
-				.initialContents(ResourceFactory.createResource(ResourceType.OIL, "1000"));
+				.initialContents(ResourceFactory.create(ResourceType.OIL, "1000"));
 		
 		// federation agreement		
 		e1s.setSupplier(ResourceType.ELECTRICITY, e3);
@@ -149,7 +149,7 @@ public class Simulator {
 			
 			if(verifyFlow) {
 				for(Location location : scenario.getLocations()) {
-					Resource flowRate = ResourceFactory.createResource();
+					Resource flowRate = ResourceFactory.create();
 					for(Element element : scenario.getElements()) {
 						if(element.getState() instanceof ResourceStoring) {
 							ResourceStoring res = (ResourceStoring) element.getState();

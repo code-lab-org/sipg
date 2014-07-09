@@ -10,7 +10,7 @@ public class DefaultElement implements Element {
 		name = "";
 		initialParent = this;
 		initialLocation = null;
-		initialContents = ResourceFactory.createResource();
+		initialContents = ResourceFactory.create();
 		initialState = new DefaultState();
 	}
 	
@@ -18,7 +18,7 @@ public class DefaultElement implements Element {
 		this.name = name;
 		initialParent = this;
 		this.initialLocation = initialLocation;
-		initialContents = ResourceFactory.createResource();
+		initialContents = ResourceFactory.create();
 		initialState = new DefaultState("Default");
 	}
 

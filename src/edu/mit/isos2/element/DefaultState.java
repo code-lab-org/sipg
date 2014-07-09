@@ -23,27 +23,27 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	}
 
 	public Resource getInput(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 
 	public Resource getOutput(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 
 	public Resource getProduced(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 
 	public Resource getConsumed(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 
 	public Resource getStored(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 
 	public Resource getRetrieved(long duration) {
-		return ResourceFactory.createResource();
+		return ResourceFactory.create();
 	}
 	
 	public void iterateTick(Element element, long duration) { }
