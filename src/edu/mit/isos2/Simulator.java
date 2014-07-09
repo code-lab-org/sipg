@@ -7,8 +7,9 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos2.element.DefaultElement;
+import edu.mit.isos2.element.DefaultState;
 import edu.mit.isos2.element.Element;
-import edu.mit.isos2.element.ExchangingElement;
+import edu.mit.isos2.element.ExchangingState;
 import edu.mit.isos2.element.ResourceExchanging;
 import edu.mit.isos2.element.ResourceStoring;
 import edu.mit.isos2.element.ResourceTransporting;
@@ -34,8 +35,8 @@ public class Simulator {
 		Location we = new Location(west, east);
 		Location ew = new Location(east, west);
 		Location e = new Location(east);
-
-		final ExchangingElement e1 = new ExchangingElement("Desal. Plant", w) {
+		
+		final ExchangingState e1s = new ExchangingState("Default") {
 			@Override
 			public Resource getStorageRate() {
 				return getConsumptionRate().get(ResourceType.AQUIFER);
@@ -54,14 +55,14 @@ public class Simulator {
 				return getConsumptionRate().get(ResourceType.ELECTRICITY);
 			}
 		};
-		Element e2 = new DefaultElement("Aquifer", w) {
+		DefaultState e2s = new DefaultState("Default") {
 			@Override
 			public Resource getRetrievalRate() {
-				return e1.getConsumptionRate().get(ResourceType.AQUIFER);
+				return e1s.getConsumptionRate().get(ResourceType.AQUIFER);
 			}
-		}.initialContents(ResourceFactory.createResource(ResourceType.AQUIFER, "100"));
+		};
 		
-		ExchangingElement e3 = new ExchangingElement("Power Plant", w) {
+		ExchangingState e3s = new ExchangingState("Default") {
 			@Override
 			public Resource getConsumptionRate() {
 				return getProductionRate().get(ResourceType.ELECTRICITY)
@@ -77,15 +78,22 @@ public class Simulator {
 			}
 		};
 		
-		ExchangingElement e4 = (ExchangingElement) new ExchangingElement("Fuel Tank", w)
-			.initialContents(ResourceFactory.createResource(ResourceType.OIL, "1000"));
+		ExchangingState e4s = new ExchangingState("Default");
+		
+
+		Element e1 = new DefaultElement("Desal. Plant", w).initialState(e1s);
+		Element e2 = new DefaultElement("Aquifer", w).initialState(e2s)
+				.initialContents(ResourceFactory.createResource(ResourceType.AQUIFER, "100"));
+		Element e3 = new DefaultElement("Power Plant", w).initialState(e3s);
+		Element e4 = new DefaultElement("Fuel Tank", w).initialState(e4s)
+				.initialContents(ResourceFactory.createResource(ResourceType.OIL, "1000"));
 		
 		// federation agreement		
-		e1.setSupplier(ResourceType.ELECTRICITY, e3);
-		e3.addCustomer(e1);
+		e1s.setSupplier(ResourceType.ELECTRICITY, e3);
+		e3s.addCustomer(e1);
 		
-		e3.setSupplier(ResourceType.OIL, e4);
-		e4.addCustomer(e3);
+		e3s.setSupplier(ResourceType.OIL, e4);
+		e4s.addCustomer(e3);
 		
 		Scenario scenario = new Scenario("Baseline", 0, Arrays.asList(w, we, e, ew), 
 				Arrays.asList(e1, e2, e3, e4));
@@ -129,10 +137,10 @@ public class Simulator {
 		while(time <= scenario.getInitialTime() + duration) {
 			for(int i = 0; i < iterationsPerTimestep; i++) {
 				for(Element element : scenario.getElements()) {
-					element.iterateTick();
+					element.stateTick();
 				}
 				for(Element element : scenario.getElements()) {
-					element.iterateTock();
+					element.stateTock();
 				}
 			}
 			if(outputs) {
@@ -143,15 +151,15 @@ public class Simulator {
 				for(Location location : scenario.getLocations()) {
 					Resource flowRate = ResourceFactory.createResource();
 					for(Element element : scenario.getElements()) {
-						if(element instanceof ResourceStoring) {
-							ResourceStoring res = (ResourceStoring) element;
+						if(element.getState() instanceof ResourceStoring) {
+							ResourceStoring res = (ResourceStoring) element.getState();
 							if(element.getLocation().equals(location)) {
 								flowRate = flowRate.subtract(res.getStorageRate())
 										.add(res.getRetrievalRate());
 							}
 						}
-						if(element instanceof ResourceTransporting) {
-							ResourceTransporting rep = (ResourceTransporting) element;
+						if(element.getState() instanceof ResourceTransporting) {
+							ResourceTransporting rep = (ResourceTransporting) element.getState();
 							if(location.isNodal() && element.getLocation().getDestination().equals(location.getOrigin())) {
 								flowRate = flowRate.add(rep.getOutputRate());
 							} 
@@ -173,11 +181,11 @@ public class Simulator {
 			
 			if(verifyExchange) {
 				for(Element e1 : scenario.getElements()) {
-					if(e1 instanceof ResourceExchanging) {
-						ResourceExchanging rex1 = (ResourceExchanging) e1;
+					if(e1.getState() instanceof ResourceExchanging) {
+						ResourceExchanging rex1 = (ResourceExchanging) e1.getState();
 						for(Element e2 : scenario.getElements()) {
-							if(e2 instanceof ResourceExchanging) {
-								ResourceExchanging rex2 = (ResourceExchanging) e2;
+							if(e2.getState() instanceof ResourceExchanging) {
+								ResourceExchanging rex2 = (ResourceExchanging) e2.getState();
 								if(!rex1.getSendingRateTo(e2).equals(
 										rex2.getReceivingRateFrom(e1))) {
 									logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 

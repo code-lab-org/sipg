@@ -4,7 +4,7 @@ import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
-public class DefaultElement implements Element, ResourceStoring, ResourceTransforming, ResourceTransporting {
+public class DefaultElement implements Element {
 
 	protected DefaultElement() {
 		name = "";
@@ -81,22 +81,36 @@ public class DefaultElement implements Element, ResourceStoring, ResourceTransfo
 		location = nextLocation = initialLocation;
 	}
 	
-	public void iterateTick() {
-		
+	public void stateTick() {
+		state.iterateTick(this);
 	}
 	
-	public void iterateTock() {
-		
+	public void stateTock() {
+		state.iterateTock();
 	}
 	
 	public void tick(long duration) {
 		nextContents = contents.copy();
-		storeResources(getStorageRate().multiply(duration), 
-				getRetrievalRate().multiply(duration));
-		transformResources(getConsumptionRate().multiply(duration),
-				getProductionRate().multiply(duration));
-		transportResources(getInputRate().multiply(duration), 
-				getOutputRate().multiply(duration));
+		if(state instanceof ResourceStoring) {
+			ResourceStoring res = (ResourceStoring) state;
+			storeResources(res.getStorageRate().multiply(duration), 
+					res.getRetrievalRate().multiply(duration));
+		}
+		if(state instanceof ResourceTransforming) {
+			ResourceTransforming ref = (ResourceTransforming) state;
+			transformResources(ref.getConsumptionRate().multiply(duration),
+					ref.getProductionRate().multiply(duration));
+		}
+		if(state instanceof ResourceTransporting) {
+			ResourceTransporting rep = (ResourceTransporting) state;
+			transportResources(rep.getInputRate().multiply(duration), 
+					rep.getOutputRate().multiply(duration));
+		}
+		if(state instanceof ResourceExchanging) {
+			ResourceExchanging rex = (ResourceExchanging) state;
+			exchangeResources(rex.getSendingRate().multiply(duration),
+					rex.getReceivingRate().multiply(duration));
+		}
 	}
 	
 	protected void storeResources(Resource stored, Resource retrieved) {
@@ -115,15 +129,18 @@ public class DefaultElement implements Element, ResourceStoring, ResourceTransfo
 		nextContents = nextContents.subtract(sent).add(received);
 	}
 	
-	protected void transformElement(State state) {
+	@Override
+	public void transform(State state) {
 		nextState = state;
 	}
-	
-	protected void transportElement(Location location) {
+
+	@Override
+	public void transport(Location location) {
 		nextLocation = location;
 	}
-	
-	protected void storeElement(Element parent) {
+
+	@Override
+	public void store(Element parent) {
 		if(!parent.getLocation().equals(getLocation())) {
 			throw new IllegalArgumentException(
 					"Parent must have same location as child.");
@@ -140,29 +157,5 @@ public class DefaultElement implements Element, ResourceStoring, ResourceTransfo
 	
 	public String toString() {
 		return name + " " + " (" + state + " @ " + location + ", " + contents + ") ";
-	}
-
-	public Resource getInputRate() {
-		return ResourceFactory.createResource();
-	}
-
-	public Resource getOutputRate() {
-		return ResourceFactory.createResource();
-	}
-
-	public Resource getProductionRate() {
-		return ResourceFactory.createResource();
-	}
-
-	public Resource getConsumptionRate() {
-		return ResourceFactory.createResource();
-	}
-
-	public Resource getStorageRate() {
-		return ResourceFactory.createResource();
-	}
-
-	public Resource getRetrievalRate() {
-		return ResourceFactory.createResource();
 	}
 }
