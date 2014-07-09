@@ -1,9 +1,27 @@
-package edu.mit.isos2;
+package edu.mit.isos2.element;
 
+import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
-public abstract class Element {
+public class DefaultElement implements ResourceStore, ResourceTransformer, ResourceTransporter {
+
+	protected DefaultElement() {
+		name = "";
+		initialParent = this;
+		initialLocation = null;
+		initialContents = ResourceFactory.createResource();
+		initialState = new State();
+	}
+	
+	public DefaultElement(String name, Location initialLocation) {
+		this.name = name;
+		initialParent = this;
+		this.initialLocation = initialLocation;
+		initialContents = ResourceFactory.createResource();
+		initialState = new State("Default");
+	}
+
 	private String name;
 	private Element initialParent;
 	private Resource initialContents;
@@ -19,14 +37,6 @@ public abstract class Element {
 	private transient Element nextParent;
 	private transient Resource nextContents;
 	private transient State nextState;
-
-	protected Element() {
-		name = "";
-		initialParent = this;
-		initialLocation = null;
-		initialContents = ResourceFactory.createResource();
-		initialState = new State();
-	}
 	
 	public Element initialContents(Resource initialContents) {
 		this.initialContents = initialContents;
@@ -41,14 +51,6 @@ public abstract class Element {
 	public Element initialParent(Element initialParent) {
 		this.initialParent = initialParent;
 		return this;
-	}
-	
-	public Element(String name, Location initialLocation) {
-		this.name = name;
-		initialParent = this;
-		this.initialLocation = initialLocation;
-		initialContents = ResourceFactory.createResource();
-		initialState = new State("Default");
 	}
 
 	
@@ -67,17 +69,6 @@ public abstract class Element {
 	public String getName() {
 		return name;
 	}
-
-	public abstract Resource getInputRate();
-	public abstract Resource getOutputRate();
-	public abstract Resource getProductionRate();
-	public abstract Resource getConsumptionRate();
-	public abstract Resource getStorageRate();
-	public abstract Resource getRetrievalRate();
-	public abstract Resource getSendingRate();
-	public abstract Resource getSendingRateTo(Element element);
-	public abstract Resource getReceivingRate();
-	public abstract Resource getReceivingRateFrom(Element element);
 	
 	public State getState() {
 		return state;
@@ -98,43 +89,41 @@ public abstract class Element {
 		
 	}
 	
-	public void tick(long duration) {
+	public void tick(long timeStep) {
 		nextContents = contents.copy();
-		storeResources(getStorageRate().multiply(duration), 
-				getRetrievalRate().multiply(duration));
-		transformResources(getConsumptionRate().multiply(duration),
-				getProductionRate().multiply(duration));
-		transportResources(getInputRate().multiply(duration), 
-				getOutputRate().multiply(duration));
-		exchangeResources(getSendingRate().multiply(duration),
-				getReceivingRate().multiply(duration));
+		storeResources(getStorageRate().multiply(timeStep), 
+				getRetrievalRate().multiply(timeStep));
+		transformResources(getConsumptionRate().multiply(timeStep),
+				getProductionRate().multiply(timeStep));
+		transportResources(getInputRate().multiply(timeStep), 
+				getOutputRate().multiply(timeStep));
 	}
 	
-	private void storeResources(Resource stored, Resource retrieved) {
+	protected void storeResources(Resource stored, Resource retrieved) {
 		nextContents = nextContents.add(stored).subtract(retrieved);
 	}
 	
-	private void transformResources(Resource consumed, Resource produced) {
+	protected void transformResources(Resource consumed, Resource produced) {
 		nextContents = nextContents.subtract(consumed).add(produced);
 	}
 	
-	private void transportResources(Resource input, Resource output) {
+	protected void transportResources(Resource input, Resource output) {
 		nextContents = nextContents.add(input).subtract(output);
 	}
 	
-	private void exchangeResources(Resource sent, Resource received) {
+	protected void exchangeResources(Resource sent, Resource received) {
 		nextContents = nextContents.subtract(sent).add(received);
 	}
 	
-	public void transformElement(State state) {
+	protected void transformElement(State state) {
 		nextState = state;
 	}
 	
-	public void transportElement(Location location) {
+	protected void transportElement(Location location) {
 		nextLocation = location;
 	}
 	
-	public void storeElement(Element parent) {
+	protected void storeElement(Element parent) {
 		if(!parent.getLocation().equals(getLocation())) {
 			throw new IllegalArgumentException(
 					"Parent must have same location as child.");
@@ -151,5 +140,29 @@ public abstract class Element {
 	
 	public String toString() {
 		return name + " " + " (" + state + " @ " + location + ", " + contents + ") ";
+	}
+
+	public Resource getInputRate() {
+		return ResourceFactory.createResource();
+	}
+
+	public Resource getOutputRate() {
+		return ResourceFactory.createResource();
+	}
+
+	public Resource getProductionRate() {
+		return ResourceFactory.createResource();
+	}
+
+	public Resource getConsumptionRate() {
+		return ResourceFactory.createResource();
+	}
+
+	public Resource getStorageRate() {
+		return ResourceFactory.createResource();
+	}
+
+	public Resource getRetrievalRate() {
+		return ResourceFactory.createResource();
 	}
 }

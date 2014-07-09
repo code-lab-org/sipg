@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.mit.isos2.element.Element;
+import edu.mit.isos2.element.ResourceExchanger;
+import edu.mit.isos2.element.ResourceStore;
+import edu.mit.isos2.element.ResourceTransformer;
+import edu.mit.isos2.element.ResourceTransporter;
+import edu.mit.isos2.element.State;
 import edu.mit.isos2.resource.Resource;
 
 public class StateHistory {
@@ -81,14 +87,30 @@ public class StateHistory {
 		stateHistory.get(time).put(element.getName(), element.getState());
 		contentsHistory.get(time).put(element.getName(), element.getContents());
 		parentHistory.get(time).put(element.getName(), element.getParent().getName());
-		consumedHistory.get(time).put(element.getName(), element.getConsumptionRate());
-		producedHistory.get(time).put(element.getName(), element.getProductionRate());
-		storedHistory.get(time).put(element.getName(), element.getStorageRate());
-		retrievedHistory.get(time).put(element.getName(), element.getRetrievalRate());
-		inputHistory.get(time).put(element.getName(), element.getInputRate());
-		outputHistory.get(time).put(element.getName(), element.getOutputRate());
-		sentHistory.get(time).put(element.getName(), element.getSendingRate());
-		receivedHistory.get(time).put(element.getName(), element.getReceivingRate());
+		if(element instanceof ResourceTransformer) {
+			ResourceTransformer ref = (ResourceTransformer) element;
+			consumedHistory.get(time).put(element.getName(), ref.getConsumptionRate());
+			producedHistory.get(time).put(element.getName(), ref.getProductionRate());
+		}
+		if(element instanceof ResourceStore) {
+			ResourceStore res = (ResourceStore) element;
+			storedHistory.get(time).put(element.getName(), res.getStorageRate());
+			retrievedHistory.get(time).put(element.getName(), res.getRetrievalRate());
+		}
+		if(element instanceof ResourceTransporter) {
+			ResourceTransporter rep = (ResourceTransporter) element;
+			inputHistory.get(time).put(element.getName(), rep.getInputRate());
+			outputHistory.get(time).put(element.getName(), rep.getOutputRate());
+		}
+		if(element instanceof ResourceExchanger) {
+			ResourceExchanger rex = (ResourceExchanger) element;
+			sentHistory.get(time).put(element.getName(), rex.getSendingRate());
+			receivedHistory.get(time).put(element.getName(), rex.getReceivingRate());
+		}
+	}
+	
+	private Object replaceNull(Object object) {
+		return object==null?"n/a":object;
 	}
 
 	public void displayOutputs(boolean flowOutputs) {
@@ -104,10 +126,10 @@ public class StateHistory {
 						locationHistory.get(time).get(element), 
 						parentHistory.get(time).get(element),
 						contentsHistory.get(time).get(element), 
-						sentHistory.get(time).get(element), 
-						receivedHistory.get(time).get(element), 
-						consumedHistory.get(time).get(element), 
-						producedHistory.get(time).get(element)));
+						replaceNull(sentHistory.get(time).get(element)), 
+						replaceNull(receivedHistory.get(time).get(element)), 
+						replaceNull(consumedHistory.get(time).get(element)), 
+						replaceNull(producedHistory.get(time).get(element))));
 			}
 			System.out.println();
 

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import edu.mit.isos2.element.Element;
+
 public class Scenario {
 	private final String name;
 	private final List<Location> locations = new ArrayList<Location>();

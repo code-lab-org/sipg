@@ -1,4 +1,4 @@
-package edu.mit.isos2;
+package edu.mit.isos2.element;
 
 public class State {
 	private final String name;
