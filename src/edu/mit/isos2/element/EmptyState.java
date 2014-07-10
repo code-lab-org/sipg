@@ -10,6 +10,7 @@ import edu.mit.isos2.Scenario;
 import edu.mit.isos2.Simulator;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
+import edu.mit.isos2.resource.ResourceMatrix;
 import edu.mit.isos2.resource.ResourceType;
 
 public class EmptyState implements State, ElementTransforming {
@@ -68,23 +69,46 @@ public class EmptyState implements State, ElementTransforming {
 	public static void main(String[] args) {
 		Node n1 = new Node("n1");
 		Node n2 = new Node("n2");
-		Location l = new Location(n1, n1);
+		Location l11 = new Location(n1, n1);
+		Location l22 = new Location(n2, n2);
+		Location l12 = new Location(n1, n2);
 
 		NullState s5 = new NullState();
-		TransitionState s4 = new TransitionState("Decommissioning", 
+		TransitioningState s4 = new TransitioningState("Decommissioning", 
 				ResourceFactory.create(ResourceType.CURRENCY, 500e3), 2, s5);
-		OperatingState s3 = new OperatingState("Operating", 9, s4);
-		TransitionState s2 = new TransitionState("Commissioning", 
+		OperatingState s3 = new ProducingState("Producing", 9, s4)
+				.consumptionMatrix(new ResourceMatrix(ResourceType.WATER, 
+						ResourceFactory.create(ResourceType.ELECTRICITY, 2.5)))
+				.initialProductionRate(ResourceFactory.create(ResourceType.WATER, 1.2))
+				.fixedExpense(ResourceFactory.create(ResourceType.CURRENCY, 1e3));
+		TransitioningState s2 = new TransitioningState("Commissioning", 
 				ResourceFactory.create(ResourceType.CURRENCY, 1e6), 3, s3);
 		EmptyState s1 = new EmptyState(25, s2);
 		
-		Element e = new DefaultElement("Dummy", l)
+		Element e1 = new DefaultElement("Dummy 1", l11)
 				.states(Arrays.asList(s1, s2, s3, s4, s5))
 				.initialState(s1);
 
+
+		NullState e2s5 = new NullState();
+		TransitioningState e2s4 = new TransitioningState("Decommissioning", 
+				ResourceFactory.create(ResourceType.CURRENCY, 200e3), 2, e2s5);
+		OperatingState e2s3 = new DistributingState("Distributing", 10, e2s4)
+				.inputMatrix(new ResourceMatrix(ResourceType.WATER, 
+						ResourceFactory.create(ResourceType.ELECTRICITY, 0.1)))
+				.initialOutputRate(ResourceFactory.create(ResourceType.WATER, 2))
+				.fixedExpense(ResourceFactory.create(ResourceType.CURRENCY, 500));
+		TransitioningState e2s2 = new TransitioningState("Commissioning", 
+				ResourceFactory.create(ResourceType.CURRENCY, 300e3), 2, e2s3);
+		EmptyState e2s1 = new EmptyState(6, e2s2);
+		
+		Element e2 = new DefaultElement("Dummy 2", l12)
+				.states(Arrays.asList(e2s1, e2s2, e2s3, e2s4, e2s5))
+				.initialState(e2s1);
+
 		BasicConfigurator.configure();
 		
-		Simulator sim = new Simulator(new Scenario("Test", 0, Arrays.asList(l), Arrays.asList(e)));
+		Simulator sim = new Simulator(new Scenario("Test", 0, Arrays.asList(l11, l22, l12), Arrays.asList(e1, e2)));
 		sim.execute(50, 2);
 	}
 

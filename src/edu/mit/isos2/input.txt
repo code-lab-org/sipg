@@ -1,0 +1,108 @@
+Scenario {
+	name: Test Scenario,
+	nodes: [Node { name: n1 }, Node {name: n2}],
+	locations: [
+		Location { name: n1, origin: n1, destination: n1},
+		Location { name: n2, origin: n2, destination: n2},
+		Location { name: n1-n2, origin: n1, destination: n2}
+		]
+	elements: [
+		System {
+			name: N1 Water
+			initialLocation: n1,
+			initialState: ExchangingState {
+				name: Nominal,
+				producers: [
+					Stock { type: AQUIFER, element: Aquifer },
+					Producer { type: WATER, element: Borehole Pump },
+					Producer { type: WATER, element: Desal. Plant },
+				],
+				distributors: [
+					Distributor { type: WATER, element: Pipeline },
+				]
+				consumers: [
+					Consumer { type: AQUIFER, element: Borehole Pump },
+					Consumer { type: ELECTRICITY, element: Borehole Pump },
+					Consumer { type: ELECTRICITY, element: Desal. Plant },
+					Consumer { type: ELECTRICITY, element: Pipeline },
+				]
+				customers: [type: WATER, element: N1 Society],
+				suppliers: [
+					Supplier { type: ELECTRICITY, element: N1 Energy }
+				]
+			},
+			elements: [
+				StockElement {
+					name: Aquifer,
+					location: n1,
+					initialContents: [
+						Resource { type: AQUIFER, quantity: 1000 }
+					],
+					initialState: DefaultState {
+						name: Default,
+					}
+				},
+				ProductionElement {
+					name: Desal. Plant,
+					location = n1,
+					initialContents: [],
+					initialState: Operational,
+					states: [
+						NullState {
+							name: Null,
+							commissionTime:
+						}
+						CommissioningState {
+							name: Commissioning,
+							commissionCost: [ Resource { type: CURRENCY, quantity: 200e6 ],
+							minDuration: 
+							duration:
+						}
+						ProductionState {
+							name: Operational,
+							maxProduction: [ Resource { type: WATER, quantity: 1000} ],
+							maxDuration:
+							duration:
+							fixedCost:
+							transformation: [
+								Output {
+									type: WATER,
+									inputs: [
+										Resource { type: ELECTRICITY, quantity: 3.7 }
+										Resource { type: CURRENCY, quantity: 0.10 }
+									]
+								}
+							],
+						}
+						DecommissioningState {
+							name: Decommissioning,
+							decommissionCost: [ Resource { type: CURRENCY, quantity: 50e6 ],
+							minDuration: 
+							duration:
+						}
+						EmptyState {
+							name: Empty,
+						}
+					]
+				},
+				ProductionElement {
+					name: Borehole Pump,
+					location = n1,
+					initialContents: [],
+					initialState: DefaultState {
+						name: Operational,
+						transformation: [
+							Output {
+								type: WATER,
+								inputs: [
+									Resource { type: AQUIFER, quantity: 1 }
+									Resource { type: ELECTRICITY, quantity: 0.05 }
+								]
+							}
+						],
+					}
+				}
+			]
+		}
+	]
+}

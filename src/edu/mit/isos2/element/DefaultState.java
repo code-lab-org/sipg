@@ -4,10 +4,10 @@ import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
-public class DefaultState implements State, ResourceStoring, ResourceTransforming, ResourceTransporting {
+public class DefaultState implements State, ResourceStoring, ResourceTransforming, ResourceTransporting, ElementTransforming {
 	private final String name;
 	
-	public DefaultState() {
+	protected DefaultState() {
 		this.name = "";
 	}
 	
@@ -54,13 +54,20 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	public void iterateTock() { }
 
 	@Override
-	public void initialize(Element element, long initialTime) { }
+	public void initialize(Element element, long initialTime) {
+		if(!element.getStates().contains(this)) {
+			throw new IllegalStateException(
+					"Element does not contain state " + this);
+		}
+	}
 
 	@Override
 	public void tick(Element element, long duration) {
-		store(element, getStored(duration), getRetrieved(duration));
-		transport(element, getInput(duration), getOutput(duration));
-		transform(element, getConsumed(duration), getProduced(duration));
+		if(equals(element.getState())) {
+			store(element, getStored(duration), getRetrieved(duration));
+			transport(element, getInput(duration), getOutput(duration));
+			transform(element, getConsumed(duration), getProduced(duration));
+		}
 	}
 
 	@Override
@@ -74,8 +81,9 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 
 	@Override
 	public void transport(Element element, Resource input, Resource output) {
-		element.addContents(input);
-		element.removeContents(output);
+		// no longer modifies element contents
+		// element.addContents(input);
+		// element.removeContents(output);
 	}
 
 	@Override
@@ -90,7 +98,8 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 		Resource netFlow = ResourceFactory.create();
 		if(element.getLocation().equals(location)) {
 			netFlow = netFlow.subtract(getStored(duration)).add(getRetrieved(duration))
-					.add(getProduced(duration)).subtract(getConsumed(duration));
+					.add(getProduced(duration)).subtract(getConsumed(duration))
+					.add(getInput(duration)).subtract(getOutput(duration));
 		}
 		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin())) {
 			netFlow = netFlow.subtract(getInput(duration));
@@ -105,5 +114,10 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	public Resource getNetExchange(Element element1, Element element2,
 			long duration) {
 		return ResourceFactory.create();
+	}
+	
+	@Override
+	public void transform(Element element, State nextState) {
+		element.setState(nextState);
 	}
 }
