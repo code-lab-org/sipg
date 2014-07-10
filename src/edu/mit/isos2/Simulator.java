@@ -10,10 +10,6 @@ import edu.mit.isos2.element.DefaultElement;
 import edu.mit.isos2.element.DefaultState;
 import edu.mit.isos2.element.Element;
 import edu.mit.isos2.element.ExchangingState;
-import edu.mit.isos2.element.ResourceExchanging;
-import edu.mit.isos2.element.ResourceStoring;
-import edu.mit.isos2.element.ResourceTransforming;
-import edu.mit.isos2.element.ResourceTransporting;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceType;
@@ -88,11 +84,15 @@ public class Simulator {
 		};
 		
 
-		Element e1 = new DefaultElement("Desal. Plant", w).initialState(e1s);
-		Element e2 = new DefaultElement("Aquifer", w).initialState(e2s)
+		Element e1 = new DefaultElement("Desal. Plant", w)
+				.states(Arrays.asList(e1s)).initialState(e1s);
+		Element e2 = new DefaultElement("Aquifer", w)
+				.states(Arrays.asList(e2s)).initialState(e2s)
 				.initialContents(ResourceFactory.create(ResourceType.AQUIFER, "100"));
-		Element e3 = new DefaultElement("Power Plant", w).initialState(e3s);
-		Element e4 = new DefaultElement("Fuel Tank", w).initialState(e4s)
+		Element e3 = new DefaultElement("Power Plant", w)
+				.states(Arrays.asList(e3s)).initialState(e3s);
+		Element e4 = new DefaultElement("Fuel Tank", w)
+				.states(Arrays.asList(e4s)).initialState(e4s)
 				.initialContents(ResourceFactory.create(ResourceType.OIL, "1000"));
 		
 		// federation agreement		
@@ -106,14 +106,7 @@ public class Simulator {
 				Arrays.asList(e1, e2, e3, e4));
 		
 		Simulator sim = new Simulator(scenario);
-		long startTime = new Date().getTime();
 		sim.execute(20, 2);
-		logger.info("Simulation completed in "
-				+ (new Date().getTime() - startTime) + " ms");
-		
-		if(sim.outputs) {
-			sim.history.displayOutputs(sim.verifyFlow);
-		}
 		
 	}
 
@@ -122,6 +115,8 @@ public class Simulator {
 	}
 	
 	public void execute(long duration, long timeStep) {
+		long startTime = new Date().getTime();
+		
 		long time = scenario.getInitialTime();
 
 		for(Element element : scenario.getElements()) {
@@ -158,35 +153,7 @@ public class Simulator {
 				for(Location location : scenario.getLocations()) {
 					Resource flowRate = ResourceFactory.create();
 					for(Element element : scenario.getElements()) {
-						if(element.getState() instanceof ResourceStoring) {
-							ResourceStoring res = (ResourceStoring) element.getState();
-							if(element.getLocation().equals(location)) {
-								flowRate = flowRate.subtract(res.getStored(timeStep))
-										.add(res.getRetrieved(timeStep));
-							}
-						}
-						if(element.getState() instanceof ResourceTransporting) {
-							ResourceTransporting rep = (ResourceTransporting) element.getState();
-							if(location.isNodal() && element.getLocation().getDestination().equals(location.getOrigin())) {
-								flowRate = flowRate.add(rep.getOutput(timeStep));
-							} 
-							if(location.isNodal() && element.getLocation().getOrigin().equals(location.getOrigin())) {
-								flowRate = flowRate.subtract(rep.getInput(timeStep));
-							}
-						}
-						if(element.getState() instanceof ResourceTransforming) {
-							ResourceTransforming ref = (ResourceTransforming) element.getState();
-							if(element.getLocation().equals(location)) {
-								flowRate = flowRate.subtract(ref.getConsumed(timeStep))
-										.add(ref.getProduced(timeStep));
-							} 
-						}
-						if(element.getState() instanceof ResourceExchanging) {
-							ResourceExchanging rex = (ResourceExchanging) element.getState();
-							if(location.isNodal() && element.getLocation().getOrigin().equals(location)) {
-								flowRate = flowRate.subtract(rex.getSent(timeStep));
-							} 
-						}
+						flowRate = flowRate.add(element.getNetFlow(location, timeStep));
 					}
 					if(outputs) {
 						history.logFlow(time, location, flowRate);
@@ -198,35 +165,17 @@ public class Simulator {
 					}
 				}
 			}
-			
+
 			if(verifyExchange) {
 				for(Element e1 : scenario.getElements()) {
-					if(e1.getState() instanceof ResourceExchanging) {
-						ResourceExchanging rex1 = (ResourceExchanging) e1.getState();
-						for(Element e2 : scenario.getElements()) {
-							if(e2.getState() instanceof ResourceExchanging) {
-								ResourceExchanging rex2 = (ResourceExchanging) e2.getState();
-								if(!rex1.getSentTo(e2, timeStep).equals(
-										rex2.getReceivedFrom(e1, timeStep))) {
-									logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
-											e1.getName() + "->" + rex1.getSentTo(e2, timeStep) + "->" + e2.getName() + ", " + 
-											e2.getName() + "<-" + rex2.getReceivedFrom(e1, timeStep) + "<-" + e1.getName());
-								}
-								if(!rex1.getSentTo(e2, timeStep).isZero()
-										&& !e1.getLocation().getDestination().equals(
-												e2.getLocation().getOrigin())) {
-									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
-											e1.getName() + " destination " + e1.getLocation().getDestination() + " =/= " + 
-											e2.getName() + " origin " + e2.getLocation().getOrigin());
-								}
-								if(!rex1.getReceivedFrom(e2, timeStep).isZero()
-										&& !e1.getLocation().getOrigin().equals(
-												e2.getLocation().getDestination())) {
-									logger.warn("@ t = " + time + ": Incompatible resource exchange: " + 
-											e1.getName() + " origin " + e1.getLocation().getOrigin() + " =/= " + 
-											e2.getName() + " destination " + e2.getLocation().getDestination());
-								}
-							}
+					for(Element e2 : scenario.getElements()) {
+						Resource e12 = e1.getNetExchange(e2, timeStep);
+						Resource e21 = e2.getNetExchange(e1, timeStep);
+
+						if(!e12.equals(e21.negate())) {
+							logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
+									e1.getName() + "->" + e12 + "->" + e2.getName() + ", " + 
+									e2.getName() + "->" + e21 + "->" + e1.getName());
 						}
 					}
 				}
@@ -247,6 +196,12 @@ public class Simulator {
 				element.tock();
 			}
 			time = time + timeStep;
+		}
+		if(outputs) {
+			logger.info("Simulation completed in "
+					+ (new Date().getTime() - startTime) + " ms");
+
+			history.displayOutputs(verifyFlow);
 		}
 	}
 }

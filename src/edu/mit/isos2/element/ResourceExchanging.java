@@ -7,4 +7,5 @@ public interface ResourceExchanging {
 	public Resource getSentTo(Element element, long duration);
 	public Resource getReceived(long duration);
 	public Resource getReceivedFrom(Element element, long duration);
+	public void exchange(Element element1, Element element2, Resource sent, Resource received);
 }

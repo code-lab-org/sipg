@@ -1,5 +1,9 @@
 package edu.mit.isos2.element;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
@@ -23,6 +27,8 @@ public class DefaultElement implements Element {
 	}
 
 	private String name;
+	private Set<State> states = new HashSet<State>();
+	
 	private Element initialParent;
 	private Resource initialContents;
 	private State initialState;
@@ -44,7 +50,16 @@ public class DefaultElement implements Element {
 	}
 	
 	public Element initialState(State initialState) {
+		if(!states.contains(initialState)) {
+			throw new IllegalArgumentException(
+					"States does not include " + initialState);
+		}
 		this.initialState = initialState;
+		return this;
+	}
+	
+	public Element states(Collection<? extends State> states) {
+		this.states = new HashSet<State>(states);
 		return this;
 	}
 	
@@ -59,7 +74,11 @@ public class DefaultElement implements Element {
 	}
 	
 	public Location getLocation() {
-		return location;
+		if(!equals(parent)) {
+			return parent.getLocation();
+		} else {
+			return location;
+		}
 	}
 	
 	public Element getParent() {
@@ -74,77 +93,67 @@ public class DefaultElement implements Element {
 		return state;
 	}
 	
+	public Set<State> getStates() {
+		return new HashSet<State>(states);
+	}
+	
 	public void initialize(long initialTime) {
 		contents = nextContents = initialContents;
 		state = nextState = initialState;
 		parent = nextParent = initialParent;
 		location = nextLocation = initialLocation;
+		for(State state : states) {
+			state.initialize(this, initialTime);
+		}
 	}
 	
 	public void iterateTick(long duration) {
-		state.iterateTick(this, duration);
+		if(state != null) {
+			state.iterateTick(this, duration);
+		}
 	}
 	
 	public void iterateTock() {
-		state.iterateTock();
+		if(state != null) {
+			state.iterateTock();
+		}
 	}
 	
 	public void tick(long duration) {
 		nextContents = contents.copy();
-		if(state instanceof ResourceStoring) {
-			ResourceStoring res = (ResourceStoring) state;
-			store(res.getStored(duration), 
-					res.getRetrieved(duration));
-		}
-		if(state instanceof ResourceTransforming) {
-			ResourceTransforming ref = (ResourceTransforming) state;
-			transform(ref.getConsumed(duration),
-					ref.getProduced(duration));
-		}
-		if(state instanceof ResourceTransporting) {
-			ResourceTransporting rep = (ResourceTransporting) state;
-			transport(rep.getInput(duration), 
-					rep.getOutput(duration));
-		}
-		if(state instanceof ResourceExchanging) {
-			ResourceExchanging rex = (ResourceExchanging) state;
-			exchange(rex.getSent(duration),
-					rex.getReceived(duration));
+		for(State state : states) {
+			state.tick(this, duration);
 		}
 	}
-
-	@Override
-	public void store(Resource stored, Resource retrieved) {
-		nextContents = nextContents.add(stored).subtract(retrieved);
+	
+	public void addContents(Resource resource) {
+		nextContents = nextContents.add(resource);
 	}
-
-	@Override
-	public void transform(Resource consumed, Resource produced) {
-		// nextContents = nextContents.subtract(consumed).add(produced);
-	}
-
-	@Override
-	public void transport(Resource input, Resource output) {
-		nextContents = nextContents.add(input).subtract(output);
-	}
-
-	@Override
-	public void exchange(Resource sent, Resource received) {
-		// nextContents = nextContents.subtract(sent).add(received);
+	
+	public void removeContents(Resource resource) {
+		nextContents = nextContents.subtract(resource);
 	}
 	
 	@Override
-	public void transform(State state) {
+	public void setState(State state) {
+		if(!states.contains(initialState)) {
+			throw new IllegalArgumentException(
+					"States does not include " + state);
+		}
 		nextState = state;
 	}
 
 	@Override
-	public void transport(Location location) {
+	public void setLocation(Location location) {
+		if(!equals(parent)) {
+			throw new IllegalStateException(
+					"Cannot change location for nested element " + this);
+		}
 		nextLocation = location;
 	}
 
 	@Override
-	public void store(Element parent) {
+	public void setParent(Element parent) {
 		if(!parent.getLocation().equals(getLocation())) {
 			throw new IllegalArgumentException(
 					"Parent must have same location as child.");
@@ -157,9 +166,30 @@ public class DefaultElement implements Element {
 		state = nextState;
 		parent = nextParent;
 		location = nextLocation;
+		for(State state : states) {
+			state.tock();
+		}
 	}
 	
 	public String toString() {
 		return name + " " + " (" + state + " @ " + location + ", " + contents + ") ";
+	}
+
+	@Override
+	public Resource getNetFlow(Location location, long duration) {
+		if(state != null) {
+			return state.getNetFlow(this, location, duration);
+		} else {
+			return ResourceFactory.create();
+		}
+	}
+
+	@Override
+	public Resource getNetExchange(Element element, long duration) {
+		if(state != null) {
+			return state.getNetExchange(this, element, duration);
+		} else {
+			return ResourceFactory.create();
+		}
 	}
 }

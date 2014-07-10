@@ -1,5 +1,6 @@
 package edu.mit.isos2.element;
 
+import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
@@ -45,7 +46,64 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	public Resource getRetrieved(long duration) {
 		return ResourceFactory.create();
 	}
-	
+
+	@Override
 	public void iterateTick(Element element, long duration) { }
+	
+	@Override
 	public void iterateTock() { }
+
+	@Override
+	public void initialize(Element element, long initialTime) { }
+
+	@Override
+	public void tick(Element element, long duration) {
+		store(element, getStored(duration), getRetrieved(duration));
+		transport(element, getInput(duration), getOutput(duration));
+		transform(element, getConsumed(duration), getProduced(duration));
+	}
+
+	@Override
+	public void tock() { }
+
+	@Override
+	public void store(Element element, Resource stored, Resource retrieved) {
+		element.addContents(stored);
+		element.removeContents(retrieved);
+	}
+
+	@Override
+	public void transport(Element element, Resource input, Resource output) {
+		element.addContents(input);
+		element.removeContents(output);
+	}
+
+	@Override
+	public void transform(Element element, Resource consumed, Resource produced) {
+		// no longer modifies element contents
+		// element.add(produced);
+		// element.remove(consumed);
+	}
+
+	@Override
+	public Resource getNetFlow(Element element, Location location, long duration) {
+		Resource netFlow = ResourceFactory.create();
+		if(element.getLocation().equals(location)) {
+			netFlow = netFlow.subtract(getStored(duration)).add(getRetrieved(duration))
+					.add(getProduced(duration)).subtract(getConsumed(duration));
+		}
+		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin())) {
+			netFlow = netFlow.subtract(getInput(duration));
+		}
+		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getDestination())) {
+			netFlow = netFlow.add(getOutput(duration));
+		}
+		return netFlow;
+	}
+
+	@Override
+	public Resource getNetExchange(Element element1, Element element2,
+			long duration) {
+		return ResourceFactory.create();
+	}
 }
