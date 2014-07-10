@@ -55,6 +55,7 @@ public class Simulator {
 				return getConsumed(duration).get(ResourceType.ELECTRICITY);
 			}
 		};
+		
 		DefaultState e2s = new DefaultState("Default") {
 			@Override
 			public Resource getRetrieved(long duration) {
