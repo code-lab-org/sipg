@@ -12,6 +12,7 @@ import edu.mit.isos2.element.Element;
 import edu.mit.isos2.element.ExchangingState;
 import edu.mit.isos2.element.ResourceExchanging;
 import edu.mit.isos2.element.ResourceStoring;
+import edu.mit.isos2.element.ResourceTransforming;
 import edu.mit.isos2.element.ResourceTransporting;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
@@ -39,7 +40,7 @@ public class Simulator {
 		final ExchangingState e1s = new ExchangingState("Default") {
 			@Override
 			public Resource getStored(long duration) {
-				return getConsumed(duration).get(ResourceType.AQUIFER);
+				return getProduced(duration).get(ResourceType.WATER);
 			}
 			@Override
 			public Resource getConsumed(long duration) {
@@ -71,7 +72,7 @@ public class Simulator {
 			}
 			@Override
 			public Resource getProduced(long duration) {
-				return getSent(duration);
+				return getSent(duration).get(ResourceType.ELECTRICITY);
 			}
 			@Override
 			public Resource getReceived(long duration) {
@@ -79,7 +80,12 @@ public class Simulator {
 			}
 		};
 		
-		ExchangingState e4s = new ExchangingState("Default");
+		ExchangingState e4s = new ExchangingState("Default") {
+			@Override
+			public Resource getRetrieved(long duration) {
+				return getSent(duration).get(ResourceType.OIL);
+			}
+		};
 		
 
 		Element e1 = new DefaultElement("Desal. Plant", w).initialState(e1s);
@@ -167,6 +173,19 @@ public class Simulator {
 							if(location.isNodal() && element.getLocation().getOrigin().equals(location.getOrigin())) {
 								flowRate = flowRate.subtract(rep.getInput(timeStep));
 							}
+						}
+						if(element.getState() instanceof ResourceTransforming) {
+							ResourceTransforming ref = (ResourceTransforming) element.getState();
+							if(element.getLocation().equals(location)) {
+								flowRate = flowRate.subtract(ref.getConsumed(timeStep))
+										.add(ref.getProduced(timeStep));
+							} 
+						}
+						if(element.getState() instanceof ResourceExchanging) {
+							ResourceExchanging rex = (ResourceExchanging) element.getState();
+							if(location.isNodal() && element.getLocation().getOrigin().equals(location)) {
+								flowRate = flowRate.subtract(rex.getSent(timeStep));
+							} 
 						}
 					}
 					if(outputs) {

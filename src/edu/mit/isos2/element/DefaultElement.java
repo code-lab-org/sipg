@@ -120,7 +120,7 @@ public class DefaultElement implements Element {
 
 	@Override
 	public void transform(Resource consumed, Resource produced) {
-		nextContents = nextContents.subtract(consumed).add(produced);
+		// nextContents = nextContents.subtract(consumed).add(produced);
 	}
 
 	@Override
@@ -130,7 +130,7 @@ public class DefaultElement implements Element {
 
 	@Override
 	public void exchange(Resource sent, Resource received) {
-		nextContents = nextContents.subtract(sent).add(received);
+		// nextContents = nextContents.subtract(sent).add(received);
 	}
 	
 	@Override
