@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.isos2.element.Element;
-import edu.mit.isos2.element.ResourceExchanging;
-import edu.mit.isos2.element.ResourceStoring;
-import edu.mit.isos2.element.ResourceTransforming;
-import edu.mit.isos2.element.ResourceTransporting;
-import edu.mit.isos2.element.State;
 import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.state.ResourceExchanging;
+import edu.mit.isos2.state.ResourceStoring;
+import edu.mit.isos2.state.ResourceTransforming;
+import edu.mit.isos2.state.ResourceTransporting;
+import edu.mit.isos2.state.State;
 
 public class StateHistory {
 	private final List<Long> timeHistory = new ArrayList<Long>();

@@ -7,12 +7,12 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos2.element.DefaultElement;
-import edu.mit.isos2.element.DefaultState;
 import edu.mit.isos2.element.Element;
-import edu.mit.isos2.element.ExchangingState;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceType;
+import edu.mit.isos2.state.DefaultState;
+import edu.mit.isos2.state.ExchangingState;
 
 public class Simulator {
 	private static Logger logger = Logger.getLogger("edu.mit.isos");

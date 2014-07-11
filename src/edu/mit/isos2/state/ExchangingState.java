@@ -1,4 +1,4 @@
-package edu.mit.isos2.element;
+package edu.mit.isos2.state;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import edu.mit.isos2.Location;
+import edu.mit.isos2.element.Element;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceType;

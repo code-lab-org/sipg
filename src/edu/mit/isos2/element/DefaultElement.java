@@ -7,6 +7,8 @@ import java.util.Set;
 import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
+import edu.mit.isos2.state.DefaultState;
+import edu.mit.isos2.state.State;
 
 public class DefaultElement implements Element {
 
@@ -15,7 +17,7 @@ public class DefaultElement implements Element {
 		initialParent = this;
 		initialLocation = null;
 		initialContents = ResourceFactory.create();
-		initialState = new DefaultState();
+		initialState = new DefaultState("Default");
 	}
 	
 	public DefaultElement(String name, Location initialLocation) {

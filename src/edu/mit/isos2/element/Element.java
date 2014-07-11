@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import edu.mit.isos2.Location;
 import edu.mit.isos2.resource.Resource;
+import edu.mit.isos2.state.State;
 
 public interface Element {
 	public Element states(Collection<? extends State> states);

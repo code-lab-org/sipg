@@ -1,6 +1,7 @@
-package edu.mit.isos2.element;
+package edu.mit.isos2.state;
 
 import edu.mit.isos2.Location;
+import edu.mit.isos2.element.Element;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
