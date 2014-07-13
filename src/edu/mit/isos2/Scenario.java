@@ -9,7 +9,7 @@ import edu.mit.isos2.element.Element;
 public class Scenario {
 	private final String name;
 	private final List<Location> locations = new ArrayList<Location>();
-	private final List<Element> elements = new ArrayList<Element>();
+	private final List<SimEntity> entities = new ArrayList<SimEntity>();
 	private final long initialTime;
 	
 	protected Scenario() {
@@ -17,21 +17,29 @@ public class Scenario {
 		initialTime = 0;
 	}
 	
-	public Scenario(String name, long initialTime, 
+	public Scenario(String name, long initialTime,
 			Collection<Location> locations, 
-			Collection<? extends Element> elements) {
+			Collection<? extends SimEntity> entities) {
 		this.name = name;
 		this.initialTime = initialTime;
 		this.locations.addAll(locations);
-		this.elements.addAll(elements);
+		this.entities.addAll(entities);
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
+	public Collection<SimEntity> getSimEntities() {
+		return new ArrayList<SimEntity>(entities);
+	}
+
 	public Collection<Element> getElements() {
-		return new ArrayList<Element>(elements);
+		List<Element> elements = new ArrayList<Element>();
+		for(SimEntity entity : entities) {
+			elements.addAll(entity.getElements());
+		}
+		return elements;
 	}
 	
 	public Collection<Location> getLocations() {

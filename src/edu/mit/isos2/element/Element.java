@@ -3,15 +3,11 @@ package edu.mit.isos2.element;
 import java.util.Collection;
 
 import edu.mit.isos2.Location;
+import edu.mit.isos2.SimEntity;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.state.State;
 
-public interface Element {
-	public Element states(Collection<? extends State> states);
-	public Element initialContents(Resource initialContents);
-	public Element initialState(State initialState);
-	public Element initialParent(Element initialParent);
-
+public interface Element extends SimEntity {
 	public String getName();
 	public Collection<? extends State> getStates();
 	
@@ -19,12 +15,6 @@ public interface Element {
 	public Location getLocation();
 	public Element getParent();
 	public State getState();
-
-	public void initialize(long initialTime);
-	public void iterateTick(long duration);
-	public void iterateTock();
-	public void tick(long duration);
-	public void tock();
 	
 	public void addContents(Resource resource);
 	public void removeContents(Resource resource);

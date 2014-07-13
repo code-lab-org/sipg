@@ -1,5 +1,6 @@
 package edu.mit.isos2.element;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -46,12 +47,12 @@ public class DefaultElement implements Element {
 	private transient Resource nextContents;
 	private transient State nextState;
 	
-	public Element initialContents(Resource initialContents) {
+	public DefaultElement initialContents(Resource initialContents) {
 		this.initialContents = initialContents;
 		return this;
 	}
 	
-	public Element initialState(State initialState) {
+	public DefaultElement initialState(State initialState) {
 		if(!states.contains(initialState)) {
 			throw new IllegalArgumentException(
 					"States does not include " + initialState);
@@ -60,12 +61,12 @@ public class DefaultElement implements Element {
 		return this;
 	}
 	
-	public Element states(Collection<? extends State> states) {
+	public DefaultElement states(Collection<? extends State> states) {
 		this.states = new HashSet<State>(states);
 		return this;
 	}
 	
-	public Element initialParent(Element initialParent) {
+	public DefaultElement initialParent(Element initialParent) {
 		this.initialParent = initialParent;
 		return this;
 	}
@@ -193,5 +194,10 @@ public class DefaultElement implements Element {
 		} else {
 			return ResourceFactory.create();
 		}
+	}
+
+	@Override
+	public Collection<? extends Element> getElements() {
+		return Arrays.asList(this);
 	}
 }
