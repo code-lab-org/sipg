@@ -36,32 +36,32 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 
 	@Override
-	public final Resource getSentTo(Element element, long duration) {
+	public final Resource getSentTo(Element element1, Element element2, long duration) {
 		Resource sent = ResourceFactory.create();
-		if(customers.contains(element)) {
-			if(demand.get(element) != null) {
-				sent = sent.add(demand.get(element));
+		if(customers.contains(element2)) {
+			if(demand.get(element2) != null) {
+				sent = sent.add(demand.get(element2));
 			}
 		}
 		return sent;
 	}
 	
 	@Override
-	public final Resource getSent(long duration) {
+	public final Resource getSent(Element element, long duration) {
 		Resource sent = ResourceFactory.create();
 		for(Element customer : customers) {
-			sent = sent.add(getSentTo(customer, duration));
+			sent = sent.add(getSentTo(element, customer, duration));
 		}
 		return sent;
 	}
 	
 	@Override
-	public final Resource getReceivedFrom(Element element, long duration) {
+	public final Resource getReceivedFrom(Element element1, Element element2, long duration) {
 		Resource received = ResourceFactory.create();
-		if(suppliers.containsValue(element)) {
+		if(suppliers.containsValue(element2)) {
 			for(ResourceType t : ResourceType.values()) {
-				if(suppliers.get(t) != null && suppliers.get(t).equals(element)) {
-					received = received.add(getReceived(duration)).get(t);
+				if(suppliers.get(t) != null && suppliers.get(t).equals(element2)) {
+					received = received.add(getReceived(element1, duration)).get(t);
 				}
 			}
 		}
@@ -69,7 +69,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 	
 	@Override
-	public Resource getReceived(long duration) {
+	public Resource getReceived(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 	
@@ -80,14 +80,14 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 		for(Element customer : customers) {
 			if(customer.getState() instanceof ResourceExchanging) {
 				ResourceExchanging rex = (ResourceExchanging) customer.getState();
-				nextDemand.put(customer, rex.getReceivedFrom(element, duration));
+				nextDemand.put(customer, rex.getReceivedFrom(customer, element, duration));
 			}
 		}
 		nextSupply.clear();
 		for(Element supplier : suppliers.values()) {
 			if(supplier.getState() instanceof ResourceExchanging) {
 				ResourceExchanging rex = (ResourceExchanging) supplier.getState();
-				nextSupply.put(supplier, rex.getSentTo(element, duration));
+				nextSupply.put(supplier, rex.getSentTo(supplier, element, duration));
 			}
 		}
 	}
@@ -105,12 +105,12 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	public void tick(Element element, long duration) {
 		super.tick(element, duration);
 		for(Element customer : customers) {
-			exchange(element, customer, getSentTo(customer, duration), 
+			exchange(element, customer, getSentTo(element, customer, duration), 
 					ResourceFactory.create());
 		}
 		for(Element supplier : suppliers.values()) {
 			exchange(element, supplier, ResourceFactory.create(), 
-					getReceivedFrom(supplier, duration));
+					getReceivedFrom(element, supplier, duration));
 		}
 	}
 
@@ -140,9 +140,10 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	@Override
 	public Resource getNetFlow(Element element, Location location, long duration) {
 		Resource netFlow = super.getNetFlow(element, location, duration);
-		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin())) {
-			netFlow = netFlow.subtract(getSent(duration))
-					.add(getReceived(duration));
+		if(location.equals(element.getLocation()) ||
+				(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin()))) {
+			netFlow = netFlow.subtract(getSent(element, duration))
+					.add(getReceived(element, duration));
 		}
 		return netFlow;
 	}
@@ -151,8 +152,8 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	public Resource getNetExchange(Element element1, Element element2,
 			long duration) {
 		Resource netExchange = super.getNetExchange(element1, element2, duration);
-		netExchange = netExchange.add(getSentTo(element2, duration))
-				.subtract(getReceivedFrom(element2, duration));
+		netExchange = netExchange.add(getSentTo(element1, element2, duration))
+				.subtract(getReceivedFrom(element1, element2, duration));
 		return netExchange;
 	}
 }

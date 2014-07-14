@@ -24,27 +24,27 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 		return name;
 	}
 
-	public Resource getInput(long duration) {
+	public Resource getInput(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
-	public Resource getOutput(long duration) {
+	public Resource getOutput(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
-	public Resource getProduced(long duration) {
+	public Resource getProduced(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
-	public Resource getConsumed(long duration) {
+	public Resource getConsumed(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
-	public Resource getStored(long duration) {
+	public Resource getStored(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
-	public Resource getRetrieved(long duration) {
+	public Resource getRetrieved(Element element, long duration) {
 		return ResourceFactory.create();
 	}
 
@@ -65,9 +65,9 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	@Override
 	public void tick(Element element, long duration) {
 		if(equals(element.getState())) {
-			store(element, getStored(duration), getRetrieved(duration));
-			transport(element, getInput(duration), getOutput(duration));
-			transform(element, getConsumed(duration), getProduced(duration));
+			store(element, getStored(element, duration), getRetrieved(element, duration));
+			transport(element, getInput(element, duration), getOutput(element, duration));
+			transform(element, getConsumed(element, duration), getProduced(element, duration));
 		}
 	}
 
@@ -98,15 +98,15 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	public Resource getNetFlow(Element element, Location location, long duration) {
 		Resource netFlow = ResourceFactory.create();
 		if(element.getLocation().equals(location)) {
-			netFlow = netFlow.subtract(getStored(duration)).add(getRetrieved(duration))
-					.add(getProduced(duration)).subtract(getConsumed(duration))
-					.add(getInput(duration)).subtract(getOutput(duration));
+			netFlow = netFlow.subtract(getStored(element, duration)).add(getRetrieved(element, duration))
+					.add(getProduced(element, duration)).subtract(getConsumed(element, duration))
+					.add(getInput(element, duration)).subtract(getOutput(element, duration));
 		}
 		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin())) {
-			netFlow = netFlow.subtract(getInput(duration));
+			netFlow = netFlow.subtract(getInput(element, duration));
 		}
 		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getDestination())) {
-			netFlow = netFlow.add(getOutput(duration));
+			netFlow = netFlow.add(getOutput(element, duration));
 		}
 		return netFlow;
 	}

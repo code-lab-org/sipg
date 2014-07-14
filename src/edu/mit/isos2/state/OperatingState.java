@@ -67,7 +67,12 @@ public class OperatingState extends DefaultState {
 	}
 	
 	@Override
-	public Resource getConsumed(long duration) {
+	public Resource getInput(Element element, long duration) {
+		return getExpense(duration);
+	}
+	
+	@Override
+	public Resource getConsumed(Element element, long duration) {
 		return getExpense(duration);
 	}
 }

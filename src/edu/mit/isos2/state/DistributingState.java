@@ -31,7 +31,7 @@ public class DistributingState extends OperatingState implements ResourceStoring
 	}
 	
 	@Override
-	public Resource getOutput(long duration) {
+	public Resource getOutput(Element element, long duration) {
 		return outputRate.multiply(duration);
 	}
 	
@@ -44,13 +44,13 @@ public class DistributingState extends OperatingState implements ResourceStoring
 	}
 	
 	@Override
-	public Resource getConsumed(long duration) {
-		return super.getConsumed(duration).add(getInput(duration).subtract(getOutput(duration)));
+	public Resource getConsumed(Element element, long duration) {
+		return getInput(element, duration).subtract(getOutput(element, duration));
 	}
 
 	@Override
-	public Resource getInput(long duration) {
-		return inputMatrix.multiply(getOutput(duration));
+	public Resource getInput(Element element, long duration) {
+		return super.getInput(element, duration).add(inputMatrix.multiply(getOutput(element, duration))).add(getOutput(element, duration));
 	}
 	
 	public void initialize(Element element, long initialTime) {

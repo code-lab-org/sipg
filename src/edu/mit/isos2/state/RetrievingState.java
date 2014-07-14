@@ -8,9 +8,7 @@ import edu.mit.isos2.resource.ResourceMatrix;
 public class RetrievingState extends OperatingState {
 	private ResourceMatrix consumptionMatrix = new ResourceMatrix();
 	
-	private Resource retrievalRate = ResourceFactory.create();
-	private Resource initialRetrievalRate = ResourceFactory.create();
-	private Resource nextRetrievalRate = ResourceFactory.create();
+	private Resource retrieved = ResourceFactory.create();
 	
 	protected RetrievingState() {
 		super();
@@ -20,42 +18,37 @@ public class RetrievingState extends OperatingState {
 		super(name, timeInState, nextState);
 	}
 	
-	public RetrievingState initialRetrievalRate(Resource initialRetrievalRate) {
-		this.initialRetrievalRate = initialRetrievalRate;
-		return this;
-	}
-	
 	public RetrievingState consumptionMatrix(ResourceMatrix consumptionMatrix) {
 		this.consumptionMatrix = consumptionMatrix;
 		return this;
 	}
 	
 	@Override
-	public Resource getRetrieved(long duration) {
-		return retrievalRate.multiply(duration);
+	public Resource getRetrieved(Element element, long duration) {
+		return retrieved;
 	}
 	
-	public void setRetrievalRate(Resource retrievalRate) {
-		nextRetrievalRate = retrievalRate;
+	public void setRetrieved(Resource retrieved) {
+		this.retrieved = retrieved;
 	}
 	
-	public Resource getRetrievalRate() {
-		return retrievalRate;
+	public Resource getRetrieved() {
+		return retrieved;
 	}
 
 	@Override
-	public Resource getConsumed(long duration) {
-		return super.getConsumed(duration).add(consumptionMatrix.multiply(getRetrieved(duration)));
+	public Resource getConsumed(Element element, long duration) {
+		return super.getConsumed(element, duration).add(consumptionMatrix.multiply(getRetrieved(element, duration)));
 	}
 	
 	public void initialize(Element element, long initialTime) {
 		super.initialize(element, initialTime);
-		retrievalRate = nextRetrievalRate = initialRetrievalRate;
+		retrieved = ResourceFactory.create();
 	}
 
 	@Override
-	public void iterateTock() { 
-		super.iterateTock();
-		retrievalRate = nextRetrievalRate;
+	public void tick(Element element, long duration) { 
+		super.tick(element, duration);
+		retrieved = ResourceFactory.create();
 	}
 }

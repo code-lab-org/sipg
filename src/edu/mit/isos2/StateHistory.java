@@ -89,23 +89,23 @@ public class StateHistory {
 		parentHistory.get(time).put(element.getName(), element.getParent().getName());
 		if(element.getState() instanceof ResourceTransforming) {
 			ResourceTransforming ref = (ResourceTransforming) element.getState();
-			consumedHistory.get(time).put(element.getName(), ref.getConsumed(timeStep));
-			producedHistory.get(time).put(element.getName(), ref.getProduced(timeStep));
+			consumedHistory.get(time).put(element.getName(), ref.getConsumed(element, timeStep));
+			producedHistory.get(time).put(element.getName(), ref.getProduced(element, timeStep));
 		}
 		if(element.getState() instanceof ResourceStoring) {
 			ResourceStoring res = (ResourceStoring) element.getState();
-			storedHistory.get(time).put(element.getName(), res.getStored(timeStep));
-			retrievedHistory.get(time).put(element.getName(), res.getRetrieved(timeStep));
+			storedHistory.get(time).put(element.getName(), res.getStored(element, timeStep));
+			retrievedHistory.get(time).put(element.getName(), res.getRetrieved(element, timeStep));
 		}
 		if(element.getState() instanceof ResourceTransporting) {
 			ResourceTransporting rep = (ResourceTransporting) element.getState();
-			inputHistory.get(time).put(element.getName(), rep.getInput(timeStep));
-			outputHistory.get(time).put(element.getName(), rep.getOutput(timeStep));
+			inputHistory.get(time).put(element.getName(), rep.getInput(element, timeStep));
+			outputHistory.get(time).put(element.getName(), rep.getOutput(element, timeStep));
 		}
 		if(element.getState() instanceof ResourceExchanging) {
 			ResourceExchanging rex = (ResourceExchanging) element.getState();
-			sentHistory.get(time).put(element.getName(), rex.getSent(timeStep));
-			receivedHistory.get(time).put(element.getName(), rex.getReceived(timeStep));
+			sentHistory.get(time).put(element.getName(), rex.getSent(element, timeStep));
+			receivedHistory.get(time).put(element.getName(), rex.getReceived(element, timeStep));
 		}
 	}
 	

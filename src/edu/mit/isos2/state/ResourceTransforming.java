@@ -4,7 +4,7 @@ import edu.mit.isos2.element.Element;
 import edu.mit.isos2.resource.Resource;
 
 public interface ResourceTransforming {
-	public Resource getProduced(long duration);
-	public Resource getConsumed(long duration);
+	public Resource getProduced(Element element, long duration);
+	public Resource getConsumed(Element element, long duration);
 	public void transform(Element element, Resource consumed, Resource produced);
 }

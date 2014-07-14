@@ -144,19 +144,19 @@ public class SystemElement implements Element {
 
 	@Override
 	public Resource getNetFlow(Location location, long duration) {
-		Resource contents = ResourceFactory.create();
+		Resource netFlow = state.getNetFlow(this, location, duration);
 		for(Element e : elements) {
-			contents = contents.add(e.getNetFlow(location, duration));
+			netFlow = netFlow.add(e.getNetFlow(location, duration));
 		}
-		return contents;
+		return netFlow;
 	}
 
 	@Override
 	public Resource getNetExchange(Element element, long duration) {
-		Resource contents = ResourceFactory.create();
+		Resource netExchange = state.getNetExchange(this, element, duration);
 		for(Element e : elements) {
-			contents = contents.add(e.getNetExchange(element, duration));
+			netExchange = netExchange.add(e.getNetExchange(element, duration));
 		}
-		return contents;
+		return netExchange;
 	}
 }

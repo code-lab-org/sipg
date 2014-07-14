@@ -57,14 +57,13 @@ public abstract class ElementFactory {
 			Location initialLocation, long commissionTime, 
 			long commissionDuration, Resource commissionExpense,
 			long operationDuration, Resource initialContents, Resource fixedExpense, 
-			ResourceMatrix consumptionMatrix, Resource initialRetrievalRate,
+			ResourceMatrix consumptionMatrix,
 			long decommissionDuration, Resource decommissionExpense) {
 		NullState s5 = new NullState();
 		TransitioningState s4 = new TransitioningState("Decommissioning", 
 				decommissionExpense, decommissionDuration, s5);
 		OperatingState s3 = new RetrievingState("Retrieving", operationDuration, s4)
 				.consumptionMatrix(consumptionMatrix)
-				.initialRetrievalRate(initialRetrievalRate)
 				.fixedExpense(fixedExpense);
 		TransitioningState s2 = new TransitioningState("Commissioning", 
 				commissionExpense, commissionDuration, s3);
@@ -75,13 +74,13 @@ public abstract class ElementFactory {
 	
 	public static Element createRetrievalElement(String name, 
 			Location initialLocation, Resource initialContents, Resource fixedExpense, 
-			ResourceMatrix consumptionMatrix, Resource initialRetrievalRate) {
-		OperatingState s3 = new RetrievingState("Retrieving", Long.MAX_VALUE, new NullState())
+			ResourceMatrix consumptionMatrix) {
+		NullState s5 = new NullState();
+		OperatingState s3 = new RetrievingState("Retrieving", Long.MAX_VALUE, s5)
 				.consumptionMatrix(consumptionMatrix)
-				.initialRetrievalRate(initialRetrievalRate)
 				.fixedExpense(fixedExpense);
 		return new DefaultElement(name, initialLocation)
-				.states(Arrays.asList(s3))
+				.states(Arrays.asList(s3, s5))
 				.initialState(s3)
 				.initialContents(initialContents);
 	}

@@ -31,7 +31,7 @@ public class ProducingState extends OperatingState {
 	}
 	
 	@Override
-	public Resource getProduced(long duration) {
+	public Resource getProduced(Element element, long duration) {
 		return productionRate.multiply(duration);
 	}
 	
@@ -44,8 +44,18 @@ public class ProducingState extends OperatingState {
 	}
 
 	@Override
-	public Resource getConsumed(long duration) {
-		return super.getConsumed(duration).add(consumptionMatrix.multiply(getProduced(duration)));
+	public Resource getInput(Element element, long duration) {
+		return getConsumed(element, duration);
+	}
+	
+	@Override
+	public Resource getOutput(Element element, long duration) {
+		return getProduced(element, duration);
+	}
+
+	@Override
+	public Resource getConsumed(Element element, long duration) {
+		return super.getConsumed(element, duration).add(consumptionMatrix.multiply(getProduced(element, duration)));
 	}
 	
 	public void initialize(Element element, long initialTime) {
