@@ -21,4 +21,8 @@ public interface Resource {
 	public double getQuantity(ResourceType type);
 	
 	public boolean isZero();
+	
+	public Resource truncatePositive();
+	
+	public Resource truncateNegative();
 }

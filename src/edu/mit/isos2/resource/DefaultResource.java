@@ -31,4 +31,22 @@ public abstract class DefaultResource implements Resource {
 	public final Resource subtract(Resource resource) {
 		return add(resource.negate());
 	}
+	
+	private final Resource truncate(int sign) {
+		Resource resource = this.copy();
+		for(ResourceType e : ResourceType.values()) {
+			if(resource.getQuantity(e)*sign < 0) {
+				resource = resource.subtract(resource.get(e));
+			}
+		}
+		return resource;
+	}
+	
+	public final Resource truncatePositive() {
+		return truncate(1);
+	}
+	
+	public final Resource truncateNegative() {
+		return truncate(-1);
+	}
 }

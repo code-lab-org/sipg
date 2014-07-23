@@ -116,11 +116,11 @@ public class StateHistory {
 	public void displayOutputs(boolean flowOutputs) {
 		for(long time : timeHistory) {
 			System.out.println("Time = " + time);
-			System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s", 
-					"Element", "State", "Location", "Parent", "Contents", "Sent", "Received", "Consumed", "Produced"));
+			System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s %-59s %-59s", 
+					"Element", "State", "Location", "Parent", "Contents", "Sent", "Received", "Consumed", "Produced", "Input", "Output"));
 			for(String element : contentsHistory.get(time).keySet()) {
 
-				System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s", 
+				System.out.println(String.format("%-19s %-9s %-9s %-19s %-59s %-59s %-59s %-59s %-59s %-59s %-59s", 
 						element, 
 						stateHistory.get(time).get(element),
 						locationHistory.get(time).get(element), 
@@ -129,7 +129,9 @@ public class StateHistory {
 						replaceNull(sentHistory.get(time).get(element)), 
 						replaceNull(receivedHistory.get(time).get(element)), 
 						replaceNull(consumedHistory.get(time).get(element)), 
-						replaceNull(producedHistory.get(time).get(element))));
+						replaceNull(producedHistory.get(time).get(element)), 
+						replaceNull(inputHistory.get(time).get(element)), 
+						replaceNull(outputHistory.get(time).get(element))));
 			}
 			System.out.println();
 

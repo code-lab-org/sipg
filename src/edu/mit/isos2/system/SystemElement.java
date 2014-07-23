@@ -159,4 +159,29 @@ public class SystemElement implements Element {
 		}
 		return netExchange;
 	}
+
+	@Override
+	public Resource getInitialContents() {
+		Resource contents = ResourceFactory.create();
+		for(Element e : elements) {
+			contents = contents.add(e.getInitialContents());
+		}
+		return contents;
+	}
+
+	@Override
+	public Location getInitialLocation() {
+		return location;
+	}
+
+	@Override
+	public Element getInitialParent() {
+		return this;
+	}
+
+	@Override
+	public State getInitialState() {
+		// TODO Auto-generated method stub
+		return state;
+	}
 }

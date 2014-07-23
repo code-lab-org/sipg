@@ -21,7 +21,7 @@ public class TestScript {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 		Simulator sim = new Simulator(buildSystemScenario());
-		sim.execute(50, 2);
+		sim.execute(50, 2, 2);
 	}
 	
 	public static Scenario buildBaselineScenario() {

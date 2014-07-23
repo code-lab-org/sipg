@@ -7,6 +7,7 @@ import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceMatrix;
 import edu.mit.isos2.state.DistributingState;
 import edu.mit.isos2.state.EmptyState;
+import edu.mit.isos2.state.ExchangingState;
 import edu.mit.isos2.state.NullState;
 import edu.mit.isos2.state.OperatingState;
 import edu.mit.isos2.state.ProducingState;
@@ -83,5 +84,11 @@ public abstract class ElementFactory {
 				.states(Arrays.asList(s3, s5))
 				.initialState(s3)
 				.initialContents(initialContents);
+	}
+	
+	public static Element createExchangingElement(String name, Location location, Resource contents) {
+		ExchangingState s3 = new ExchangingState("Operating");
+		return new DefaultElement(name, location, s3)
+				.initialContents(contents);
 	}
 }

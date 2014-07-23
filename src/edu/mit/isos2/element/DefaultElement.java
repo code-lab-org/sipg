@@ -14,19 +14,20 @@ import edu.mit.isos2.state.State;
 public class DefaultElement implements Element {
 
 	protected DefaultElement() {
-		name = "";
-		initialParent = this;
-		initialLocation = null;
-		initialContents = ResourceFactory.create();
-		initialState = new DefaultState("Default");
+		this("", null);
 	}
 	
 	public DefaultElement(String name, Location initialLocation) {
+		this(name, initialLocation, new DefaultState("Default"));
+	}
+	
+	public DefaultElement(String name, Location initialLocation, State initialState) {
 		this.name = name;
 		initialParent = this;
 		this.initialLocation = initialLocation;
 		initialContents = ResourceFactory.create();
-		initialState = new DefaultState("Default");
+		this.initialState = initialState;
+		states.add(initialState);
 	}
 
 	private String name;
@@ -199,5 +200,25 @@ public class DefaultElement implements Element {
 	@Override
 	public Collection<? extends Element> getElements() {
 		return Arrays.asList(this);
+	}
+
+	@Override
+	public Resource getInitialContents() {
+		return initialContents;
+	}
+
+	@Override
+	public Location getInitialLocation() {
+		return initialLocation;
+	}
+
+	@Override
+	public Element getInitialParent() {
+		return initialParent;
+	}
+
+	@Override
+	public State getInitialState() {
+		return initialState;
 	}
 }

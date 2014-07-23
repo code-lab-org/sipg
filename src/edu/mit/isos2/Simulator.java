@@ -14,14 +14,13 @@ public class Simulator {
 	private final Scenario scenario;
 	private final StateHistory history = new StateHistory();
 	
-	private int iterationsPerTimestep = 2;
 	private boolean verifyFlow = true, verifyExchange = true, outputs = true;
 
 	public Simulator(Scenario scenario) {
 		this.scenario = scenario;
 	}
 	
-	public void execute(long duration, long timeStep) {
+	public void execute(long duration, long timeStep, int iterations) {
 		long startTime = new Date().getTime();
 		
 		long time = scenario.getInitialTime();
@@ -37,14 +36,14 @@ public class Simulator {
 		logger.info("Executing scenario " + scenario 
 				+ " for duration " + duration 
 				+ " with a timestep of " + timeStep 
+				+ " and " + iterations + " iterations" 
 				+ " and options {" 
-				+ "iterationsPerTimestep: " + iterationsPerTimestep
-				+ ", verifyFlow: " + verifyFlow 
+				+ "verifyFlow: " + verifyFlow 
 				+ ", verifyExchange: " + verifyExchange
 				+ ", outputs: " + outputs + "}.");
 		
 		while(time <= scenario.getInitialTime() + duration) {
-			for(int i = 0; i < iterationsPerTimestep; i++) {
+			for(int i = 0; i < iterations; i++) {
 				for(SimEntity entity : scenario.getSimEntities()) {
 					entity.iterateTick(timeStep);
 				}

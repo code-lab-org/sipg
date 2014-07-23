@@ -11,6 +11,11 @@ public interface Element extends SimEntity {
 	public String getName();
 	public Collection<? extends State> getStates();
 	
+	public Resource getInitialContents();
+	public Location getInitialLocation();
+	public Element getInitialParent();
+	public State getInitialState();
+	
 	public Resource getContents();
 	public Location getLocation();
 	public Element getParent();
