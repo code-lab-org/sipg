@@ -96,10 +96,10 @@ public class TestScript {
 		
 		// federation agreement
 		e1s.setSupplier(ResourceType.ELECTRICITY, e3);
-		e3s.addCustomer(e1);
+		e3s.addCustomer(ResourceType.ELECTRICITY, e1);
 		
 		e3s.setSupplier(ResourceType.OIL, e4);
-		e4s.addCustomer(e3);
+		e4s.addCustomer(ResourceType.OIL, e3);
 		
 		return new Scenario("Baseline", 0, Arrays.asList(w, we, e, ew), 
 				Arrays.asList(e1, e2, e3, e4));

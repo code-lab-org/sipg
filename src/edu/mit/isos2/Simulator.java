@@ -103,10 +103,9 @@ public class Simulator {
 			}
 			time = time + timeStep;
 		}
+		logger.info("Simulation completed in "
+				+ (new Date().getTime() - startTime) + " ms");
 		if(outputs) {
-			logger.info("Simulation completed in "
-					+ (new Date().getTime() - startTime) + " ms");
-
 			history.displayOutputs(verifyFlow);
 		}
 	}
