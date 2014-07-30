@@ -11,7 +11,7 @@ public class NullState implements State {
 	public NullState() { }
 	
 	public String getName() {
-		return "Null";
+		return "";
 	}
 	
 	public String toString() {
