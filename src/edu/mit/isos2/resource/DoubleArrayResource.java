@@ -2,7 +2,7 @@ package edu.mit.isos2.resource;
 
 
 public class DoubleArrayResource extends DefaultResource implements Resource {
-	private static final double epsilon = 1e-14;
+	private static final double epsilon = 1e-12;
 	private final double[] amount = new double[ResourceType.values().length];
 	
 	protected DoubleArrayResource() {
