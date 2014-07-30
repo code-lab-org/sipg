@@ -13,7 +13,7 @@ import edu.mit.isos2.resource.ResourceType;
 
 public class ExchangingState extends DefaultState implements ResourceExchanging {
 	private Map<ResourceType, Element> suppliers = new HashMap<ResourceType, Element>();
-	private Set<Element> customers = new HashSet<Element>();
+	private Map<ResourceType, Set<Element>> customers = new HashMap<ResourceType, Set<Element>>();
 	private Map<Element, Resource> demand = new HashMap<Element, Resource>();
 	private Map<Element, Resource> nextDemand = new HashMap<Element, Resource>();
 	private Map<Element, Resource> supply = new HashMap<Element, Resource>();
@@ -31,15 +31,20 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 		suppliers.put(type, supplier);
 	}
 	
-	public void addCustomer(Element customer) {
-		customers.add(customer);
+	public void addCustomer(ResourceType type, Element customer) {
+		if(!customers.containsKey(type)) {
+			customers.put(type, new HashSet<Element>());
+		}
+		customers.get(type).add(customer);
 	}
 
 	@Override
-	public final Resource getSentTo(Element element1, Element element2, long duration) {
+	public Resource getSentTo(Element element1, Element element2, long duration) {
 		Resource sent = ResourceFactory.create();
-		if(customers.contains(element2)) {
-			if(demand.get(element2) != null) {
+		for(ResourceType type : customers.keySet()) {
+			if(customers.get(type) != null 
+					&& customers.get(type).contains(element2)
+					&& demand.get(element2) != null) {
 				sent = sent.add(demand.get(element2));
 			}
 		}
@@ -47,22 +52,22 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 	
 	@Override
-	public final Resource getSent(Element element, long duration) {
+	public Resource getSent(Element element, long duration) {
 		Resource sent = ResourceFactory.create();
-		for(Element customer : customers) {
-			sent = sent.add(getSentTo(element, customer, duration));
+		for(ResourceType type : customers.keySet()) {
+			for(Element customer : customers.get(type)) {
+				sent = sent.add(getSentTo(element, customer, duration));
+			}
 		}
 		return sent;
 	}
 	
 	@Override
-	public final Resource getReceivedFrom(Element element1, Element element2, long duration) {
+	public Resource getReceivedFrom(Element element1, Element element2, long duration) {
 		Resource received = ResourceFactory.create();
-		if(suppliers.containsValue(element2)) {
-			for(ResourceType t : ResourceType.values()) {
-				if(suppliers.get(t) != null && suppliers.get(t).equals(element2)) {
-					received = received.add(getReceived(element1, duration)).get(t);
-				}
+		for(ResourceType t : ResourceType.values()) {
+			if(suppliers.get(t) != null && suppliers.get(t).equals(element2)) {
+				received = received.add(getReceived(element1, duration).get(t));
 			}
 		}
 		return received;
@@ -74,20 +79,30 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 	
 	@Override
-	public final void iterateTick(Element element, long duration) {
+	public void iterateTick(Element element, long duration) {
 		super.iterateTick(element, duration);
 		nextDemand.clear();
-		for(Element customer : customers) {
-			if(customer.getState() instanceof ResourceExchanging) {
-				ResourceExchanging rex = (ResourceExchanging) customer.getState();
-				nextDemand.put(customer, rex.getReceivedFrom(customer, element, duration));
+		for(ResourceType type : customers.keySet()) {
+			for(Element customer : customers.get(type)) {
+				if(customer.getState() instanceof ResourceExchanging) {
+					ResourceExchanging rex = (ResourceExchanging) customer.getState();
+					if(nextDemand.get(customer) == null) {
+						nextDemand.put(customer, ResourceFactory.create());
+					}
+					nextDemand.put(customer, nextDemand.get(customer)
+							.add(rex.getReceivedFrom(customer, element, duration).get(type)));
+				}
 			}
 		}
 		nextSupply.clear();
-		for(Element supplier : suppliers.values()) {
-			if(supplier.getState() instanceof ResourceExchanging) {
-				ResourceExchanging rex = (ResourceExchanging) supplier.getState();
-				nextSupply.put(supplier, rex.getSentTo(supplier, element, duration));
+		for(ResourceType type : suppliers.keySet()) {
+			if(suppliers.get(type).getState() instanceof ResourceExchanging) {
+				ResourceExchanging rex = (ResourceExchanging) suppliers.get(type).getState();
+				if(nextSupply.get(suppliers.get(type)) == null) {
+					nextSupply.put(suppliers.get(type), ResourceFactory.create());
+				}
+				nextSupply.put(suppliers.get(type), nextSupply.get(suppliers.get(type))
+						.add(rex.getSentTo(suppliers.get(type), element, duration).get(type)));
 			}
 		}
 	}
@@ -104,13 +119,17 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	@Override
 	public void tick(Element element, long duration) {
 		super.tick(element, duration);
-		for(Element customer : customers) {
-			exchange(element, customer, getSentTo(element, customer, duration), 
-					ResourceFactory.create());
+		for(ResourceType type : customers.keySet()) {
+			for(Element customer : customers.get(type)) {
+				exchange(element, customer, getSentTo(element, customer, duration).get(type), 
+						ResourceFactory.create());
+			}
 		}
-		for(Element supplier : suppliers.values()) {
-			exchange(element, supplier, ResourceFactory.create(), 
-					getReceivedFrom(element, supplier, duration));
+		for(ResourceType type : suppliers.keySet()) {
+			for(Element supplier : suppliers.values()) {
+				exchange(element, supplier, ResourceFactory.create(), 
+						getReceivedFrom(element, supplier, duration).get(type));
+			}
 		}
 	}
 
