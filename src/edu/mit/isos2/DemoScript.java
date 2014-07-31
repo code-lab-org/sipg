@@ -22,6 +22,8 @@ import org.apache.log4j.BasicConfigurator;
 
 import edu.mit.isos2.element.DefaultElement;
 import edu.mit.isos2.element.Element;
+import edu.mit.isos2.event.SimulationTimeEvent;
+import edu.mit.isos2.event.SimulationTimeListener;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceMatrix;
@@ -34,9 +36,25 @@ public class DemoScript {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 
-		int stepsPerYear = 1000;
-		Simulator sim = new Simulator(buildScenario(stepsPerYear));
-		sim.execute(5000, (int) (.25*stepsPerYear), 20);
+		final int stepsPerYear = 1000;
+		final double timeStepDuration = 0.5;
+		final double simulationDuration = 20.0;
+		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
+		sim.addSimulationTimeListener(new SimulationTimeListener() {
+			@Override
+			public void timeAdvanced(SimulationTimeEvent event) {
+				//System.out.println("time is now " + event.getTime());
+				if(event.getTime()==simulationDuration*stepsPerYear) {
+					System.out.println("e_w1 contents " + sim.getScenario().getElement("e_w1").getContents());
+				}
+			}
+		});
+		for(int i = 0; i < 100; i++) {
+			System.out.println("Simulation completed in " 
+					+ sim.execute((int) (simulationDuration*stepsPerYear), 
+							(int) (timeStepDuration*stepsPerYear), 20)
+					+ " ms");
+		}
 	}
 
 	public static Scenario buildScenario(double stepsPerYear) {
@@ -131,8 +149,7 @@ public class DemoScript {
 			public Resource getReceived(Element element, long duration) {
 				return getConsumed(element, duration).get(ResourceType.OIL);
 			}
-		}
-				);
+		});
 	}
 
 	private static Element createOilElement(String name, Location location, 

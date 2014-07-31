@@ -5,6 +5,7 @@ import java.util.Collection;
 import edu.mit.isos2.element.Element;
 
 public interface SimEntity {
+	public String getName();
 	public Collection<? extends Element> getElements();
 	
 	public void initialize(long initialTime);

@@ -42,6 +42,15 @@ public class Scenario {
 		return elements;
 	}
 	
+	public Element getElement(String name) {
+		for(Element element : getElements()) {
+			if(element.getName().equals(name)) {
+				return element;
+			}
+		}
+		return null;
+	}
+	
 	public Collection<Location> getLocations() {
 		return new ArrayList<Location>(locations);
 	}

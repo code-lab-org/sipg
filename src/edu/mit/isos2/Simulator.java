@@ -2,9 +2,13 @@ package edu.mit.isos2;
 
 import java.util.Date;
 
+import javax.swing.event.EventListenerList;
+
 import org.apache.log4j.Logger;
 
 import edu.mit.isos2.element.Element;
+import edu.mit.isos2.event.SimulationTimeEvent;
+import edu.mit.isos2.event.SimulationTimeListener;
 import edu.mit.isos2.resource.Resource;
 import edu.mit.isos2.resource.ResourceFactory;
 
@@ -13,14 +17,35 @@ public class Simulator {
 	
 	private final Scenario scenario;
 	private final StateHistory history = new StateHistory();
+	private EventListenerList listeners = new EventListenerList();
 	
-	private boolean verifyFlow = true, verifyExchange = true, outputs = true;
+	private boolean verifyFlow = false, verifyExchange = false, outputs = false;
 
 	public Simulator(Scenario scenario) {
 		this.scenario = scenario;
 	}
 	
-	public void execute(long duration, long timeStep, int iterations) {
+	public Scenario getScenario() {
+		return scenario;
+	}
+	
+	public void addSimulationTimeListener(SimulationTimeListener listener) {
+		listeners.add(SimulationTimeListener.class, listener);
+	}
+	
+	public void removeSimulationTimeListener(SimulationTimeListener listener) {
+		listeners.remove(SimulationTimeListener.class, listener);
+	} 
+	
+	private void fireTimeAdvanced(long time) {
+		SimulationTimeListener[] listeners = this.listeners.getListeners(
+				SimulationTimeListener.class);
+		for(int i = 0; i < listeners.length; i++) {
+			listeners[i].timeAdvanced(new SimulationTimeEvent(this, time));
+		}
+	}
+	
+	public long execute(long duration, long timeStep, int iterations) {
 		long startTime = new Date().getTime();
 		
 		long time = scenario.getInitialTime();
@@ -28,6 +53,8 @@ public class Simulator {
 		for(SimEntity entity : scenario.getSimEntities()) {
 			entity.initialize(scenario.getInitialTime());
 		}
+		
+		fireTimeAdvanced(time);
 		
 		if(outputs) {
 			history.clear();
@@ -42,7 +69,7 @@ public class Simulator {
 				+ ", verifyExchange: " + verifyExchange
 				+ ", outputs: " + outputs + "}.");
 		
-		while(time <= scenario.getInitialTime() + duration) {
+		while(time < scenario.getInitialTime() + duration) {
 			for(int i = 0; i < iterations; i++) {
 				for(SimEntity entity : scenario.getSimEntities()) {
 					entity.iterateTick(timeStep);
@@ -51,6 +78,7 @@ public class Simulator {
 					entity.iterateTock();
 				}
 			}
+			
 			if(outputs) {
 				history.log(time);
 			}
@@ -102,11 +130,14 @@ public class Simulator {
 				entity.tock();
 			}
 			time = time + timeStep;
+			fireTimeAdvanced(time);
 		}
-		logger.info("Simulation completed in "
-				+ (new Date().getTime() - startTime) + " ms");
+		long executionTime = new Date().getTime() - startTime;
 		if(outputs) {
+			logger.info("Simulation completed in "
+					+ executionTime + " ms");
 			history.displayOutputs(verifyFlow);
 		}
+		return executionTime;
 	}
 }
