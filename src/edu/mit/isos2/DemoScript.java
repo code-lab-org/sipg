@@ -33,11 +33,13 @@ import edu.mit.isos2.state.NullState;
 public class DemoScript {
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
-		Simulator sim = new Simulator(buildScenario());
-		sim.execute(5, 1, 20);
+
+		int stepsPerYear = 1000;
+		Simulator sim = new Simulator(buildScenario(stepsPerYear));
+		sim.execute(5000, (int) (.25*stepsPerYear), 20);
 	}
-	
-	public static Scenario buildScenario() {
+
+	public static Scenario buildScenario(double stepsPerYear) {
 		Node n_a = new Node("A");
 		Node n_b = new Node("B");
 		Node n_c = new Node("C");
@@ -49,156 +51,157 @@ public class DemoScript {
 		Location l_bc = new Location(n_b, n_c);
 		Location l_cb = new Location(n_c, n_b);
 
-		Element e_s1 = createSocialElement("e_s1", l_aa, 10.0, 3.0, 1.0, 1000, 0.03);
-		Element e_s2 = createSocialElement("e_s2", l_bb, 10.0, 3.0, 1.0, 200, 0.03);
-		Element e_s3 = createSocialElement("e_s3", l_cc, 10.0, 3.0, 1.0, 800, 0.04);
-		
-		Element e_e1 = createElectricityElement("e_e1", l_aa, 0, 10);
-		Element e_e2 = createElectricityElement("e_e2", l_bb, 0, 10);
-		Element e_e3 = createElectricityElement("e_e3", l_cc, 0, 10);
-		
-		Element e_o1 = createOilElement("e_o1", l_aa, 0.01, 1, 1e6);
-		Element e_o2 = createOilElement("e_o2", l_bb, 0.01, 1, 1e6);
-		Element e_o3 = createOilElement("e_o3", l_cc, 0.01, 1, 1e6);
+		Element e_s1 = createSocialElement("e_s1", l_aa, 0.065/stepsPerYear, 4.0/stepsPerYear, 1.0/stepsPerYear, 3.0, 0.07/stepsPerYear);
+		Element e_s2 = createSocialElement("e_s2", l_bb, 0.050/stepsPerYear, 3.0/stepsPerYear, 1.2/stepsPerYear, 1.0, 0.05/stepsPerYear);
+		Element e_s3 = createSocialElement("e_s3", l_cc, 0.060/stepsPerYear, 3.5/stepsPerYear, 1.0/stepsPerYear, 6.0, 0.06/stepsPerYear);
 
-		Element e_w1 = createWaterElement("e_w1", l_aa, 1, 0.05*0.001, 1e6);
-		Element e_w2 = createWaterElement("e_w2", l_bb, 1, 0.05*0.001, 1e6);
-		Element e_w3 = createWaterElement("e_w3", l_cc, 1, 0.05*0.001, 1e6);
-		Element e_w4 = createPlantElement("e_w4", l_aa, 12000, 0.05);
-		Element e_w5 = createPlantElement("e_w5", l_cc, 12000, 0.05);
-		Element e_w6 = createPipelineElement("e_w6", l_ab, 1000, 0.9, 0.001);
-		Element e_w7 = createPipelineElement("e_w7", l_cb, 1000, 0.9, 0.001);
+		Element e_o1 = createOilElement("e_o1", l_aa, 1.5, 1.0, 500);
+		Element e_o2 = createOilElement("e_o2", l_bb, 2.0, 1.0, 100);
+		Element e_o3 = createOilElement("e_o3", l_cc, 1.6, 1.0, 400);
+
+		Element e_e1 = createElectricityElement("e_e1", l_aa, 1.0/stepsPerYear, 0.25);
+		Element e_e2 = createElectricityElement("e_e2", l_bb, 0.5/stepsPerYear, 0.30);
+		Element e_e3 = createElectricityElement("e_e3", l_cc, 0.8/stepsPerYear, 0.25);
+
+		Element e_w1 = createWaterElement("e_w1", l_aa, 1.0, 0.9, 200);
+		Element e_w2 = createWaterElement("e_w2", l_bb, 1.0, 0.9, 150);
+		Element e_w3 = createWaterElement("e_w3", l_cc, 1.0, 0.9, 250);
+		Element e_w4 = createPlantElement("e_w4", l_aa, 0.5/stepsPerYear, 4.5);
+		Element e_w5 = createPlantElement("e_w5", l_cc, 0.4/stepsPerYear, 4.5);
+		Element e_w6 = createPipelineElement("e_w6", l_ab, 0.02/stepsPerYear, 0.9, 2.5);
+		Element e_w7 = createPipelineElement("e_w7", l_cb, 0.02/stepsPerYear, 0.9, 2.0);
 		Element e_w8 = createWaterController("e_w8", l_aa, 
 				Arrays.asList(e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7));
-		
+
 		// federation agreement
 		setUpAgreement(e_s1, e_e1, e_o1, e_w1);
 		setUpAgreement(e_s2, e_e2, e_o2, e_w2);
 		setUpAgreement(e_s3, e_e3, e_o3, e_w3);
-		
+
 		return new Scenario("Demo", 0, 
 				Arrays.asList(l_aa, l_bb, l_cc, l_ab, l_ba, l_bc, l_cb), 
 				Arrays.asList(e_s1, e_s2, e_s3, e_o1, e_o2, e_o3, 
 						e_e1, e_e2, e_e3, e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7, e_w8));
 	}
-	
+
 	private static void setUpAgreement(Element social, Element electricity, Element oil, Element water) {
 		((ExchangingState)social.getInitialState()).setSupplier(ResourceType.ELECTRICITY, electricity);
 		((ExchangingState)social.getInitialState()).setSupplier(ResourceType.OIL, oil);
 		((ExchangingState)social.getInitialState()).setSupplier(ResourceType.WATER, water);
-		
+
 		((ExchangingState)oil.getInitialState()).addCustomer(ResourceType.OIL, electricity);
 		((ExchangingState)oil.getInitialState()).addCustomer(ResourceType.OIL, social);
-		((ExchangingState)oil.getInitialState()).addCustomer(ResourceType.OIL, water);
+		//((ExchangingState)oil.getInitialState()).addCustomer(ResourceType.OIL, water);
 		((ExchangingState)oil.getInitialState()).setSupplier(ResourceType.ELECTRICITY, electricity);
-		
+
 		((ExchangingState)electricity.getInitialState()).addCustomer(ResourceType.ELECTRICITY, water);
 		((ExchangingState)electricity.getInitialState()).addCustomer(ResourceType.ELECTRICITY, social);
 		((ExchangingState)electricity.getInitialState()).addCustomer(ResourceType.ELECTRICITY, oil);
 		((ExchangingState)electricity.getInitialState()).setSupplier(ResourceType.OIL, oil);
-		
+
 		((ExchangingState)water.getInitialState()).addCustomer(ResourceType.WATER, social);
 		((ExchangingState)water.getInitialState()).setSupplier(ResourceType.ELECTRICITY, electricity);
-		((ExchangingState)water.getInitialState()).setSupplier(ResourceType.OIL, oil);
+		//((ExchangingState)water.getInitialState()).setSupplier(ResourceType.OIL, oil);
 	}
-	
+
 	private static Element createElectricityElement(String name, Location location,
 			final double solarCap, final double thermalOil) {
 		return new DefaultElement(name, location, 
 				new ExchangingState("Ops") {
-					private ResourceMatrix tfMatrix = new ResourceMatrix(
-							ResourceType.ELECTRICITY, 
-							ResourceFactory.create(ResourceType.OIL, thermalOil));
-					
-					private Resource solarCapacity = ResourceFactory.create(
-							ResourceType.ELECTRICITY, solarCap);
-					
-					@Override 
-					public Resource getProduced(Element element, long duration) {
-						return getSent(element, duration);
-					}
-					
-					@Override
-					public Resource getConsumed(Element element, long duration) {
-						return tfMatrix.multiply(getProduced(element, duration)
-								.subtract(solarCapacity.multiply(duration))
-								.truncatePositive());
-					}
-					
-					@Override
-					public Resource getReceived(Element element, long duration) {
-						return getConsumed(element, duration).get(ResourceType.OIL);
-					}
-				}
-		);
+			private ResourceMatrix tfMatrix = new ResourceMatrix(
+					ResourceType.ELECTRICITY, 
+					ResourceFactory.create(ResourceType.OIL, thermalOil));
+
+			private Resource solarCapacity = ResourceFactory.create(
+					ResourceType.ELECTRICITY, solarCap);
+
+			@Override 
+			public Resource getProduced(Element element, long duration) {
+				return getSent(element, duration);
+			}
+
+			@Override
+			public Resource getConsumed(Element element, long duration) {
+				return tfMatrix.multiply(getProduced(element, duration)
+						.subtract(solarCapacity.multiply(duration))
+						.truncatePositive());
+			}
+
+			@Override
+			public Resource getReceived(Element element, long duration) {
+				return getConsumed(element, duration).get(ResourceType.OIL);
+			}
+		}
+				);
 	}
-	
+
 	private static Element createOilElement(String name, Location location, 
 			final double extractElect, final double extractReserves, 
 			final double initialReserves) {
 		return new DefaultElement(name, location, 
 				new ExchangingState("Ops") {
-					private ResourceMatrix tfMatrix = new ResourceMatrix(
-							ResourceType.OIL, ResourceFactory.create(
-									new ResourceType[]{ResourceType.ELECTRICITY, ResourceType.RESERVES},
-									new double[]{extractElect, extractReserves}));
-					@Override 
-					public Resource getProduced(Element element, long duration) {
-						return getSent(element, duration);
-					}
-					
-					@Override
-					public Resource getRetrieved(Element element, long duration) {
-						return getConsumed(element, duration).get(ResourceType.RESERVES);
-					}
-					
-					@Override
-					public Resource getConsumed(Element element, long duration) {
-						return tfMatrix.multiply(getProduced(element, duration));
-					}
-					
-					@Override
-					public Resource getReceived(Element element, long duration) {
-						return getConsumed(element, duration).get(ResourceType.ELECTRICITY);
-					}
-				}
-		).initialContents(ResourceFactory.create(ResourceType.RESERVES, initialReserves));
+			private ResourceMatrix tfMatrix = new ResourceMatrix(
+					ResourceType.OIL, ResourceFactory.create(
+							new ResourceType[]{ResourceType.ELECTRICITY, ResourceType.RESERVES},
+							new double[]{extractElect, extractReserves}));
+			@Override 
+			public Resource getProduced(Element element, long duration) {
+				return getSent(element, duration);
+			}
+
+			@Override
+			public Resource getRetrieved(Element element, long duration) {
+				return getConsumed(element, duration).get(ResourceType.RESERVES);
+			}
+
+			@Override
+			public Resource getConsumed(Element element, long duration) {
+				return tfMatrix.multiply(getProduced(element, duration));
+			}
+
+			@Override
+			public Resource getReceived(Element element, long duration) {
+				return getConsumed(element, duration).get(ResourceType.ELECTRICITY);
+			}
+		}
+				).initialContents(ResourceFactory.create(ResourceType.RESERVES, initialReserves));
 	}
-	
+
 	private static Element createSocialElement(String name, Location location, 
 			final double waterPC, final double electPC, final double oilPC, 
 			final double initialPopulation, final double growthRate) {
 		return new DefaultElement(name, location, 
 				new ExchangingState("Ops") {
-					@Override
-					public Resource getReceived(Element element, long duration) {
-						return getConsumed(element, duration);
-					}
-					
-					@Override
-					public Resource getConsumed(Element element, long duration) {
-						return ResourceFactory.create(
-								new ResourceType[]{ResourceType.ELECTRICITY, 
-										ResourceType.WATER, ResourceType.OIL},
-								new double[]{electPC, waterPC, oilPC})
-								.multiply(element.getContents().getQuantity(ResourceType.PEOPLE))
-								.multiply(duration);
-					}
-					
-					@Override
-					public Resource getProduced(Element element, long duration) {
-						return element.getContents().get(ResourceType.PEOPLE)
-								.multiply(Math.pow(growthRate+1,duration)-1);
-					}
-					
-					@Override
-					public Resource getStored(Element element, long duration) {
-						return getProduced(element, duration);
-					}
-				}
-		).initialContents(ResourceFactory.create(ResourceType.PEOPLE, initialPopulation));
+			private ResourceMatrix tfMatrix = new ResourceMatrix(
+					ResourceType.PEOPLE, ResourceFactory.create(
+							new ResourceType[]{ResourceType.ELECTRICITY, 
+									ResourceType.WATER, ResourceType.OIL},
+									new double[]{electPC, waterPC, oilPC}));
+			@Override
+			public Resource getReceived(Element element, long duration) {
+				return getConsumed(element, duration);
+			}
+
+			@Override
+			public Resource getConsumed(Element element, long duration) {
+				return tfMatrix.multiply(element.getContents().get(ResourceType.PEOPLE))
+						.multiply(duration);
+			}
+
+			@Override
+			public Resource getProduced(Element element, long duration) {
+				return element.getContents().get(ResourceType.PEOPLE)
+						.multiply(Math.exp(growthRate*duration)-1);
+			}
+
+			@Override
+			public Resource getStored(Element element, long duration) {
+				return getProduced(element, duration);
+			}
+		}
+				).initialContents(ResourceFactory.create(ResourceType.PEOPLE, initialPopulation));
 	}
-	
+
 	private static Element createWaterController(String name, Location location, 
 			final List<Element> elements) {
 		return new DefaultElement(name, location, new NullState() {
@@ -244,7 +247,7 @@ public class DemoScript {
 					constraints.add(new LinearConstraint(outputCoefficients, Relationship.LEQ, 
 							((PipelineState)e.getState()).outputCapacity.multiply(duration).getQuantity(ResourceType.WATER)));
 				}
-				
+
 				for(Element e : systems) {
 					double[] flowCoefficients = new double[elements.size()];
 					flowCoefficients[elements.indexOf(e)] = 1; // system production
@@ -295,14 +298,14 @@ public class DemoScript {
 					// Don't overwrite existing values.
 					ignore.printStackTrace();
 				}
-				
+
 				for(Element system : systems) {
 					Resource received = ((WaterState)system.getState())
 							.getConsumed(system, duration).get(ResourceType.ELECTRICITY);
 					for(Element plant : plants) {
 						if(plant.getLocation().equals(system.getLocation())){
 							received = received.add(((PlantState)plant.getState())
-									.getConsumed(plant, duration).get(ResourceType.OIL));
+									.getConsumed(plant, duration).get(ResourceType.ELECTRICITY));
 						}
 					}
 					for(Element pipeline : pipelines) {
@@ -317,12 +320,12 @@ public class DemoScript {
 			}
 		});
 	}
-	
+
 	private static Element createWaterElement(String name, Location location,
 			double liftAquifer, double liftElect, double initialAquifer) {
 		return new DefaultElement(name, location,
 				new WaterState(liftAquifer, liftElect))
-				.initialContents(ResourceFactory.create(ResourceType.AQUIFER, initialAquifer));
+		.initialContents(ResourceFactory.create(ResourceType.AQUIFER, initialAquifer));
 	}
 
 	public static Element createPipelineElement(String name, Location location, 
@@ -335,18 +338,18 @@ public class DemoScript {
 		return new DefaultElement(name, location,
 				new PlantState(capacity, desalElect));
 	}
-	
+
 	private static class PlantState extends DefaultState {
 		protected Resource productionCapacity;
 		protected ResourceMatrix tfMatrix = new ResourceMatrix();
 		protected Resource produced = ResourceFactory.create();
-		
-		public PlantState(double capacity, double desalOil) {
+
+		public PlantState(double capacity, double desalElect) {
 			super("Ops");
 			this.productionCapacity = ResourceFactory.create(ResourceType.WATER, capacity);
 			tfMatrix = new ResourceMatrix(
 					ResourceType.WATER,
-					ResourceFactory.create(ResourceType.OIL, desalOil));
+					ResourceFactory.create(ResourceType.ELECTRICITY, desalElect));
 		}
 		@Override
 		public Resource getConsumed(Element element, long duration) {
@@ -358,20 +361,20 @@ public class DemoScript {
 		}
 		protected void setProduced(Resource produced, long duration) {
 			if(produced.getQuantity(ResourceType.WATER) > 
-				productionCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
+			productionCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
 				this.produced = productionCapacity.multiply(duration);
 			} else {
 				this.produced = produced.truncatePositive();
 			}
 		}
 	}
-	
+
 	private static class PipelineState extends DefaultState {
 		protected Resource outputCapacity;
 		protected double eta = 1;
 		protected ResourceMatrix tpMatrix = new ResourceMatrix();
 		protected Resource output = ResourceFactory.create();
-		
+
 		public PipelineState(double capacity, double efficiency, double pumpElect) {
 			super("Ops");
 			this.outputCapacity = ResourceFactory.create(ResourceType.WATER, capacity);
@@ -380,7 +383,7 @@ public class DemoScript {
 					ResourceType.WATER, 
 					ResourceFactory.create(ResourceType.ELECTRICITY, pumpElect));
 		}
-		
+
 		@Override
 		public Resource getInput(Element element, long duration) {
 			return getOutput(element, duration).multiply(1/eta)
@@ -396,14 +399,14 @@ public class DemoScript {
 		}
 		protected void setOutput(Resource output, long duration) {
 			if(output.getQuantity(ResourceType.WATER) > 
-				outputCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
+			outputCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
 				this.output = outputCapacity.multiply(duration);
 			} else {
 				this.output = output.truncatePositive();
 			}
 		}
 	}
-	
+
 	private static class WaterState extends ExchangingState {
 		private ResourceMatrix liftMatrix = new ResourceMatrix();
 		Resource produced = ResourceFactory.create();
@@ -416,17 +419,17 @@ public class DemoScript {
 							new ResourceType[]{ResourceType.AQUIFER, ResourceType.ELECTRICITY}, 
 							new double[]{liftAquifer, liftElect}));
 		}
-		
+
 		@Override 
 		public Resource getProduced(Element element, long duration) {
 			return produced;
 		}
-		
+
 		@Override
 		public Resource getRetrieved(Element element, long duration) {
 			return getConsumed(element, duration).get(ResourceType.AQUIFER);
 		}
-		
+
 		@Override
 		public Resource getConsumed(Element element, long duration) {
 			return liftMatrix.multiply(produced);
