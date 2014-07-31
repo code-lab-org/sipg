@@ -16,7 +16,7 @@ public abstract class DefaultResource implements Resource {
 
 	@Override
 	public final String toString() {
-		NumberFormat format = new DecimalFormat("0.00");
+		NumberFormat format = new DecimalFormat("0.000000000000");
 		StringBuilder b = new StringBuilder().append("[");
 		for(ResourceType t : ResourceType.values()) {
 			b.append(format.format(getQuantity(t)));
@@ -48,5 +48,15 @@ public abstract class DefaultResource implements Resource {
 	
 	public final Resource truncateNegative() {
 		return truncate(-1);
+	}
+	
+	public final Resource absoluteValue() {
+		Resource resource = this.copy();
+		for(ResourceType t : ResourceType.values()) {
+			if(!resource.get(t).isZero() && resource.get(t).truncatePositive().isZero()) {
+				resource = resource.add(resource.get(t).negate()).add(resource.get(t).negate());
+			}
+		}
+		return resource;
 	}
 }

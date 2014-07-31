@@ -103,4 +103,15 @@ public class BigDecimalArrayResource extends DefaultResource implements Resource
 		}
 		return true;
 	}
+	
+	public final Resource safeDivide(Resource resource) {
+		BigDecimalArrayResource newResource = new BigDecimalArrayResource();
+		for(ResourceType t : ResourceType.values()) {
+			if(resource.getQuantity(t) != 0) {
+				newResource.amount[t.ordinal()] = amount[t.ordinal()]
+						.divide(new BigDecimal(resource.getQuantity(t), context));
+			}
+		}
+		return newResource;
+	}
 }

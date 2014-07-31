@@ -12,6 +12,10 @@ public interface Resource {
 	
 	public Resource multiply(Resource resource);
 	
+	public Resource safeDivide(Resource resource);
+	
+	public Resource absoluteValue();
+	
 	public Resource copy();
 	
 	public Resource swap(ResourceType oldType, ResourceType newType);

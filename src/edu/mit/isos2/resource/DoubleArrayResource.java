@@ -1,6 +1,7 @@
 package edu.mit.isos2.resource;
 
 
+
 public class DoubleArrayResource extends DefaultResource implements Resource {
 	private static final double epsilon = 1e-12;
 	private final double[] amount = new double[ResourceType.values().length];
@@ -98,5 +99,15 @@ public class DoubleArrayResource extends DefaultResource implements Resource {
 			}
 		}
 		return true;
+	}
+
+	public final Resource safeDivide(Resource resource) {
+		DoubleArrayResource newResource = new DoubleArrayResource();
+		for(ResourceType t : ResourceType.values()) {
+			if(resource.getQuantity(t) != 0) {
+				newResource.amount[t.ordinal()] = amount[t.ordinal()] / resource.getQuantity(t);
+			}
+		}
+		return newResource;
 	}
 }
