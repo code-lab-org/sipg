@@ -16,7 +16,7 @@ public abstract class DefaultResource implements Resource {
 
 	@Override
 	public final String toString() {
-		NumberFormat format = new DecimalFormat("0.000000000000");
+		NumberFormat format = new DecimalFormat("#.############");
 		StringBuilder b = new StringBuilder().append("[");
 		for(ResourceType t : ResourceType.values()) {
 			b.append(format.format(getQuantity(t)));

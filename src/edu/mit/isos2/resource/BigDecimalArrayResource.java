@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 public class BigDecimalArrayResource extends DefaultResource implements Resource {
-	private static final BigDecimal epsilon = new BigDecimal("1e-14");
+	private static final BigDecimal epsilon = new BigDecimal("1e-12");
 	private static final MathContext context = MathContext.DECIMAL32;
 	private final BigDecimal[] amount = new BigDecimal[ResourceType.values().length];
 	

@@ -18,7 +18,7 @@ import java.util.EventObject;
 public class SimulationTimeEvent extends EventObject {
 	private static final long serialVersionUID = -5707468210897815237L;
 	
-	private final long time;
+	private final long time, duration;
 	
 	/**
 	 * Instantiates a new execution control event.
@@ -26,9 +26,10 @@ public class SimulationTimeEvent extends EventObject {
 	 * @param source the source
 	 * @param time the time
 	 */
-	public SimulationTimeEvent(Object source, long time) {
+	public SimulationTimeEvent(Object source, long time, long duration) {
 		super(source);
 		this.time = time;
+		this.duration = duration;
 	}
 	
 	/**
@@ -38,5 +39,14 @@ public class SimulationTimeEvent extends EventObject {
 	 */
 	public long getTime() {
 		return time;
+	}
+	
+	/**
+	 * Gets the duration.
+	 *
+	 * @return the duration
+	 */
+	public long getDuration() {
+		return duration;
 	}
 }

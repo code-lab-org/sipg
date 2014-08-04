@@ -25,6 +25,18 @@ public class Simulator {
 		this.scenario = scenario;
 	}
 	
+	public void setVerifyFlow(boolean verifyFlow) {
+		this.verifyFlow = verifyFlow;
+	}
+	
+	public void setVerifyExchange(boolean verifyExchange) {
+		this.verifyExchange = verifyExchange;
+	}
+	
+	public void setOutputs(boolean outputs) {
+		this.outputs = outputs;
+	}
+	
 	public Scenario getScenario() {
 		return scenario;
 	}
@@ -37,11 +49,11 @@ public class Simulator {
 		listeners.remove(SimulationTimeListener.class, listener);
 	} 
 	
-	private void fireTimeAdvanced(long time) {
+	private void fireTimeAdvanced(long time, long duration) {
 		SimulationTimeListener[] listeners = this.listeners.getListeners(
 				SimulationTimeListener.class);
 		for(int i = 0; i < listeners.length; i++) {
-			listeners[i].timeAdvanced(new SimulationTimeEvent(this, time));
+			listeners[i].timeAdvanced(new SimulationTimeEvent(this, time, duration));
 		}
 	}
 	
@@ -54,7 +66,7 @@ public class Simulator {
 			entity.initialize(scenario.getInitialTime());
 		}
 		
-		fireTimeAdvanced(time);
+		// TODO fireTimeAdvanced(time, timeStep);
 		
 		if(outputs) {
 			history.clear();
@@ -69,7 +81,7 @@ public class Simulator {
 				+ ", verifyExchange: " + verifyExchange
 				+ ", outputs: " + outputs + "}.");
 		
-		while(time < scenario.getInitialTime() + duration) {
+		while(time <= scenario.getInitialTime() + duration) {
 			for(int i = 0; i < iterations; i++) {
 				for(SimEntity entity : scenario.getSimEntities()) {
 					entity.iterateTick(timeStep);
@@ -107,9 +119,14 @@ public class Simulator {
 						Resource e21 = e2.getNetExchange(e1, timeStep);
 
 						if(!e12.equals(e21.negate())) {
+							/*
 							logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
 									e1.getName() + "->" + e12 + "->" + e2.getName() + ", " + 
 									e2.getName() + "->" + e21 + "->" + e1.getName());
+							*/
+							logger.warn("@ t = " + time + ": Unbalanced resource exchange: " + 
+									e1.getName() + "<->"  + e2.getName() + ", delta=" +
+									e12.add(e21) + ", error=" + (e12.add(e21)).safeDivide(e12));
 						}
 					}
 				}
@@ -126,11 +143,11 @@ public class Simulator {
 			for(SimEntity entity : scenario.getSimEntities()) {
 				entity.tick(timeStep);
 			}
+			fireTimeAdvanced(time, timeStep);
 			for(SimEntity entity : scenario.getSimEntities()) {
 				entity.tock();
 			}
 			time = time + timeStep;
-			fireTimeAdvanced(time);
 		}
 		long executionTime = new Date().getTime() - startTime;
 		if(outputs) {

@@ -1,9 +1,18 @@
 package edu.mit.isos2;
 
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.math3.exception.TooManyIterationsException;
@@ -31,30 +40,149 @@ import edu.mit.isos2.resource.ResourceType;
 import edu.mit.isos2.state.DefaultState;
 import edu.mit.isos2.state.ExchangingState;
 import edu.mit.isos2.state.NullState;
+import edu.mit.isos2.state.ResourceExchanging;
+import edu.mit.isos2.state.ResourceTransforming;
+import edu.mit.isos2.state.ResourceTransporting;
 
 public class DemoScript {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		BasicConfigurator.configure();
-
-		final int stepsPerYear = 1000;
-		final double timeStepDuration = 0.5;
-		final double simulationDuration = 20.0;
-		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
-		sim.addSimulationTimeListener(new SimulationTimeListener() {
-			@Override
-			public void timeAdvanced(SimulationTimeEvent event) {
-				//System.out.println("time is now " + event.getTime());
-				if(event.getTime()==simulationDuration*stepsPerYear) {
-					System.out.println("e_w1 contents " + sim.getScenario().getElement("e_w1").getContents());
-				}
-			}
-		});
-		for(int i = 0; i < 100; i++) {
-			System.out.println("Simulation completed in " 
-					+ sim.execute((int) (simulationDuration*stepsPerYear), 
-							(int) (timeStepDuration*stepsPerYear), 20)
-					+ " ms");
+		
+		String testName = "10exe80iter";
+		
+		Path outputDirPath = Paths.get("output",testName);
+		if(!outputDirPath.toFile().exists()) {
+			outputDirPath.toFile().mkdir();
 		}
+		
+		Path summaryPath = Paths.get("output",testName,"summary.txt");
+		if(!summaryPath.toFile().exists()) {
+			summaryPath.toFile().createNewFile();
+		}
+
+		// create an output writer to handle file output
+		final BufferedWriter summaryWriter = Files.newBufferedWriter(
+				summaryPath, Charset.defaultCharset(), 
+				StandardOpenOption.WRITE);
+		summaryWriter.write(String.format("%6s%20s\n","Run","Time (ms)"));
+
+		final int numIterations = 80;
+		final int numExecution = 10;
+		final int stepsPerYear = 1000;
+		final double timeStepDuration = 1.0;
+		final double simulationDuration = 30.0;
+		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
+		sim.setVerifyFlow(false);
+		sim.setVerifyExchange(false);
+		
+		for(int i = 0; i < numExecution; i++) {
+			Path currentOutputDirPath = Paths.get("output",testName,new Integer(i+1).toString());
+			if(!currentOutputDirPath.toFile().exists()) {
+				currentOutputDirPath.toFile().mkdir();
+			}
+			
+			final Map<Element, BufferedWriter> elementWriters = new HashMap<Element, BufferedWriter>();
+			for(Element e : sim.getScenario().getElements()) {
+				Path elementPath = Paths.get("output",testName,new Integer(i+1).toString(),e.getName() + ".txt");
+				if(!elementPath.toFile().exists()) {
+					elementPath.toFile().createNewFile();
+				}
+				BufferedWriter writer = Files.newBufferedWriter(
+						elementPath, Charset.defaultCharset(), 
+						StandardOpenOption.WRITE);
+				writer.write(String.format("%6s%10s%10s%10s%10s%60s%60s%60s%60s%60s%60s%60s\n", 
+						"Time", "Element", "State", "Location", "Parent", "Contents", 
+						"Consumed", "Produced", "Input", "Output", "Sent", "Received"));
+				elementWriters.put(e, writer);
+			}
+			
+			Path warningPath = Paths.get("output",testName,new Integer(i+1).toString(),"warnings.txt");
+			if(!warningPath.toFile().exists()) {
+				warningPath.toFile().createNewFile();
+			}
+			final BufferedWriter warningWriter = Files.newBufferedWriter(warningPath, 
+					Charset.defaultCharset(), StandardOpenOption.WRITE);
+			warningWriter.write(String.format("%6s%10s%20s%60s%60s\n","Time","Type","Unit(s)","Error","% Error"));
+			
+			SimulationTimeListener listener = new SimulationTimeListener() {
+				@Override
+				public void timeAdvanced(SimulationTimeEvent event) {					
+					for(Element e : sim.getScenario().getElements()) {
+						try {
+							elementWriters.get(e).write(String.format("%6d%10s%10s%10s%10s%60s%60s%60s%60s%60s%60s%60s\n", 
+									event.getTime(), 
+									e.getName(),
+									e.getState(),
+									e.getLocation(), 
+									e.getParent().getName(),
+									e.getContents(), 
+									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getConsumed(e, event.getDuration()):"", 
+									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getProduced(e, event.getDuration()):"", 
+									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getInput(e, event.getDuration()):"", 
+									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getOutput(e, event.getDuration()):"", 
+									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getSent(e, event.getDuration()):"", 
+									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getReceived(e, event.getDuration()):""));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}
+					for(Location l : sim.getScenario().getLocations()) {
+						Resource netFlow = ResourceFactory.create();
+						Resource flow = ResourceFactory.create();
+						for(Element element : sim.getScenario().getElements()) {
+							netFlow = netFlow.add(element.getNetFlow(l, event.getDuration()));
+							flow = flow.add(element.getNetFlow(l, event.getDuration()).absoluteValue());
+						}
+						if(!netFlow.isZero()) {
+							try {
+								warningWriter.write(String.format("%6d%10s%20s%60s%60s\n",
+										event.getTime(), 
+										"Net Flow", l.toString(), 
+										netFlow, netFlow.absoluteValue().safeDivide(flow)));
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}
+					for(Element e1 : sim.getScenario().getElements()) {
+						for(Element e2 : sim.getScenario().getElements()) {
+							Resource r12 = e1.getNetExchange(e2, event.getDuration());
+							Resource r21 = e2.getNetExchange(e1, event.getDuration());
+							if(!r12.add(r21).isZero()) {
+								try {
+									warningWriter.write(String.format("%6d%10s%20s%60s%60s\n",
+											event.getTime(), 
+											"Exchange", e1.getName() + "<->" + e2.getName(), 
+											r12.add(r21), r12.add(r21).absoluteValue().safeDivide(r12.absoluteValue())));
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+						}
+					}
+				}
+			};
+			
+			sim.addSimulationTimeListener(listener);
+			
+			long time = sim.execute((int) (simulationDuration*stepsPerYear), 
+							(int) (timeStepDuration*stepsPerYear), numIterations);
+			summaryWriter.write(String.format("%6d%20d\n",(i+1),time));
+			
+			for(BufferedWriter writer : elementWriters.values()) {
+				writer.close();
+			}
+			
+			warningWriter.close();
+			
+			sim.removeSimulationTimeListener(listener);
+		}
+		
+		summaryWriter.close();
+	}
+	
+	private static Object replaceNull(Object object) {
+		return object==null?"n/a":object;
 	}
 
 	public static Scenario buildScenario(double stepsPerYear) {
