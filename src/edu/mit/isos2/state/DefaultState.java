@@ -98,7 +98,7 @@ public class DefaultState implements State, ResourceStoring, ResourceTransformin
 	public Resource getNetFlow(Element element, Location location, long duration) {
 		Resource netFlow = ResourceFactory.create();
 		if(element.getLocation().equals(location)) {
-			netFlow = netFlow.subtract(getStored(element, duration)).add(getRetrieved(element, duration))
+			netFlow = netFlow.add(getRetrieved(element, duration)).subtract(getStored(element, duration))
 					.add(getProduced(element, duration)).subtract(getConsumed(element, duration))
 					.add(getInput(element, duration)).subtract(getOutput(element, duration));
 		}

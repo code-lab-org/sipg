@@ -1,11 +1,15 @@
 package edu.mit.isos2.element;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import edu.mit.isos2.Location;
 import edu.mit.isos2.state.EmptyState;
 import edu.mit.isos2.state.NullState;
 import edu.mit.isos2.state.OperatingState;
+import edu.mit.isos2.state.State;
 import edu.mit.isos2.state.TransitioningState;
 
 public class LifecycleElement extends DefaultElement {	
@@ -14,6 +18,7 @@ public class LifecycleElement extends DefaultElement {
 	private OperatingState operatingState;
 	private TransitioningState decommissioningState;
 	private NullState nullState;
+	private List<? extends State> states;
 	
 	protected LifecycleElement() {
 		super();
@@ -29,10 +34,14 @@ public class LifecycleElement extends DefaultElement {
 		this.operatingState = operatingState;
 		this.decommissioningState = decommissioningState;
 		this.nullState = nullState;
-
-		states(Arrays.asList(emptyState, commissioningState, 
-				operatingState, decommissioningState, nullState));
+		this.states = Arrays.asList(emptyState, commissioningState, operatingState, 
+					decommissioningState, nullState);
 		initialState(emptyState);
+	}
+	
+	@Override
+	public Set<State> getStates() {
+		return new HashSet<State>(states);
 	}
 	
 	@Override

@@ -49,14 +49,4 @@ public abstract class DefaultResource implements Resource {
 	public final Resource truncateNegative() {
 		return truncate(-1);
 	}
-	
-	public final Resource absoluteValue() {
-		Resource resource = this.copy();
-		for(ResourceType t : ResourceType.values()) {
-			if(!resource.get(t).isZero() && resource.get(t).truncatePositive().isZero()) {
-				resource = resource.add(resource.get(t).negate()).add(resource.get(t).negate());
-			}
-		}
-		return resource;
-	}
 }

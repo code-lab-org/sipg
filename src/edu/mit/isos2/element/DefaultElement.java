@@ -3,6 +3,7 @@ package edu.mit.isos2.element;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import edu.mit.isos2.Location;
@@ -22,12 +23,18 @@ public class DefaultElement implements Element {
 	}
 	
 	public DefaultElement(String name, Location initialLocation, State initialState) {
+		this(name, initialLocation, Arrays.asList(initialState));
+	}
+	
+	public DefaultElement(String name, Location initialLocation, List<State> states) {
 		this.name = name;
 		initialParent = this;
 		this.initialLocation = initialLocation;
 		initialContents = ResourceFactory.create();
-		this.initialState = initialState;
-		states.add(initialState);
+		this.states.addAll(states);
+		if(states.size() > 0) {
+			initialState = states.get(0);
+		}
 	}
 
 	private String name;
@@ -54,16 +61,11 @@ public class DefaultElement implements Element {
 	}
 	
 	public DefaultElement initialState(State initialState) {
-		if(!states.contains(initialState)) {
+		if(!getStates().contains(initialState)) {
 			throw new IllegalArgumentException(
 					"States does not include " + initialState);
 		}
 		this.initialState = initialState;
-		return this;
-	}
-	
-	public DefaultElement states(Collection<? extends State> states) {
-		this.states = new HashSet<State>(states);
 		return this;
 	}
 	
@@ -106,7 +108,7 @@ public class DefaultElement implements Element {
 		state = nextState = initialState;
 		parent = nextParent = initialParent;
 		location = nextLocation = initialLocation;
-		for(State state : states) {
+		for(State state : getStates()) {
 			state.initialize(this, initialTime);
 		}
 	}
@@ -125,7 +127,7 @@ public class DefaultElement implements Element {
 	
 	public void tick(long duration) {
 		nextContents = contents.copy();
-		for(State state : states) {
+		for(State state : getStates()) {
 			state.tick(this, duration);
 		}
 	}
@@ -140,7 +142,7 @@ public class DefaultElement implements Element {
 	
 	@Override
 	public void setState(State state) {
-		if(!states.contains(initialState)) {
+		if(!getStates().contains(initialState)) {
 			throw new IllegalArgumentException(
 					"States does not include " + state);
 		}
@@ -170,7 +172,7 @@ public class DefaultElement implements Element {
 		state = nextState;
 		parent = nextParent;
 		location = nextLocation;
-		for(State state : states) {
+		for(State state : getStates()) {
 			state.tock();
 		}
 	}

@@ -38,24 +38,67 @@ import edu.mit.isos2.resource.ResourceFactory;
 import edu.mit.isos2.resource.ResourceMatrix;
 import edu.mit.isos2.resource.ResourceType;
 import edu.mit.isos2.state.DefaultState;
+import edu.mit.isos2.state.EmptyState;
 import edu.mit.isos2.state.ExchangingState;
 import edu.mit.isos2.state.NullState;
 import edu.mit.isos2.state.ResourceExchanging;
 import edu.mit.isos2.state.ResourceTransforming;
 import edu.mit.isos2.state.ResourceTransporting;
+import edu.mit.isos2.state.State;
 
 public class DemoScript {
 	public static void main(String[] args) throws IOException {
 		BasicConfigurator.configure();
+		/*
+		for(int itr : new int[]{4}) {
+			new DemoScript(itr,20,1000).execute();
+		}
+		*/
+		/*
+		for(int itr : new int[]{100, 100, 100, 100, 100}) {
+			new DemoScript(itr,20,1000).execute();
+		}
+		for(int itr : new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100}) {
+			new DemoScript(itr,50,1000).execute();
+		}
+		*/
+		for(int itr : new int[]{100, 100, 100, 100, 100}) {
+			new DemoScript(itr,20,1000).execute();
+		}
+		for(int stp : new int[]{100, 250, 500, 1000, 2500, 10000}) {
+			new DemoScript(40,50,stp).execute();
+		}
+	}
+	
+	boolean replicationOutputs = true;
+	boolean retainReplicationOutputs = false;
+	final int numIterations;
+	final int numReplications;
+	final int stepsPerYear = 1000;
+	final long timeStep;
+	final double simulationDuration = 30.0;
+	private final String dir = "output";
+	
+	public DemoScript(int numIterations, int numReplications, int timeStep) {
+		this.numIterations = numIterations;
+		this.numReplications = numReplications;
+		this.timeStep = timeStep;
+	}
+	
+	public void execute() throws IOException {
+		Path dirPath = Paths.get(dir);
+		if(!dirPath.toFile().exists()) {
+			dirPath.toFile().mkdir();
+		}
 		
-		String testName = "10exe80iter";
+		String testName = numReplications+"rep"+numIterations+"itr"+timeStep+"stp";
 		
-		Path outputDirPath = Paths.get("output",testName);
+		Path outputDirPath = Paths.get(dir,testName);
 		if(!outputDirPath.toFile().exists()) {
 			outputDirPath.toFile().mkdir();
 		}
 		
-		Path summaryPath = Paths.get("output",testName,"summary.txt");
+		Path summaryPath = Paths.get(dir,testName,"summary.txt");
 		if(!summaryPath.toFile().exists()) {
 			summaryPath.toFile().createNewFile();
 		}
@@ -66,37 +109,34 @@ public class DemoScript {
 				StandardOpenOption.WRITE);
 		summaryWriter.write(String.format("%6s%20s\n","Run","Time (ms)"));
 
-		final int numIterations = 80;
-		final int numExecution = 10;
-		final int stepsPerYear = 1000;
-		final double timeStepDuration = 1.0;
-		final double simulationDuration = 30.0;
 		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
 		sim.setVerifyFlow(false);
 		sim.setVerifyExchange(false);
 		
-		for(int i = 0; i < numExecution; i++) {
-			Path currentOutputDirPath = Paths.get("output",testName,new Integer(i+1).toString());
+		for(int i = 0; i < numReplications; i++) {
+			Path currentOutputDirPath = Paths.get(dir,testName,new Integer(i+1).toString());
 			if(!currentOutputDirPath.toFile().exists()) {
 				currentOutputDirPath.toFile().mkdir();
 			}
 			
 			final Map<Element, BufferedWriter> elementWriters = new HashMap<Element, BufferedWriter>();
-			for(Element e : sim.getScenario().getElements()) {
-				Path elementPath = Paths.get("output",testName,new Integer(i+1).toString(),e.getName() + ".txt");
-				if(!elementPath.toFile().exists()) {
-					elementPath.toFile().createNewFile();
+			if(replicationOutputs || i == 1) {
+				for(Element e : sim.getScenario().getElements()) {
+					Path elementPath = Paths.get(dir,testName,new Integer(i+1).toString(),e.getName() + ".txt");
+					if(!elementPath.toFile().exists()) {
+						elementPath.toFile().createNewFile();
+					}
+					BufferedWriter writer = Files.newBufferedWriter(
+							elementPath, Charset.defaultCharset(), 
+							StandardOpenOption.WRITE);
+					writer.write(String.format("%6s%10s%10s%10s%10s%60s%60s%60s%60s%60s%60s%60s\n", 
+							"Time", "Element", "State", "Location", "Parent", "Contents", 
+							"Consumed", "Produced", "Input", "Output", "Sent", "Received"));
+					elementWriters.put(e, writer);
 				}
-				BufferedWriter writer = Files.newBufferedWriter(
-						elementPath, Charset.defaultCharset(), 
-						StandardOpenOption.WRITE);
-				writer.write(String.format("%6s%10s%10s%10s%10s%60s%60s%60s%60s%60s%60s%60s\n", 
-						"Time", "Element", "State", "Location", "Parent", "Contents", 
-						"Consumed", "Produced", "Input", "Output", "Sent", "Received"));
-				elementWriters.put(e, writer);
 			}
 			
-			Path warningPath = Paths.get("output",testName,new Integer(i+1).toString(),"warnings.txt");
+			Path warningPath = Paths.get(dir,testName,new Integer(i+1).toString(),"warnings.txt");
 			if(!warningPath.toFile().exists()) {
 				warningPath.toFile().createNewFile();
 			}
@@ -106,8 +146,8 @@ public class DemoScript {
 			
 			SimulationTimeListener listener = new SimulationTimeListener() {
 				@Override
-				public void timeAdvanced(SimulationTimeEvent event) {					
-					for(Element e : sim.getScenario().getElements()) {
+				public void timeAdvanced(SimulationTimeEvent event) {
+					for(Element e : elementWriters.keySet()) {
 						try {
 							elementWriters.get(e).write(String.format("%6d%10s%10s%10s%10s%60s%60s%60s%60s%60s%60s%60s\n", 
 									event.getTime(), 
@@ -116,29 +156,27 @@ public class DemoScript {
 									e.getLocation(), 
 									e.getParent().getName(),
 									e.getContents(), 
-									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getConsumed(e, event.getDuration()):"", 
-									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getProduced(e, event.getDuration()):"", 
-									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getInput(e, event.getDuration()):"", 
-									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getOutput(e, event.getDuration()):"", 
-									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getSent(e, event.getDuration()):"", 
-									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getReceived(e, event.getDuration()):""));
+									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getConsumed(e, event.getDuration()):"NaN", 
+									(e.getState() instanceof ResourceTransforming)?((ResourceTransforming)e.getState()).getProduced(e, event.getDuration()):"NaN", 
+									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getInput(e, event.getDuration()):"NaN", 
+									(e.getState() instanceof ResourceTransporting)?((ResourceTransporting)e.getState()).getOutput(e, event.getDuration()):"NaN", 
+									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getSent(e, event.getDuration()):"NaN", 
+									(e.getState() instanceof ResourceExchanging)?((ResourceExchanging)e.getState()).getReceived(e, event.getDuration()):"NaN"));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
 					}
 					for(Location l : sim.getScenario().getLocations()) {
 						Resource netFlow = ResourceFactory.create();
-						Resource flow = ResourceFactory.create();
 						for(Element element : sim.getScenario().getElements()) {
 							netFlow = netFlow.add(element.getNetFlow(l, event.getDuration()));
-							flow = flow.add(element.getNetFlow(l, event.getDuration()).absoluteValue());
 						}
 						if(!netFlow.isZero()) {
 							try {
 								warningWriter.write(String.format("%6d%10s%20s%60s%60s\n",
 										event.getTime(), 
 										"Net Flow", l.toString(), 
-										netFlow, netFlow.absoluteValue().safeDivide(flow)));
+										netFlow, "NaN"));
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
@@ -166,11 +204,15 @@ public class DemoScript {
 			sim.addSimulationTimeListener(listener);
 			
 			long time = sim.execute((int) (simulationDuration*stepsPerYear), 
-							(int) (timeStepDuration*stepsPerYear), numIterations);
+					timeStep, numIterations);
 			summaryWriter.write(String.format("%6d%20d\n",(i+1),time));
 			
-			for(BufferedWriter writer : elementWriters.values()) {
-				writer.close();
+			for(Element e : elementWriters.keySet()) {
+				elementWriters.get(e).close();
+				Path elementPath = Paths.get(dir,testName,new Integer(i+1).toString(),e.getName() + ".txt");
+				if(i > 1 && elementPath.toFile().exists() && !retainReplicationOutputs) {
+					elementPath.toFile().deleteOnExit();
+				}
 			}
 			
 			warningWriter.close();
@@ -179,10 +221,6 @@ public class DemoScript {
 		}
 		
 		summaryWriter.close();
-	}
-	
-	private static Object replaceNull(Object object) {
-		return object==null?"n/a":object;
 	}
 
 	public static Scenario buildScenario(double stepsPerYear) {
@@ -197,27 +235,28 @@ public class DemoScript {
 		Location l_bc = new Location(n_b, n_c);
 		Location l_cb = new Location(n_c, n_b);
 
-		Element e_s1 = createSocialElement("e_s1", l_aa, 0.065/stepsPerYear, 4.0/stepsPerYear, 1.0/stepsPerYear, 3.0, 0.07/stepsPerYear);
-		Element e_s2 = createSocialElement("e_s2", l_bb, 0.050/stepsPerYear, 3.0/stepsPerYear, 1.2/stepsPerYear, 1.0, 0.05/stepsPerYear);
-		Element e_s3 = createSocialElement("e_s3", l_cc, 0.060/stepsPerYear, 3.5/stepsPerYear, 1.0/stepsPerYear, 6.0, 0.06/stepsPerYear);
+		Element e_s1 = createSocialElement("e_S1", l_aa, 0.065/stepsPerYear, 4.0/stepsPerYear, 1.0/stepsPerYear, 3.0, 0.07/stepsPerYear);
+		Element e_s2 = createSocialElement("e_S2", l_bb, 0.050/stepsPerYear, 3.0/stepsPerYear, 1.2/stepsPerYear, 1.0, 0.05/stepsPerYear);
+		Element e_s3 = createSocialElement("e_S3", l_cc, 0.060/stepsPerYear, 3.5/stepsPerYear, 1.0/stepsPerYear, 6.0, 0.06/stepsPerYear);
 
-		Element e_o1 = createOilElement("e_o1", l_aa, 1.5, 1.0, 500);
-		Element e_o2 = createOilElement("e_o2", l_bb, 2.0, 1.0, 100);
-		Element e_o3 = createOilElement("e_o3", l_cc, 1.6, 1.0, 400);
+		Element e_o1 = createOilElement("e_P1", l_aa, 0.5, 1.0, 5000);
+		Element e_o2 = createOilElement("e_P2", l_bb, 0.8, 1.0, 1000);
+		Element e_o3 = createOilElement("e_P3", l_cc, 0.6, 1.0, 4000);
 
-		Element e_e1 = createElectricityElement("e_e1", l_aa, 1.0/stepsPerYear, 0.25);
-		Element e_e2 = createElectricityElement("e_e2", l_bb, 0.5/stepsPerYear, 0.30);
-		Element e_e3 = createElectricityElement("e_e3", l_cc, 0.8/stepsPerYear, 0.25);
+		Element e_e1 = createElectricityElement("e_E1", l_aa, 1.0/stepsPerYear, 0.25);
+		Element e_e2 = createElectricityElement("e_E2", l_bb, 0.5/stepsPerYear, 0.30);
+		Element e_e3 = createElectricityElement("e_E3", l_cc, 0.8/stepsPerYear, 0.25);
 
-		Element e_w1 = createWaterElement("e_w1", l_aa, 1.0, 0.9, 200);
-		Element e_w2 = createWaterElement("e_w2", l_bb, 1.0, 0.9, 150);
-		Element e_w3 = createWaterElement("e_w3", l_cc, 1.0, 0.9, 250);
-		Element e_w4 = createPlantElement("e_w4", l_aa, 0.5/stepsPerYear, 4.5);
-		Element e_w5 = createPlantElement("e_w5", l_cc, 0.4/stepsPerYear, 4.5);
-		Element e_w6 = createPipelineElement("e_w6", l_ab, 0.02/stepsPerYear, 0.9, 2.5);
-		Element e_w7 = createPipelineElement("e_w7", l_cb, 0.02/stepsPerYear, 0.9, 2.0);
-		Element e_w8 = createWaterController("e_w8", l_aa, 
-				Arrays.asList(e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7));
+		Element e_w1 = createWaterElement("e_W1", l_aa, 1.0, 0.9, 200);
+		Element e_w2 = createWaterElement("e_W2", l_bb, 1.0, 0.9, 150);
+		Element e_w3 = createWaterElement("e_W3", l_cc, 1.0, 0.9, 250);
+		Element e_w4 = createPlantElement("e_W4", l_aa, (long)(0*stepsPerYear), 0.5/stepsPerYear, 4.5);
+		Element e_w5 = createPlantElement("e_W5", l_cc, (long)(0*stepsPerYear), 0.4/stepsPerYear, 4.5);
+		Element e_w6 = createPlantElement("e_W6", l_cc, (long)(5*stepsPerYear), 0.6/stepsPerYear, 4.5);
+		Element e_w7 = createPipelineElement("e_W7", l_ab, 0.02/stepsPerYear, 0.9, 2.5);
+		Element e_w8 = createPipelineElement("e_W8", l_cb, 0.02/stepsPerYear, 0.9, 2.0);
+		Element e_w9 = createWaterController("e_W9", l_aa, 
+				Arrays.asList(e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7, e_w8));
 
 		// federation agreement
 		setUpAgreement(e_s1, e_e1, e_o1, e_w1);
@@ -227,7 +266,7 @@ public class DemoScript {
 		return new Scenario("Demo", 0, 
 				Arrays.asList(l_aa, l_bb, l_cc, l_ab, l_ba, l_bc, l_cb), 
 				Arrays.asList(e_s1, e_s2, e_s3, e_o1, e_o2, e_o3, 
-						e_e1, e_e2, e_e3, e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7, e_w8));
+						e_e1, e_e2, e_e3, e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7, e_w8, e_w9));
 	}
 
 	private static void setUpAgreement(Element social, Element electricity, Element oil, Element water) {
@@ -308,8 +347,7 @@ public class DemoScript {
 			public Resource getReceived(Element element, long duration) {
 				return getConsumed(element, duration).get(ResourceType.ELECTRICITY);
 			}
-		}
-				).initialContents(ResourceFactory.create(ResourceType.RESERVES, initialReserves));
+		}).initialContents(ResourceFactory.create(ResourceType.RESERVES, initialReserves));
 	}
 
 	private static Element createSocialElement(String name, Location location, 
@@ -322,11 +360,6 @@ public class DemoScript {
 							new ResourceType[]{ResourceType.ELECTRICITY, 
 									ResourceType.WATER, ResourceType.OIL},
 									new double[]{electPC, waterPC, oilPC}));
-			@Override
-			public Resource getReceived(Element element, long duration) {
-				return getConsumed(element, duration);
-			}
-
 			@Override
 			public Resource getConsumed(Element element, long duration) {
 				return tfMatrix.multiply(element.getContents().get(ResourceType.PEOPLE))
@@ -343,8 +376,11 @@ public class DemoScript {
 			public Resource getStored(Element element, long duration) {
 				return getProduced(element, duration);
 			}
-		}
-				).initialContents(ResourceFactory.create(ResourceType.PEOPLE, initialPopulation));
+			@Override
+			public Resource getReceived(Element element, long duration) {
+				return getConsumed(element, duration);
+			}
+		}).initialContents(ResourceFactory.create(ResourceType.PEOPLE, initialPopulation));
 	}
 
 	private static Element createWaterController(String name, Location location, 
@@ -479,15 +515,34 @@ public class DemoScript {
 				new PipelineState(capacity, efficiency, pumpElect));
 	}
 	public static Element createPlantElement(String name, Location location, 
-			double capacity, double desalElect) {
-		return new DefaultElement(name, location,
-				new PlantState(capacity, desalElect));
+			final long commissionTime, final double capacity, final double desalElect) {
+		return new DefaultElement(name, location) {
+			PlantState operatingState = new PlantState(capacity, desalElect);
+			EmptyState emptyState = new EmptyState(commissionTime, operatingState);
+			List<? extends State> states = Arrays.asList(emptyState, operatingState);
+			
+			@Override
+			public void initialize(long initialTime) {
+				if(initialTime < emptyState.getStateChangeTime()) {
+					initialState(emptyState);
+				} else {
+					initialState(operatingState);
+				}
+				super.initialize(initialTime);
+			}
+			
+			@Override
+			public Set<State> getStates() {
+				return new HashSet<State>(states);
+			}
+		};
 	}
 
 	private static class PlantState extends DefaultState {
 		protected Resource productionCapacity;
 		protected ResourceMatrix tfMatrix = new ResourceMatrix();
 		protected Resource produced = ResourceFactory.create();
+		private final Resource initialProduced = ResourceFactory.create();
 
 		public PlantState(double capacity, double desalElect) {
 			super("Ops");
@@ -504,6 +559,11 @@ public class DemoScript {
 		public Resource getProduced(Element element, long duration) {
 			return produced;
 		}
+		@Override
+		public void initialize(Element element, long initialTime) {
+			super.initialize(element, initialTime);
+			produced = initialProduced;
+		}
 		protected void setProduced(Resource produced, long duration) {
 			if(produced.getQuantity(ResourceType.WATER) > 
 			productionCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
@@ -519,6 +579,7 @@ public class DemoScript {
 		protected double eta = 1;
 		protected ResourceMatrix tpMatrix = new ResourceMatrix();
 		protected Resource output = ResourceFactory.create();
+		private final Resource initialOutput = ResourceFactory.create();
 
 		public PipelineState(double capacity, double efficiency, double pumpElect) {
 			super("Ops");
@@ -542,6 +603,11 @@ public class DemoScript {
 		public Resource getConsumed(Element element, long duration) {
 			return getInput(element, duration).subtract(getOutput(element, duration));
 		}
+		@Override
+		public void initialize(Element element, long initialTime) {
+			super.initialize(element, initialTime);
+			output = initialOutput;
+		}
 		protected void setOutput(Resource output, long duration) {
 			if(output.getQuantity(ResourceType.WATER) > 
 			outputCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
@@ -556,6 +622,8 @@ public class DemoScript {
 		private ResourceMatrix liftMatrix = new ResourceMatrix();
 		Resource produced = ResourceFactory.create();
 		Resource received = ResourceFactory.create();
+		private final Resource initialProduced = ResourceFactory.create();
+		private final Resource initialReceived = ResourceFactory.create();
 
 		public WaterState(double liftAquifer, double liftElect) {
 			super("Ops");
@@ -579,15 +647,21 @@ public class DemoScript {
 		public Resource getConsumed(Element element, long duration) {
 			return liftMatrix.multiply(produced);
 		}
-		@Override
-		public Resource getReceived(Element element, long duration) {
-			return received;
-		}
 		protected void setProduced(Resource produced, long duration) {
 			this.produced = produced;
 		}
 		protected void setReceived(Resource received, long duration) {
 			this.received = received;
+		}
+		@Override
+		public Resource getReceived(Element element, long duration) {
+			return received;
+		}
+		@Override
+		public void initialize(Element element, long initialTime) {
+			super.initialize(element, initialTime);
+			produced = initialProduced;
+			received = initialReceived;
 		}
 	}
 }

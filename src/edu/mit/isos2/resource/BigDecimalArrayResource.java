@@ -114,4 +114,12 @@ public class BigDecimalArrayResource extends DefaultResource implements Resource
 		}
 		return newResource;
 	}
+	
+	public final Resource absoluteValue() {
+		BigDecimalArrayResource newResource = new BigDecimalArrayResource();
+		for(ResourceType t : ResourceType.values()) {
+			newResource.amount[t.ordinal()] = amount[t.ordinal()].abs();
+		}
+		return newResource;
+	}
 }

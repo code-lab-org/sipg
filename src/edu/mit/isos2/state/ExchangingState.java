@@ -79,6 +79,15 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	}
 	
 	@Override
+	public void initialize(Element element, long initialTime) {
+		super.initialize(element, initialTime);
+		demand.clear();
+		nextDemand.clear();
+		supply.clear();
+		nextSupply.clear();
+	}
+	
+	@Override
 	public void iterateTick(Element element, long duration) {
 		super.iterateTick(element, duration);
 		nextDemand.clear();
@@ -159,8 +168,7 @@ public class ExchangingState extends DefaultState implements ResourceExchanging 
 	@Override
 	public Resource getNetFlow(Element element, Location location, long duration) {
 		Resource netFlow = super.getNetFlow(element, location, duration);
-		if(location.equals(element.getLocation()) ||
-				(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin()))) {
+		if(location.isNodal() && location.getOrigin().equals(element.getLocation().getOrigin())) {
 			netFlow = netFlow.subtract(getSent(element, duration))
 					.add(getReceived(element, duration));
 		}

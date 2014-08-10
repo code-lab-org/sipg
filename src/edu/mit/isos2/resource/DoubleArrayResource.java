@@ -110,4 +110,12 @@ public class DoubleArrayResource extends DefaultResource implements Resource {
 		}
 		return newResource;
 	}
+	
+	public final Resource absoluteValue() {
+		DoubleArrayResource newResource = new DoubleArrayResource();
+		for(ResourceType t : ResourceType.values()) {
+			newResource.amount[t.ordinal()] = Math.abs(amount[t.ordinal()]);
+		}
+		return newResource;
+	}
 }

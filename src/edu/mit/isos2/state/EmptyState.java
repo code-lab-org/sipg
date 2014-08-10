@@ -49,7 +49,7 @@ public class EmptyState implements State, ElementTransforming {
 		nextTime = time + duration;
 
 		if(element.getState().equals(this)
-				&& nextTime > stateChangeTime) {
+				&& nextTime >= stateChangeTime) {
 			transform(element, nextState);
 		}
 	}

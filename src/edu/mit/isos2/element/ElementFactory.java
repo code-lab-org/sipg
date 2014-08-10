@@ -80,9 +80,7 @@ public abstract class ElementFactory {
 		OperatingState s3 = new RetrievingState("Retrieving", Long.MAX_VALUE, s5)
 				.consumptionMatrix(consumptionMatrix)
 				.fixedExpense(fixedExpense);
-		return new DefaultElement(name, initialLocation)
-				.states(Arrays.asList(s3, s5))
-				.initialState(s3)
+		return new DefaultElement(name, initialLocation, Arrays.asList(s3, s5))
 				.initialContents(initialContents);
 	}
 	

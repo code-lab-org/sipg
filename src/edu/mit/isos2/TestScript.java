@@ -83,15 +83,11 @@ public class TestScript {
 		};
 		
 
-		DefaultElement e1 = new DefaultElement("Desal. Plant", w)
-				.states(Arrays.asList(e1s)).initialState(e1s);
-		DefaultElement e2 = new DefaultElement("Aquifer", w)
-				.states(Arrays.asList(e2s)).initialState(e2s)
+		DefaultElement e1 = new DefaultElement("Desal. Plant", w, e1s);
+		DefaultElement e2 = new DefaultElement("Aquifer", w, e2s)
 				.initialContents(ResourceFactory.create(ResourceType.AQUIFER, "100"));
-		DefaultElement e3 = new DefaultElement("Power Plant", w)
-				.states(Arrays.asList(e3s)).initialState(e3s);
-		DefaultElement e4 = new DefaultElement("Fuel Tank", w)
-				.states(Arrays.asList(e4s)).initialState(e4s)
+		DefaultElement e3 = new DefaultElement("Power Plant", w, e3s);
+		DefaultElement e4 = new DefaultElement("Fuel Tank", w, e4s)
 				.initialContents(ResourceFactory.create(ResourceType.OIL, "1000"));
 		
 		// federation agreement
