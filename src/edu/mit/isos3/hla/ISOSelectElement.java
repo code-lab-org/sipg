@@ -179,12 +179,12 @@ public class ISOSelectElement extends ISOSelement implements ElectElement {
 	 */
 	@Override
 	public String toString() {
-		return new StringBuilder().append("ISOSsocialElement { name: ")
-				.append(getName()).append(", location: ").append(getLocation().toString())
-				.append(getName()).append(", petrolReceived: ").append(getPetrolReceived())
-				.append(getName()).append(", electSentToPetrol: ").append(getElectSentToPetrol())
-				.append(getName()).append(", electSentToSocial: ").append(getElectSentToSocial())
-				.append(getName()).append(", electSentToWater: ").append(getElectSentToWater())
+		return new StringBuilder().append("ISOSelectElement { name: ").append(getName())
+				.append(", location: ").append(getLocation())
+				.append(", petrolReceived: ").append(getPetrolReceived())
+				.append(", electSentToPetrol: ").append(getElectSentToPetrol())
+				.append(", electSentToSocial: ").append(getElectSentToSocial())
+				.append(", electSentToWater: ").append(getElectSentToWater())
 				.append("}").toString();
 	}
 

@@ -128,7 +128,9 @@ public class ISOSelement extends HLAobject implements Element {
 	@Override
 	public Location getLocation() {
 		String[] nodeNames = location.getValue().split("-");
-		if(nodeNames.length == 2) {
+		if(nodeNames.length==1) {
+			return new Location(new Node(nodeNames[0]), new Node(nodeNames[0]));
+		} else if(nodeNames.length == 2) {
 			return new Location(new Node(nodeNames[0]), new Node(nodeNames[1]));
 		} else {
 			return null;
@@ -172,8 +174,8 @@ public class ISOSelement extends HLAobject implements Element {
 	 */
 	@Override
 	public String toString() {
-		return new StringBuilder().append("ISOSelement { name: ")
-				.append(getName()).append(", location: ").append(getLocation().toString())
+		return new StringBuilder().append("ISOSelement { name: ").append(getName())
+				.append(", location: ").append(getLocation())
 				.append("}").toString();
 	}
 }

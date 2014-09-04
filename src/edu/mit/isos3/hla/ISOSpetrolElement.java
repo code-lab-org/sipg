@@ -16,30 +16,33 @@ import hla.rti1516e.exceptions.RTIexception;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos3.SimEntity;
-import edu.mit.isos3.element.WaterElement;
+import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.PetrolElement;
 
 /**
- * ISOSwaterElement is the HLA object class implementing the {@link WaterElement} 
+ * ISOSpetrolElement is the HLA object class implementing the {@link PetrolElement} 
  * interface for communication with the RTI.
  * 
  * @author Paul T. Grogan, ptgrogan@mit.edu
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ISOSwaterElement extends ISOSelement implements WaterElement {
-	private static Logger logger = Logger.getLogger(ISOSwaterElement.class);
-	public static final String CLASS_NAME = "HLAobjectRoot.Element.WaterElement";
+public class ISOSpetrolElement extends ISOSelement implements PetrolElement {
+	private static Logger logger = Logger.getLogger(ISOSpetrolElement.class);
+	public static final String CLASS_NAME = "HLAobjectRoot.Element.PetrolElement";
 	
 	public static final String NAME_ATTRIBUTE = "Name",
 			LOCATION_ATTRIBUTE = "Location",
 			ELECT_RECEIVED_ATTRIBUTE = "ElectReceived",
-			WATER_SENT_TO_SOCIAL_ATTRIBUTE = "WaterSentToSocial";
+			PETROL_SENT_TO_ELECT_ATTRIBUTE = "PetrolSentToElect",
+			PETROL_SENT_TO_SOCIAL_ATTRIBUTE = "PetrolSentToSocial";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		LOCATION_ATTRIBUTE,
 		ELECT_RECEIVED_ATTRIBUTE,
-		WATER_SENT_TO_SOCIAL_ATTRIBUTE
+		PETROL_SENT_TO_ELECT_ATTRIBUTE,
+		PETROL_SENT_TO_SOCIAL_ATTRIBUTE
 	};
 
 	/**
@@ -82,7 +85,8 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	}
 
 	private final HLAfloat64BE electReceived;
-	private final HLAfloat64BE waterSentToSocial;
+	private final HLAfloat64BE petrolSentToElect;
+	private final HLAfloat64BE petrolSentToSocial;
 	
 	/**
 	 * Instantiates a new ISOS element. The object is interpreted as local
@@ -94,7 +98,7 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	 * @param instanceName the instance name
 	 * @throws RTIexception the RTI exception
 	 */
-	public ISOSwaterElement(RTIambassador rtiAmbassador, 
+	public ISOSpetrolElement(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) 
 					throws RTIexception {
 		super(rtiAmbassador, encoderFactory, instanceName);
@@ -107,12 +111,20 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 		sendOrderMap.put(getAttributeHandle(ELECT_RECEIVED_ATTRIBUTE), 
 				OrderType.TIMESTAMP);
 		
-		logger.trace("Creating the water sent to social data element, " 
+		logger.trace("Creating the petrol sent to elect data element, " 
 				+ "adding it as an attribute, "
 				+ " and setting the send order.");
-		waterSentToSocial = encoderFactory.createHLAfloat64BE();
-		attributeValues.put(getAttributeHandle(WATER_SENT_TO_SOCIAL_ATTRIBUTE),  waterSentToSocial);
-		sendOrderMap.put(getAttributeHandle(WATER_SENT_TO_SOCIAL_ATTRIBUTE), 
+		petrolSentToElect = encoderFactory.createHLAfloat64BE();
+		attributeValues.put(getAttributeHandle(PETROL_SENT_TO_ELECT_ATTRIBUTE),  petrolSentToElect);
+		sendOrderMap.put(getAttributeHandle(PETROL_SENT_TO_ELECT_ATTRIBUTE), 
+				OrderType.TIMESTAMP);
+		
+		logger.trace("Creating the petrol sent to social data element, " 
+				+ "adding it as an attribute, "
+				+ " and setting the send order.");
+		petrolSentToSocial = encoderFactory.createHLAfloat64BE();
+		attributeValues.put(getAttributeHandle(PETROL_SENT_TO_SOCIAL_ATTRIBUTE),  petrolSentToSocial);
+		sendOrderMap.put(getAttributeHandle(PETROL_SENT_TO_SOCIAL_ATTRIBUTE), 
 				OrderType.TIMESTAMP);
 	}
 
@@ -138,13 +150,14 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	@Override
 	public void setAttributes(SimEntity object) {
 		super.setAttributes(object);
-		if(object instanceof WaterElement) {
-			WaterElement element = (WaterElement) object;
+		if(object instanceof PetrolElement) {
+			PetrolElement element = (PetrolElement) object;
 			electReceived.setValue(element.getElectReceived());
-			waterSentToSocial.setValue(element.getWaterSentToSocial());
+			petrolSentToElect.setValue(element.getPetrolSentToElect());
+			petrolSentToSocial.setValue(element.getPetrolSentToSocial());
 		} else {
 			logger.warn("Incompatible object passed: expected " 
-					+ WaterElement.class + " but received "
+					+ ElectElement.class + " but received "
 					+ object.getClass() + ".");
 		}
 	}
@@ -154,10 +167,11 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	 */
 	@Override
 	public String toString() {
-		return new StringBuilder().append("ISOSwaterElement { name: ").append(getName())
+		return new StringBuilder().append("ISOSpetrolElement { name: ").append(getName())
 				.append(", location: ").append(getLocation())
 				.append(", electReceived: ").append(getElectReceived())
-				.append(", waterSentToSocial: ").append(getWaterSentToSocial())
+				.append(", petrolSentToElect: ").append(getPetrolSentToElect())
+				.append(", petrolSentToSocial: ").append(getPetrolSentToSocial())
 				.append("}").toString();
 	}
 
@@ -167,7 +181,12 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	}
 
 	@Override
-	public double getWaterSentToSocial() {
-		return waterSentToSocial.getValue();
+	public double getPetrolSentToElect() {
+		return petrolSentToElect.getValue();
+	}
+
+	@Override
+	public double getPetrolSentToSocial() {
+		return petrolSentToSocial.getValue();
 	}
 }

@@ -1,5 +1,7 @@
 package edu.mit.isos3;
 
+import hla.rti1516e.exceptions.RTIexception;
+
 import java.util.Date;
 
 import javax.swing.event.EventListenerList;
@@ -9,6 +11,7 @@ import org.apache.log4j.Logger;
 import edu.mit.isos3.element.LocalElement;
 import edu.mit.isos3.event.SimulationTimeEvent;
 import edu.mit.isos3.event.SimulationTimeListener;
+import edu.mit.isos3.hla.ISOSambassador;
 import edu.mit.isos3.resource.Resource;
 import edu.mit.isos3.resource.ResourceFactory;
 
@@ -57,16 +60,25 @@ public class Simulator {
 		}
 	}
 	
-	public long execute(long duration, long timeStep, int iterations) {
-		long startTime = new Date().getTime();
+	public long initialize(ISOSambassador amb, String federateName, 
+			long timeStep, int iterations) throws RTIexception {
+		amb.connect("ISOS Test", "isos.xml", federateName, "Test");
 		
-		long time = scenario.getInitialTime();
-
-		for(SimEntity entity : scenario.getElements()) {
-			entity.initialize(scenario.getInitialTime());
+		// TODO wait for other federates to join
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			logger.error(e);
 		}
-		
-		// TODO fireTimeAdvanced(time, timeStep);
+
+		long startTime = new Date().getTime();
+		amb.initialize(scenario.getInitialTime(), iterations, timeStep, scenario.getElements());
+		return startTime;
+	}
+
+	public void execute(ISOSambassador amb, String federateName, 
+			long duration, long timeStep, int iterations) throws RTIexception {
+		long time = scenario.getInitialTime();
 		
 		if(outputs) {
 			history.clear();
@@ -82,14 +94,7 @@ public class Simulator {
 				+ ", outputs: " + outputs + "}.");
 		
 		while(time <= scenario.getInitialTime() + duration) {
-			for(int i = 0; i < iterations; i++) {
-				for(SimEntity entity : scenario.getElements()) {
-					entity.iterateTick(timeStep);
-				}
-				for(SimEntity entity : scenario.getElements()) {
-					entity.iterateTock();
-				}
-			}
+			amb.advance();
 			
 			if(outputs) {
 				history.log(time);
@@ -149,12 +154,5 @@ public class Simulator {
 			}
 			time = time + timeStep;
 		}
-		long executionTime = new Date().getTime() - startTime;
-		if(outputs) {
-			logger.info("Simulation completed in "
-					+ executionTime + " ms");
-			history.displayOutputs(verifyFlow);
-		}
-		return executionTime;
 	}
 }

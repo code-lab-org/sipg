@@ -166,11 +166,11 @@ public class ISOSsocialElement extends ISOSelement implements SocialElement {
 	 */
 	@Override
 	public String toString() {
-		return new StringBuilder().append("ISOSsocialElement { name: ")
-				.append(getName()).append(", location: ").append(getLocation().toString())
-				.append(getName()).append(", electReceived: ").append(getElectReceived())
-				.append(getName()).append(", petrolReceived: ").append(getPetrolReceived())
-				.append(getName()).append(", waterReceived: ").append(getWaterReceived())
+		return new StringBuilder().append("ISOSsocialElement { name: ").append(getName())
+				.append(", location: ").append(getLocation())
+				.append(", electReceived: ").append(getElectReceived())
+				.append(", petrolReceived: ").append(getPetrolReceived())
+				.append(", waterReceived: ").append(getWaterReceived())
 				.append("}").toString();
 	}
 

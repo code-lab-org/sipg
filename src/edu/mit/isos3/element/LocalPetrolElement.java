@@ -16,7 +16,7 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 			double extractElect, double extractReserves, 
 			double initialReserves) {
 		super(name, location, new PetrolState(extractElect, extractReserves));
-		initialContents(ResourceFactory.create(ResourceType.OIL, initialReserves));
+		initialContents(ResourceFactory.create(ResourceType.RESERVES, initialReserves));
 	}
 	
 	public void setElectSupplier(ElectElement element) {
