@@ -8,11 +8,7 @@ import edu.mit.isos3.resource.ResourceFactory;
 import edu.mit.isos3.resource.ResourceMatrix;
 import edu.mit.isos3.resource.ResourceType;
 
-public class LocalSocialElement extends DefaultElement implements SocialElement {
-	private double electReceived, nextElectReceived;
-	private double petrolReceived, nextPetrolReceived;
-	private double waterReceived, nextWaterReceived;
-	
+public class LocalSocialElement extends DefaultElement implements SocialElement {	
 	public LocalSocialElement(String name, Location location, 
 			double waterPC, double electPC, double oilPC, 
 			double initialPopulation, double growthRate) {
@@ -43,45 +39,26 @@ public class LocalSocialElement extends DefaultElement implements SocialElement 
 	
 	@Override
 	public double getElectReceived() {
-		return electReceived;
+		if(getState() instanceof SocialState) {
+			return ((SocialState)getState()).getElectReceived();
+		}
+		return 0;
 	}
 	
 	@Override
 	public double getPetrolReceived() {
-		return petrolReceived;
+		if(getState() instanceof SocialState) {
+			return ((SocialState)getState()).getPetrolReceived();
+		}
+		return 0;
 	}
 	
 	@Override
 	public double getWaterReceived() {
-		return waterReceived;
-	}
-	
-	@Override
-	public void initialize(long initialTime) {
-		super.initialize(initialTime);
-		electReceived = nextElectReceived = 0;
-		petrolReceived = nextPetrolReceived = 0;
-		waterReceived = nextWaterReceived = 0;
-	}
-
-	public void iterateTick(long duration) {
-		super.iterateTick(duration);
 		if(getState() instanceof SocialState) {
-			SocialState state = (SocialState) getState();
-			nextElectReceived = state.getReceived(this, duration)
-					.getQuantity(ResourceType.ELECTRICITY);
-			nextPetrolReceived = state.getReceived(this, duration)
-					.getQuantity(ResourceType.OIL);
-			nextWaterReceived = state.getReceived(this, duration)
-					.getQuantity(ResourceType.WATER);
+			return ((SocialState)getState()).getWaterReceived();
 		}
-	}
-	
-	public void iterateTock() {
-		super.iterateTock();
-		electReceived = nextElectReceived;
-		petrolReceived = nextPetrolReceived;
-		waterReceived = nextWaterReceived;
+		return 0;
 	}
 	
 	public static class SocialState extends DefaultState implements ResourceExchanging {
@@ -91,6 +68,40 @@ public class LocalSocialElement extends DefaultElement implements SocialElement 
 		private ElectElement electSupplier = null;
 		private PetrolElement petrolSupplier = null;
 		private WaterElement waterSupplier = null;
+		private double electReceived, nextElectReceived;
+		private double petrolReceived, nextPetrolReceived;
+		private double waterReceived, nextWaterReceived;
+		
+		public double getElectReceived() {
+			return electReceived;
+		}
+		
+		public double getPetrolReceived() {
+			return petrolReceived;
+		}
+		
+		public double getWaterReceived() {
+			return waterReceived;
+		}
+
+		@Override
+		public void iterateTick(LocalElement element, long duration) {
+			super.iterateTick(element, duration);
+			nextElectReceived = getReceived(element, duration)
+					.getQuantity(ResourceType.ELECTRICITY);
+			nextPetrolReceived = getReceived(element, duration)
+					.getQuantity(ResourceType.OIL);
+			nextWaterReceived = getReceived(element, duration)
+					.getQuantity(ResourceType.WATER);
+		}
+
+		@Override
+		public void iterateTock() {
+			super.iterateTock();
+			electReceived = nextElectReceived;
+			petrolReceived = nextPetrolReceived;
+			waterReceived = nextWaterReceived;
+		}
 		
 		@Override
 		public void initialize(LocalElement element, long initialTime) {
@@ -98,6 +109,9 @@ public class LocalSocialElement extends DefaultElement implements SocialElement 
 			electSupplier = null;
 			petrolSupplier = null;
 			waterSupplier = null;
+			electReceived = nextElectReceived = 0;
+			petrolReceived = nextPetrolReceived = 0;
+			waterReceived = nextWaterReceived = 0;
 		}
 		
 		public SocialState(double electPC, double oilPC, double waterPC, double growthRate) {

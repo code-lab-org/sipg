@@ -10,9 +10,7 @@ import edu.mit.isos3.resource.ResourceFactory;
 import edu.mit.isos3.resource.ResourceMatrix;
 import edu.mit.isos3.resource.ResourceType;
 
-public class LocalWaterElement extends DefaultElement implements WaterElement {
-	private double electReceived, nextElectReceived;
-	
+public class LocalWaterElement extends DefaultElement implements WaterElement {	
 	public LocalWaterElement(String name, Location location,
 			double liftAquifer, double liftElect, double initialAquifer) {
 		super(name, location, new WaterState(liftAquifer, liftElect));
@@ -39,7 +37,10 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 	
 	@Override
 	public double getElectReceived() {
-		return electReceived;
+		if(getState() instanceof WaterState) {
+			return ((WaterState)getState()).getElectReceived();
+		}
+		return 0;
 	}
 	
 	@Override
@@ -50,32 +51,31 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 		return 0;
 	}
 	
-	@Override
-	public void initialize(long initialTime) {
-		super.initialize(initialTime);
-		electReceived = nextElectReceived = 0;
-	}
-	
-	public void iterateTick(long duration) {
-		super.iterateTick(duration);
-		if(getState() instanceof WaterState) {
-			WaterState state = (WaterState) getState();
-			nextElectReceived = state.getReceived(this, duration)
-					.getQuantity(ResourceType.ELECTRICITY);
-		}
-	}
-	
-	public void iterateTock() {
-		super.iterateTock();
-		electReceived = nextElectReceived;
-	}
-	
 	public static class WaterState extends DefaultState implements ResourceExchanging {
 		private ResourceMatrix liftMatrix = new ResourceMatrix();
 		Resource produced = ResourceFactory.create();
 		Resource received = ResourceFactory.create();
+		
 		private SocialElement socialCustomer = null;
 		private ElectElement electSupplier = null;
+		private double electReceived, nextElectReceived;
+		
+		public double getElectReceived() {
+			return electReceived;
+		}
+		
+		@Override
+		public void iterateTick(LocalElement element, long duration) {
+			super.iterateTick(element, duration);
+			nextElectReceived = getReceived(element, duration)
+					.getQuantity(ResourceType.ELECTRICITY);
+		}
+
+		@Override
+		public void iterateTock() {
+			super.iterateTock();
+			electReceived = nextElectReceived;
+		}
 		
 		@Override
 		public void initialize(LocalElement element, long initialTime) {
@@ -84,6 +84,7 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 			received = ResourceFactory.create();
 			socialCustomer = null;
 			electSupplier = null;
+			electReceived = nextElectReceived = 0;
 		}
 
 		public WaterState(double liftAquifer, double liftElect) {

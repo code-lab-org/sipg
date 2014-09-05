@@ -11,8 +11,6 @@ import edu.mit.isos3.resource.ResourceMatrix;
 import edu.mit.isos3.resource.ResourceType;
 
 public class LocalElectElement extends DefaultElement implements ElectElement {
-	private double petrolReceived, nextPetrolReceived;
-	
 	public LocalElectElement(String name, Location location, 
 			double solarCap, double thermalOil) {
 		super(name, location, new ElectState(solarCap, thermalOil));
@@ -48,7 +46,10 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 	
 	@Override
 	public double getPetrolReceived() {
-		return petrolReceived;
+		if(getState() instanceof ElectState) {
+			return ((ElectState)getState()).getPetrolReceived();
+		}
+		return 0;
 	}
 	
 	@Override
@@ -75,41 +76,41 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 		return 0;
 	}
 	
-	@Override
-	public void initialize(long initialTime) {
-		super.initialize(initialTime);
-		petrolReceived = nextPetrolReceived = 0;
-	}
-	
-	public void iterateTick(long duration) {
-		super.iterateTick(duration);
-		if(getState() instanceof ElectState) {
-			ElectState state = (ElectState) getState();
-			nextPetrolReceived = state.getReceived(this, duration)
-					.getQuantity(ResourceType.OIL);
-		}
-	}
-	
-	public void iterateTock() {
-		super.iterateTock();
-		petrolReceived = nextPetrolReceived;
-	}
-	
 	public static class ElectState extends DefaultState implements ResourceExchanging {
 		private ResourceMatrix tfMatrix = new ResourceMatrix();
 		private Resource solarCapacity = ResourceFactory.create();
+		
 		private PetrolElement petrolSupplier = null;
 		private PetrolElement petrolCustomer = null;
 		private SocialElement socialCustomer = null;
 		private WaterElement waterCustomer = null;
+		private double petrolReceived, nextPetrolReceived;
 		
 		@Override
 		public void initialize(LocalElement element, long initialTime) {
 			super.initialize(element, initialTime);
+			petrolReceived = nextPetrolReceived = 0;
 			petrolSupplier = null;
 			petrolCustomer = null;
 			socialCustomer = null;
 			waterCustomer = null;
+		}
+		
+		@Override
+		public void iterateTick(LocalElement element, long duration) {
+			super.iterateTick(element, duration);
+			nextPetrolReceived = getReceived(element, duration)
+					.getQuantity(ResourceType.OIL);
+		}
+		
+		@Override
+		public void iterateTock() {
+			super.iterateTock();
+			petrolReceived = nextPetrolReceived;
+		}
+		
+		public double getPetrolReceived() {
+			return petrolReceived;
 		}
 
 		public ElectState(double solarCap, double thermalOil) {
