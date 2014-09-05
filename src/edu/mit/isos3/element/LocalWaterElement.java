@@ -9,7 +9,6 @@ import edu.mit.isos3.resource.ResourceType;
 
 public class LocalWaterElement extends DefaultElement implements WaterElement {
 	private double electReceived, nextElectReceived;
-	private double waterSentToSocial, nextWaterSentToSocial;
 	
 	public LocalWaterElement(String name, Location location,
 			double liftAquifer, double liftElect, double initialAquifer) {
@@ -42,7 +41,10 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 	
 	@Override
 	public double getWaterSentToSocial() {
-		return waterSentToSocial;
+		if(getState() instanceof WaterState) {
+			return ((WaterState)getState()).getWaterSentToSocial();
+		}
+		return 0;
 	}
 	
 	public void iterateTick(long duration) {
@@ -51,15 +53,12 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 			WaterState state = (WaterState) getState();
 			nextElectReceived = state.getReceived(this, duration)
 					.getQuantity(ResourceType.ELECTRICITY);
-			nextWaterSentToSocial = state.getSent(this, duration)
-					.getQuantity(ResourceType.WATER);
 		}
 	}
 	
 	public void iterateTock() {
 		super.iterateTock();
 		electReceived = nextElectReceived;
-		waterSentToSocial = nextWaterSentToSocial;
 	}
 	
 	public static class WaterState extends ExchangingState {
@@ -76,6 +75,14 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 					ResourceType.WATER, ResourceFactory.create(
 							new ResourceType[]{ResourceType.AQUIFER, ResourceType.ELECTRICITY}, 
 							new double[]{liftAquifer, liftElect}));
+		}
+		
+		private double getWaterSentToSocial() {
+			if(socialCustomer != null) {
+				return socialCustomer.getWaterReceived();
+			} else {
+				return 0;
+			}
 		}
 
 		@Override 

@@ -76,8 +76,9 @@ public class Simulator {
 		return startTime;
 	}
 
-	public void execute(ISOSambassador amb, String federateName, 
+	public long execute(ISOSambassador amb, String federateName, 
 			long duration, long timeStep, int iterations) throws RTIexception {
+		long startTime = new Date().getTime();
 		long time = scenario.getInitialTime();
 		
 		if(outputs) {
@@ -154,5 +155,6 @@ public class Simulator {
 			}
 			time = time + timeStep;
 		}
+		return startTime;
 	}
 }

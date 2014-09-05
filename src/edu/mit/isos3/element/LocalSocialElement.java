@@ -54,7 +54,7 @@ public class LocalSocialElement extends DefaultElement implements SocialElement 
 	public double getWaterReceived() {
 		return waterReceived;
 	}
-	
+
 	public void iterateTick(long duration) {
 		super.iterateTick(duration);
 		if(getState() instanceof SocialState) {

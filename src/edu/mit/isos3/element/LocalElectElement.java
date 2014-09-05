@@ -9,9 +9,6 @@ import edu.mit.isos3.resource.ResourceType;
 
 public class LocalElectElement extends DefaultElement implements ElectElement {
 	private double petrolReceived, nextPetrolReceived;
-	private double electSentToPetrol, nextElectSentToPetrol;
-	private double electSentToSocial, nextElectSentToSocial;
-	private double electSentToWater, nextElectSentToWater;
 	
 	public LocalElectElement(String name, Location location, 
 			double solarCap, double thermalOil) {
@@ -53,17 +50,26 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 	
 	@Override
 	public double getElectSentToSocial() {
-		return electSentToSocial;
+		if(getState() instanceof ElectState) {
+			return ((ElectState)getState()).getElectSentToSocial();
+		}
+		return 0;
 	}
 	
 	@Override
 	public double getElectSentToPetrol() {
-		return electSentToPetrol;
+		if(getState() instanceof ElectState) {
+			return ((ElectState)getState()).getElectSentToPetrol();
+		}
+		return 0;
 	}
 	
 	@Override
 	public double getElectSentToWater() {
-		return electSentToWater;
+		if(getState() instanceof ElectState) {
+			return ((ElectState)getState()).getElectSentToWater();
+		}
+		return 0;
 	}
 	
 	public void iterateTick(long duration) {
@@ -72,21 +78,12 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 			ElectState state = (ElectState) getState();
 			nextPetrolReceived = state.getReceived(this, duration)
 					.getQuantity(ResourceType.OIL);
-			nextElectSentToPetrol = state.getSentTo(this, state.petrolCustomer, duration)
-					.getQuantity(ResourceType.ELECTRICITY);
-			nextElectSentToSocial = state.getSentTo(this, state.socialCustomer, duration)
-					.getQuantity(ResourceType.ELECTRICITY);
-			nextElectSentToWater = state.getSentTo(this, state.waterCustomer, duration)
-					.getQuantity(ResourceType.ELECTRICITY);
 		}
 	}
 	
 	public void iterateTock() {
 		super.iterateTock();
 		petrolReceived = nextPetrolReceived;
-		electSentToPetrol = nextElectSentToPetrol;
-		electSentToSocial = nextElectSentToSocial;
-		electSentToWater = nextElectSentToWater;
 	}
 	
 	public static class ElectState extends ExchangingState {
@@ -104,6 +101,30 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 
 			solarCapacity = ResourceFactory.create(
 					ResourceType.ELECTRICITY, solarCap);
+		}
+		
+		private double getElectSentToSocial() {
+			if(socialCustomer != null) {
+				return socialCustomer.getElectReceived();
+			} else {
+				return 0;
+			}
+		}
+		
+		private double getElectSentToPetrol() {
+			if(petrolCustomer != null) {
+				return petrolCustomer.getElectReceived();
+			} else {
+				return 0;
+			}
+		}
+		
+		private double getElectSentToWater() {
+			if(waterCustomer != null) {
+				return waterCustomer.getElectReceived();
+			} else {
+				return 0;
+			}
 		}
 
 		@Override 

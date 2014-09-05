@@ -9,8 +9,6 @@ import edu.mit.isos3.resource.ResourceType;
 
 public class LocalPetrolElement extends DefaultElement implements PetrolElement {
 	private double electReceived, nextElectReceived;
-	private double petrolSentToElect, nextPetrolSentToElect;
-	private double petrolSentToSocial, nextPetrolSentToSocial;
 	
 	public LocalPetrolElement(String name, Location location, 
 			double extractElect, double extractReserves, 
@@ -47,12 +45,18 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 	
 	@Override
 	public double getPetrolSentToSocial() {
-		return petrolSentToSocial;
+		if(getState() instanceof PetrolState) {
+			return ((PetrolState)getState()).getPetrolSentToSocial();
+		}
+		return 0;
 	}
 	
 	@Override
 	public double getPetrolSentToElect() {
-		return petrolSentToElect;
+		if(getState() instanceof PetrolState) {
+			return ((PetrolState)getState()).getPetrolSentToElect();
+		}
+		return 0;
 	}
 	
 	public void iterateTick(long duration) {
@@ -61,18 +65,12 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 			PetrolState state = (PetrolState) getState();
 			nextElectReceived = state.getReceived(this, duration)
 					.getQuantity(ResourceType.ELECTRICITY);
-			nextPetrolSentToSocial = state.getSentTo(this, state.socialCustomer, duration)
-					.getQuantity(ResourceType.OIL);
-			nextPetrolSentToElect = state.getSentTo(this, state.electCustomer, duration)
-					.getQuantity(ResourceType.OIL);
 		}
 	}
 	
 	public void iterateTock() {
 		super.iterateTock();
 		electReceived = nextElectReceived;
-		petrolSentToSocial = nextPetrolSentToSocial;
-		petrolSentToElect = nextPetrolSentToElect;
 	}
 	
 	public static class PetrolState extends ExchangingState {
@@ -86,6 +84,22 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 					ResourceType.OIL, ResourceFactory.create(
 							new ResourceType[]{ResourceType.ELECTRICITY, ResourceType.RESERVES},
 							new double[]{extractElect, extractReserves}));
+		}
+		
+		private double getPetrolSentToSocial() {
+			if(socialCustomer != null) {
+				return socialCustomer.getPetrolReceived();
+			} else {
+				return 0;
+			}
+		}
+		
+		private double getPetrolSentToElect() {
+			if(electCustomer != null) {
+				return electCustomer.getPetrolReceived();
+			} else {
+				return 0;
+			}
 		}
 
 		@Override 

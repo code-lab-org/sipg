@@ -36,7 +36,7 @@ public class FederateController {
 		}
 		*/
 		
-		final int itr = 20;
+		final int itr = 1;
 		final int rep = 1;
 		final long stp = 1000;
 		
