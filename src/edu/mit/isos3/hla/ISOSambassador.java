@@ -17,6 +17,7 @@ import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
+import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
 import hla.rti1516e.exceptions.FederateInternalError;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
@@ -47,7 +48,11 @@ import org.apache.log4j.Logger;
 import edu.mit.isos3.Scenario;
 import edu.mit.isos3.SimEntity;
 import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.LocalElectElement;
 import edu.mit.isos3.element.LocalElement;
+import edu.mit.isos3.element.LocalPetrolElement;
+import edu.mit.isos3.element.LocalSocialElement;
+import edu.mit.isos3.element.LocalWaterElement;
 import edu.mit.isos3.element.PetrolElement;
 import edu.mit.isos3.element.SocialElement;
 import edu.mit.isos3.element.WaterElement;
@@ -147,7 +152,6 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Making the initial time.");
 		HLAfloat64Time initTime = timeFactory.makeTime(scenario.getInitialTime());
 		
-		/*
 		logger.debug("Enabling asynchronous message delivery.");
 		try {
 			rtiAmbassador.enableAsynchronousDelivery();
@@ -156,7 +160,6 @@ public class ISOSambassador extends NullFederateAmbassador {
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
-		*/
 		
 		logger.debug("Enabling time constrained behavior.");
 		try {
@@ -168,7 +171,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time constrained callback service.");
 		while(!timeConstrained.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(1,10);
+				rtiAmbassador.evokeMultipleCallbacks(0,1);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -185,7 +188,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time regulating callback service.");
 		while(!timeRegulating.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(1,10);
+				rtiAmbassador.evokeMultipleCallbacks(0,1);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -259,7 +262,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization registration confirmation callback service.");
 		while(!initSyncRegSuccess.get() && !initSyncRegFailure.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(1,10);
+				rtiAmbassador.evokeMultipleCallbacks(0,1);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -268,7 +271,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization announce callback service.");
 		while(!initSyncAnnounce.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(1,10);
+				rtiAmbassador.evokeMultipleCallbacks(0,1);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -285,7 +288,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization complete callback service.");
 		while(!initSyncComplete.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(1,10);
+				rtiAmbassador.evokeMultipleCallbacks(0,1);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -303,6 +306,17 @@ public class ISOSambassador extends NullFederateAmbassador {
 				}
 			}
 		}
+
+		logger.debug("Setting up object links.");
+		for(LocalElement entity : localObjects.keySet()) {
+			while(!setUpElement(entity)) {
+				try {
+					rtiAmbassador.evokeMultipleCallbacks(0,1);
+				} catch (RTIexception e) {
+					logger.error(e);
+				}
+			}
+		}
 		
 		if(initTime.compareTo(logicalTime) > 0) {
 			logger.debug("Requesting time advance to initial time " + initTime);
@@ -315,13 +329,141 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeMultipleCallbacks(1,10);
+					rtiAmbassador.evokeMultipleCallbacks(0,1);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
 			}
 			timeAdvanceGranted.set(false);
 		}
+	}
+	
+	private boolean setUpElement(LocalElement element) {
+		if(element instanceof LocalElectElement) {
+			return setUpElect((LocalElectElement)element);
+		}
+		if(element instanceof LocalPetrolElement) {
+			return setUpPetrol((LocalPetrolElement)element);
+		}
+		if(element instanceof LocalSocialElement) {
+			return setUpSocial((LocalSocialElement)element);
+		}
+		if(element instanceof LocalWaterElement) {
+			return setUpWater((LocalWaterElement)element);
+		}
+		return true; // nothing to set up
+	}
+	
+	private boolean setUpElect(LocalElectElement elect) {
+		PetrolElement petrol = null;
+		SocialElement social = null;
+		WaterElement water = null;
+		for(ISOSelement element : getElements()) {
+			if(element instanceof PetrolElement 
+					&& elect.getLocation().equals(element.getLocation())) {
+				petrol = (PetrolElement) element;
+				elect.setPetrolSupplier(petrol);
+				elect.setCustomer(petrol);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof SocialElement 
+					&& elect.getLocation().equals(element.getLocation())) {
+				social = (SocialElement) element;
+				elect.setCustomer(social);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof WaterElement
+					&& elect.getLocation().equals(element.getLocation())) {
+				water = (WaterElement) element;
+				elect.setCustomer(water);
+				break;
+			}
+		}
+		logger.warn(elect + " missing " + (petrol==null?"petrol":"") + " " + (social==null?"social":"") + " " + (water==null?"water":""));
+		return petrol != null && social != null && water != null;
+	}
+	
+	private boolean setUpPetrol(LocalPetrolElement petrol) {
+		ElectElement elect = null;
+		SocialElement social = null;
+		for(ISOSelement element : getElements()) {
+			if(element instanceof ElectElement 
+					&& petrol.getLocation().equals(element.getLocation())) {
+				elect = (ElectElement) element;
+				petrol.setCustomer(elect);
+				petrol.setElectSupplier(elect);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof SocialElement 
+					&& petrol.getLocation().equals(element.getLocation())) {
+				social = (SocialElement) element;
+				petrol.setCustomer(social);
+				break;
+			}
+		}
+		logger.warn(petrol + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		return elect != null && social != null;
+	}
+	
+	private boolean setUpSocial(LocalSocialElement social) {
+		ElectElement elect = null;
+		PetrolElement petrol = null;
+		WaterElement water = null;
+		for(ISOSelement element : getElements()) {
+			if(element instanceof ElectElement 
+					&& social.getLocation().equals(element.getLocation())) {
+				elect = (ElectElement) element;
+				social.setElectSupplier(elect);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof PetrolElement 
+					&& social.getLocation().equals(element.getLocation())) {
+				petrol = (PetrolElement) element;
+				social.setPetrolSupplier(petrol);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof WaterElement 
+					&& social.getLocation().equals(element.getLocation())) {
+				water = (WaterElement) element;
+				social.setWaterSupplier(water);
+				break;
+			}
+		}
+		logger.warn(social + " missing " + (elect==null?"elect":"") + " " + (petrol==null?"petrol":"") + " " + (water==null?"water":""));
+		return elect != null && petrol != null && water != null;
+	}
+	
+	private boolean setUpWater(LocalWaterElement water) {
+		ElectElement elect = null;
+		SocialElement social = null;
+		for(ISOSelement element : getElements()) {
+			if(element instanceof ElectElement 
+					&& water.getLocation().equals(element.getLocation())) {
+				elect = (ElectElement) element;
+				water.setElectSupplier(elect);
+				break;
+			}
+		}
+		for(ISOSelement element : getElements()) {
+			if(element instanceof SocialElement 
+					&& water.getLocation().equals(element.getLocation())) {
+				social = (SocialElement) element;
+				water.setCustomer(social);
+				break;
+			}
+		}
+		logger.warn(water + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		return elect != null && social != null;
 	}
 	
 	public void advance() {
@@ -351,7 +493,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeMultipleCallbacks(1,10);
+					rtiAmbassador.evokeMultipleCallbacks(0,1);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}

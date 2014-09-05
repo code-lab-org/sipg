@@ -191,8 +191,6 @@ public abstract class DefaultFederate {
 			long initStartTime = sim.initialize(amb, federateName, timeStep, numIterations);
 			long initEndTime = new Date().getTime();
 			
-			postInitializeSetUp(amb);
-			
 			long execStartTime = sim.execute(amb, federateName, (int) (simulationDuration*stepsPerYear), 
 					timeStep, numIterations);
 			long execEndTime = new Date().getTime();
@@ -222,6 +220,4 @@ public abstract class DefaultFederate {
 	}
 	
 	public abstract Scenario buildScenario(double stepsPerYear);
-	
-	public abstract void postInitializeSetUp(ISOSambassador amb);
 }

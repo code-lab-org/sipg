@@ -13,7 +13,7 @@ public class FederateController {
 	
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
-		logger.setLevel(Level.FATAL);
+		logger.setLevel(Level.DEBUG);
 		/*
 		for(int itr : new int[]{4}) {
 			new DemoScript(itr,20,1000).execute();
