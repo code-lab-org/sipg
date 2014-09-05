@@ -18,6 +18,7 @@ import edu.mit.isos3.element.WaterPipeline;
 import edu.mit.isos3.element.WaterPlant;
 import edu.mit.isos3.hla.HLAobject;
 import edu.mit.isos3.hla.ISOSambassador;
+import edu.mit.isos3.hla.ISOSelement;
 
 public class WaterFederate extends DefaultFederate {
 	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
@@ -54,12 +55,12 @@ public class WaterFederate extends DefaultFederate {
 
 	@Override
 	public void postInitializeSetUp(ISOSambassador amb) {
-		setUpWater(e_w1, amb.getObjects());
-		setUpWater(e_w2, amb.getObjects());
-		setUpWater(e_w3, amb.getObjects());
+		setUpWater(e_w1, amb.getElements());
+		setUpWater(e_w2, amb.getElements());
+		setUpWater(e_w3, amb.getElements());
 	}
 	
-	private static void setUpWater(LocalWaterElement water, Collection<HLAobject> objects) {
+	private static void setUpWater(LocalWaterElement water, Collection<ISOSelement> objects) {
 		for(HLAobject object : objects) {
 			if(object instanceof ElectElement) {
 				ElectElement elect = (ElectElement) object;

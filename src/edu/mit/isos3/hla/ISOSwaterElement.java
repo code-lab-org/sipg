@@ -16,7 +16,13 @@ import hla.rti1516e.exceptions.RTIexception;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos3.SimEntity;
+import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.Element;
+import edu.mit.isos3.element.SocialElement;
 import edu.mit.isos3.element.WaterElement;
+import edu.mit.isos3.resource.Resource;
+import edu.mit.isos3.resource.ResourceFactory;
+import edu.mit.isos3.resource.ResourceType;
 
 /**
  * ISOSwaterElement is the HLA object class implementing the {@link WaterElement} 
@@ -169,5 +175,27 @@ public class ISOSwaterElement extends ISOSelement implements WaterElement {
 	@Override
 	public double getWaterSentToSocial() {
 		return waterSentToSocial.getValue();
+	}
+
+	@Override
+	public void updatePeriodicAttributes(RTIambassador rtiAmbassador) throws RTIexception {
+		AttributeHandleSet ahs = rtiAmbassador.getAttributeHandleSetFactory().create();
+		ahs.add(getAttributeHandle(ELECT_RECEIVED_ATTRIBUTE));
+		ahs.add(getAttributeHandle(WATER_SENT_TO_SOCIAL_ATTRIBUTE));
+		updateAttributes(rtiAmbassador, ahs);
+	}
+
+	@Override
+	public Resource getNetExchange(Element element, long duration) {
+		Resource exchange = ResourceFactory.create();
+		if(element instanceof ElectElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.subtract(ResourceFactory.create(
+					ResourceType.ELECTRICITY, getElectReceived()));
+		}
+		if(element instanceof SocialElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.add(ResourceFactory.create(
+					ResourceType.WATER, getWaterSentToSocial()));
+		}
+		return exchange;
 	}
 }

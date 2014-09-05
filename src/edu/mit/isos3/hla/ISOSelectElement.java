@@ -17,7 +17,13 @@ import org.apache.log4j.Logger;
 
 import edu.mit.isos3.SimEntity;
 import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.Element;
+import edu.mit.isos3.element.PetrolElement;
+import edu.mit.isos3.element.SocialElement;
 import edu.mit.isos3.element.WaterElement;
+import edu.mit.isos3.resource.Resource;
+import edu.mit.isos3.resource.ResourceFactory;
+import edu.mit.isos3.resource.ResourceType;
 
 /**
  * ISOSwaterElement is the HLA object class implementing the {@link WaterElement} 
@@ -206,5 +212,35 @@ public class ISOSelectElement extends ISOSelement implements ElectElement {
 	@Override
 	public double getElectSentToWater() {
 		return electSentToWater.getValue();
+	}
+
+	@Override
+	public void updatePeriodicAttributes(RTIambassador rtiAmbassador) throws RTIexception {
+		AttributeHandleSet ahs = rtiAmbassador.getAttributeHandleSetFactory().create();
+		ahs.add(getAttributeHandle(PETROL_RECEIVED_ATTRIBUTE));
+		ahs.add(getAttributeHandle(ELECT_SENT_TO_PETROL_ATTRIBUTE));
+		ahs.add(getAttributeHandle(ELECT_SENT_TO_WATER_ATTRIBUTE));
+		ahs.add(getAttributeHandle(ELECT_SENT_TO_SOCIAL_ATTRIBUTE));
+		updateAttributes(rtiAmbassador, ahs);
+	}
+
+	@Override
+	public Resource getNetExchange(Element element, long duration) {
+		Resource exchange = ResourceFactory.create();
+		if(element instanceof PetrolElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.add(ResourceFactory.create(
+					ResourceType.ELECTRICITY, getElectSentToPetrol()));
+			exchange = exchange.subtract(ResourceFactory.create(
+					ResourceType.OIL, getPetrolReceived()));
+		}
+		if(element instanceof SocialElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.add(ResourceFactory.create(
+					ResourceType.ELECTRICITY, getElectSentToSocial()));
+		}
+		if(element instanceof WaterElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.add(ResourceFactory.create(
+					ResourceType.ELECTRICITY, getElectSentToWater()));
+		}
+		return exchange;
 	}
 }

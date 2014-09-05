@@ -62,17 +62,11 @@ public class Simulator {
 	
 	public long initialize(ISOSambassador amb, String federateName, 
 			long timeStep, int iterations) throws RTIexception {
-		amb.connect("ISOS Test", "isos.xml", federateName, "Test");
-		
-		// TODO wait for other federates to join
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			logger.error(e);
-		}
-
 		long startTime = new Date().getTime();
-		amb.initialize(scenario.getInitialTime(), iterations, timeStep, scenario.getElements());
+		for(SimEntity entity : scenario.getElements()) {
+			entity.initialize(scenario.getInitialTime());
+		}
+		amb.initialize(scenario, iterations, timeStep);
 		return startTime;
 	}
 

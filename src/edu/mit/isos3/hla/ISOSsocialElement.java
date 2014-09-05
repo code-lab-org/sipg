@@ -16,7 +16,14 @@ import hla.rti1516e.exceptions.RTIexception;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos3.SimEntity;
+import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.Element;
+import edu.mit.isos3.element.PetrolElement;
 import edu.mit.isos3.element.SocialElement;
+import edu.mit.isos3.element.WaterElement;
+import edu.mit.isos3.resource.Resource;
+import edu.mit.isos3.resource.ResourceFactory;
+import edu.mit.isos3.resource.ResourceType;
 
 /**
  * ISOSsocialElement is the HLA object class implementing the {@link SocialElement} 
@@ -187,5 +194,32 @@ public class ISOSsocialElement extends ISOSelement implements SocialElement {
 	@Override
 	public double getWaterReceived() {
 		return waterReceived.getValue();
+	}
+
+	@Override
+	public void updatePeriodicAttributes(RTIambassador rtiAmbassador) throws RTIexception {
+		AttributeHandleSet ahs = rtiAmbassador.getAttributeHandleSetFactory().create();
+		ahs.add(getAttributeHandle(ELECT_RECEIVED_ATTRIBUTE));
+		ahs.add(getAttributeHandle(PETROL_RECEIVED_ATTRIBUTE));
+		ahs.add(getAttributeHandle(WATER_RECEIVED_ATTRIBUTE));
+		updateAttributes(rtiAmbassador, ahs);
+	}
+
+	@Override
+	public Resource getNetExchange(Element element, long duration) {
+		Resource exchange = ResourceFactory.create();
+		if(element instanceof ElectElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.subtract(ResourceFactory.create(
+					ResourceType.ELECTRICITY, getElectReceived()));
+		}
+		if(element instanceof PetrolElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.subtract(ResourceFactory.create(
+					ResourceType.OIL, getPetrolReceived()));
+		}
+		if(element instanceof WaterElement && element.getLocation().equals(getLocation())) {
+			exchange = exchange.subtract(ResourceFactory.create(
+					ResourceType.WATER, getWaterReceived()));
+		}
+		return exchange;
 	}
 }

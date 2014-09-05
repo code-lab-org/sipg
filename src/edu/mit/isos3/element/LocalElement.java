@@ -27,5 +27,4 @@ public interface LocalElement extends Element, SimEntity {
 	public void setLocation(Location location);
 	
 	public Resource getNetFlow(Location location, long duration);
-	public Resource getNetExchange(Element element, long duration);
 }

@@ -28,7 +28,7 @@ import edu.mit.isos3.element.Element;
  * @version 0.1.0
  * @since 0.1.0
  */
-public class ISOSelement extends HLAobject implements Element {
+public abstract class ISOSelement extends HLAobject implements Element {
 	private static Logger logger = Logger.getLogger(ISOSelement.class);
 	public static final String CLASS_NAME = "HLAobjectRoot.Element";
 	
@@ -178,4 +178,13 @@ public class ISOSelement extends HLAobject implements Element {
 				.append(", location: ").append(getLocation())
 				.append("}").toString();
 	}
+	
+	public final void updateStaticAttributes(RTIambassador rtiAmbassador) throws RTIexception {
+		AttributeHandleSet ahs = rtiAmbassador.getAttributeHandleSetFactory().create();
+		ahs.add(getAttributeHandle(NAME_ATTRIBUTE));
+		ahs.add(getAttributeHandle(LOCATION_ATTRIBUTE));
+		updateAttributes(rtiAmbassador, ahs);
+	}
+	
+	public abstract void updatePeriodicAttributes(RTIambassador rtiAmbassador) throws RTIexception;
 }

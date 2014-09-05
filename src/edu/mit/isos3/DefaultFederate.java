@@ -30,7 +30,7 @@ public abstract class DefaultFederate {
 	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
 	
 	boolean replicationOutputs = true;
-	boolean retainReplicationOutputs = false;
+	boolean retainReplicationOutputs = true;
 	final int numIterations;
 	final int numReplications;
 	final int stepsPerYear = 1000;
@@ -80,7 +80,7 @@ public abstract class DefaultFederate {
 		final BufferedWriter summaryWriter = Files.newBufferedWriter(
 				summaryPath, Charset.defaultCharset(), 
 				StandardOpenOption.WRITE);
-		summaryWriter.write(String.format("%6s%20s\n","Run","Time (ms)"));
+		summaryWriter.write(String.format("%6s%20s%20s%20s\n","Run","Total Time (ms)","Init Time (ms)","Exec Time (ms)"));
 
 		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
 		sim.setVerifyFlow(false);
@@ -116,6 +116,9 @@ public abstract class DefaultFederate {
 			final BufferedWriter warningWriter = Files.newBufferedWriter(warningPath, 
 					Charset.defaultCharset(), StandardOpenOption.WRITE);
 			warningWriter.write(String.format("%6s%10s%20s%60s%60s\n","Time","Type","Unit(s)","Error","% Error"));
+			
+
+			final ISOSambassador amb = new ISOSambassador();
 			
 			SimulationTimeListener listener = new SimulationTimeListener() {
 				@Override
@@ -155,8 +158,8 @@ public abstract class DefaultFederate {
 							}
 						}
 					}
-					for(LocalElement e1 : sim.getScenario().getElements()) {
-						for(LocalElement e2 : sim.getScenario().getElements()) {
+					for(Element e1 : sim.getScenario().getElements()) {
+						for(Element e2 : amb.getElements()) {
 							Resource r12 = e1.getNetExchange(e2, event.getDuration());
 							Resource r21 = e2.getNetExchange(e1, event.getDuration());
 							if(!r12.add(r21).isZero()) {
@@ -176,16 +179,29 @@ public abstract class DefaultFederate {
 			
 			sim.addSimulationTimeListener(listener);
 
-			ISOSambassador amb = new ISOSambassador();
-			long startTime = sim.initialize(amb, federateName, timeStep, numIterations);
+			amb.connect("ISOS Test " + (i+1), "isos.xml", federateName, "Test");
+			
+			// TODO wait for other federates to join
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				logger.error(e);
+			}
+			
+			long initStartTime = sim.initialize(amb, federateName, timeStep, numIterations);
+			long initEndTime = new Date().getTime();
 			
 			postInitializeSetUp(amb);
 			
-			sim.execute(amb, federateName, (int) (simulationDuration*stepsPerYear), 
+			long execStartTime = sim.execute(amb, federateName, (int) (simulationDuration*stepsPerYear), 
 					timeStep, numIterations);
-			long executionTime = new Date().getTime() - startTime;
-			logger.info("Simulation completed in " + executionTime + " ms");
-			summaryWriter.write(String.format("%6d%20d\n",(i+1),executionTime));
+			long execEndTime = new Date().getTime();
+			long initTime = initEndTime - initStartTime;
+			long execTime = execEndTime - execStartTime;
+			long totalTime = initTime + execTime;
+			
+			logger.info("Simulation completed in " + totalTime + " ms");
+			summaryWriter.write(String.format("%6d%20d%20d%20d\n",(i+1),totalTime, initTime, execTime));
 			
 			for(Element e : elementWriters.keySet()) {
 				elementWriters.get(e).close();
@@ -198,6 +214,8 @@ public abstract class DefaultFederate {
 			warningWriter.close();
 			
 			sim.removeSimulationTimeListener(listener);
+			
+			amb.disconnect("ISOS Test " + (i+1));
 		}
 		
 		summaryWriter.close();

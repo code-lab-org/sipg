@@ -93,21 +93,6 @@ public abstract class HLAobject {
 	}
 	
 	/**
-	 * Deletes this object from the federation if this is a local object. This
-	 * method does nothing for remote objects.
-	 *
-	 * @throws RTIexception the RTI exception
-	 */
-	public final void delete(RTIambassador rtiAmbassador) throws RTIexception {
-		if(isLocal()) {
-			logger.trace("Deleting " + this + " from the RTI.");
-			rtiAmbassador.deleteObjectInstance(getObjectInstanceHandle(), new byte[0]);
-		} else {
-			logger.warn("Cannot delete remote object " + this + " from the RTI.");
-		}
-	}
-	
-	/**
 	 * Gets this object's RTI-assigned attribute handle for a given FOM 
 	 * attribute name. Returns null if the attribute handle does not exist.
 	 *
@@ -219,34 +204,6 @@ public abstract class HLAobject {
 	}
 	
 	/**
-	 * Deletes this object locally for remote objects. This method does nothing
-	 * for local objects.
-	 *
-	 * @throws RTIexception the RTI exception 
-	 */
-	public final void localDelete(RTIambassador rtiAmbassador) throws RTIexception {
-		if(!isLocal()) {
-			logger.debug("Locally deleting remote object " + this + ".");
-			rtiAmbassador.localDeleteObjectInstance(getObjectInstanceHandle());
-		} else {
-			logger.warn("Cannot locally delete local object " + this + ".");
-		}
-	}
-	
-	/**
-	 * Provides updates for all of object's attribute values.
-	 *
-	 * @param attributeHandleSet the attribute handle set
-	 * @throws RTIexception the RTI exception 
-	 */
-	public final void provideAttributes(RTIambassador rtiAmbassador, 
-			AttributeHandleSet attributeHandleSet) 
-			throws RTIexception {
-		updateTimestampOrderAttributes(rtiAmbassador, attributeHandleSet);
-		updateReceiveOrderAttributes(rtiAmbassador, attributeHandleSet);
-	}
-	
-	/**
 	 * Publishes all of this object's attributes.
 	 *
 	 * @throws RTIexception the RTI exception
@@ -254,17 +211,6 @@ public abstract class HLAobject {
 	public final void publishAllAttributes(RTIambassador rtiAmbassador) throws RTIexception {
 		rtiAmbassador.publishObjectClassAttributes(
 				getObjectClassHandle(), getAttributeHandleSet());
-	}
-	
-	/**
-	 * Requests updates for all of this object's attribute values.
-	 *
-	 * @throws RTIexception the RTI exception
-	 */
-	public final void requestAttributeValueUpdate(RTIambassador rtiAmbassador) throws RTIexception {
-		logger.trace("Requesting attribute value updates for " + this);
-		rtiAmbassador.requestAttributeValueUpdate(
-				getObjectInstanceHandle(), getAttributeHandleSet(), new byte[0]);
 	}
 	
 	/**
@@ -322,15 +268,6 @@ public abstract class HLAobject {
 	@Override
 	public String toString() {
 		return getInstanceName() + " (" + getObjectInstanceHandle() + ")";
-	}
-
-	/**
-	 * Updates all of this object's attributes.
-	 *
-	 * @throws RTIexception the RTI exception
-	 */
-	public final void updateAllAttributes(RTIambassador rtiAmbassador) throws RTIexception {
-		updateAttributes(rtiAmbassador, getAttributeHandleSet());
 	}
 	
 	/**

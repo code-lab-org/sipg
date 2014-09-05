@@ -17,7 +17,6 @@ import hla.rti1516e.TransportationTypeHandle;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
-import hla.rti1516e.exceptions.AsynchronousDeliveryAlreadyEnabled;
 import hla.rti1516e.exceptions.FederateAlreadyExecutionMember;
 import hla.rti1516e.exceptions.FederateInternalError;
 import hla.rti1516e.exceptions.FederateNotExecutionMember;
@@ -45,16 +44,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.log4j.Logger;
 
+import edu.mit.isos3.Scenario;
 import edu.mit.isos3.SimEntity;
 import edu.mit.isos3.element.ElectElement;
+import edu.mit.isos3.element.LocalElement;
 import edu.mit.isos3.element.PetrolElement;
 import edu.mit.isos3.element.SocialElement;
 import edu.mit.isos3.element.WaterElement;
 
 public class ISOSambassador extends NullFederateAmbassador {
-	public static final String OHLA_RTI = "OHLA";
-	public static final String PORTICO_RTI = "portico";
-
 	protected static Logger logger = Logger.getLogger(ISOSambassador.class);
 	protected final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
@@ -70,25 +68,21 @@ public class ISOSambassador extends NullFederateAmbassador {
 	private volatile AtomicBoolean initSyncAnnounce = new AtomicBoolean(false);
 	private volatile AtomicBoolean initSyncComplete = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
-	private final Map<ObjectInstanceHandle, HLAobject> objectInstanceHandleMap = 
+	private final Map<ObjectInstanceHandle, ISOSelement> objectInstanceHandleMap = 
 			Collections.synchronizedMap(
-					new HashMap<ObjectInstanceHandle, HLAobject>());
-	private final Map<SimEntity, HLAobject> localObjects = 
+					new HashMap<ObjectInstanceHandle, ISOSelement>());
+	private final Map<LocalElement, ISOSelement> localObjects = 
 			Collections.synchronizedMap(
-					new HashMap<SimEntity, HLAobject>());
+					new HashMap<LocalElement, ISOSelement>());
 
 	public ISOSambassador() throws RTIexception {
-		this(PORTICO_RTI);
-	}
-	
-	public Collection<HLAobject> getObjects() {
-		return objectInstanceHandleMap.values();
-	}
-	
-	public ISOSambassador(String rtiName) throws RTIexception {
-		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory(rtiName);
+		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
 		rtiAmbassador = rtiFactory.getRtiAmbassador();
 		encoderFactory = rtiFactory.getEncoderFactory();
+	}
+	
+	public Collection<ISOSelement> getElements() {
+		return objectInstanceHandleMap.values();
 	}
 	
 	public void connect(String federationName, String fomPath, 
@@ -130,8 +124,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		}
 	}
 	
-	public void initialize(long initialTime, int numIterations, long timeStep, 
-			Collection<? extends SimEntity> entities) {
+	public void initialize(Scenario scenario, int numIterations, long timeStep) {
 		this.numIterations = numIterations;
 		this.timeStep = timeStep;
 		
@@ -152,8 +145,9 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Making the lookahead interval.");
 		lookaheadInterval = timeFactory.makeInterval(timeStep/((double)numIterations));
 		logger.trace("Making the initial time.");
-		HLAfloat64Time initTime = timeFactory.makeTime(initialTime);
+		HLAfloat64Time initTime = timeFactory.makeTime(scenario.getInitialTime());
 		
+		/*
 		logger.debug("Enabling asynchronous message delivery.");
 		try {
 			rtiAmbassador.enableAsynchronousDelivery();
@@ -162,6 +156,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
+		*/
 		
 		logger.debug("Enabling time constrained behavior.");
 		try {
@@ -173,7 +168,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time constrained callback service.");
 		while(!timeConstrained.get()) {
 			try {
-				rtiAmbassador.evokeCallback(0.1);
+				rtiAmbassador.evokeMultipleCallbacks(1,10);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -190,7 +185,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time regulating callback service.");
 		while(!timeRegulating.get()) {
 			try {
-				rtiAmbassador.evokeCallback(0.1);
+				rtiAmbassador.evokeMultipleCallbacks(1,10);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -214,44 +209,40 @@ public class ISOSambassador extends NullFederateAmbassador {
 		}
 
 		logger.debug("Registering object instantiations.");
-		for(SimEntity entity : entities) {
-			entity.initialize((long)initialTime);
+		for(LocalElement entity : scenario.getElements()) {
 			if(!localObjects.containsKey(entity)) {
 				try {
 					logger.trace("Searching for the correct object subclass.");
-					HLAobject hlaObject = null;
+					ISOSelement element = null;
 					if(entity instanceof ElectElement) {
 						logger.debug("Registering an elect element.");
-						hlaObject = new ISOSelectElement(
+						element = new ISOSelectElement(
 								rtiAmbassador, encoderFactory, null);
-						hlaObject.setAttributes(entity);
 					} else if(entity instanceof PetrolElement) {
 						logger.debug("Registering a petrol element.");
-						hlaObject = new ISOSpetrolElement(
+						element = new ISOSpetrolElement(
 								rtiAmbassador, encoderFactory, null);
-						hlaObject.setAttributes(entity);
 					} else if(entity instanceof SocialElement) {
 						logger.debug("Registering a social element.");
-						hlaObject = new ISOSsocialElement(
+						element = new ISOSsocialElement(
 								rtiAmbassador, encoderFactory, null);
-						hlaObject.setAttributes(entity);
 					} else if(entity instanceof WaterElement) {
 						logger.debug("Registering a water element.");
-						hlaObject = new ISOSwaterElement(
+						element = new ISOSwaterElement(
 								rtiAmbassador, encoderFactory, null);
-						hlaObject.setAttributes(entity);
 					} else {
 						logger.warn("Unknown HLA object type for class " 
 								+ entity.getClass() + ", skipping");
 					}
 					logger.trace("Adding " + entity.getName() 
 							+ " to local objects.");
-					localObjects.put(entity, hlaObject);
-					if(hlaObject != null) {
+					localObjects.put(entity, element);
+					if(element != null) {
+						element.setAttributes(entity);
 						logger.trace("Adding " + entity.getName() 
 								+ " to known instances.");
 						objectInstanceHandleMap.put(
-								hlaObject.getObjectInstanceHandle(), hlaObject);
+								element.getObjectInstanceHandle(), element);
 					}
 				} catch (RTIexception e) {
 					logger.error(e);
@@ -268,7 +259,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization registration confirmation callback service.");
 		while(!initSyncRegSuccess.get() && !initSyncRegFailure.get()) {
 			try {
-				rtiAmbassador.evokeCallback(0.1);
+				rtiAmbassador.evokeMultipleCallbacks(1,10);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -277,7 +268,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization announce callback service.");
 		while(!initSyncAnnounce.get()) {
 			try {
-				rtiAmbassador.evokeCallback(0.1);
+				rtiAmbassador.evokeMultipleCallbacks(1,10);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -294,18 +285,19 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for synchronization complete callback service.");
 		while(!initSyncComplete.get()) {
 			try {
-				rtiAmbassador.evokeCallback(0.1);
+				rtiAmbassador.evokeMultipleCallbacks(1,10);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
 		}
 		logger.info("Synchronization point complete.");
-		
-		logger.info("Updating attributes for all local objects.");
-		for(HLAobject object : localObjects.values()) {
-			if(object != null) {
+
+		for(LocalElement entity : localObjects.keySet()) {
+			logger.trace("Updating name and location attributes for " 
+					+ entity.getName() + ".");
+			if(localObjects.get(entity) != null) {
 				try {
-					object.updateAllAttributes(rtiAmbassador);
+					localObjects.get(entity).updateStaticAttributes(rtiAmbassador);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
@@ -323,7 +315,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeCallback(0.1);
+					rtiAmbassador.evokeMultipleCallbacks(1,10);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
@@ -342,7 +334,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 				if(localObjects.get(entity) != null) {
 					localObjects.get(entity).setAttributes(entity);
 					try {
-						localObjects.get(entity).updateAllAttributes(rtiAmbassador);
+						localObjects.get(entity).updatePeriodicAttributes(rtiAmbassador);
 					} catch (RTIexception e) {
 						logger.error(e);
 					}
@@ -359,7 +351,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeCallback(0.1);
+					rtiAmbassador.evokeMultipleCallbacks(1,10);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
@@ -505,30 +497,30 @@ public class ISOSambassador extends NullFederateAmbassador {
 		}
 
 		logger.trace("Searching for the correct object subclass.");
-		HLAobject hlaObject = null;
+		ISOSelement element = null;
 		try {
 			if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
 					ISOSelectElement.CLASS_NAME))) {
 				logger.debug("Creating an elect element.");
-				hlaObject = new ISOSelectElement(
+				element = new ISOSelectElement(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(
 					rtiAmbassador.getObjectClassHandle(
 							ISOSsocialElement.CLASS_NAME))) {
 				logger.debug("Creating a social element.");
-				hlaObject = new ISOSsocialElement(
+				element = new ISOSsocialElement(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(
 					rtiAmbassador.getObjectClassHandle(
 							ISOSpetrolElement.CLASS_NAME))) {
 				logger.debug("Creating a petrol element.");
-				hlaObject = new ISOSpetrolElement(
+				element = new ISOSpetrolElement(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(
 					rtiAmbassador.getObjectClassHandle(
 							ISOSwaterElement.CLASS_NAME))) {
 				logger.debug("Creating a water element.");
-				hlaObject = new ISOSwaterElement(
+				element = new ISOSwaterElement(
 						rtiAmbassador, encoderFactory, objectName);
 			} else {
 				logger.warn("Unknown object class " + theObjectClass + ", skipping.");
@@ -536,7 +528,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 			
 			logger.trace("Adding object to known instances.");
-			objectInstanceHandleMap.put(theObject, hlaObject);
+			objectInstanceHandleMap.put(theObject, element);
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
@@ -584,8 +576,8 @@ public class ISOSambassador extends NullFederateAmbassador {
 			if(objectInstanceHandleMap.containsKey(theObject)) {
 				logger.trace("Reflecting attributes for known object " 
 						+ objectInstanceHandleMap.get(theObject));
-				HLAobject object = objectInstanceHandleMap.get(theObject);
-				object.setAllAttributes(theAttributes);
+				ISOSelement element = objectInstanceHandleMap.get(theObject);
+				element.setAllAttributes(theAttributes);
 			} 
 		} catch (DecoderException e) {
 			logger.error(e);

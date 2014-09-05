@@ -13,7 +13,7 @@ public class FederateController {
 	
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
-		logger.setLevel(Level.OFF);
+		logger.setLevel(Level.FATAL);
 		/*
 		for(int itr : new int[]{4}) {
 			new DemoScript(itr,20,1000).execute();
@@ -37,7 +37,7 @@ public class FederateController {
 		*/
 		
 		final int itr = 1;
-		final int rep = 1;
+		final int rep = 10;
 		final long stp = 1000;
 		
 		new Thread(new Runnable() {

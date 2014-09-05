@@ -16,6 +16,7 @@ import edu.mit.isos3.element.SocialElement;
 import edu.mit.isos3.element.WaterElement;
 import edu.mit.isos3.hla.HLAobject;
 import edu.mit.isos3.hla.ISOSambassador;
+import edu.mit.isos3.hla.ISOSelement;
 
 public class ElectFederate extends DefaultFederate {
 	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
@@ -45,12 +46,12 @@ public class ElectFederate extends DefaultFederate {
 
 	@Override
 	public void postInitializeSetUp(ISOSambassador amb) {
-		setUpElect(e_e1, amb.getObjects());
-		setUpElect(e_e2, amb.getObjects());
-		setUpElect(e_e3, amb.getObjects());
+		setUpElect(e_e1, amb.getElements());
+		setUpElect(e_e2, amb.getElements());
+		setUpElect(e_e3, amb.getElements());
 	}
 	
-	private static void setUpElect(LocalElectElement elect, Collection<HLAobject> objects) {
+	private static void setUpElect(LocalElectElement elect, Collection<ISOSelement> objects) {
 		for(HLAobject object : objects) {
 			if(object instanceof PetrolElement) {
 				PetrolElement petrol = (PetrolElement) object;
