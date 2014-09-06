@@ -35,7 +35,6 @@ public abstract class DefaultFederate {
 	final int numReplications;
 	final int stepsPerYear = 1000;
 	final long timeStep;
-	final double simulationDuration = 30.0;
 	private final String dir = "isos3";
 	private final String federateName;
 	
@@ -58,7 +57,7 @@ public abstract class DefaultFederate {
 		this.timeStep = timeStep;
 	}
 	
-	public void execute() throws IOException, RTIexception {
+	public void execute(double simulationDuration) throws IOException, RTIexception {
 		Path dirPath = Paths.get(dir);
 		if(!dirPath.toFile().exists()) {
 			dirPath.toFile().mkdir();

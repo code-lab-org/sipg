@@ -23,7 +23,13 @@ public class WaterFederate extends DefaultFederate {
 	public static void main(String[] args) throws RTIexception, IOException {
 		BasicConfigurator.configure();
 		logger.setLevel(Level.ALL);
-		new WaterFederate(4, 1, 1000).execute();
+		
+		final int itr = 1;
+		final int rep = 1;
+		final long stp = 1000;
+		final double dur = 5.0;
+		
+		new WaterFederate(itr, rep, stp).execute(dur);
 	}
 
 	public WaterFederate(int numIterations, int numReplications, long timeStep) {

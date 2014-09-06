@@ -63,15 +63,19 @@ public class ISOSambassador extends NullFederateAmbassador {
 	private final EncoderFactory encoderFactory;
 	private HLAfloat64TimeFactory timeFactory;
 	private volatile HLAfloat64Time logicalTime;
-	private HLAfloat64Interval lookaheadInterval;
+	private HLAfloat64Interval lookaheadInterval, timeStepDuration;
 	private int numIterations;
 	private long timeStep;
 	private volatile AtomicBoolean timeConstrained = new AtomicBoolean(false);
 	private volatile AtomicBoolean timeRegulating = new AtomicBoolean(false);
-	private volatile AtomicBoolean initSyncRegSuccess = new AtomicBoolean(false);
-	private volatile AtomicBoolean initSyncRegFailure = new AtomicBoolean(false);
-	private volatile AtomicBoolean initSyncAnnounce = new AtomicBoolean(false);
-	private volatile AtomicBoolean initSyncComplete = new AtomicBoolean(false);
+	private Map<String, Boolean> syncRegSuccess = 
+			Collections.synchronizedMap(new HashMap<String, Boolean>());
+	private Map<String, Boolean> syncRegFailure = 
+			Collections.synchronizedMap(new HashMap<String, Boolean>());
+	private Map<String, Boolean> syncAnnounce = 
+			Collections.synchronizedMap(new HashMap<String, Boolean>());
+	private Map<String, Boolean> syncComplete = 
+			Collections.synchronizedMap(new HashMap<String, Boolean>());
 	private volatile AtomicBoolean timeAdvanceGranted =  new AtomicBoolean(false);
 	private final Map<ObjectInstanceHandle, ISOSelement> objectInstanceHandleMap = 
 			Collections.synchronizedMap(
@@ -149,6 +153,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		}
 		logger.trace("Making the lookahead interval.");
 		lookaheadInterval = timeFactory.makeInterval(timeStep/((double)numIterations));
+		timeStepDuration = timeFactory.makeInterval(timeStep/((double)numIterations));
 		logger.trace("Making the initial time.");
 		HLAfloat64Time initTime = timeFactory.makeTime(scenario.getInitialTime());
 		
@@ -171,7 +176,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time constrained callback service.");
 		while(!timeConstrained.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(0,1);
+				rtiAmbassador.evokeMultipleCallbacks(0,5);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -188,7 +193,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.trace("Waiting for time regulating callback service.");
 		while(!timeRegulating.get()) {
 			try {
-				rtiAmbassador.evokeMultipleCallbacks(0,1);
+				rtiAmbassador.evokeMultipleCallbacks(0,5);
 			} catch (RTIexception e) {
 				logger.error(e);
 			}
@@ -207,6 +212,12 @@ public class ISOSambassador extends NullFederateAmbassador {
 			ISOSpetrolElement.subscribeAll(rtiAmbassador);
 			ISOSwaterElement.subscribeAll(rtiAmbassador);
 			logger.info("Published and subscribed all objects and interactions.");
+		} catch (RTIexception e) {
+			logger.error(e);
+		}
+		
+		try {
+			synchronize("join");
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
@@ -253,48 +264,12 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 		}
 		
-		logger.debug("Registering `init' synchronization point.");
 		try {
-			rtiAmbassador.registerFederationSynchronizationPoint("init", new byte[0]);
+			synchronize("init");
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
-		logger.trace("Waiting for synchronization registration confirmation callback service.");
-		while(!initSyncRegSuccess.get() && !initSyncRegFailure.get()) {
-			try {
-				rtiAmbassador.evokeMultipleCallbacks(0,1);
-			} catch (RTIexception e) {
-				logger.error(e);
-			}
-		}
-		logger.info("Synchronization point confirmed (" + (initSyncRegSuccess.get()?"Success":"Failure") + ").");
-		logger.trace("Waiting for synchronization announce callback service.");
-		while(!initSyncAnnounce.get()) {
-			try {
-				rtiAmbassador.evokeMultipleCallbacks(0,1);
-			} catch (RTIexception e) {
-				logger.error(e);
-			}
-		}
-		logger.info("Synchronization point announced.");
-
-		logger.debug("Achieving `init' synchronization point.");
-		try {
-			rtiAmbassador.synchronizationPointAchieved("init");
-		} catch (RTIexception e) {
-			logger.error(e);
-		}
-		logger.info("Synchronization point achieved.");
-		logger.trace("Waiting for synchronization complete callback service.");
-		while(!initSyncComplete.get()) {
-			try {
-				rtiAmbassador.evokeMultipleCallbacks(0,1);
-			} catch (RTIexception e) {
-				logger.error(e);
-			}
-		}
-		logger.info("Synchronization point complete.");
-
+		
 		for(LocalElement entity : localObjects.keySet()) {
 			logger.trace("Updating name and location attributes for " 
 					+ entity.getName() + ".");
@@ -311,7 +286,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 		for(LocalElement entity : localObjects.keySet()) {
 			while(!setUpElement(entity)) {
 				try {
-					rtiAmbassador.evokeMultipleCallbacks(0,1);
+					rtiAmbassador.evokeMultipleCallbacks(0,5);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
@@ -329,13 +304,59 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeMultipleCallbacks(0,1);
+					rtiAmbassador.evokeMultipleCallbacks(0,5);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
 			}
 			timeAdvanceGranted.set(false);
 		}
+	}
+	
+	private void synchronize(String name) throws RTIexception {
+		synchronized(syncRegSuccess) {
+			if(!syncRegSuccess.containsKey(name)) {
+				syncRegSuccess.put(name, false);
+			}
+		}
+		synchronized(syncRegFailure) {
+			if(!syncRegFailure.containsKey(name)) {
+				syncRegFailure.put(name, false);
+			}
+		}
+		synchronized(syncAnnounce) {
+			if(!syncAnnounce.containsKey(name)) {
+				syncAnnounce.put(name, false);
+			}
+		}
+		synchronized(syncComplete) {
+			if(!syncComplete.containsKey(name)) {
+				syncComplete.put(name, false);
+			}
+		}
+		
+		logger.debug("Registering `"+name+"' synchronization point.");
+		rtiAmbassador.registerFederationSynchronizationPoint(name, new byte[0]);
+		
+		logger.trace("Waiting for synchronization registration confirmation callback service.");
+		while(!syncRegSuccess.get(name) && !syncRegFailure.get(name)) {
+			rtiAmbassador.evokeMultipleCallbacks(0,5);
+		}
+		logger.info("Synchronization point confirmed (" + (syncRegSuccess.get(name)?"Success":"Failure") + ").");
+		logger.trace("Waiting for synchronization announce callback service.");
+		while(!syncAnnounce.get(name)) {
+			rtiAmbassador.evokeMultipleCallbacks(0,5);
+		}
+		logger.info("Synchronization point announced.");
+
+		logger.debug("Achieving `"+name+"' synchronization point.");
+		rtiAmbassador.synchronizationPointAchieved(name);
+		logger.info("Synchronization point achieved.");
+		logger.trace("Waiting for synchronization complete callback service.");
+		while(!syncComplete.get(name)) {
+			rtiAmbassador.evokeMultipleCallbacks(0,5);
+		}
+		logger.info("Synchronization point complete.");
 	}
 	
 	private boolean setUpElement(LocalElement element) {
@@ -483,7 +504,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 				}
 			}
 			try {
-				HLAfloat64Time nextTime = logicalTime.add(lookaheadInterval);
+				HLAfloat64Time nextTime = logicalTime.add(timeStepDuration);
 				logger.debug("Requesting time advance to initial time " + nextTime);
 				rtiAmbassador.timeAdvanceRequest(nextTime);
 			} catch (RTIexception e) {
@@ -493,7 +514,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			logger.debug("Waiting for time advance grant.");
 			while(!timeAdvanceGranted.get()) {
 				try {
-					rtiAmbassador.evokeMultipleCallbacks(0,1);
+					rtiAmbassador.evokeMultipleCallbacks(0,5);
 				} catch (RTIexception e) {
 					logger.error(e);
 				}
@@ -597,34 +618,26 @@ public class ISOSambassador extends NullFederateAmbassador {
 	@Override
 	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
 			throws FederateInternalError {
-		if(synchronizationPointLabel.equals("init")) {
-			initSyncRegSuccess.set(true);
-		}
+		syncRegSuccess.put(synchronizationPointLabel, true);
 	}
 
 	@Override
 	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
 			SynchronizationPointFailureReason reason)
 					throws FederateInternalError {
-		if(synchronizationPointLabel.equals("init")) {
-			initSyncRegFailure.set(true);
-		}
+		syncRegFailure.put(synchronizationPointLabel, true);
 	}
 
 	@Override
 	public void announceSynchronizationPoint(String synchronizationPointLabel, 
 			byte[] userSuppliedTag) throws FederateInternalError {
-		if(synchronizationPointLabel.equals("init")) {
-			initSyncAnnounce.set(true);
-		}
+		syncAnnounce.put(synchronizationPointLabel, true);
 	}
 
 	@Override
 	public void federationSynchronized(String synchronizationPointLabel, 
 			FederateHandleSet failedToSyncSet) throws FederateInternalError {
-		if(synchronizationPointLabel.equals("init")) {
-			initSyncComplete.set(true);
-		}
+		syncComplete.put(synchronizationPointLabel, true);
 	}
 
 	@Override
@@ -701,7 +714,7 @@ public class ISOSambassador extends NullFederateAmbassador {
 			LogicalTime theTime,
 			OrderType receivedOrdering,
 			SupplementalReflectInfo reflectInfo) {
-		logger.trace("Redirecting to common callback method.");
+		logger.debug("Reflect attributes for object " + theObject + " with timestamp " + theTime);
 		reflectAttributeValues(theObject, theAttributes, userSuppliedTag,
 				sentOrdering, theTransport, reflectInfo);
 	}
@@ -716,10 +729,10 @@ public class ISOSambassador extends NullFederateAmbassador {
 		logger.debug("Reflect attributes for object " + theObject);
 		try {
 			if(objectInstanceHandleMap.containsKey(theObject)) {
-				logger.trace("Reflecting attributes for known object " 
-						+ objectInstanceHandleMap.get(theObject));
 				ISOSelement element = objectInstanceHandleMap.get(theObject);
 				element.setAllAttributes(theAttributes);
+				logger.trace("Reflected attributes for known object " 
+						+ objectInstanceHandleMap.get(theObject));
 			} 
 		} catch (DecoderException e) {
 			logger.error(e);

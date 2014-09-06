@@ -37,13 +37,14 @@ public class FederateController {
 		*/
 		
 		final int itr = 1;
-		final int rep = 10;
+		final int rep = 1;
 		final long stp = 1000;
+		final double dur = 30.0;
 		
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					new ElectFederate(itr, rep, stp).execute();
+					new ElectFederate(itr, rep, stp).execute(dur);
 				} catch (RTIexception | IOException e) {
 					logger.error(e);
 				}
@@ -53,7 +54,7 @@ public class FederateController {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					new PetrolFederate(itr, rep, stp).execute();
+					new PetrolFederate(itr, rep, stp).execute(dur);
 				} catch (RTIexception | IOException e) {
 					logger.error(e);
 				}
@@ -63,7 +64,7 @@ public class FederateController {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					new SocialFederate(itr, rep, stp).execute();
+					new SocialFederate(itr, rep, stp).execute(dur);
 				} catch (RTIexception | IOException e) {
 					logger.error(e);
 				}
@@ -73,7 +74,7 @@ public class FederateController {
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					new WaterFederate(itr, rep, stp).execute();
+					new WaterFederate(itr, rep, stp).execute(dur);
 				} catch (RTIexception | IOException e) {
 					logger.error(e);
 				}

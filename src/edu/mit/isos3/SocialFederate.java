@@ -20,7 +20,13 @@ public class SocialFederate extends DefaultFederate {
 	public static void main(String[] args) throws RTIexception, IOException {
 		BasicConfigurator.configure();
 		logger.setLevel(Level.ALL);
-		new SocialFederate(4, 1, 1000).execute();
+		
+		final int itr = 1;
+		final int rep = 1;
+		final long stp = 1000;
+		final double dur = 5.0;
+		
+		new SocialFederate(itr, rep, stp).execute(dur);
 	}
 
 	public SocialFederate(int numIterations, int numReplications, long timeStep) {

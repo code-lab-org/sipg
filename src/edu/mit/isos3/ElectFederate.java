@@ -20,7 +20,13 @@ public class ElectFederate extends DefaultFederate {
 	public static void main(String[] args) throws RTIexception, IOException {
 		BasicConfigurator.configure();
 		logger.setLevel(Level.ALL);
-		new ElectFederate(4, 1, 1000).execute();
+		
+		final int itr = 1;
+		final int rep = 1;
+		final long stp = 1000;
+		final double dur = 5.0;
+		
+		new ElectFederate(itr, rep, stp).execute(dur);
 	}
 
 	public ElectFederate(int numIterations, int numReplications, long timeStep) {
