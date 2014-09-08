@@ -4,6 +4,7 @@ import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
 import hla.rti1516e.FederateHandleSet;
 import hla.rti1516e.LogicalTime;
+import hla.rti1516e.MessageRetractionHandle;
 import hla.rti1516e.NullFederateAmbassador;
 import hla.rti1516e.ObjectClassHandle;
 import hla.rti1516e.ObjectInstanceHandle;
@@ -14,6 +15,7 @@ import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TransportationTypeHandle;
+import hla.rti1516e.FederateAmbassador.SupplementalReflectInfo;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
@@ -713,8 +715,8 @@ public class ISOSambassador extends NullFederateAmbassador {
 			TransportationTypeHandle theTransport,
 			LogicalTime theTime,
 			OrderType receivedOrdering,
-			SupplementalReflectInfo reflectInfo) {
-		logger.debug("Reflect attributes for object " + theObject + " with timestamp " + theTime);
+			SupplementalReflectInfo reflectInfo) throws FederateInternalError {
+		logger.debug("Reflect attributes for object " + theObject + " with timestamp " + theTime + " " + sentOrdering + "/" + receivedOrdering);
 		reflectAttributeValues(theObject, theAttributes, userSuppliedTag,
 				sentOrdering, theTransport, reflectInfo);
 	}
@@ -725,8 +727,8 @@ public class ISOSambassador extends NullFederateAmbassador {
 			byte[] userSuppliedTag,
 			OrderType sentOrdering,
 			TransportationTypeHandle theTransport,
-			SupplementalReflectInfo reflectInfo) {
-		logger.debug("Reflect attributes for object " + theObject);
+			SupplementalReflectInfo reflectInfo) throws FederateInternalError {
+		logger.debug("Reflect attributes for object " + theObject + " " + sentOrdering);
 		try {
 			if(objectInstanceHandleMap.containsKey(theObject)) {
 				ISOSelement element = objectInstanceHandleMap.get(theObject);
@@ -737,5 +739,20 @@ public class ISOSambassador extends NullFederateAmbassador {
 		} catch (DecoderException e) {
 			logger.error(e);
 		}
+	}
+	
+	@Override
+	public void reflectAttributeValues(ObjectInstanceHandle theObject,
+            AttributeHandleValueMap theAttributes,
+            byte[] userSuppliedTag,
+            OrderType sentOrdering,
+            TransportationTypeHandle theTransport,
+            LogicalTime theTime,
+            OrderType receivedOrdering,
+            MessageRetractionHandle retractionHandle,
+            SupplementalReflectInfo reflectInfo) throws FederateInternalError {
+		logger.debug("Reflect attributes for object " + theObject + " with timestamp " + theTime + " " + sentOrdering + "/" + receivedOrdering);
+		reflectAttributeValues(theObject, theAttributes, userSuppliedTag,
+				sentOrdering, theTransport, reflectInfo);
 	}
 }
