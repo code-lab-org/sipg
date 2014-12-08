@@ -15,7 +15,6 @@ import hla.rti1516e.RtiFactory;
 import hla.rti1516e.RtiFactoryFactory;
 import hla.rti1516e.SynchronizationPointFailureReason;
 import hla.rti1516e.TransportationTypeHandle;
-import hla.rti1516e.FederateAmbassador.SupplementalReflectInfo;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.exceptions.AlreadyConnected;
@@ -407,6 +406,11 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 		}
 		logger.warn(elect + " missing " + (petrol==null?"petrol":"") + " " + (social==null?"social":"") + " " + (water==null?"water":""));
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return petrol != null && social != null && water != null;
 	}
 	
@@ -431,6 +435,11 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 		}
 		logger.warn(petrol + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return elect != null && social != null;
 	}
 	
@@ -463,6 +472,11 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 		}
 		logger.warn(social + " missing " + (elect==null?"elect":"") + " " + (petrol==null?"petrol":"") + " " + (water==null?"water":""));
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return elect != null && petrol != null && water != null;
 	}
 	
@@ -486,6 +500,11 @@ public class ISOSambassador extends NullFederateAmbassador {
 			}
 		}
 		logger.warn(water + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		return elect != null && social != null;
 	}
 	
@@ -730,13 +749,25 @@ public class ISOSambassador extends NullFederateAmbassador {
 			SupplementalReflectInfo reflectInfo) throws FederateInternalError {
 		logger.debug("Reflect attributes for object " + theObject + " " + sentOrdering);
 		try {
+			if(!objectInstanceHandleMap.containsKey(theObject)) {
+				logger.warn("Unknown object " + theObject + 
+						" with reflected attributes ... attempting to discover.");
+				discoverObjectInstance(theObject, 
+						rtiAmbassador.getKnownObjectClassHandle(theObject), 
+						rtiAmbassador.getObjectInstanceName(theObject));
+			}
 			if(objectInstanceHandleMap.containsKey(theObject)) {
 				ISOSelement element = objectInstanceHandleMap.get(theObject);
 				element.setAllAttributes(theAttributes);
 				logger.trace("Reflected attributes for known object " 
 						+ objectInstanceHandleMap.get(theObject));
-			} 
+			} else {
+				logger.warn("Unknown object " + theObject + 
+						" with reflected attributes... skipping.");
+			}
 		} catch (DecoderException e) {
+			logger.error(e);
+		} catch (RTIexception e) {
 			logger.error(e);
 		}
 	}
