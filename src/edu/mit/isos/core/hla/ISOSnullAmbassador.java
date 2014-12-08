@@ -91,7 +91,11 @@ public class ISOSnullAmbassador implements ISOSambassador {
 				break;
 			}
 		}
-		logger.warn(elect + " missing " + (petrol==null?"petrol":"") + " " + (social==null?"social":"") + " " + (water==null?"water":""));
+		if(petrol==null || social==null || water==null) {
+			logger.warn(elect + " missing " + (petrol==null?"petrol":"") 
+					+ " " + (social==null?"social":"") 
+					+ " " + (water==null?"water":""));
+		}
 
 		return petrol != null && social != null && water != null;
 	}
@@ -116,7 +120,10 @@ public class ISOSnullAmbassador implements ISOSambassador {
 				break;
 			}
 		}
-		logger.warn(petrol + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		if(elect==null || social==null) {
+			logger.warn(petrol + " missing " + (elect==null?"elect":"") 
+					+ " " + (social==null?"social":""));
+		}
 
 		return elect != null && social != null;
 	}
@@ -149,7 +156,11 @@ public class ISOSnullAmbassador implements ISOSambassador {
 				break;
 			}
 		}
-		logger.warn(social + " missing " + (elect==null?"elect":"") + " " + (petrol==null?"petrol":"") + " " + (water==null?"water":""));
+		if(elect==null || petrol==null || water==null) {
+			logger.warn(social + " missing " + (elect==null?"elect":"") 
+					+ " " + (petrol==null?"petrol":"") 
+					+ " " + (water==null?"water":""));
+		}
 
 		return elect != null && petrol != null && water != null;
 	}
@@ -173,7 +184,10 @@ public class ISOSnullAmbassador implements ISOSambassador {
 				break;
 			}
 		}
-		logger.warn(water + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
+		if(elect==null || social==null) {
+			logger.warn(water + " missing " + (elect==null?"elect":"") 
+					+ " " + (social==null?"social":""));
+		}
 
 		return elect != null && social != null;
 	}
