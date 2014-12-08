@@ -19,6 +19,7 @@ import org.apache.commons.math3.optim.linear.Relationship;
 import org.apache.commons.math3.optim.linear.SimplexSolver;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
+import edu.mit.isos.app.water.LocalWaterElement.WaterState;
 import edu.mit.isos.core.context.Location;
 import edu.mit.isos.core.context.Resource;
 import edu.mit.isos.core.context.ResourceFactory;
@@ -113,15 +114,15 @@ public class WaterController extends DefaultElement {
 						new LinearObjectiveFunction(costCoefficients, 0d),
 						new InitialGuess(initialValues));
 				for(LocalWaterElement e : systems) {
-					e.getOperatingState().setProduced(ResourceFactory.create(ResourceType.WATER,
+					e.getOperatingState().setProduced(e, ResourceFactory.create(ResourceType.WATER,
 							output.getPoint()[elements.indexOf(e)]), duration);
 				}
 				for(WaterPlant e : plants) {
-					e.getOperatingState().setProduced(ResourceFactory.create(ResourceType.WATER,
+					e.getOperatingState().setProduced(e, ResourceFactory.create(ResourceType.WATER,
 							output.getPoint()[elements.indexOf(e)]), duration);
 				}
 				for(WaterPipeline e : pipelines) {
-					e.getOperatingState().setOutput(ResourceFactory.create(ResourceType.WATER,
+					e.getOperatingState().setOutput(e, ResourceFactory.create(ResourceType.WATER,
 							output.getPoint()[elements.indexOf(e)]), duration);
 				}
 			} catch(TooManyIterationsException ignore) { 
@@ -148,7 +149,7 @@ public class WaterController extends DefaultElement {
 								.getInput(pipeline, duration).get(ResourceType.ELECTRICITY));
 					}
 				}
-				system.getOperatingState().setReceived(received, duration);
+				system.getOperatingState().setReceived(system, received, duration);
 			}
 		}
 	}

@@ -1,18 +1,12 @@
 package edu.mit.isos.app;
 
-import java.io.IOException;
-
 import hla.rti1516e.exceptions.RTIexception;
-import net.sf.ohla.rti.RTI;
+
+import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-
-import edu.mit.isos.app.elect.ElectFederate;
-import edu.mit.isos.app.petrol.PetrolFederate;
-import edu.mit.isos.app.social.SocialFederate;
-import edu.mit.isos.app.water.WaterFederate;
 
 public class FederateController {
 	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
@@ -42,18 +36,27 @@ public class FederateController {
 		}
 		*/
 		
-		// OHLA
+		
+		
+		/*/ OHLA
 		new Thread(new Runnable() {
 			public void run() {
 				new RTI();
 			}
-		}).start();
+		}).start();*/
 		
 		final int itr = 1;
 		final int rep = 10;
 		final long stp = 1000;
 		final double dur = 30.0;
 		
+		try {
+			new SingleFederate(itr, rep, stp).execute(dur);
+		} catch (RTIexception | IOException e) {
+			logger.error(e);
+		}
+		
+		/*
 		new Thread(new Runnable() {
 			public void run() {
 				try {
@@ -93,6 +96,6 @@ public class FederateController {
 				}
 			}
 		}).start();
-		
+		*/
 	}
 }

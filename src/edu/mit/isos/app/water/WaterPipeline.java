@@ -53,13 +53,15 @@ public class WaterPipeline extends DefaultElement {
 			super.initialize(element, initialTime);
 			output = initialOutput;
 		}
-		protected void setOutput(Resource output, long duration) {
+		protected void setOutput(LocalElement element, Resource output, long duration) {
 			if(output.getQuantity(ResourceType.WATER) > 
 			outputCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
 				this.output = outputCapacity.multiply(duration);
 			} else {
 				this.output = output.truncatePositive();
 			}
+			// re-iterate tick to resolve controller order dependencies
+			iterateTick(element, duration);
 		}
 	}
 }

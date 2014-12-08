@@ -78,13 +78,15 @@ public class WaterPlant extends DefaultElement {
 			super.initialize(element, initialTime);
 			produced = initialProduced;
 		}
-		protected void setProduced(Resource produced, long duration) {
+		protected void setProduced(LocalElement element, Resource produced, long duration) {
 			if(produced.getQuantity(ResourceType.WATER) > 
 			productionCapacity.multiply(duration).getQuantity(ResourceType.WATER)) {
 				this.produced = productionCapacity.multiply(duration);
 			} else {
 				this.produced = produced.truncatePositive();
 			}
+			// re-iterate tick to resolve controller order dependencies
+			iterateTick(element, duration);
 		}
 	}
 }
