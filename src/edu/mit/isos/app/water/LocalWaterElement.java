@@ -65,9 +65,14 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 		private SocialElement socialCustomer = null;
 		private ElectElement electSupplier = null;
 		private double electReceived, nextElectReceived;
+		private double waterSentSocial, nextWaterSentSocial;
 		
 		public double getElectReceived() {
 			return electReceived;
+		}
+		
+		public double getWaterSentToSocial() {
+			return waterSentSocial;
 		}
 		
 		@Override
@@ -75,12 +80,14 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 			super.iterateTick(element, duration);
 			nextElectReceived = getReceived(element, duration)
 					.getQuantity(ResourceType.ELECTRICITY);
+			nextWaterSentSocial = socialCustomer==null?0:socialCustomer.getWaterReceived();
 		}
 
 		@Override
 		public void iterateTock() {
 			super.iterateTock();
 			electReceived = nextElectReceived;
+			waterSentSocial = nextWaterSentSocial;
 		}
 		
 		@Override
@@ -99,14 +106,6 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 					ResourceType.WATER, ResourceFactory.create(
 							new ResourceType[]{ResourceType.AQUIFER, ResourceType.ELECTRICITY}, 
 							new double[]{liftAquifer, liftElect}));
-		}
-		
-		private double getWaterSentToSocial() {
-			if(socialCustomer != null) {
-				return socialCustomer.getWaterReceived();
-			} else {
-				return 0;
-			}
 		}
 
 		@Override 
@@ -138,8 +137,7 @@ public class LocalWaterElement extends DefaultElement implements WaterElement {
 		public Resource getSentTo(LocalElement element1, Element element2, long duration) {
 			Resource sent = ResourceFactory.create();
 			if(element2 != null && element2.equals(socialCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.WATER, 
-						socialCustomer.getWaterReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.WATER, waterSentSocial));
 			}
 			return sent;
 		}

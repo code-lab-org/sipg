@@ -45,7 +45,7 @@ public class FederateController {
 			}
 		}).start();*/
 		
-		final int itr = 1;
+		final int itr = 2;
 		final int rep = 10;
 		final long stp = 1000;
 		final double dur = 30.0;

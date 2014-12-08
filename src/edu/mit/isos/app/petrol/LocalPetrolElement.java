@@ -76,9 +76,19 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 		private ElectElement electCustomer = null;
 		private ElectElement electSupplier = null;
 		private double electReceived, nextElectReceived;
+		private double petrolSentSocial, nextPetrolSentSocial;
+		private double petrolSentElect, nextPetrolSentElect;
 		
 		public double getElectReceived() {
 			return electReceived;
+		}
+		
+		public double getPetrolSentToSocial() {
+			return petrolSentSocial;
+		}
+		
+		public double getPetrolSentToElect() {
+			return petrolSentElect;
 		}
 		
 		@Override
@@ -86,12 +96,16 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 			super.iterateTick(element, duration);
 			nextElectReceived = getReceived(element, duration)
 					.getQuantity(ResourceType.ELECTRICITY);
+			nextPetrolSentSocial = socialCustomer==null?0:socialCustomer.getPetrolReceived();
+			nextPetrolSentElect = electCustomer==null?0:electCustomer.getPetrolReceived();
 		}
 		
 		@Override
 		public void iterateTock() {
 			super.iterateTock();
 			electReceived = nextElectReceived;
+			petrolSentSocial = nextPetrolSentSocial;
+			petrolSentElect = nextPetrolSentElect;
 		}
 		
 		@Override
@@ -109,22 +123,6 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 					ResourceType.OIL, ResourceFactory.create(
 							new ResourceType[]{ResourceType.ELECTRICITY, ResourceType.RESERVES},
 							new double[]{extractElect, extractReserves}));
-		}
-		
-		private double getPetrolSentToSocial() {
-			if(socialCustomer != null) {
-				return socialCustomer.getPetrolReceived();
-			} else {
-				return 0;
-			}
-		}
-		
-		private double getPetrolSentToElect() {
-			if(electCustomer != null) {
-				return electCustomer.getPetrolReceived();
-			} else {
-				return 0;
-			}
 		}
 
 		@Override 
@@ -146,12 +144,10 @@ public class LocalPetrolElement extends DefaultElement implements PetrolElement 
 		public Resource getSentTo(LocalElement element1, Element element2, long duration) {
 			Resource sent = ResourceFactory.create();
 			if(element2 != null && element2.equals(socialCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.OIL, 
-						socialCustomer.getPetrolReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.OIL, petrolSentSocial));
 			}
 			if(element2 != null && element2.equals(electCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.OIL, 
-						electCustomer.getPetrolReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.OIL, petrolSentElect));
 			}
 			return sent;
 		}

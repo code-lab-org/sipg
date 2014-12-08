@@ -134,7 +134,7 @@ public class WaterController extends DefaultElement {
 			}
 
 			for(LocalWaterElement system : systems) {
-				Resource received = ((WaterState)system.getState())
+				Resource received = system.getOperatingState()
 						.getConsumed(system, duration).get(ResourceType.ELECTRICITY);
 				for(WaterPlant plant : plants) {
 					if(plant.getLocation().equals(system.getLocation())){

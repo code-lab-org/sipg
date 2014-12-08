@@ -92,6 +92,9 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 		private SocialElement socialCustomer = null;
 		private WaterElement waterCustomer = null;
 		private double petrolReceived, nextPetrolReceived;
+		private double electSentSocial, nextElectSentSocial;
+		private double electSentWater, nextElectSentWater;
+		private double electSentPetrol, nextElectSentPetrol;
 		
 		@Override
 		public void initialize(LocalElement element, long initialTime) {
@@ -108,16 +111,34 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 			super.iterateTick(element, duration);
 			nextPetrolReceived = getReceived(element, duration)
 					.getQuantity(ResourceType.OIL);
+			nextElectSentSocial = socialCustomer==null?0:socialCustomer.getElectReceived();
+			nextElectSentWater = waterCustomer==null?0:waterCustomer.getElectReceived();
+			nextElectSentPetrol = petrolCustomer==null?0:petrolCustomer.getElectReceived();
 		}
 		
 		@Override
 		public void iterateTock() {
 			super.iterateTock();
 			petrolReceived = nextPetrolReceived;
+			electSentSocial = nextElectSentSocial;
+			electSentWater = nextElectSentWater;
+			electSentPetrol = nextElectSentPetrol;
 		}
 		
 		public double getPetrolReceived() {
 			return petrolReceived;
+		}
+		
+		public double getElectSentToSocial() {
+			return electSentSocial;
+		}
+		
+		public double getElectSentToWater() {
+			return electSentWater;
+		}
+		
+		public double getElectSentToPetrol() {
+			return electSentPetrol;
 		}
 
 		public ElectState(double solarCap, double thermalOil) {
@@ -128,30 +149,6 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 
 			solarCapacity = ResourceFactory.create(
 					ResourceType.ELECTRICITY, solarCap);
-		}
-		
-		private double getElectSentToSocial() {
-			if(socialCustomer != null) {
-				return socialCustomer.getElectReceived();
-			} else {
-				return 0;
-			}
-		}
-		
-		private double getElectSentToPetrol() {
-			if(petrolCustomer != null) {
-				return petrolCustomer.getElectReceived();
-			} else {
-				return 0;
-			}
-		}
-		
-		private double getElectSentToWater() {
-			if(waterCustomer != null) {
-				return waterCustomer.getElectReceived();
-			} else {
-				return 0;
-			}
 		}
 
 		@Override 
@@ -170,16 +167,13 @@ public class LocalElectElement extends DefaultElement implements ElectElement {
 		public Resource getSentTo(LocalElement element1, Element element2, long duration) {
 			Resource sent = ResourceFactory.create();
 			if(element2 != null && element2.equals(socialCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, 
-						socialCustomer.getElectReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, electSentSocial));
 			}
 			if(element2 != null && element2.equals(petrolCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, 
-						petrolCustomer.getElectReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, electSentPetrol));
 			}
 			if(element2 != null && element2.equals(waterCustomer)) {
-				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, 
-						waterCustomer.getElectReceived()));
+				sent = sent.add(ResourceFactory.create(ResourceType.ELECTRICITY, electSentWater));
 			}
 			return sent;
 		}
