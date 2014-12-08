@@ -62,8 +62,7 @@ public class DefaultElement implements Element {
 	
 	public DefaultElement initialState(State initialState) {
 		if(!getStates().contains(initialState)) {
-			throw new IllegalArgumentException(
-					"States does not include " + initialState);
+			states.add(initialState);
 		}
 		this.initialState = initialState;
 		return this;
