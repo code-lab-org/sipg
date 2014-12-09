@@ -40,7 +40,7 @@ public abstract class DefaultFederate {
 	final int numReplications;
 	final int stepsPerYear = 1000;
 	final long timeStep;
-	private final String dir = "isos3";
+	private final String dir = "isos";
 	private final String federateName;
 	
 	public final Node n_a = new Node("A");
