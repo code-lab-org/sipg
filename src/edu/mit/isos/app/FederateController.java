@@ -23,19 +23,14 @@ public class FederateController {
 		logger.setLevel(Level.WARN);
 		
 		ohlaRTI();
-
-		for(int itr : new int[]{10}) {
-			multiThread(itr, 5, 1000, 30.0);
-		}
+		multiThread(5, 5, 1000, 30.0);
+		
 		/*
-		for(int itr : new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 16, 18, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100}) {
-			multiThread(itr, 5, 1000, 30.0);
-		}
-		for(int itr : new int[]{100, 100, 100, 100, 100}) {
+		for(int itr : new int[]{1, 2, 4, 10, 20, 50}) {
 			multiThread(itr, 20, 1000, 30.0);
 		}
-		for(int stp : new int[]{100, 250, 500, 1000, 2500, 10000}) {
-			multiThread(itr, 20, 1000, 30.0);
+		for(int stp : new int[]{100, 250, 500, 2500, 10000}) {
+			multiThread(10, 20, stp, 30.0);
 		}
 		*/
 		
