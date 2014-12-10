@@ -219,6 +219,8 @@
     <interactions>
         <interactionClass>
             <name>HLAinteractionRoot</name>
+      		<transportation>HLAreliable</transportation>
+      		<order>Receive</order>
         </interactionClass>
     </interactions>
     <switches>
