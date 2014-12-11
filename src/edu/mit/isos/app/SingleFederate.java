@@ -39,7 +39,7 @@ import edu.mit.isos.core.state.ResourceTransforming;
 import edu.mit.isos.core.state.ResourceTransporting;
 
 public class SingleFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos");
+	protected static Logger logger = Logger.getLogger(SingleFederate.class);
 	
 	boolean replicationOutputs = true;
 	boolean retainReplicationOutputs = true;
