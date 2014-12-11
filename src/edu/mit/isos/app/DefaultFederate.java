@@ -32,7 +32,7 @@ import edu.mit.isos.core.state.ResourceTransforming;
 import edu.mit.isos.core.state.ResourceTransporting;
 
 public abstract class DefaultFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
+	protected static Logger logger = Logger.getLogger(DefaultFederate.class);
 	
 	boolean replicationOutputs = true;
 	boolean retainReplicationOutputs = true;
@@ -158,6 +158,7 @@ public abstract class DefaultFederate {
 										"Net Flow", l.toString(), 
 										netFlow, "NaN"));
 							} catch (IOException e) {
+								logger.error(e);
 								e.printStackTrace();
 							}
 						}
@@ -173,6 +174,7 @@ public abstract class DefaultFederate {
 											"Exchange", e1.getName() + "<->" + e2.getName(), 
 											r12.add(r21), r12.add(r21).absoluteValue().safeDivide(r12.absoluteValue())));
 								} catch (IOException e) {
+									logger.error(e);
 									e.printStackTrace();
 								}
 							}

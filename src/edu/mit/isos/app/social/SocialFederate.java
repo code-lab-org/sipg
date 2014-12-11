@@ -13,7 +13,7 @@ import edu.mit.isos.app.DefaultFederate;
 import edu.mit.isos.core.context.Scenario;
 
 public class SocialFederate extends DefaultFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
+	protected static Logger logger = Logger.getLogger(SocialFederate.class);
 	private LocalSocialElement e_s1;
 	private LocalSocialElement e_s2;
 	private LocalSocialElement e_s3;

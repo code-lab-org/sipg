@@ -13,7 +13,7 @@ import edu.mit.isos.app.DefaultFederate;
 import edu.mit.isos.core.context.Scenario;
 
 public class ElectFederate extends DefaultFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
+	protected static Logger logger = Logger.getLogger(ElectFederate.class);
 	private LocalElectElement e_e1;
 	private LocalElectElement e_e2;
 	private LocalElectElement e_e3;

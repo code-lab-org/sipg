@@ -13,7 +13,7 @@ import edu.mit.isos.app.DefaultFederate;
 import edu.mit.isos.core.context.Scenario;
 
 public class WaterFederate extends DefaultFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
+	protected static Logger logger = Logger.getLogger(WaterFederate.class);
 	private LocalWaterElement e_w1;
 	private LocalWaterElement e_w2;
 	private LocalWaterElement e_w3;

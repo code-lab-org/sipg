@@ -13,7 +13,7 @@ import edu.mit.isos.app.DefaultFederate;
 import edu.mit.isos.core.context.Scenario;
 
 public class PetrolFederate extends DefaultFederate {
-	protected static Logger logger = Logger.getLogger("edu.mit.isos3");
+	protected static Logger logger = Logger.getLogger(PetrolFederate.class);
 	private LocalPetrolElement e_o1;
 	private LocalPetrolElement e_o2;
 	private LocalPetrolElement e_o3;
