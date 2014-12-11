@@ -102,7 +102,7 @@ public class DoubleArrayResource extends DefaultResource implements Resource {
 	public final Resource safeDivide(Resource resource) {
 		DoubleArrayResource newResource = new DoubleArrayResource();
 		for(ResourceType t : ResourceType.values()) {
-			if(resource.getQuantity(t) != 0) {
+			if(Math.abs(resource.getQuantity(t)) > epsilon) {
 				newResource.amount[t.ordinal()] = amount[t.ordinal()] / resource.getQuantity(t);
 			}
 		}
