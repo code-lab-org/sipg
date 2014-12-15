@@ -130,10 +130,10 @@ public class FederateController {
 			}).start();
 		}
 		
-		while((roles.contains(Role.SOCIAL) && !running.get(Role.SOCIAL))
-				&& (roles.contains(Role.WATER) && !running.get(Role.WATER))
-				&& (roles.contains(Role.ELECT) && !running.get(Role.ELECT))
-				&& (roles.contains(Role.PETROL) && !running.get(Role.PETROL))) {
+		while((roles.contains(Role.SOCIAL) && running.get(Role.SOCIAL))
+				&& (roles.contains(Role.WATER) && running.get(Role.WATER))
+				&& (roles.contains(Role.ELECT) && running.get(Role.ELECT))
+				&& (roles.contains(Role.PETROL) && running.get(Role.PETROL))) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
