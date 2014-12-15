@@ -1,4 +1,4 @@
-package edu.mit.isos.core.hla;
+package edu.mit.isos.app.hla;
 
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
@@ -52,16 +52,14 @@ import edu.mit.isos.app.PetrolElement;
 import edu.mit.isos.app.SocialElement;
 import edu.mit.isos.app.WaterElement;
 import edu.mit.isos.app.elect.LocalElectElement;
-import edu.mit.isos.app.hla.ISOSelectElement;
-import edu.mit.isos.app.hla.ISOSpetrolElement;
-import edu.mit.isos.app.hla.ISOSsocialElement;
-import edu.mit.isos.app.hla.ISOSwaterElement;
 import edu.mit.isos.app.petrol.LocalPetrolElement;
 import edu.mit.isos.app.social.LocalSocialElement;
 import edu.mit.isos.app.water.LocalWaterElement;
 import edu.mit.isos.core.context.Scenario;
 import edu.mit.isos.core.element.Element;
 import edu.mit.isos.core.element.LocalElement;
+import edu.mit.isos.core.hla.ISOSambassador;
+import edu.mit.isos.core.hla.ISOSelement;
 import edu.mit.isos.core.sim.SimEntity;
 
 public class ISOSfedAmbassador extends NullFederateAmbassador implements ISOSambassador {

@@ -1,4 +1,4 @@
-package edu.mit.isos.core.hla;
+package edu.mit.isos.app.hla;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +17,7 @@ import edu.mit.isos.app.water.LocalWaterElement;
 import edu.mit.isos.core.context.Scenario;
 import edu.mit.isos.core.element.Element;
 import edu.mit.isos.core.element.LocalElement;
+import edu.mit.isos.core.hla.ISOSambassador;
 import edu.mit.isos.core.sim.SimEntity;
 
 public class ISOSnullAmbassador implements ISOSambassador {
