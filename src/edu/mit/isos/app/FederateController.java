@@ -5,6 +5,8 @@ import hla.rti1516e.exceptions.RTIexception;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
@@ -23,9 +25,13 @@ public class FederateController {
 		BasicConfigurator.configure();
 		logger.setLevel(Level.INFO);
 		
-		Collection<Role> roles = Arrays.asList(Role.SOCIAL, Role.WATER, Role.ELECT, Role.PETROL);
+		Collection<Role> roles = Arrays.asList(Role.WATER);
 
-		multiThread(roles, 5, 5, 1000, 30.0);
+		multiThread(roles, 5, 1, 1000, 30.0);
+		for(int itr : new int[]{1, 2, 4, 10}) {
+			multiThread(roles, itr, 20, 1000, 30.0);
+		}
+		/*
 		for(int itr : new int[]{1, 2, 4, 10, 20, 50}) {
 			multiThread(roles, itr, 20, 1000, 30.0);
 		}
@@ -34,7 +40,6 @@ public class FederateController {
 		}
 		multiThread(roles, 2, 20, 250, 30.0);
 		
-		/*
 		singleThread(5, 5, 1000, 30.0);
 		for(int itr : new int[]{1, 2, 4, 10, 20, 50}) {
 			singleThread(itr, 20, 1000, 30.0);
@@ -57,10 +62,10 @@ public class FederateController {
 	}
 	
 	public static void multiThread(Collection<Role> roles, int itr, final int rep, final long stp, final double dur) {
-		Thread social = null, water = null, elect = null, petrol = null;
+		Map<Role, Thread> federates = new HashMap<Role, Thread>();
 
 		if(roles.contains(Role.SOCIAL)) {
-			social = new Thread(new Runnable() {
+			Thread social = new Thread(new Runnable() {
 				public void run() {
 					try {
 						new SocialFederate(itr, rep, stp).execute(dur);
@@ -70,11 +75,15 @@ public class FederateController {
 					}
 				}
 			});
+			federates.put(Role.SOCIAL, social);
 			social.start();
+			while(!social.isAlive()) {
+				Thread.yield();
+			}
 		}
 
 		if(roles.contains(Role.WATER)) {
-			water = new Thread(new Runnable() {
+			Thread water = new Thread(new Runnable() {
 				public void run() {
 					try {
 						new WaterFederate(itr, rep, stp).execute(dur);
@@ -84,11 +93,15 @@ public class FederateController {
 					}
 				}
 			});
+			federates.put(Role.WATER, water);
 			water.start();
+			while(!water.isAlive()) {
+				Thread.yield();
+			}
 		}
 		
 		if(roles.contains(Role.ELECT)) {
-			elect = new Thread(new Runnable() {
+			Thread elect = new Thread(new Runnable() {
 				public void run() {
 					try {
 						new ElectFederate(itr, rep, stp).execute(dur);
@@ -98,11 +111,15 @@ public class FederateController {
 					}
 				}
 			});
+			federates.put(Role.ELECT, elect);
 			elect.start();
+			while(!elect.isAlive()) {
+				Thread.yield();
+			}
 		}
 
 		if(roles.contains(Role.PETROL)) {
-			petrol = new Thread(new Runnable() {
+			Thread petrol = new Thread(new Runnable() {
 				public void run() {
 					try {
 						new PetrolFederate(itr, rep, stp).execute(dur);
@@ -112,13 +129,17 @@ public class FederateController {
 					}
 				}
 			});
+			federates.put(Role.PETROL, petrol);
 			petrol.start();
+			while(!petrol.isAlive()) {
+				Thread.yield();
+			}
 		}
 		
-		while((social != null && social.isAlive()) 
-				&& (water != null && water.isAlive())
-				&& (elect != null && elect.isAlive())
-				&& (petrol != null && petrol.isAlive())) {
+		while((roles.contains(Role.SOCIAL) && federates.get(Role.SOCIAL).isAlive()) 
+				&& (roles.contains(Role.WATER) && federates.get(Role.WATER).isAlive()) 
+				&& (roles.contains(Role.ELECT) && federates.get(Role.ELECT).isAlive()) 
+				&& (roles.contains(Role.PETROL) && federates.get(Role.PETROL).isAlive()) ) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
