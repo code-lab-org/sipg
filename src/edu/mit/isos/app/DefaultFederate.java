@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Location;
 import edu.mit.isos.core.context.Node;
 import edu.mit.isos.core.context.Resource;
@@ -23,7 +24,6 @@ import edu.mit.isos.core.context.Scenario;
 import edu.mit.isos.core.element.Element;
 import edu.mit.isos.core.element.LocalElement;
 import edu.mit.isos.core.hla.ISOSambassador;
-import edu.mit.isos.core.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.sim.SimulationTimeEvent;
 import edu.mit.isos.core.sim.SimulationTimeListener;
 import edu.mit.isos.core.sim.Simulator;
@@ -35,7 +35,7 @@ public abstract class DefaultFederate {
 	protected static Logger logger = Logger.getLogger(DefaultFederate.class);
 	
 	boolean replicationOutputs = true;
-	boolean retainReplicationOutputs = true;
+	boolean retainReplicationOutputs = false;
 	final int numIterations;
 	final int numReplications;
 	final int stepsPerYear = 1000;
@@ -85,6 +85,7 @@ public abstract class DefaultFederate {
 				summaryPath, Charset.defaultCharset(), 
 				StandardOpenOption.WRITE);
 		summaryWriter.write(String.format("%6s%20s%20s%20s\n","Run","Total Time (ms)","Init Time (ms)","Exec Time (ms)"));
+		summaryWriter.flush();
 
 		final Simulator sim = new Simulator(buildScenario(stepsPerYear));
 		sim.setVerifyFlow(false);
@@ -206,12 +207,13 @@ public abstract class DefaultFederate {
 			
 			logger.info("Simulation completed in " + totalTime + " ms");
 			summaryWriter.write(String.format("%6d%20d%20d%20d\n",(i+1),totalTime, initTime, execTime));
+			summaryWriter.flush();
 			
 			for(Element e : elementWriters.keySet()) {
 				elementWriters.get(e).close();
 				Path elementPath = Paths.get(dir,testName,new Integer(i+1).toString(),e.getName() + ".txt");
-				if(i > 1 && elementPath.toFile().exists() && !retainReplicationOutputs) {
-					elementPath.toFile().deleteOnExit();
+				if(i >= 1 && elementPath.toFile().exists() && !retainReplicationOutputs) {
+					elementPath.toFile().delete();
 				}
 			}
 			

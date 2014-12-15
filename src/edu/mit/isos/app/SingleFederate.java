@@ -17,6 +17,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos.app.elect.LocalElectElement;
+import edu.mit.isos.app.hla.ISOSnullAmbassador;
 import edu.mit.isos.app.petrol.LocalPetrolElement;
 import edu.mit.isos.app.social.LocalSocialElement;
 import edu.mit.isos.app.water.LocalWaterElement;
@@ -30,7 +31,6 @@ import edu.mit.isos.core.context.ResourceFactory;
 import edu.mit.isos.core.context.Scenario;
 import edu.mit.isos.core.element.Element;
 import edu.mit.isos.core.element.LocalElement;
-import edu.mit.isos.core.hla.ISOSnullAmbassador;
 import edu.mit.isos.core.sim.SimulationTimeEvent;
 import edu.mit.isos.core.sim.SimulationTimeListener;
 import edu.mit.isos.core.sim.Simulator;
