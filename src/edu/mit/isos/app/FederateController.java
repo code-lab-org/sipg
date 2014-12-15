@@ -3,10 +3,10 @@ package edu.mit.isos.app;
 import hla.rti1516e.exceptions.RTIexception;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.apache.log4j.BasicConfigurator;
@@ -26,7 +26,7 @@ public class FederateController {
 		BasicConfigurator.configure();
 		logger.setLevel(Level.INFO);
 		
-		Collection<Role> roles = Arrays.asList();
+		Collection<Role> roles = new HashSet<Role>();
 		for(String arg : args) {
 			if(Role.valueOf(arg) != null) {
 				roles.add(Role.valueOf(arg));
