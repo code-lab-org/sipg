@@ -131,13 +131,6 @@ public class ISOSfedAmbassador extends ISOSdefaultAmbassador implements ISOSamba
 		} catch (RTIexception e) {
 			logger.error(e);
 		}
-		
-		// TODO wait for other federates to join
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			logger.error(e);
-		}
 	}
 	
 	public void initialize(Scenario scenario, int numIterations, long timeStep) {
