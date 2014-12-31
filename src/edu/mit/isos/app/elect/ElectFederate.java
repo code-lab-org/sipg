@@ -10,6 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos.app.DefaultFederate;
+import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Scenario;
 
 public class ElectFederate extends DefaultFederate {
@@ -30,8 +31,8 @@ public class ElectFederate extends DefaultFederate {
 		new ElectFederate(itr, rep, stp).execute(dur);
 	}
 
-	public ElectFederate(int numIterations, int numReplications, long timeStep) {
-		super("Elect", numIterations, numReplications, timeStep);
+	public ElectFederate(int numIterations, int numReplications, long timeStep) throws RTIexception {
+		super("Elect", numIterations, numReplications, timeStep, new ISOSfedAmbassador());
 	}
 
 	@Override

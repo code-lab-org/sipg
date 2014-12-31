@@ -32,12 +32,12 @@ public class FederateController {
 				roles.add(Role.valueOf(arg));
 			}
 		}
-
-		multiThread(roles, 5, 1, 1000, 30.0);
-		for(int itr : new int[]{1, 2, 4, 10}) {
-			multiThread(roles, itr, 20, 1000, 30.0);
+		multiThread(roles, 5, 2, 1000, 30.0);
+		for(int stp : new int[]{250}) {
+			multiThread(roles, 10, 20, stp, 30.0);
 		}
 		/*
+		multiThread(roles, 5, 1, 1000, 30.0);
 		for(int itr : new int[]{1, 2, 4, 10, 20, 50}) {
 			multiThread(roles, itr, 20, 1000, 30.0);
 		}
@@ -45,8 +45,9 @@ public class FederateController {
 			multiThread(roles, 10, 20, stp, 30.0);
 		}
 		multiThread(roles, 2, 20, 250, 30.0);
-		
-		singleThread(5, 5, 1000, 30.0);
+		*/
+		/*
+		singleThread(5, 100, 1000, 30.0);
 		for(int itr : new int[]{1, 2, 4, 10, 20, 50}) {
 			singleThread(itr, 20, 1000, 30.0);
 		}
@@ -54,7 +55,6 @@ public class FederateController {
 			singleThread(10, 20, stp, 30.0);
 		}
 		singleThread(2, 20, 250, 30.0);
-		
 		*/
 	}
 	

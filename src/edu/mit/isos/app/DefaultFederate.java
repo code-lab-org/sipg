@@ -15,7 +15,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Location;
 import edu.mit.isos.core.context.Node;
 import edu.mit.isos.core.context.Resource;
@@ -34,32 +33,34 @@ import edu.mit.isos.core.state.ResourceTransporting;
 public abstract class DefaultFederate {
 	protected static Logger logger = Logger.getLogger(DefaultFederate.class);
 	
-	boolean replicationOutputs = true;
-	boolean retainReplicationOutputs = false;
-	final int numIterations;
-	final int numReplications;
-	final int stepsPerYear = 1000;
-	final long timeStep;
+	private boolean replicationOutputs = true;
+	private boolean retainReplicationOutputs = false;
+	private final int numIterations;
+	private final int numReplications;
+	private final int stepsPerYear = 1000;
+	private final long timeStep;
 	private final String dir = "isos";
 	private final String federateName;
+	private final ISOSambassador amb;
 	
-	public final Node n_a = new Node("A");
-	public final Node n_b = new Node("B");
-	public final Node n_c = new Node("C");
-	public final Location l_aa = new Location(n_a, n_a);
-	public final Location l_bb = new Location(n_b, n_b);
-	public final Location l_cc = new Location(n_c, n_c);
-	public final Location l_ab = new Location(n_a, n_b);
-	public final Location l_ba = new Location(n_b, n_a);
-	public final Location l_bc = new Location(n_b, n_c);
-	public final Location l_cb = new Location(n_c, n_b);
+	protected final Node n_a = new Node("A");
+	protected final Node n_b = new Node("B");
+	protected final Node n_c = new Node("C");
+	protected final Location l_aa = new Location(n_a, n_a);
+	protected final Location l_bb = new Location(n_b, n_b);
+	protected final Location l_cc = new Location(n_c, n_c);
+	protected final Location l_ab = new Location(n_a, n_b);
+	protected final Location l_ba = new Location(n_b, n_a);
+	protected final Location l_bc = new Location(n_b, n_c);
+	protected final Location l_cb = new Location(n_c, n_b);
 	
 	public DefaultFederate(String federateName, int numIterations,
-			int numReplications, long timeStep) {
+			int numReplications, long timeStep, ISOSambassador fedAmbassador) {
 		this.federateName = federateName;
 		this.numIterations = numIterations;
 		this.numReplications = numReplications;
 		this.timeStep = timeStep;
+		this.amb = fedAmbassador;
 	}
 	
 	public void execute(double simulationDuration) throws IOException, RTIexception {
@@ -121,9 +122,6 @@ public abstract class DefaultFederate {
 			final BufferedWriter warningWriter = Files.newBufferedWriter(warningPath, 
 					Charset.defaultCharset(), StandardOpenOption.WRITE);
 			warningWriter.write(String.format("%6s%10s%20s%60s%60s\n","Time","Type","Unit(s)","Error","% Error"));
-			
-
-			final ISOSambassador amb = new ISOSfedAmbassador();
 			
 			SimulationTimeListener listener = new SimulationTimeListener() {
 				@Override

@@ -5,7 +5,6 @@ import hla.rti1516e.CallbackModel;
 import hla.rti1516e.FederateHandleSet;
 import hla.rti1516e.LogicalTime;
 import hla.rti1516e.MessageRetractionHandle;
-import hla.rti1516e.NullFederateAmbassador;
 import hla.rti1516e.ObjectClassHandle;
 import hla.rti1516e.ObjectInstanceHandle;
 import hla.rti1516e.OrderType;
@@ -51,10 +50,6 @@ import edu.mit.isos.app.ElectElement;
 import edu.mit.isos.app.PetrolElement;
 import edu.mit.isos.app.SocialElement;
 import edu.mit.isos.app.WaterElement;
-import edu.mit.isos.app.elect.LocalElectElement;
-import edu.mit.isos.app.petrol.LocalPetrolElement;
-import edu.mit.isos.app.social.LocalSocialElement;
-import edu.mit.isos.app.water.LocalWaterElement;
 import edu.mit.isos.core.context.Scenario;
 import edu.mit.isos.core.element.Element;
 import edu.mit.isos.core.element.LocalElement;
@@ -62,7 +57,7 @@ import edu.mit.isos.core.hla.ISOSambassador;
 import edu.mit.isos.core.hla.ISOSelement;
 import edu.mit.isos.core.sim.SimEntity;
 
-public class ISOSfedAmbassador extends NullFederateAmbassador implements ISOSambassador {
+public class ISOSfedAmbassador extends ISOSdefaultAmbassador implements ISOSambassador {
 	protected static Logger logger = Logger.getLogger(ISOSfedAmbassador.class);
 	protected final RTIambassador rtiAmbassador;
 	private final EncoderFactory encoderFactory;
@@ -103,7 +98,7 @@ public class ISOSfedAmbassador extends NullFederateAmbassador implements ISOSamb
 			String federateName, String federateType) {
 		logger.debug("Connecting to the RTI.");
 		try {
-			rtiAmbassador.connect(this, CallbackModel.HLA_EVOKED);
+			rtiAmbassador.connect(this, CallbackModel.HLA_EVOKED, "edu/mit/isos/app/hla/ohla.properties");
 			logger.info("Connected to the RTI.");
 		} catch(AlreadyConnected ignored) {
 		} catch (RTIexception e) {
@@ -134,6 +129,13 @@ public class ISOSfedAmbassador extends NullFederateAmbassador implements ISOSamb
 		} catch(FederateAlreadyExecutionMember ignored) { 
 			logger.trace("Already joined to the federation execution.");
 		} catch (RTIexception e) {
+			logger.error(e);
+		}
+		
+		// TODO wait for other federates to join
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
 			logger.error(e);
 		}
 	}
@@ -363,155 +365,7 @@ public class ISOSfedAmbassador extends NullFederateAmbassador implements ISOSamb
 		}
 		logger.info("Synchronization point complete.");
 	}
-	
-	private boolean setUpElement(LocalElement element) {
-		if(element instanceof LocalElectElement) {
-			return setUpElect((LocalElectElement)element);
-		}
-		if(element instanceof LocalPetrolElement) {
-			return setUpPetrol((LocalPetrolElement)element);
-		}
-		if(element instanceof LocalSocialElement) {
-			return setUpSocial((LocalSocialElement)element);
-		}
-		if(element instanceof LocalWaterElement) {
-			return setUpWater((LocalWaterElement)element);
-		}
-		return true; // nothing to set up
-	}
-	
-	private boolean setUpElect(LocalElectElement elect) {
-		PetrolElement petrol = null;
-		SocialElement social = null;
-		WaterElement water = null;
-		for(Element element : getElements()) {
-			if(element instanceof PetrolElement 
-					&& elect.getLocation().equals(element.getLocation())) {
-				petrol = (PetrolElement) element;
-				elect.setPetrolSupplier(petrol);
-				elect.setCustomer(petrol);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof SocialElement 
-					&& elect.getLocation().equals(element.getLocation())) {
-				social = (SocialElement) element;
-				elect.setCustomer(social);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof WaterElement
-					&& elect.getLocation().equals(element.getLocation())) {
-				water = (WaterElement) element;
-				elect.setCustomer(water);
-				break;
-			}
-		}
-		logger.warn(elect + " missing " + (petrol==null?"petrol":"") + " " + (social==null?"social":"") + " " + (water==null?"water":""));
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return petrol != null && social != null && water != null;
-	}
-	
-	private boolean setUpPetrol(LocalPetrolElement petrol) {
-		ElectElement elect = null;
-		SocialElement social = null;
-		for(Element element : getElements()) {
-			if(element instanceof ElectElement 
-					&& petrol.getLocation().equals(element.getLocation())) {
-				elect = (ElectElement) element;
-				petrol.setCustomer(elect);
-				petrol.setElectSupplier(elect);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof SocialElement 
-					&& petrol.getLocation().equals(element.getLocation())) {
-				social = (SocialElement) element;
-				petrol.setCustomer(social);
-				break;
-			}
-		}
-		logger.warn(petrol + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return elect != null && social != null;
-	}
-	
-	private boolean setUpSocial(LocalSocialElement social) {
-		ElectElement elect = null;
-		PetrolElement petrol = null;
-		WaterElement water = null;
-		for(Element element : getElements()) {
-			if(element instanceof ElectElement 
-					&& social.getLocation().equals(element.getLocation())) {
-				elect = (ElectElement) element;
-				social.setElectSupplier(elect);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof PetrolElement 
-					&& social.getLocation().equals(element.getLocation())) {
-				petrol = (PetrolElement) element;
-				social.setPetrolSupplier(petrol);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof WaterElement 
-					&& social.getLocation().equals(element.getLocation())) {
-				water = (WaterElement) element;
-				social.setWaterSupplier(water);
-				break;
-			}
-		}
-		logger.warn(social + " missing " + (elect==null?"elect":"") + " " + (petrol==null?"petrol":"") + " " + (water==null?"water":""));
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return elect != null && petrol != null && water != null;
-	}
-	
-	private boolean setUpWater(LocalWaterElement water) {
-		ElectElement elect = null;
-		SocialElement social = null;
-		for(Element element : getElements()) {
-			if(element instanceof ElectElement 
-					&& water.getLocation().equals(element.getLocation())) {
-				elect = (ElectElement) element;
-				water.setElectSupplier(elect);
-				break;
-			}
-		}
-		for(Element element : getElements()) {
-			if(element instanceof SocialElement 
-					&& water.getLocation().equals(element.getLocation())) {
-				social = (SocialElement) element;
-				water.setCustomer(social);
-				break;
-			}
-		}
-		logger.warn(water + " missing " + (elect==null?"elect":"") + " " + (social==null?"social":""));
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		return elect != null && social != null;
-	}
-	
+		
 	public void advance() {
 		for(int i = 0; i < numIterations; i++) {
 			for(SimEntity entity : localObjects.keySet()) {

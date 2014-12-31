@@ -10,6 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos.app.DefaultFederate;
+import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Scenario;
 
 public class PetrolFederate extends DefaultFederate {
@@ -30,8 +31,8 @@ public class PetrolFederate extends DefaultFederate {
 		new PetrolFederate(itr, rep, stp).execute(dur);
 	}
 
-	public PetrolFederate(int numIterations, int numReplications, long timeStep) {
-		super("Petrol", numIterations, numReplications, timeStep);
+	public PetrolFederate(int numIterations, int numReplications, long timeStep) throws RTIexception {
+		super("Petrol", numIterations, numReplications, timeStep, new ISOSfedAmbassador());
 	}
 
 	@Override

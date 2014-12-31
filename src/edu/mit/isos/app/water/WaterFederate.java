@@ -10,6 +10,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import edu.mit.isos.app.DefaultFederate;
+import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Scenario;
 
 public class WaterFederate extends DefaultFederate {
@@ -30,8 +31,8 @@ public class WaterFederate extends DefaultFederate {
 		new WaterFederate(itr, rep, stp).execute(dur);
 	}
 
-	public WaterFederate(int numIterations, int numReplications, long timeStep) {
-		super("Water", numIterations, numReplications, timeStep);
+	public WaterFederate(int numIterations, int numReplications, long timeStep) throws RTIexception {
+		super("Water", numIterations, numReplications, timeStep, new ISOSfedAmbassador());
 	}
 
 	@Override
