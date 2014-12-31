@@ -41,7 +41,6 @@ public abstract class DefaultFederate {
 	private final long timeStep;
 	private final String dir = "isos";
 	private final String federateName;
-	private final ISOSambassador amb;
 	
 	protected final Node n_a = new Node("A");
 	protected final Node n_b = new Node("B");
@@ -55,13 +54,14 @@ public abstract class DefaultFederate {
 	protected final Location l_cb = new Location(n_c, n_b);
 	
 	public DefaultFederate(String federateName, int numIterations,
-			int numReplications, long timeStep, ISOSambassador fedAmbassador) {
+			int numReplications, long timeStep) {
 		this.federateName = federateName;
 		this.numIterations = numIterations;
 		this.numReplications = numReplications;
 		this.timeStep = timeStep;
-		this.amb = fedAmbassador;
 	}
+	
+	public abstract ISOSambassador getAmbassador() throws RTIexception;
 	
 	public void execute(double simulationDuration) throws IOException, RTIexception {
 		Path dirPath = Paths.get(dir);
@@ -122,6 +122,8 @@ public abstract class DefaultFederate {
 			final BufferedWriter warningWriter = Files.newBufferedWriter(warningPath, 
 					Charset.defaultCharset(), StandardOpenOption.WRITE);
 			warningWriter.write(String.format("%6s%10s%20s%60s%60s\n","Time","Type","Unit(s)","Error","% Error"));
+			
+			final ISOSambassador amb = getAmbassador();
 			
 			SimulationTimeListener listener = new SimulationTimeListener() {
 				@Override

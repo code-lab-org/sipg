@@ -1,5 +1,7 @@
 package edu.mit.isos.app;
 
+import hla.rti1516e.exceptions.RTIexception;
+
 import java.util.Arrays;
 
 import org.apache.log4j.Logger;
@@ -13,6 +15,7 @@ import edu.mit.isos.app.water.WaterController;
 import edu.mit.isos.app.water.WaterPipeline;
 import edu.mit.isos.app.water.WaterPlant;
 import edu.mit.isos.core.context.Scenario;
+import edu.mit.isos.core.hla.ISOSambassador;
 
 public class SingleFederate extends DefaultFederate {
 	protected static Logger logger = Logger.getLogger(SingleFederate.class);
@@ -31,7 +34,7 @@ public class SingleFederate extends DefaultFederate {
 	private LocalPetrolElement e_o3;
 
 	public SingleFederate(int numIterations, int numReplications, long timeStep) {
-		super("Single", numIterations, numReplications, timeStep, new ISOSnullAmbassador());
+		super("Single", numIterations, numReplications, timeStep);
 	}
 	
 	public Scenario buildScenario(double stepsPerYear) {
@@ -63,6 +66,11 @@ public class SingleFederate extends DefaultFederate {
 						e_w1, e_w2, e_w3, e_w4, e_w5, e_w6, e_w7, e_w8, e_w9, 
 						e_o1, e_o2, e_o3, 
 						e_e1, e_e2, e_e3));
+	}
+
+	@Override
+	public ISOSambassador getAmbassador() throws RTIexception {
+		return new ISOSnullAmbassador();
 	}
 
 }

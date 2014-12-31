@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import edu.mit.isos.app.DefaultFederate;
 import edu.mit.isos.app.hla.ISOSfedAmbassador;
 import edu.mit.isos.core.context.Scenario;
+import edu.mit.isos.core.hla.ISOSambassador;
 
 public class SocialFederate extends DefaultFederate {
 	protected static Logger logger = Logger.getLogger(SocialFederate.class);
@@ -32,7 +33,7 @@ public class SocialFederate extends DefaultFederate {
 	}
 
 	public SocialFederate(int numIterations, int numReplications, long timeStep) throws RTIexception {
-		super("Social", numIterations, numReplications, timeStep, new ISOSfedAmbassador());
+		super("Social", numIterations, numReplications, timeStep);
 	}
 
 	@Override
@@ -43,5 +44,10 @@ public class SocialFederate extends DefaultFederate {
 		return new Scenario("Demo", 2014000, 
 				Arrays.asList(l_aa, l_bb, l_cc, l_ab, l_ba, l_bc, l_cb), 
 				Arrays.asList(e_s1, e_s2, e_s3));
+	}
+
+	@Override
+	public ISOSambassador getAmbassador() throws RTIexception {
+		return new ISOSfedAmbassador();
 	}
 }
