@@ -176,6 +176,22 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	}
 	
 	/**
+	 * Creates the toggle-able stacked area chart.
+	 *
+	 * @param valueAxis the value axis
+	 * @param areaDataset the dataset
+	 * @return the j free chart
+	 */
+	protected JTabbedPane createToggleableStackedAreaChart(final String title, final String valueAxis,
+			final TableXYDataset areaDataset, final Color[] colors, 
+			final TableXYDataset areaDataset2, final Color[] colors2) {
+		final JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Aggregated", createStackedAreaChart(title, valueAxis, areaDataset, colors));
+		tabbedPane.addTab("Disaggregated", createStackedAreaChart(title, valueAxis, areaDataset2, colors2));
+		return tabbedPane;
+	}
+	
+	/**
 	 * Creates the stacked area chart.
 	 *
 	 * @param valueAxis the value axis

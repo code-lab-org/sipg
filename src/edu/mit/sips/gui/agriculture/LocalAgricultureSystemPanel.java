@@ -20,7 +20,6 @@ import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
-import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;
 import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.SpatialStatePanel;
@@ -58,11 +57,16 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 	TimeSeriesCollection foodSupplyProfitData = new TimeSeriesCollection();
 	TimeSeriesCollection foodConsumptionPerCapita = new TimeSeriesCollection();
 
-	DefaultTableXYDataset landAvailableDataset = new DefaultTableXYDataset();
-	DefaultTableXYDataset laborAvailableDataset = new DefaultTableXYDataset();
-	DefaultTableXYDataset foodSourceData = new DefaultTableXYDataset();
-	DefaultTableXYDataset foodUseData = new DefaultTableXYDataset();
-	DefaultTableXYDataset waterUseData = new DefaultTableXYDataset();
+	DefaultTableXYDataset landAvailableAggregatedDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset landAvailableDisaggregatedDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset laborAvailableAggregatedDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset laborAvailableDisaggregatedDataset = new DefaultTableXYDataset();
+	DefaultTableXYDataset foodSourceAggregatedData = new DefaultTableXYDataset();
+	DefaultTableXYDataset foodSourceDisaggregatedData = new DefaultTableXYDataset();
+	DefaultTableXYDataset foodUseAggregatedData = new DefaultTableXYDataset();
+	DefaultTableXYDataset foodUseDisaggregatedData = new DefaultTableXYDataset();
+	DefaultTableXYDataset waterUseAggregatedData = new DefaultTableXYDataset();
+	DefaultTableXYDataset waterUseDisaggregatedData = new DefaultTableXYDataset();
 	DefaultTableXYDataset cashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset cumulativeBalance = new DefaultTableXYDataset();
@@ -132,55 +136,91 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
 		
-		List<String> foodSourceNames = new ArrayList<String>();
+		List<String> foodSourceAggregatedNames = new ArrayList<String>();
+		List<String> foodSourceDisaggregatedNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				foodSourceNames.add(society.getName());
+				foodSourceDisaggregatedNames.add(society.getName());
 			}
+		}
+		foodSourceAggregatedNames.add(getSociety().getName() + " Production");
+		if(!(getAgricultureSystem() instanceof LocalAgricultureSoS)) {
+			foodSourceAggregatedNames.add("In-Distribution");
+		}
+		foodSourceAggregatedNames.add("Import");
+		foodSourceDisaggregatedNames.add("Import");
+		for(String name : foodSourceAggregatedNames) {
+			foodSourceAggregatedData.addSeries(new XYSeries(name, true, false));
+		}
+		for(String name : foodSourceDisaggregatedNames) {
+			foodSourceDisaggregatedData.addSeries(new XYSeries(name, true, false));
+		}
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			nationalPane.addTab("Source", Icons.AGRICULTURE_SOURCE, createToggleableStackedAreaChart(
+					getAgricultureSystem().getName() + " Food Source",
+					"Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
+					foodSourceAggregatedData, PlottingUtils.getResourceColors(foodSourceAggregatedNames), 
+					foodSourceDisaggregatedData, PlottingUtils.getResourceColors(foodSourceDisaggregatedNames)));
 		} else {
-			foodSourceNames.add(getSociety().getName() + " Production");
-			foodSourceNames.add("In-Distribution");
+			nationalPane.addTab("Source", Icons.AGRICULTURE_SOURCE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Food Source",
+					"Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
+					foodSourceAggregatedData, PlottingUtils.getResourceColors(foodSourceAggregatedNames)));
 		}
-		foodSourceNames.add("Import");
-		for(String name : foodSourceNames) {
-			foodSourceData.addSeries(new XYSeries(name, true, false));
-		}
-		nationalPane.addTab("Source", Icons.AGRICULTURE_SOURCE,
-				createStackedAreaChart(getAgricultureSystem().getName() + " Food Source",
-						"Food Source (" + foodUnits + "/" + foodTimeUnits + ")", 
-						foodSourceData, PlottingUtils.getResourceColors(foodSourceNames)));
 		
-		List<String> foodUseNames = new ArrayList<String>();
+		List<String> foodUseAggregatedNames = new ArrayList<String>();
+		List<String> foodUseDisaggregatedNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				foodUseNames.add(society.getName());
+				foodUseDisaggregatedNames.add(society.getName());
 			}
 			// foodUseNames.add("Losses");
+		}
+		foodUseAggregatedNames.add(getSociety().getName()  + " Society");
+		if(!(getAgricultureSystem() instanceof LocalAgricultureSoS)) {
+			foodUseAggregatedNames.add("Out-Distribution");
+		}
+		foodUseAggregatedNames.add("Export");
+		foodUseDisaggregatedNames.add("Export");
+		for(String name : foodUseAggregatedNames) {
+			foodUseAggregatedData.addSeries(new XYSeries(name, true, false));
+		}
+		for(String name : foodUseDisaggregatedNames) {
+			foodUseDisaggregatedData.addSeries(new XYSeries(name, true, false));
+		}
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			nationalPane.addTab("Use", Icons.AGRICULTURE_USE, createToggleableStackedAreaChart(
+					getAgricultureSystem().getName() + " Food Use",
+					"Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
+					foodUseAggregatedData, PlottingUtils.getResourceColors(foodUseAggregatedNames), 
+					foodUseDisaggregatedData, PlottingUtils.getResourceColors(foodUseDisaggregatedNames)));
 		} else {
-			foodUseNames.add(getSociety().getName()  + " Society");
-			foodUseNames.add("Out-Distribution");
+			nationalPane.addTab("Use", Icons.AGRICULTURE_USE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Food Use",
+					"Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
+					foodUseAggregatedData, PlottingUtils.getResourceColors(foodUseAggregatedNames)));
 		}
-		foodUseNames.add("Export");
-		for(String name : foodUseNames) {
-			foodUseData.addSeries(new XYSeries(name, true, false));
-		}
-		nationalPane.addTab("Use", Icons.AGRICULTURE_USE,
-				createStackedAreaChart(getAgricultureSystem().getName() + " Food Use",
-						"Food Use (" + foodUnits + "/" + foodTimeUnits + ")", 
-						foodUseData, PlottingUtils.getResourceColors(foodUseNames)));
 		
-		List<String> waterUseNames = new ArrayList<String>();
+		List<String> waterUseAggregatedNames = new ArrayList<String>();
+		List<String> waterUseDisaggregatedNames = new ArrayList<String>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				waterUseNames.add(society.getName() + " Operations");
+				waterUseDisaggregatedNames.add(society.getName() + " Operations");
 			}
-		} else {
-			waterUseNames.add(getSociety().getName() + " Operations");
 		}
-		nationalPane.addTab("Use", Icons.WATER_USE,
-				createStackedAreaChart(getAgricultureSystem().getName() + " Water Use",
-						"Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
-						waterUseData, PlottingUtils.getResourceColors(waterUseNames)));
+		waterUseDisaggregatedNames.add(getSociety().getName() + " Operations");
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			nationalPane.addTab("Use", Icons.WATER_USE, createToggleableStackedAreaChart(
+					getAgricultureSystem().getName() + " Water Use",
+					"Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
+					waterUseAggregatedData, PlottingUtils.getResourceColors(waterUseAggregatedNames),
+					waterUseDisaggregatedData, PlottingUtils.getResourceColors(waterUseDisaggregatedNames)));
+		} else {
+			nationalPane.addTab("Use", Icons.WATER_USE, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Water Use",
+					"Water Use (" + waterUnits + "/" + waterTimeUnits + ")",
+					waterUseAggregatedData, PlottingUtils.getResourceColors(waterUseAggregatedNames)));
+		}
 		
 		/* temporarily removed
 		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
@@ -190,22 +230,34 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 				+ "/" + TimeUnits.day + ")", 
 						foodConsumptionPerCapita));
 		 */
-		List<Color> landColors = new ArrayList<Color>();
+		List<Color> landColorsAggregated = new ArrayList<Color>();
+		List<Color> landColorsDisaggregated = new ArrayList<Color>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
-				landColors.add(PlottingUtils.getSocietySecondaryColor(society));
-				landColors.add(PlottingUtils.getSocietyColor(society));
+				landColorsDisaggregated.add(PlottingUtils.getSocietySecondaryColor(society));
+				landColorsDisaggregated.add(PlottingUtils.getSocietyColor(society));
 			}
-		} else {
-			landColors.add(PlottingUtils.getSocietySecondaryColor(getSociety()));
-			landColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
-		nationalPane.addTab("Land", Icons.ARABLE_LAND, createStackedAreaChart(
-				getAgricultureSystem().getName() + " Land",
-				"Arable Land (km^2)", landAvailableDataset, landColors.toArray(new Color[0])));
-		nationalPane.addTab("Labor", Icons.LABOR, createStackedAreaChart(
-				getAgricultureSystem().getName() + " Labor",
-				"Available Labor (people)", laborAvailableDataset, landColors.toArray(new Color[0])));
+		landColorsAggregated.add(PlottingUtils.getSocietySecondaryColor(getSociety()));
+		landColorsAggregated.add(PlottingUtils.getSocietyColor(getSociety()));
+		
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			nationalPane.addTab("Land", Icons.ARABLE_LAND, createToggleableStackedAreaChart(
+					getAgricultureSystem().getName() + " Land", "Arable Land (km^2)", 
+					landAvailableAggregatedDataset, landColorsAggregated.toArray(new Color[0]),
+					landAvailableDisaggregatedDataset, landColorsDisaggregated.toArray(new Color[0])));
+			nationalPane.addTab("Labor", Icons.LABOR, createToggleableStackedAreaChart(
+					getAgricultureSystem().getName() + " Labor", "Available Labor (people)", 
+					laborAvailableAggregatedDataset, landColorsAggregated.toArray(new Color[0]),
+					laborAvailableDisaggregatedDataset, landColorsDisaggregated.toArray(new Color[0])));
+		} else {
+			nationalPane.addTab("Land", Icons.ARABLE_LAND, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Land", "Arable Land (km^2)", 
+					landAvailableAggregatedDataset, landColorsAggregated.toArray(new Color[0])));
+			nationalPane.addTab("Labor", Icons.LABOR, createStackedAreaChart(
+					getAgricultureSystem().getName() + " Labor", "Available Labor (people)", 
+					laborAvailableAggregatedDataset, landColorsAggregated.toArray(new Color[0])));
+		}
 
 		agricultureStatePanel = new SpatialStatePanel(
 				agricultureSystem.getSociety(), new AgricultureStateProvider());
@@ -298,11 +350,16 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		foodProductCostData.removeAllSeries();
 		foodSupplyProfitData.removeAllSeries();
 		foodConsumptionPerCapita.removeAllSeries();
-		landAvailableDataset.removeAllSeries();
-		laborAvailableDataset.removeAllSeries();
-		foodUseData.removeAllSeries();
-		waterUseData.removeAllSeries();
-		foodSourceData.removeAllSeries();
+		landAvailableAggregatedDataset.removeAllSeries();
+		landAvailableAggregatedDataset.removeAllSeries();
+		laborAvailableAggregatedDataset.removeAllSeries();
+		laborAvailableDisaggregatedDataset.removeAllSeries();
+		foodUseAggregatedData.removeAllSeries();
+		foodUseDisaggregatedData.removeAllSeries();
+		waterUseAggregatedData.removeAllSeries();
+		waterUseDisaggregatedData.removeAllSeries();
+		foodSourceAggregatedData.removeAllSeries();
+		foodSourceDisaggregatedData.removeAllSeries();
 		cashFlow.removeAllSeries();
 		netCashFlow.removeAllSeries();
 		cumulativeBalance.removeAllSeries();
@@ -393,38 +450,34 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		}
 		*/
 		
-		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
-			updateSeries(landAvailableDataset, "Available", year, 
-					getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
-			updateSeries(landAvailableDataset, "Used", year, 
-					getAgricultureSystem().getLandAreaUsed());
-		} else {
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " Land Available", 
+				updateSeries(landAvailableDisaggregatedDataset, nestedSystem.getSociety().getName() + " Land Available", 
 						year, nestedSystem.getArableLandArea() - nestedSystem.getLandAreaUsed());
-				updateSeries(landAvailableDataset, nestedSystem.getSociety().getName() + " Land Used", 
+				updateSeries(landAvailableDisaggregatedDataset, nestedSystem.getSociety().getName() + " Land Used", 
 						year, nestedSystem.getLandAreaUsed());
 			}
-		}
-		
-		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
-			updateSeries(laborAvailableDataset, "Available", year, 
-					getAgricultureSystem().getLaborParticipationRate() 
-					* getSociety().getSocialSystem().getPopulation()
-					- getAgricultureSystem().getLaborUsed());
-			updateSeries(laborAvailableDataset, "Used", year, 
-					getAgricultureSystem().getLaborUsed());
-		} else {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " Labor Available", year,
-						nestedSystem.getLaborParticipationRate() 
+				updateSeries(laborAvailableDisaggregatedDataset, nestedSystem.getSociety().getName() + " Labor Available", 
+						year, nestedSystem.getLaborParticipationRate() 
 						* nestedSystem.getSociety().getSocialSystem().getPopulation()
 						- nestedSystem.getLaborUsed());
-				updateSeries(laborAvailableDataset, nestedSystem.getSociety().getName() + " Labor Used", year,
-						nestedSystem.getLaborUsed());
+				updateSeries(laborAvailableDisaggregatedDataset, nestedSystem.getSociety().getName() + " Labor Used", 
+						year, nestedSystem.getLaborUsed());
 			}
 		}
-	
+		updateSeries(landAvailableAggregatedDataset, "Available", year, 
+				getAgricultureSystem().getArableLandArea() - getAgricultureSystem().getLandAreaUsed());
+		updateSeries(landAvailableAggregatedDataset, "Used", year, 
+				getAgricultureSystem().getLandAreaUsed());
+		
+		updateSeries(laborAvailableAggregatedDataset, "Available", year, 
+				getAgricultureSystem().getLaborParticipationRate() 
+				* getSociety().getSocialSystem().getPopulation()
+				- getAgricultureSystem().getLaborUsed());
+		updateSeries(laborAvailableAggregatedDataset, "Used", year, 
+				getAgricultureSystem().getLaborUsed());
+		
 		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(-getAgricultureSystem().getCapitalExpense(),
 						getAgricultureSystem(), this));
@@ -463,64 +516,25 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
 				CurrencyUnits.convertFlow(getAgricultureSystem().getCumulativeCashFlow(),
 						getAgricultureSystem(), this));
-		if(getAgricultureSystem() instanceof LocalAgricultureSystem) {
-			updateSeries(foodSourceData, "Production", year, 
-					FoodUnits.convertFlow(getAgricultureSystem().getFoodProduction(),
-							getAgricultureSystem(), this));
-			updateSeries(foodSourceData, "Distribution", year, 
-					FoodUnits.convertFlow(getAgricultureSystem().getFoodInDistribution(),
-							getAgricultureSystem(), this));
-			updateSeries(foodUseData, "Society", year, 
-					FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
-							getSociety().getSocialSystem(), this));
-			updateSeries(foodUseData, "Distribution", year, 
-					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(), 
-							getAgricultureSystem(), this));
-			/* temporarily removed
-			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
-				if(element.getMaxLandArea() > 0) {
-					updateSeries(foodSourceData, element.getName(), year, 
-							FoodUnits.convertFlow(element.getFoodProduction(),
-									element, this));
-				}
-				
-				if(element.getMaxFoodInput() > 0) {
-					updateSeries(foodUseData, element.getName(), year, 
-							FoodUnits.convertFlow(element.getFoodInput(), element, this));
-				}
-			}
-			for(AgricultureElement element : getAgricultureSystem().getExternalElements()) {
-				if(element.getMaxFoodInput() > 0) {
-					updateSeries(foodSourceData, element.getName(), year, 
-							FoodUnits.convertFlow(element.getFoodOutput(),
-									element, this));
-				}
-			}
-			*/
-			updateSeries(waterUseData, "Operations", year, 
-					WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
-							getAgricultureSystem(), this));
-			/* temporarily removed
-			for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
-				if(element.getWaterConsumption() > 0) {
-					updateSeries(waterUseData, element.getName(), year, 
-							WaterUnits.convertFlow(element.getWaterConsumption(),
-									element, this));
-				}
-			}
-			*/
-		} else {
+
+		updateSeries(foodSourceAggregatedData, "Production", year, 
+				FoodUnits.convertFlow(getAgricultureSystem().getFoodProduction(),
+						getAgricultureSystem(), this));
+		updateSeries(foodUseAggregatedData, "Society", year, 
+				FoodUnits.convertFlow(getSociety().getSocialSystem().getFoodConsumption(),
+						getSociety().getSocialSystem(), this));
+		if(getAgricultureSystem() instanceof LocalAgricultureSoS) {
 			for(AgricultureSystem.Local nestedSystem : getNestedAgricultureSystems()) {
-				updateSeries(foodSourceData, nestedSystem.getSociety().getName(), year,
+				updateSeries(foodSourceDisaggregatedData, nestedSystem.getSociety().getName(), year,
 						FoodUnits.convertFlow(nestedSystem.getTotalFoodSupply()
 								+ nestedSystem.getFoodOutDistribution()
 								- nestedSystem.getFoodInDistribution()
 								+ nestedSystem.getFoodExport()
 								- nestedSystem.getFoodImport(), nestedSystem, this));
-				updateSeries(foodUseData, nestedSystem.getSociety().getName(), year,
+				updateSeries(foodUseDisaggregatedData, nestedSystem.getSociety().getName(), year,
 						FoodUnits.convertFlow(nestedSystem.getSociety().getTotalFoodDemand(), 
 								nestedSystem.getSociety(), this));
-				updateSeries(waterUseData, nestedSystem.getSociety().getName(), year, 
+				updateSeries(waterUseDisaggregatedData, nestedSystem.getSociety().getName(), year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterConsumption(),
 								nestedSystem, this));
 			}
@@ -538,11 +552,57 @@ implements FoodUnitsOutput, CurrencyUnitsOutput, WaterUnitsOutput {
 			/*updateSeries(foodUseData, "Losses", year, 
 					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistributionLosses(),
 							getAgricultureSystem(), this));*/
+		} else {
+			updateSeries(foodSourceAggregatedData, "Distribution", year, 
+					FoodUnits.convertFlow(getAgricultureSystem().getFoodInDistribution(),
+							getAgricultureSystem(), this));
+			updateSeries(foodUseAggregatedData, "Distribution", year, 
+					FoodUnits.convertFlow(getAgricultureSystem().getFoodOutDistribution(), 
+							getAgricultureSystem(), this));
 		}
-		updateSeries(foodSourceData, "Import", year, 
+		updateSeries(waterUseAggregatedData, "Operations", year, 
+				WaterUnits.convertFlow(getAgricultureSystem().getWaterConsumption(),
+						getAgricultureSystem(), this));
+		/* temporarily removed
+		for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
+			if(element.getMaxLandArea() > 0) {
+				updateSeries(foodSourceData, element.getName(), year, 
+						FoodUnits.convertFlow(element.getFoodProduction(),
+								element, this));
+			}
+			
+			if(element.getMaxFoodInput() > 0) {
+				updateSeries(foodUseData, element.getName(), year, 
+						FoodUnits.convertFlow(element.getFoodInput(), element, this));
+			}
+		}
+		for(AgricultureElement element : getAgricultureSystem().getExternalElements()) {
+			if(element.getMaxFoodInput() > 0) {
+				updateSeries(foodSourceData, element.getName(), year, 
+						FoodUnits.convertFlow(element.getFoodOutput(),
+								element, this));
+			}
+		}
+		*/
+		/* temporarily removed
+		for(AgricultureElement element : getAgricultureSystem().getInternalElements()) {
+			if(element.getWaterConsumption() > 0) {
+				updateSeries(waterUseData, element.getName(), year, 
+						WaterUnits.convertFlow(element.getWaterConsumption(),
+								element, this));
+			}
+		}
+		*/
+		updateSeries(foodSourceAggregatedData, "Import", year, 
 				FoodUnits.convertFlow(getAgricultureSystem().getFoodImport(),
 						getAgricultureSystem(), this));
-		updateSeries(foodUseData, "Export", year, 
+		updateSeries(foodSourceDisaggregatedData, "Import", year, 
+				FoodUnits.convertFlow(getAgricultureSystem().getFoodImport(),
+						getAgricultureSystem(), this));
+		updateSeries(foodUseAggregatedData, "Export", year, 
+				FoodUnits.convertFlow(getAgricultureSystem().getFoodExport(),
+						getAgricultureSystem(), this));
+		updateSeries(foodUseDisaggregatedData, "Export", year, 
 				FoodUnits.convertFlow(getAgricultureSystem().getFoodExport(),
 						getAgricultureSystem(), this));
 		
