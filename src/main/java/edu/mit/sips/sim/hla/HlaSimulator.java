@@ -103,8 +103,6 @@ public class HlaSimulator extends NullSimulator {
 				e.printStackTrace();
 			}
 		}
-
-		runAutoOptimization();
 		
 		fireInitializeEvent();
 

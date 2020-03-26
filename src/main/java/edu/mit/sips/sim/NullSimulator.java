@@ -203,8 +203,10 @@ public class NullSimulator implements Simulator {
 		time = startTime;
 
 		scenario.getCountry().initialize(startTime);
-		
-		runAutoOptimization();
+
+		for(int i = 0; i < numberIterations; i++) {
+			runAutoOptimization();
+		}
 		
 		fireInitializeEvent();
 
