@@ -15,7 +15,7 @@ import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.SimulationControlEvent;
-import edu.mit.sips.scenario.SaudiElementTemplate2;
+import edu.mit.sips.scenario.GameElementTemplate;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.Simulator;
 
@@ -58,10 +58,10 @@ public class ScenarioAnalyzer {
 							scenario.getCountry().getAgricultureSystem();
 					//numAgriculture += system.getInternalElements().size();
 					for(AgricultureElement e : system.getInternalElements()) {
-						if(e.getTemplateName().equals(SaudiElementTemplate2.WHEAT_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.WHEAT_2.getName())) {
 							numWheat++;
 						}
-						if(e.getTemplateName().equals(SaudiElementTemplate2.FOOD_TRANSPORT_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.FOOD_TRANSPORT_2.getName())) {
 							numTransport++;
 						}
 						/*
@@ -80,10 +80,10 @@ public class ScenarioAnalyzer {
 							scenario.getCountry().getWaterSystem();
 					//numWater += system.getInternalElements().size();
 					for(WaterElement e : system.getInternalElements()) {
-						if(e.getTemplateName().equals(SaudiElementTemplate2.RO_PLANT_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.RO_PLANT_2.getName())) {
 							numLargeRO++;
 						}
-						if(e.getTemplateName().equals(SaudiElementTemplate2.RO_PLANT_3.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.RO_PLANT_3.getName())) {
 							numHugeRO++;
 						}
 						/*
@@ -102,10 +102,10 @@ public class ScenarioAnalyzer {
 							scenario.getCountry().getPetroleumSystem();
 					//numEnergy += system.getInternalElements().size();
 					for(PetroleumElement e : system.getInternalElements()) {
-						if(e.getTemplateName().equals(SaudiElementTemplate2.OIL_WELL_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.OIL_WELL_2.getName())) {
 							numWell++;
 						}
-						if(e.getTemplateName().equals(SaudiElementTemplate2.OIL_PIPELINE_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.OIL_PIPELINE_2.getName())) {
 							numPipeline++;
 						}
 						/*
@@ -124,10 +124,10 @@ public class ScenarioAnalyzer {
 							scenario.getCountry().getElectricitySystem();
 					//numEnergy += system.getInternalElements().size();
 					for(ElectricityElement e : system.getInternalElements()) {
-						if(e.getTemplateName().equals(SaudiElementTemplate2.POWER_PLANT_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.POWER_PLANT_2.getName())) {
 							numThermal++;
 						}
-						if(e.getTemplateName().equals(SaudiElementTemplate2.PV_PLANT_2.getName())) {
+						if(e.getTemplateName().equals(GameElementTemplate.PV_PLANT_2.getName())) {
 							numSolar++;
 						}
 						/*

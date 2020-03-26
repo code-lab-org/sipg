@@ -9,8 +9,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
 import edu.mit.sips.gui.DataFrame;
-import edu.mit.sips.scenario.SaudiScenario2;
-import edu.mit.sips.scenario.SaudiScenario2g;
+import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
@@ -32,10 +31,10 @@ public class SuperPlayer {
 		boolean isTeamScoreDisplayed = true;
 		
 		logger.debug("Creating scenario.");
-		Scenario scenario = new SaudiScenario2g(
-				Arrays.asList(SaudiScenario2.INDUSTRIAL, 
-						SaudiScenario2.URBAN, 
-						SaudiScenario2.RURAL),
+		Scenario scenario = new GameScenario(
+				Arrays.asList(GameScenario.INDUSTRIAL, 
+						GameScenario.URBAN, 
+						GameScenario.RURAL),
 				Arrays.asList(Sector.AGRICULTURE,
 						Sector.WATER,
 						Sector.ELECTRICITY,
