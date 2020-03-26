@@ -12,27 +12,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.mit.sips.core.InfrastructureSystem;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
+import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class HLAenergySystem.
+ * The Class HLA water system.
  */
-public class HLApetroleumSystem extends HLAinfrastructureSystem implements PetroleumSystem {
+public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSystem {
+	private static final WaterUnits waterUnits = WaterUnits.m3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private static final OilUnits oilUnits = OilUnits.toe;
-	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	
-	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.PetroleumSystem";
+	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.WaterSystem";
 	
 	public static final String 
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
-	PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE = "PetroleumDomesticPrice",
-	PETROLEUM_IMPORT_PRICE_ATTRIBUTE = "PetroleumImportPrice",
-	PETROLEUM_EXPORT_PRICE_ATTRIBUTE = "PetroleumExportPrice";
+	WATER_DOMESTIC_PRICE_ATTRIBUTE = "WaterDomesticPrice",
+	WATER_AGRICULTURAL_PRICE_ATTRIBUTE = "WaterAgriculturalPrice",
+	WATER_IMPORT_PRICE_ATTRIBUTE = "WaterImportPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
@@ -41,43 +41,43 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
 		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
-		ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
-		PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE, 
-		PETROLEUM_IMPORT_PRICE_ATTRIBUTE,
-		PETROLEUM_EXPORT_PRICE_ATTRIBUTE
+		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+		WATER_DOMESTIC_PRICE_ATTRIBUTE,
+		WATER_AGRICULTURAL_PRICE_ATTRIBUTE,
+		WATER_IMPORT_PRICE_ATTRIBUTE
 	};
 
 	/**
-	 * Creates the local energy system.
+	 * Creates the local water system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
-	 * @param petroleumSystem the petroleum system
-	 * @return the hL aenergy system
+	 * @param waterSystem the water system
+	 * @return the hL awater system
 	 * @throws RTIexception the rT iexception
 	 */
-	public static HLApetroleumSystem createLocalPetroleumSystem(
+	public static HlaWaterSystem createLocalWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			PetroleumSystem.Local petroleumSystem) throws RTIexception {
-		HLApetroleumSystem hlaSystem = new HLApetroleumSystem(
+			WaterSystem.Local waterSystem) throws RTIexception {
+		HlaWaterSystem hlaSystem = new HlaWaterSystem(
 				rtiAmbassador, encoderFactory, null);
-		hlaSystem.setAttributes(petroleumSystem);
+		hlaSystem.setAttributes(waterSystem);
 		return hlaSystem;
 	}
 	
 	/**
-	 * Creates the remote energy system.
+	 * Creates the remote water system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL aenergy system
+	 * @return the hL awater system
 	 * @throws RTIexception the rT iexception
 	 */
-	public static HLApetroleumSystem createRemotePetroleumSystem(
+	public static HlaWaterSystem createRemoteWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HLApetroleumSystem hlaSystem = new HLApetroleumSystem(
+		HlaWaterSystem hlaSystem = new HlaWaterSystem(
 				rtiAmbassador, encoderFactory, instanceName);
 		//hlaSystem.requestAttributeValueUpdate();
 		return hlaSystem;
@@ -124,33 +124,33 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 	}
 	
 	private transient final HLAfloat64BE electricityConsumption;
-	private transient final HLAfloat64BE petroleumDomesticPrice;
-	private transient final HLAfloat64BE petroleumImportPrice;
-	private transient final HLAfloat64BE petroleumExportPrice;
+	private transient final HLAfloat64BE waterDomesticPrice;
+	private transient final HLAfloat64BE waterAgriculturalPrice;
+	private transient final HLAfloat64BE waterImportPrice;
 
 	/**
-	 * Instantiates a new hL aenergy system.
+	 * Instantiates a new hL awater system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @throws RTIexception the rT iexception
 	 */
-	protected HLApetroleumSystem(RTIambassador rtiAmbassador, 
+	protected HlaWaterSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
 		super(rtiAmbassador, encoderFactory, instanceName);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
-		petroleumDomesticPrice = encoderFactory.createHLAfloat64BE();
-		petroleumImportPrice = encoderFactory.createHLAfloat64BE();
-		petroleumExportPrice = encoderFactory.createHLAfloat64BE();
+		waterDomesticPrice = encoderFactory.createHLAfloat64BE();
+		waterAgriculturalPrice = encoderFactory.createHLAfloat64BE();
+		waterImportPrice = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
-		attributeValues.put(getAttributeHandle(PETROLEUM_DOMESTIC_PRICE_ATTRIBUTE), 
-				petroleumDomesticPrice);
-		attributeValues.put(getAttributeHandle(PETROLEUM_IMPORT_PRICE_ATTRIBUTE), 
-				petroleumImportPrice);
-		attributeValues.put(getAttributeHandle(PETROLEUM_EXPORT_PRICE_ATTRIBUTE), 
-				petroleumExportPrice);
+		attributeValues.put(getAttributeHandle(WATER_DOMESTIC_PRICE_ATTRIBUTE), 
+				waterDomesticPrice);
+		attributeValues.put(getAttributeHandle(WATER_AGRICULTURAL_PRICE_ATTRIBUTE), 
+				waterAgriculturalPrice);
+		attributeValues.put(getAttributeHandle(WATER_IMPORT_PRICE_ATTRIBUTE), 
+				waterImportPrice);
 	}
 	
 	/* (non-Javadoc)
@@ -170,13 +170,13 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getElectricityConsumption()
+	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
 	 */
 	@Override
 	public double getElectricityConsumption() {
 		return electricityConsumption.getValue();
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 	 */
@@ -202,43 +202,43 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
 	 */
 	@Override
-	public TimeUnits getOilTimeUnits() {
-		return oilTimeUnits;
+	public double getWaterAgriculturalPrice() {
+		return waterAgriculturalPrice.getValue();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
 	@Override
-	public OilUnits getOilUnits() {
-		return oilUnits;
+	public double getWaterDomesticPrice() {
+		return waterDomesticPrice.getValue();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
+	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
 	 */
 	@Override
-	public double getPetroleumDomesticPrice() {
-		return petroleumDomesticPrice.getValue();
+	public double getWaterImportPrice() {
+		return waterImportPrice.getValue();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
 	 */
 	@Override
-	public double getPetroleumExportPrice() {
-		return petroleumExportPrice.getValue();
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
+	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
 	 */
 	@Override
-	public double getPetroleumImportPrice() {
-		return petroleumImportPrice.getValue();
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 
 	/* (non-Javadoc)
@@ -247,30 +247,30 @@ public class HLApetroleumSystem extends HLAinfrastructureSystem implements Petro
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);
-		if(system instanceof PetroleumSystem) {
-			PetroleumSystem petroleumSystem = (PetroleumSystem) system;
-			electricityConsumption.setValue(petroleumSystem.getElectricityConsumption());
-			petroleumDomesticPrice.setValue(petroleumSystem.getPetroleumDomesticPrice());
-			petroleumImportPrice.setValue(petroleumSystem.getPetroleumImportPrice());
-			petroleumExportPrice.setValue(petroleumSystem.getPetroleumExportPrice());
-			sustainabilityMetricNumerator.setValue(petroleumSystem.getPetroleumReservoirVolume());
-			sustainabilityMetricDenominator.setValue(petroleumSystem.getPetroleumWithdrawals());
+		if(system instanceof WaterSystem) {
+			WaterSystem waterSystem = (WaterSystem) system;
+			electricityConsumption.setValue(waterSystem.getElectricityConsumption());
+			waterDomesticPrice.setValue(waterSystem.getWaterDomesticPrice());
+			waterAgriculturalPrice.setValue(waterSystem.getWaterAgriculturalPrice());
+			waterImportPrice.setValue(waterSystem.getWaterImportPrice());
+			sustainabilityMetricNumerator.setValue(waterSystem.getWaterReservoirVolume());
+			sustainabilityMetricDenominator.setValue(waterSystem.getReservoirWithdrawals());
 		}
 	}
 
 	@Override
-	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+	public double getAquiferLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getWaterReservoirVolume() {
 		return sustainabilityMetricNumerator.getValue();
 	}
 
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		return sustainabilityMetricDenominator.getValue();
 	}
 }

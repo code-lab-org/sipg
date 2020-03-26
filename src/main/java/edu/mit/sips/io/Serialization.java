@@ -49,11 +49,11 @@ import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.ElementTemplate;
 import edu.mit.sips.scenario.Scenario;
-import edu.mit.sips.sim.hla.HLAagricultureSystem;
-import edu.mit.sips.sim.hla.HLAelectricitySystem;
-import edu.mit.sips.sim.hla.HLApetroleumSystem;
-import edu.mit.sips.sim.hla.HLAsocialSystem;
-import edu.mit.sips.sim.hla.HLAwaterSystem;
+import edu.mit.sips.sim.hla.HlaAgricultureSystem;
+import edu.mit.sips.sim.hla.HlaElectricitySystem;
+import edu.mit.sips.sim.hla.HlaPetroleumSystem;
+import edu.mit.sips.sim.hla.HlaSocialSystem;
+import edu.mit.sips.sim.hla.HlaWaterSystem;
 
 /**
  * The Class Serialization.
@@ -143,19 +143,19 @@ public final class Serialization {
 		// replace HLA datatypes; they will need to be re-created
 		// to get the proper data members
 		for(City city : country.getCities()) {
-			if(city.getAgricultureSystem() instanceof HLAagricultureSystem) {
+			if(city.getAgricultureSystem() instanceof HlaAgricultureSystem) {
 				city.setAgricultureSystem(new DefaultAgricultureSystem());
 			}
-			if(city.getWaterSystem() instanceof HLAwaterSystem) {
+			if(city.getWaterSystem() instanceof HlaWaterSystem) {
 				city.setWaterSystem(new DefaultWaterSystem());
 			}
-			if(city.getPetroleumSystem() instanceof HLApetroleumSystem) {
+			if(city.getPetroleumSystem() instanceof HlaPetroleumSystem) {
 				city.setPetroleumSystem(new DefaultPetroleumSystem());
 			}
-			if(city.getElectricitySystem() instanceof HLAelectricitySystem) {
+			if(city.getElectricitySystem() instanceof HlaElectricitySystem) {
 				city.setElectricitySystem(new DefaultElectricitySystem());
 			}
-			if(city.getSocialSystem() instanceof HLAsocialSystem) {
+			if(city.getSocialSystem() instanceof HlaSocialSystem) {
 				city.setSocialSystem(new DefaultSocialSystem());
 			}
 		}

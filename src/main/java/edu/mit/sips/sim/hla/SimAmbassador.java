@@ -89,11 +89,11 @@ public class SimAmbassador extends NullFederateAmbassador {
 	private volatile AtomicBoolean restorationCompleted = new AtomicBoolean(false);
 	private volatile AtomicBoolean initialized =  new AtomicBoolean(false);
 	
-	private final Map<ObjectInstanceHandle, HLAinfrastructureSystem> hlaObjects = 
-			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HLAinfrastructureSystem>());
+	private final Map<ObjectInstanceHandle, HlaInfrastructureSystem> hlaObjects = 
+			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, HlaInfrastructureSystem>());
 
-	private final Map<InfrastructureSystem, HLAinfrastructureSystem> localObjects = 
-			Collections.synchronizedMap(new HashMap<InfrastructureSystem, HLAinfrastructureSystem>());
+	private final Map<InfrastructureSystem, HlaInfrastructureSystem> localObjects = 
+			Collections.synchronizedMap(new HashMap<InfrastructureSystem, HlaInfrastructureSystem>());
 	
 	private final Map<ObjectInstanceHandle, AttributeHandleSet> attributeUpdateRequests = 
 			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, AttributeHandleSet>());
@@ -125,7 +125,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		synchronized(attributeUpdateRequests) {
 			for(ObjectInstanceHandle theObject : attributeUpdateRequests.keySet()) {
-				HLAobject object = hlaObjects.get(theObject);
+				HlaObject object = hlaObjects.get(theObject);
 				if(object != null) {
 					object.provideAttributes(attributeUpdateRequests.get(theObject));
 				}
@@ -247,32 +247,32 @@ public class SimAmbassador extends NullFederateAmbassador {
 		}
 		
 		logger.trace("Searching for correct subclass.");
-		HLAinfrastructureSystem remoteSystem = null;
+		HlaInfrastructureSystem remoteSystem = null;
 		try {
 			if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLAagricultureSystem.CLASS_NAME))) {
+					HlaAgricultureSystem.CLASS_NAME))) {
 				logger.trace("Creating a remote agriculture system.");
-				remoteSystem = HLAagricultureSystem.createRemoteAgricultureSystem(
+				remoteSystem = HlaAgricultureSystem.createRemoteAgricultureSystem(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLAwaterSystem.CLASS_NAME))) {
+					HlaWaterSystem.CLASS_NAME))) {
 				logger.trace("Creating a remote water system.");
-				remoteSystem = HLAwaterSystem.createRemoteWaterSystem(
+				remoteSystem = HlaWaterSystem.createRemoteWaterSystem(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLAelectricitySystem.CLASS_NAME))) {
+					HlaElectricitySystem.CLASS_NAME))) {
 				logger.trace("Creating a remote electricity system.");
-				remoteSystem = HLAelectricitySystem.createRemoteElectricitySystem(
+				remoteSystem = HlaElectricitySystem.createRemoteElectricitySystem(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLApetroleumSystem.CLASS_NAME))) {
+					HlaPetroleumSystem.CLASS_NAME))) {
 				logger.trace("Creating a remote petroleum system.");
-				remoteSystem = HLApetroleumSystem.createRemotePetroleumSystem(
+				remoteSystem = HlaPetroleumSystem.createRemotePetroleumSystem(
 						rtiAmbassador, encoderFactory, objectName);
 			} else if(theObjectClass.equals(rtiAmbassador.getObjectClassHandle(
-					HLAsocialSystem.CLASS_NAME))) {
+					HlaSocialSystem.CLASS_NAME))) {
 				logger.trace("Creating a remote social system.");
-				remoteSystem = HLAsocialSystem.createRemoteSocialSystem(
+				remoteSystem = HlaSocialSystem.createRemoteSocialSystem(
 						rtiAmbassador, encoderFactory, objectName);
 			} else {
 				logger.warn("Unknown object class, skipping.");
@@ -424,15 +424,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 				instanceof AgricultureSystem.Local) {
 			logger.trace("Country contains a local agriculture " + 
 					"system: publish its attributes.");
-			HLAagricultureSystem.publishAll(rtiAmbassador);
+			HlaAgricultureSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getAgricultureSystem() instanceof AgricultureSystem.Local) {
 					logger.trace("Creating HLA agriculture system for local " +
 							"system " + city.getAgricultureSystem() + ".");
 					AgricultureSystem.Local localSystem = 
 							(AgricultureSystem.Local) city.getAgricultureSystem();
-					HLAagricultureSystem hlaObject = 
-							HLAagricultureSystem.createLocalAgricultureSystem(
+					HlaAgricultureSystem hlaObject = 
+							HlaAgricultureSystem.createLocalAgricultureSystem(
 									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
@@ -440,21 +440,21 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		logger.trace("Subscribing to agriculture system attributes.");
-		HLAagricultureSystem.subscribeAll(rtiAmbassador);
+		HlaAgricultureSystem.subscribeAll(rtiAmbassador);
 		
 		if(simulator.getScenario().getCountry().getWaterSystem() 
 				instanceof WaterSystem.Local) {
 			logger.trace("Country contains a local water " + 
 					"system: publish its attributes.");
-			HLAwaterSystem.publishAll(rtiAmbassador);
+			HlaWaterSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getWaterSystem() instanceof WaterSystem.Local) {
 					logger.trace("Creating HLA water system for local " +
 							"system " + city.getWaterSystem() + ".");
 					WaterSystem.Local localSystem = 
 							(WaterSystem.Local) city.getWaterSystem();
-					HLAwaterSystem hlaObject = 
-							HLAwaterSystem.createLocalWaterSystem(
+					HlaWaterSystem hlaObject = 
+							HlaWaterSystem.createLocalWaterSystem(
 									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
@@ -462,21 +462,21 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		logger.trace("Subscribing to water system attributes.");
-		HLAwaterSystem.subscribeAll(rtiAmbassador);
+		HlaWaterSystem.subscribeAll(rtiAmbassador);
 		
 		if(simulator.getScenario().getCountry().getElectricitySystem() 
 				instanceof ElectricitySystem.Local) {
 			logger.trace("Country contains a local electricity " + 
 					"system: publish its attributes.");
-			HLAelectricitySystem.publishAll(rtiAmbassador);
+			HlaElectricitySystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getElectricitySystem() instanceof ElectricitySystem.Local) {
 					logger.trace("Creating HLA electricity system for local " +
 							"system " + city.getElectricitySystem() + ".");
 					ElectricitySystem.Local localSystem = 
 							(ElectricitySystem.Local) city.getElectricitySystem();
-					HLAelectricitySystem hlaObject = 
-							HLAelectricitySystem.createLocalElectricitySystem(
+					HlaElectricitySystem hlaObject = 
+							HlaElectricitySystem.createLocalElectricitySystem(
 									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
@@ -484,21 +484,21 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		logger.trace("Subscribing to electricity system attributes.");
-		HLAelectricitySystem.subscribeAll(rtiAmbassador);
+		HlaElectricitySystem.subscribeAll(rtiAmbassador);
 		
 		if(simulator.getScenario().getCountry().getPetroleumSystem() 
 				instanceof PetroleumSystem.Local) {
 			logger.trace("Country contains a local petroleum " + 
 					"system: publish its attributes.");
-			HLApetroleumSystem.publishAll(rtiAmbassador);
+			HlaPetroleumSystem.publishAll(rtiAmbassador);
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(city.getPetroleumSystem() instanceof PetroleumSystem.Local) {
 					logger.trace("Creating HLA petroleum system for local " +
 							"system " + city.getElectricitySystem() + ".");
 					PetroleumSystem.Local localSystem = 
 							(PetroleumSystem.Local) city.getPetroleumSystem();
-					HLApetroleumSystem hlaObject = 
-							HLApetroleumSystem.createLocalPetroleumSystem(
+					HlaPetroleumSystem hlaObject = 
+							HlaPetroleumSystem.createLocalPetroleumSystem(
 									rtiAmbassador, encoderFactory, localSystem);
 					hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
 					localObjects.put(localSystem, hlaObject);
@@ -506,15 +506,15 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		logger.trace("Subscribing to petroleum system attributes.");
-		HLApetroleumSystem.subscribeAll(rtiAmbassador);
+		HlaPetroleumSystem.subscribeAll(rtiAmbassador);
 
 		logger.trace("Publishing social system attributes.");
-		HLAsocialSystem.publishAll(rtiAmbassador);
+		HlaSocialSystem.publishAll(rtiAmbassador);
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getSocialSystem() instanceof SocialSystem.Local) {
 				SocialSystem.Local localSystem = 
 						(SocialSystem.Local) city.getSocialSystem();
-				HLAsocialSystem hlaObject = HLAsocialSystem.
+				HlaSocialSystem hlaObject = HlaSocialSystem.
 						createLocalSocialSystem(rtiAmbassador, encoderFactory, 
 								localSystem);
 				hlaObjects.put(hlaObject.getObjectInstanceHandle(), hlaObject);
@@ -522,7 +522,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 			}
 		}
 		logger.trace("Subscribing to social system attributes.");
-		HLAsocialSystem.subscribeAll(rtiAmbassador);
+		HlaSocialSystem.subscribeAll(rtiAmbassador);
 
 		logger.trace("Achieving synchronization point (label = initialized).");
 		rtiAmbassador.synchronizationPointAchieved("initialized");
@@ -657,12 +657,12 @@ public class SimAmbassador extends NullFederateAmbassador {
 		
 		if(hlaObjects.containsKey(theObject)) {
 			try {
-				HLAinfrastructureSystem system = hlaObjects.get(theObject);
+				HlaInfrastructureSystem system = hlaObjects.get(theObject);
 				system.setAllAttributes(theAttributes);
 			
 				if(theAttributes.containsKey(rtiAmbassador.getAttributeHandle(
-						rtiAmbassador.getObjectClassHandle(HLAinfrastructureSystem.CLASS_NAME), 
-						HLAinfrastructureSystem.SOCIETY_NAME_ATTRIBUTE))) {
+						rtiAmbassador.getObjectClassHandle(HlaInfrastructureSystem.CLASS_NAME), 
+						HlaInfrastructureSystem.SOCIETY_NAME_ATTRIBUTE))) {
 					for(Society society : simulator.getScenario().getCountry().getSocieties()) {
 						if(society.getName().equals(system.getSocietyName())) {
 							if(!(society.getAgricultureSystem() instanceof AgricultureSystem.Local)

@@ -18,9 +18,9 @@ import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class HLAinfrastructureSystem.
+ * The Class HLA infrastructure system.
  */
-public abstract class HLAinfrastructureSystem extends HLAobject implements InfrastructureSystem {
+public abstract class HlaInfrastructureSystem extends HlaObject implements InfrastructureSystem {
 	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem";
 	protected static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
 	protected static final TimeUnits currencyTimeUnits = TimeUnits.year;
@@ -100,7 +100,7 @@ public abstract class HLAinfrastructureSystem extends HLAobject implements Infra
 	 * @param instanceName the instance name
 	 * @throws RTIexception the rT iexception
 	 */
-	protected HLAinfrastructureSystem(RTIambassador rtiAmbassador, 
+	protected HlaInfrastructureSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
 		super(rtiAmbassador, instanceName);
 		name = encoderFactory.createHLAunicodeString();

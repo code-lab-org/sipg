@@ -46,8 +46,6 @@ public class HlaSimulator extends NullSimulator {
 		}
 		
 		long stopTime = Math.min(endTime, time + duration);
-
-		//runAutoOptimization();
 		
 		while(time <= stopTime) {
 			try {
@@ -71,14 +69,6 @@ public class HlaSimulator extends NullSimulator {
 			scenario.getCountry().tock();
 			time = time + 1;
 			logger.trace("The time is now " + time + ".");
-			
-			/* temporarily removed for non-interactive simulation
-			if(time <= endTime) {
-				logger.trace("Firing the first update for this time step.");
-				runAutoOptimization();
-				fireUpdateEvent(time);
-			}
-			*/
 		}
 	}
 	

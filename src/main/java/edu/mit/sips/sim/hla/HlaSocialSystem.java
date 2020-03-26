@@ -6,83 +6,92 @@ import hla.rti1516e.RTIambassador;
 import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.EncoderFactory;
 import hla.rti1516e.encoding.HLAfloat64BE;
+import hla.rti1516e.encoding.HLAinteger64BE;
 import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.mit.sips.core.InfrastructureSystem;
-import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
+import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class HLAwaterSystem.
+ * The Class HLA social system.
  */
-public class HLAagricultureSystem extends HLAinfrastructureSystem implements AgricultureSystem {
+public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSystem {
+	private static final OilUnits oilUnits = OilUnits.toe;
+	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
-	public static final String 
-	CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.AgricultureSystem";
+	
+	public static final String CLASS_NAME = "HLAobjectRoot.InfrastructureSystem.SocialSystem";
 	
 	public static final String 
+	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
+	FOOD_CONSUMPTION_ATTRIBUTE = "FoodConsumption",
 	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
-	FOOD_DOMESTIC_PRICE_ATTRIBUTE = "FoodDomesticPrice",
-	FOOD_IMPORT_PRICE_ATTRIBUTE = "FoodImportPrice",
-	FOOD_EXPORT_PRICE_ATTRIBUTE = "FoodExportPrice";
+	PETROLEUM_CONSUMPTION_ATTRIBUTE = "PetroleumConsumption",
+	POPULATION_ATTRIBUTE = "Population",
+	DOMESTIC_PRODUCT_ATTRIBUTE = "DomesticProduct";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
 		DOMESTIC_PRODUCTION_ATTRIBUTE,
-		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
-		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
+		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
+		FOOD_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
-		FOOD_DOMESTIC_PRICE_ATTRIBUTE,
-		FOOD_IMPORT_PRICE_ATTRIBUTE,
-		FOOD_EXPORT_PRICE_ATTRIBUTE
+		PETROLEUM_CONSUMPTION_ATTRIBUTE,
+		POPULATION_ATTRIBUTE,
+		DOMESTIC_PRODUCT_ATTRIBUTE
 	};
-
+	
 	/**
-	 * Creates the local water system.
+	 * Creates the local social system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
-	 * @param agricultureSystem the agriculture system
-	 * @return the hL awater system
+	 * @param socialSystem the social system
+	 * @return the hL asocial system
 	 * @throws RTIexception the rT iexception
 	 */
-	public static HLAagricultureSystem createLocalAgricultureSystem(
+	public static HlaSocialSystem createLocalSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
-			AgricultureSystem.Local agricultureSystem) throws RTIexception {
-		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
+			SocialSystem.Local socialSystem) throws RTIexception {
+		HlaSocialSystem hlaSystem = new HlaSocialSystem(
 				rtiAmbassador, encoderFactory, null);
-		hlaSystem.setAttributes(agricultureSystem);
+		hlaSystem.setAttributes(socialSystem);
 		return hlaSystem;
 	}
 	
 	/**
-	 * Creates the remote agriculture system.
+	 * Creates the remote social system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL aagriculture system
+	 * @return the hL asocial system
 	 * @throws RTIexception the rT iexception
 	 */
-	public static HLAagricultureSystem createRemoteAgricultureSystem(
+	public static HlaSocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HLAagricultureSystem hlaSystem = new HLAagricultureSystem(
-				rtiAmbassador, encoderFactory, instanceName);
+		HlaSocialSystem hlaSystem = new HlaSocialSystem(rtiAmbassador, 
+				encoderFactory, instanceName);
 		//hlaSystem.requestAttributeValueUpdate();
 		return hlaSystem;
 	}
-	
+
 	/**
 	 * Publish all.
 	 *
@@ -102,7 +111,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-
+	
 	/**
 	 * Subscribe all.
 	 *
@@ -122,36 +131,43 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 				rtiAmbassador.getObjectClassHandle(CLASS_NAME), 
 				attributeHandleSet);
 	}
-	
-	private transient final HLAfloat64BE waterConsumption;
-	private transient final HLAfloat64BE foodDomesticPrice;
-	private transient final HLAfloat64BE foodImportPrice;
-	private transient final HLAfloat64BE foodExportPrice;
 
+	private transient final HLAfloat64BE electricityConsumption;
+	private transient final HLAfloat64BE foodConsumption;
+	private transient final HLAfloat64BE waterConsumption;
+	private transient final HLAfloat64BE petroleumConsumption;
+	private transient final HLAfloat64BE domesticProduct; // TODO unused -- now calculated locally
+	private transient final HLAinteger64BE population;
+	
 	/**
-	 * Instantiates a new hL aagriculture system.
+	 * Instantiates a new hL asocial system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param agricultureSystem the agriculture system
 	 * @throws RTIexception the rT iexception
 	 */
-	protected HLAagricultureSystem(RTIambassador rtiAmbassador, 
+	protected HlaSocialSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
 		super(rtiAmbassador, encoderFactory, instanceName);
+		electricityConsumption = encoderFactory.createHLAfloat64BE();
+		foodConsumption = encoderFactory.createHLAfloat64BE();
 		waterConsumption = encoderFactory.createHLAfloat64BE();
-		foodDomesticPrice = encoderFactory.createHLAfloat64BE();
-		foodImportPrice = encoderFactory.createHLAfloat64BE();
-		foodExportPrice = encoderFactory.createHLAfloat64BE();
+		petroleumConsumption = encoderFactory.createHLAfloat64BE();
+		domesticProduct = encoderFactory.createHLAfloat64BE();
+		population = encoderFactory.createHLAinteger64BE();
+		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
+				electricityConsumption);
+		attributeValues.put(getAttributeHandle(FOOD_CONSUMPTION_ATTRIBUTE), 
+				foodConsumption);
 		attributeValues.put(getAttributeHandle(WATER_CONSUMPTION_ATTRIBUTE), 
 				waterConsumption);
-		attributeValues.put(getAttributeHandle(FOOD_DOMESTIC_PRICE_ATTRIBUTE), 
-				foodDomesticPrice);
-		attributeValues.put(getAttributeHandle(FOOD_IMPORT_PRICE_ATTRIBUTE), 
-				foodImportPrice);
-		attributeValues.put(getAttributeHandle(FOOD_EXPORT_PRICE_ATTRIBUTE), 
-				foodExportPrice);
+		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
+				petroleumConsumption);
+		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCT_ATTRIBUTE), 
+				domesticProduct);
+		attributeValues.put(getAttributeHandle(POPULATION_ATTRIBUTE), 
+				population);
 	}
 	
 	/* (non-Javadoc)
@@ -161,7 +177,7 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
 	 */
@@ -171,27 +187,35 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
+	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
 	 */
 	@Override
-	public double getFoodDomesticPrice() {
-		return foodDomesticPrice.getValue();
+	public double getElectricityConsumption() {
+		return electricityConsumption.getValue();
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
 	 */
 	@Override
-	public double getFoodExportPrice() {
-		return foodExportPrice.getValue();
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
+	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
 	 */
 	@Override
-	public double getFoodImportPrice() {
-		return foodImportPrice.getValue();
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
+	 */
+	@Override
+	public double getFoodConsumption() {
+		return foodConsumption.getValue();
 	}
 
 	/* (non-Javadoc)
@@ -219,7 +243,39 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
+	 */
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
+	 */
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
+	 */
+	@Override
+	public double getPetroleumConsumption() {
+		return petroleumConsumption.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
+	 */
+	@Override
+	public long getPopulation() {
+		return population.getValue();
+	}
+
+	/* (non-Javadoc)
+	 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumption()
 	 */
 	@Override
 	public double getWaterConsumption() {
@@ -248,30 +304,13 @@ public class HLAagricultureSystem extends HLAinfrastructureSystem implements Agr
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);
-		if(system instanceof AgricultureSystem) {
-			AgricultureSystem agricultureSystem = (AgricultureSystem) system;
-			waterConsumption.setValue(agricultureSystem.getWaterConsumption());
-			foodDomesticPrice.setValue(agricultureSystem.getFoodDomesticPrice());
-			foodImportPrice.setValue(agricultureSystem.getFoodImportPrice());
-			foodExportPrice.setValue(agricultureSystem.getFoodExportPrice());
-			sustainabilityMetricNumerator.setValue(agricultureSystem.getFoodProduction());
-			sustainabilityMetricDenominator.setValue(agricultureSystem.getTotalFoodSupply());
+		if(system instanceof SocialSystem) {
+			SocialSystem socialSystem = (SocialSystem) system;
+			electricityConsumption.setValue(socialSystem.getElectricityConsumption());
+			foodConsumption.setValue(socialSystem.getFoodConsumption());
+			waterConsumption.setValue(socialSystem.getWaterConsumption());
+			petroleumConsumption.setValue(socialSystem.getPetroleumConsumption());
+			population.setValue(socialSystem.getPopulation());
 		}
-	}
-
-	@Override
-	public double getFoodSecurity() {
-		return getTotalFoodSupply() == 0 ? 1 
-				: (getFoodProduction() / getTotalFoodSupply());
-	}
-
-	@Override
-	public double getFoodProduction() {
-		return sustainabilityMetricNumerator.getValue();
-	}
-
-	@Override
-	public double getTotalFoodSupply() {
-		return sustainabilityMetricDenominator.getValue();
 	}
 }

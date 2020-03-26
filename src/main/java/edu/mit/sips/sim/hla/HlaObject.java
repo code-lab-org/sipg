@@ -18,9 +18,9 @@ import java.util.Map;
 import javax.swing.event.EventListenerList;
 
 /**
- * The Class HLAobject.
+ * The Class HLA object.
  */
-public abstract class HLAobject {
+public abstract class HlaObject {
 	private transient final boolean local;
 	private transient final RTIambassador rtiAmbassador;
 	private transient final ObjectClassHandle objectClassHandle;
@@ -37,7 +37,7 @@ public abstract class HLAobject {
 	 * @param instanceName the instance name
 	 * @throws RTIexception the rT iexception
 	 */
-	public HLAobject(RTIambassador rtiAmbassador, String instanceName) 
+	public HlaObject(RTIambassador rtiAmbassador, String instanceName) 
 			throws RTIexception {
 		this.local = instanceName == null;
 		this.rtiAmbassador = rtiAmbassador;
