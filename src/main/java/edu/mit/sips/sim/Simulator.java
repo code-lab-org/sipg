@@ -1,460 +1,131 @@
+/*
+ * 
+ */
 package edu.mit.sips.sim;
 
-import hla.rti1516e.exceptions.NotConnected;
-import hla.rti1516e.exceptions.RTIexception;
-
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import javax.swing.event.EventListenerList;
-
-import org.apache.log4j.Logger;
-
 import edu.mit.sips.core.OptimizationOptions;
-import edu.mit.sips.core.agriculture.AgricultureSoS;
-import edu.mit.sips.core.electricity.ElectricitySoS;
-import edu.mit.sips.core.petroleum.PetroleumSoS;
-import edu.mit.sips.core.water.WaterSoS;
-import edu.mit.sips.gui.SimulationControlEvent;
-import edu.mit.sips.gui.SimulationControlEvent.AdvanceToEnd;
-import edu.mit.sips.gui.SimulationControlEvent.Execute;
-import edu.mit.sips.gui.SimulationControlEvent.Reset;
 import edu.mit.sips.gui.SimulationControlListener;
-import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.UpdateListener;
-import edu.mit.sips.hla.FederationConnection;
-import edu.mit.sips.hla.SimAmbassador;
 import edu.mit.sips.scenario.Scenario;
 
-/**
- * The Class Simulator.
- */
-public class Simulator implements SimulationControlListener {	
-	private static Logger logger = Logger.getLogger(Simulator.class);
-	
-	private final Scenario scenario;
-	
-	private boolean autoOptimizeDistribution = true;
-	private boolean autoOptimizeProductionAndDistribution = true;
-	private final OptimizationOptions optimizationOptions = new OptimizationOptions();
-
-	private final AtomicBoolean initialized = new AtomicBoolean(false);
-	private final AtomicBoolean completed = new AtomicBoolean(false);
-	private long startTime, endTime;
-	private long time;
-
-	private final FederationConnection connection = new FederationConnection();
-
-	private transient SimAmbassador simAmbassador;
-
-	private transient EventListenerList listenerList = new EventListenerList(); // mutable
-
-	/**
-	 * Instantiates a new simulator.
-	 */
-	protected Simulator() {
-		scenario = null;
-		listenerList = new EventListenerList();
-	}
-	
-	/**
-	 * Instantiates a new simulator.
-	 *
-	 * @param scenario the scenario
-	 */
-	public Simulator(Scenario scenario) {
-		// Validate country.
-		if(scenario == null) {
-			throw new IllegalArgumentException("Scenario cannot be null.");
-		}
-		this.scenario = scenario;
-		
-		logger.trace("Creating federate ambassador.");
-		try {
-			simAmbassador = new SimAmbassador(this);
-		} catch (RTIexception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
-		}
-	}
+public interface Simulator extends SimulationControlListener {
 
 	/**
 	 * Adds the update listener.
 	 *
 	 * @param listener the listener
 	 */
-	public void addUpdateListener(UpdateListener listener) {
-		listenerList.add(UpdateListener.class, listener);
-	}
+	void addUpdateListener(UpdateListener listener);
 	
 	/**
-	 * Advance.
-	 *
-	 * @param duration the duration
+	 * Connects this simulator.
 	 */
-	private void advance(long duration) {
-		logger.debug("Advancing simulation with duration " + duration + ".");
-		
-		if(time + duration > endTime) {
-			throw new IllegalArgumentException("Duration cannot exceed end time.");
-		}
-		if(!initialized.get()) {
-			throw new IllegalStateException("Simulation must be initialized.");
-		}
-		
-		long stopTime = Math.min(endTime, time + duration);
+	void connect();
+	
+	/**
+	 * Disconnects this simulator.
+	 */
+	void disconnect();
 
-		//runAutoOptimization();
-		
-		while(time <= stopTime) {
-			try {
-				simAmbassador.advance();
-			} catch (NotConnected ignored) {
-				logger.warn("Not connected: continuing in offline mode.");
-			} catch (RTIexception e) {
-				logger.error(e.getMessage());
-				e.printStackTrace();
-			}
-			
-			logger.trace("Tick/tocking the country (time = " + time + ").");
-			scenario.getCountry().tick();
-			fireUpdateEvent(time);
-			if(time >= endTime) {
-				logger.trace("Simulation is completed.");
-				completed.set(true);
-				fireCompleteEvent(time);
-				return;
-			}
-			scenario.getCountry().tock();
-			time = time + 1;
-			logger.trace("The time is now " + time + ".");
-			
-			/* temporarily removed for non-interactive simulation
-			if(time <= endTime) {
-				logger.trace("Firing the first update for this time step.");
-				runAutoOptimization();
-				fireUpdateEvent(time);
-			}
-			*/
-		}
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SimulationControlListener#advanceSimulation(edu.mit.sips.gui.SimulationControlEvent)
-	 */
-	@Override
-	public synchronized void advanceSimulation(SimulationControlEvent.Advance event) {
-		advance(event.getDuration());
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SimulationControlListener#advanceSimulationToEnd(edu.mit.sips.gui.SimulationControlEvent.AdvanceToEnd)
-	 */
-	@Override
-	public synchronized void advanceSimulationToEnd(AdvanceToEnd event) {
-		advance(endTime - time);
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SimulationControlListener#executeSimulation(edu.mit.sips.gui.SimulationControlEvent.Execute)
-	 */
-	@Override
-	public synchronized void executeSimulation(Execute event) {
-		initialize(event.getStartTime(), event.getEndTime());
-		advance(endTime - time);
-	}
-	
-	/**
-	 * Fire complete event.
-	 *
-	 * @param time the time
-	 */
-	public void fireCompleteEvent(long time) {
-		System.out.println("Firing complete event with time " + time);
-		for(UpdateListener listener 
-				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationCompleted(new UpdateEvent(this, time, scenario.getCountry()));
-		}
-	}
-	
-	/**
-	 * Fire initialize event.
-	 *
-	 */
-	private void fireInitializeEvent() {
-		for(UpdateListener listener 
-				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationInitialized(new UpdateEvent(this, time, scenario.getCountry()));
-		}
-	}
-	
-	/**
-	 * Fire update event.
-	 *
-	 * @param time the time
-	 */
-	public void fireUpdateEvent(long time) {
-		System.out.println("Firing update event with time " + time);
-		for(UpdateListener listener 
-				: listenerList.getListeners(UpdateListener.class)) {
-			listener.simulationUpdated(new UpdateEvent(this, time, scenario.getCountry()));
-		}
-	}
-	
-	/**
-	 * Gets the ambassador.
-	 *
-	 * @return the ambassador
-	 */
-	public SimAmbassador getAmbassador() {
-		return simAmbassador;
-	}
-	
 	/**
 	 * Gets the connection.
 	 *
 	 * @return the connection
 	 */
-	public FederationConnection getConnection() {
-		return connection;
-	}
-
+	Connection getConnection();
+	
 	/**
 	 * Gets the scenario.
 	 *
 	 * @return the scenario
 	 */
-	public Scenario getScenario() {
-		return scenario;
-	}
-	
+	Scenario getScenario();
+
 	/**
 	 * Gets the end time.
 	 *
 	 * @return the end time
 	 */
-	public long getEndTime() {
-		return endTime;
-	}
-	
+	long getEndTime();
+
 	/**
 	 * Gets the optimization options.
 	 *
 	 * @return the optimization options
 	 */
-	public OptimizationOptions getOptimizationOptions() {
-		return optimizationOptions;
-	}
-	
+	OptimizationOptions getOptimizationOptions();
+
 	/**
 	 * Gets the start time.
 	 *
 	 * @return the start time
 	 */
-	public long getStartTime() {
-		return startTime;
-	}
-	
+	long getStartTime();
+
 	/**
 	 * Gets the time.
 	 *
 	 * @return the time
 	 */
-	public long getTime() {
-		return time;
-	}
-	
-	/**
-	 * Initialize.
-	 *
-	 * @param startTime the start time
-	 * @param endTime the end time
-	 */
-	private void initialize(long startTime, long endTime) {
-		// No need to validate start time.
-		this.startTime = startTime;
-		
-		// Validate end time.
-		if(endTime < startTime) {
-			throw new IllegalArgumentException(
-					"End year cannot precede start year.");
-		}
-		this.endTime = endTime;
-
-		/* TODO
-		if(simAmbassador.isInitialized()) {
-			try {
-				simAmbassador.disconnect();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		try {
-			simAmbassador.connect();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
-		
-		time = startTime;
-
-		scenario.getCountry().initialize(startTime);
-
-		if(simAmbassador.isInitialized()) {
-			try {
-				simAmbassador.restoreInitialConditions();
-			} catch (NotConnected ignored) {
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			try {
-				simAmbassador.initialize(startTime);
-			} catch (NotConnected ignored) {
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-		runAutoOptimization();
-		
-		fireInitializeEvent();
-
-		initialized.set(true);
-		completed.set(false);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SimulationControlListener#initializeSimulation(edu.mit.sips.gui.SimulationControlEvent)
-	 */
-	@Override
-	public synchronized void initializeSimulation(SimulationControlEvent.Initialize event) {
-		initialize(event.getStartTime(), event.getEndTime());
-	}
+	long getTime();
 
 	/**
 	 * Checks if is auto optimize distribution.
 	 *
 	 * @return true, if is auto optimize distribution
 	 */
-	public boolean isAutoOptimizeDistribution() {
-		return autoOptimizeDistribution;
-	}
+	boolean isAutoOptimizeDistribution();
 
 	/**
 	 * Checks if is auto optimize production and distribution.
 	 *
 	 * @return true, if is auto optimize production and distribution
 	 */
-	public boolean isAutoOptimizeProductionAndDistribution() {
-		return autoOptimizeProductionAndDistribution;
-	}
+	boolean isAutoOptimizeProductionAndDistribution();
 
 	/**
 	 * Checks if is completed.
 	 *
 	 * @return true, if is completed
 	 */
-	public boolean isCompleted() {
-		return completed.get();
-	}
-	
+	boolean isCompleted();
+
 	/**
 	 * Checks if is initialized.
 	 *
 	 * @return true, if is initialized
 	 */
-	public boolean isInitialized() {
-		return initialized.get();
-	}
-	
+	boolean isInitialized();
+
 	/**
 	 * Removes the update listener.
 	 *
 	 * @param listener the listener
 	 */
-	public void removeUpdateListener(UpdateListener listener) {
-		listenerList.remove(UpdateListener.class, listener);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SimulationControlListener#resetSimulation(edu.mit.sips.gui.SimulationControlEvent.Reset)
-	 */
-	@Override
-	public synchronized void resetSimulation(Reset event) {
-		initialize(startTime, endTime);
-	}
+	void removeUpdateListener(UpdateListener listener);
 
 	/**
 	 * Run auto optimization.
 	 */
-	public void runAutoOptimization() {
-		if(autoOptimizeProductionAndDistribution) {
-			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
-				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())
-				.optimizeFoodProductionAndDistribution(optimizationOptions);
-			}
-			
-			if(scenario.getCountry().getWaterSystem() instanceof WaterSoS.Local) {
-				((WaterSoS.Local)scenario.getCountry().getWaterSystem())
-				.optimizeWaterProductionAndDistribution(optimizationOptions);
-			}
-			
-			if(scenario.getCountry().getElectricitySystem() instanceof ElectricitySoS.Local) {
-				((ElectricitySoS.Local)scenario.getCountry().getElectricitySystem())
-				.optimizeElectricityProductionAndDistribution(optimizationOptions);
-			}
-			
-			if(scenario.getCountry().getPetroleumSystem() instanceof PetroleumSoS.Local) {
-				((PetroleumSoS.Local)scenario.getCountry().getPetroleumSystem())
-				.optimizePetroleumProductionAndDistribution(optimizationOptions);
-			}
-		} else if(autoOptimizeDistribution) {
-			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
-				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())
-				.optimizeFoodDistribution();
-			}
-			
-			if(scenario.getCountry().getWaterSystem() instanceof WaterSoS.Local) {
-				((WaterSoS.Local)scenario.getCountry().getWaterSystem())
-				.optimizeWaterDistribution();
-			}
-			
-			if(scenario.getCountry().getElectricitySystem() instanceof ElectricitySoS.Local) {
-				((ElectricitySoS.Local)scenario.getCountry().getElectricitySystem())
-				.optimizeElectricityDistribution();
-			}
-			
-			if(scenario.getCountry().getPetroleumSystem() instanceof PetroleumSoS.Local) {
-				((PetroleumSoS.Local)scenario.getCountry().getPetroleumSystem())
-				.optimizePetroleumDistribution();
-			}
-		}
-	}
+	void runAutoOptimization();
 
 	/**
 	 * Run optimization.
 	 */
-	public void runOptimization() {
-		runAutoOptimization();
-		fireUpdateEvent(time);
-	}
-	
+	void runOptimization();
+
 	/**
 	 * Sets the auto optimize distribution.
 	 *
 	 * @param autoOptimizeDistribution the new auto optimize distribution
 	 */
-	public void setAutoOptimizeDistribution(boolean autoOptimizeDistribution) {
-		this.autoOptimizeDistribution = autoOptimizeDistribution;
-	}
-	
+	void setAutoOptimizeDistribution(boolean autoOptimizeDistribution);
+
 	/**
 	 * Sets the auto optimize production and distribution.
 	 *
 	 * @param autoOptimizeProductionAndDistribution the new auto optimize production and distribution
 	 */
-	public void setAutoOptimizeProductionAndDistribution(
-			boolean autoOptimizeProductionAndDistribution) {
-		this.autoOptimizeProductionAndDistribution = autoOptimizeProductionAndDistribution;
-	}
+	void setAutoOptimizeProductionAndDistribution(boolean autoOptimizeProductionAndDistribution);
+
 }

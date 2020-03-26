@@ -2,7 +2,7 @@ package edu.mit.sips.gui.event;
 
 import java.util.EventObject;
 
-import edu.mit.sips.hla.FederationConnection;
+import edu.mit.sips.sim.Connection;
 
 /**
  * The Class ConnectionEvent.
@@ -12,7 +12,7 @@ import edu.mit.sips.hla.FederationConnection;
 public class ConnectionEvent extends EventObject {
 	private static final long serialVersionUID = -389874206436130676L;
 	
-	private final FederationConnection connection;
+	private final Connection connection;
 	
 	/**
 	 * Instantiates a new connection event.
@@ -22,7 +22,7 @@ public class ConnectionEvent extends EventObject {
 	 * @param host the host
 	 * @param federationName the federation name
 	 */
-	public ConnectionEvent(Object source, FederationConnection connection) {
+	public ConnectionEvent(Object source, Connection connection) {
 		super(source);
 		this.connection = connection;
 	}
@@ -32,7 +32,7 @@ public class ConnectionEvent extends EventObject {
 	 *
 	 * @return the connection
 	 */
-	public FederationConnection getConnection() {
+	public Connection getConnection() {
 		return connection;
 	}
 }

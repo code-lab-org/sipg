@@ -1,4 +1,4 @@
-package edu.mit.sips.hla;
+package edu.mit.sips.sim.hla;
 
 import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;

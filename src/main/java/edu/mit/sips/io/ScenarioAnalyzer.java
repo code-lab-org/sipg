@@ -17,7 +17,7 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.SimulationControlEvent;
 import edu.mit.sips.scenario.GameElementTemplate;
 import edu.mit.sips.scenario.Scenario;
-import edu.mit.sips.sim.Simulator;
+import edu.mit.sips.sim.hla.HlaSimulator;
 
 public class ScenarioAnalyzer {
 	public static void main(String[] args) {
@@ -39,7 +39,7 @@ public class ScenarioAnalyzer {
 				Scenario scenario = getScenario(
 						basePath+sessionPath+scenarioPaths[i]);
 				
-				Simulator simulator = new Simulator(scenario);
+				HlaSimulator simulator = new HlaSimulator(scenario);
 				// simulate to 2009 to avoid decommission-in-2010 effects
 				simulator.initializeSimulation(new SimulationControlEvent
 						.Initialize(simulator, 1950, 2009));

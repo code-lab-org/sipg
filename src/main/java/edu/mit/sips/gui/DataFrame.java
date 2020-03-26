@@ -54,6 +54,7 @@ import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.sim.Simulator;
+import edu.mit.sips.sim.hla.HlaSimulator;
 
 /**
  * The Class DataFrame.
@@ -201,7 +202,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 					// close readers
 					br.close();
 					fr.close();
-					Simulator sim = new Simulator(Serialization.deserialize(jsonBuilder.toString()));
+					HlaSimulator sim = new HlaSimulator(Serialization.deserialize(jsonBuilder.toString()));
 					initialize(sim);
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
@@ -654,11 +655,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 		if(simulator == null) {
 			if(this.simulator != null) {
 				if(this.simulator.getConnection().isConnected()) {
-					try {
-						this.simulator.getAmbassador().disconnect();
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					this.simulator.disconnect();
 				}
 				this.simulator.getConnection().removeConnectionListener(connectionPanel);
 				this.simulator.getConnection().removeConnectionListener(connectionToolbar);

@@ -24,7 +24,7 @@ import edu.mit.sips.scenario.CompletedGameScenario;
 import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
-import edu.mit.sips.sim.Simulator;
+import edu.mit.sips.sim.hla.HlaSimulator;
 
 public class ScenarioCombinator {
 	public static void main(String[] args) {
@@ -126,7 +126,7 @@ public class ScenarioCombinator {
 	}
 	
 	private static void runSimulation(Scenario scenario) {
-		final Simulator simulator = new Simulator(scenario);
+		final HlaSimulator simulator = new HlaSimulator(scenario);
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {

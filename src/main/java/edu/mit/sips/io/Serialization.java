@@ -47,13 +47,13 @@ import edu.mit.sips.core.water.MutableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.hla.HLAagricultureSystem;
-import edu.mit.sips.hla.HLAelectricitySystem;
-import edu.mit.sips.hla.HLApetroleumSystem;
-import edu.mit.sips.hla.HLAsocialSystem;
-import edu.mit.sips.hla.HLAwaterSystem;
 import edu.mit.sips.scenario.ElementTemplate;
 import edu.mit.sips.scenario.Scenario;
+import edu.mit.sips.sim.hla.HLAagricultureSystem;
+import edu.mit.sips.sim.hla.HLAelectricitySystem;
+import edu.mit.sips.sim.hla.HLApetroleumSystem;
+import edu.mit.sips.sim.hla.HLAsocialSystem;
+import edu.mit.sips.sim.hla.HLAwaterSystem;
 
 /**
  * The Class Serialization.

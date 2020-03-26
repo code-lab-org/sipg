@@ -33,6 +33,7 @@ import edu.mit.sips.gui.event.ConnectionEvent;
 import edu.mit.sips.gui.event.ConnectionListener;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
+import edu.mit.sips.sim.hla.HlaConnection;
 
 /**
  * The Class ConnectionPanel. A panel allowing connections to be specified.
@@ -222,14 +223,16 @@ implements ActionListener, ConnectionListener {
 			statusLabel.setIcon(Icons.LOADING);
 
 			simulator.getConnection().setFederationName(federationName.getText());
-			simulator.getConnection().setFomPath(fomPath.getText());
+			if(simulator.getConnection() instanceof HlaConnection) {
+				((HlaConnection)simulator.getConnection()).setFomPath(fomPath.getText());
+				((HlaConnection)simulator.getConnection()).setFederateType(federateType.getText());
+			}
 			simulator.getConnection().setFederateName(federateName.getText());
-			simulator.getConnection().setFederateType(federateType.getText());
 			new SwingWorker<Void,Void>() {
 				@Override
 				protected Void doInBackground() {
 					try {
-						simulator.getAmbassador().connect();
+						simulator.connect();
 					} catch (Exception ex) {
 						ex.printStackTrace();
 						federateName.setEnabled(true);
@@ -241,9 +244,7 @@ implements ActionListener, ConnectionListener {
 						connectButton.setEnabled(true);
 						connectButton.setText("Connect");
 						statusLabel.setIcon(null);
-						try {
-							simulator.getAmbassador().disconnect();
-						} catch (Exception ignored) { }
+						simulator.disconnect();
 						statusLabel.setText("Failed (" + ex.getMessage() + ")");
 					}
 					return null;
@@ -256,12 +257,7 @@ implements ActionListener, ConnectionListener {
 				new SwingWorker<Void,Void>() {
 					@Override
 					protected Void doInBackground() {
-						try {
-							simulator.getAmbassador().disconnect();
-						} catch (Exception ex) {
-							ex.printStackTrace();
-							statusLabel.setText("Failed (" + ex.getMessage() + ")");
-						}
+						simulator.disconnect();
 						return null;
 					}
 				}.execute();
@@ -313,9 +309,11 @@ implements ActionListener, ConnectionListener {
 	public void updateFields() {
 		connectButton.setText(simulator.getConnection().isConnected()?"Disconnect":"Connect");
 		federateName.setText(simulator.getConnection().getFederateName());
-		federateType.setText(simulator.getConnection().getFederateType());
 		federationName.setText(simulator.getConnection().getFederationName());
-		fomPath.setText(simulator.getConnection().getFomPath());
+		if(simulator.getConnection() instanceof HlaConnection) {
+			federateType.setText(((HlaConnection)simulator.getConnection()).getFederateType());
+			fomPath.setText(((HlaConnection)simulator.getConnection()).getFomPath());
+		}
 		rememberCheck.setSelected(isDataSaved());
 	}
 
@@ -379,9 +377,11 @@ implements ActionListener, ConnectionListener {
 			e.printStackTrace();
 		}
 		simulator.getConnection().setFederateName(properties.getProperty("name"));
-		simulator.getConnection().setFederateType(properties.getProperty("type"));
 		simulator.getConnection().setFederationName(properties.getProperty("federation"));
-		simulator.getConnection().setFomPath(properties.getProperty("fom"));
+		if(simulator.getConnection() instanceof HlaConnection) {
+			((HlaConnection)simulator.getConnection()).setFederateType(properties.getProperty("type"));
+			((HlaConnection)simulator.getConnection()).setFomPath(properties.getProperty("fom"));
+		}
 	}
 
 	/**

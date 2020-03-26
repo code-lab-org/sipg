@@ -1,5 +1,24 @@
-package edu.mit.sips.hla;
+package edu.mit.sips.sim.hla;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.log4j.Logger;
+
+import edu.mit.sips.core.City;
+import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.Society;
+import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.electricity.ElectricitySystem;
+import edu.mit.sips.core.petroleum.PetroleumSystem;
+import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.sim.Simulator;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.AttributeHandleValueMap;
 import hla.rti1516e.CallbackModel;
@@ -40,34 +59,14 @@ import hla.rti1516e.time.HLAinteger64Interval;
 import hla.rti1516e.time.HLAinteger64Time;
 import hla.rti1516e.time.HLAinteger64TimeFactory;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import org.apache.log4j.Logger;
-
-import edu.mit.sips.core.City;
-import edu.mit.sips.core.InfrastructureSystem;
-import edu.mit.sips.core.Society;
-import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.core.social.SocialSystem;
-import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.sim.Simulator;
-
 /**
  * The Class SimAmbassador.
  */
 public class SimAmbassador extends NullFederateAmbassador {
 	private static Logger logger = Logger.getLogger(SimAmbassador.class);
 	
-	private final int unitsPerYear = 1000;
-	private final int numberIterations = 4; // must be a factor of unitsPerYear
+	private final int unitsPerYear;
+	private final int numberIterations; // must be a factor of unitsPerYear
 	
 	private final Simulator simulator;
 	private final RTIambassador rtiAmbassador;
@@ -103,8 +102,10 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Instantiates a new sim ambassador.
 	 * @throws RTIinternalError 
 	 */
-	public SimAmbassador(Simulator simulator) throws RTIexception {
+	public SimAmbassador(Simulator simulator, int unitsPerYear, int numberIterations) throws RTIexception {
 		this.simulator = simulator;
+		this.unitsPerYear = unitsPerYear;
+		this.numberIterations = numberIterations;
 		
 		logger.trace("Making the RTI factory.");
 		RtiFactory rtiFactory = RtiFactoryFactory.getRtiFactory();
@@ -608,15 +609,17 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * @throws MalformedURLException 
 	 */
 	private void joinFederation() throws RTIexception, MalformedURLException {
+		HlaConnection connection = (HlaConnection) simulator.getConnection();
+		
 		try {
-			rtiAmbassador.createFederationExecution(simulator.getConnection().getFederationName(), 
-					new URL[]{new File(simulator.getConnection().getFomPath()).toURI().toURL()},
+			rtiAmbassador.createFederationExecution(connection.getFederationName(), 
+					new URL[]{new File(connection.getFomPath()).toURI().toURL()},
 					"HLAinteger64Time");
 		} catch(FederationExecutionAlreadyExists ignored) { }
 		
 		try {
-			rtiAmbassador.joinFederationExecution(simulator.getConnection().getFederateName(), 
-					simulator.getConnection().getFederateType(), simulator.getConnection().getFederationName());
+			rtiAmbassador.joinFederationExecution(connection.getFederateName(), 
+					connection.getFederateType(), connection.getFederationName());
 		} catch(FederateAlreadyExecutionMember ignored) { }
 	}
 

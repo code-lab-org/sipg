@@ -48,9 +48,9 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 				protected Void doInBackground() {
 					try {
 						if(simulator.getConnection().isConnected()) {
-							simulator.getAmbassador().disconnect();
+							simulator.disconnect();
 						} else {
-							simulator.getAmbassador().connect();
+							simulator.connect();
 						}
 					} catch (Exception ex) {
 						ex.printStackTrace();

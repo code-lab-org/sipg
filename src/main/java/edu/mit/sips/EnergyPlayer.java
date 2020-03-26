@@ -13,6 +13,8 @@ import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.Simulator;
+import edu.mit.sips.sim.hla.HlaConnection;
+import edu.mit.sips.sim.hla.HlaSimulator;
 
 /**
  * The Class BalancingProgram.
@@ -38,7 +40,7 @@ public class EnergyPlayer {
 				isTeamScoreDisplayed);
 
 		logger.debug("Creating simulator.");
-		final Simulator simulator = new Simulator(scenario);
+		final Simulator simulator = new HlaSimulator(scenario);
 		//simulator.addUpdateListener(new ConsoleLogger());
 
 		logger.debug("Launching graphical user interface.");
@@ -57,12 +59,11 @@ public class EnergyPlayer {
 		}
 
 		simulator.getConnection().setFederateName("Energy Player");
-		simulator.getConnection().setFederateType("Energy Ministry");
-		try {
-			// simulator.getAmbassador().connect();
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-			e.printStackTrace();
+		simulator.getConnection().setFederationName("SIPG");
+		if(simulator.getConnection() instanceof HlaConnection) {
+			((HlaConnection)simulator.getConnection()).setFederateType("Energy Ministry");
+			((HlaConnection)simulator.getConnection()).setFomPath("sipg.xml");
 		}
+		simulator.connect();
 	}
 }
