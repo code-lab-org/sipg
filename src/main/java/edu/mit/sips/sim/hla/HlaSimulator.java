@@ -5,14 +5,14 @@ import java.net.MalformedURLException;
 import org.apache.log4j.Logger;
 
 import edu.mit.sips.scenario.Scenario;
-import edu.mit.sips.sim.NullSimulator;
+import edu.mit.sips.sim.DefaultSimulator;
 import hla.rti1516e.exceptions.NotConnected;
 import hla.rti1516e.exceptions.RTIexception;
 
 /**
  * The Class HLA Simulator.
  */
-public class HlaSimulator extends NullSimulator {	
+public class HlaSimulator extends DefaultSimulator {	
 	private static Logger logger = Logger.getLogger(HlaSimulator.class);
 
 	private transient SimAmbassador simAmbassador;

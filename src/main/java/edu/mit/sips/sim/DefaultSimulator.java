@@ -22,8 +22,8 @@ import edu.mit.sips.scenario.Scenario;
 /**
  * The Class NullSimulator.
  */
-public class NullSimulator implements Simulator {	
-	private static Logger logger = Logger.getLogger(NullSimulator.class);
+public class DefaultSimulator implements Simulator {	
+	private static Logger logger = Logger.getLogger(DefaultSimulator.class);
 	
 	protected final Scenario scenario;
 	
@@ -46,7 +46,7 @@ public class NullSimulator implements Simulator {
 	 *
 	 * @param scenario the scenario
 	 */
-	public NullSimulator(Scenario scenario, Connection connection) {
+	public DefaultSimulator(Scenario scenario, Connection connection) {
 		if(scenario == null) {
 			throw new IllegalArgumentException("Scenario cannot be null.");
 		}

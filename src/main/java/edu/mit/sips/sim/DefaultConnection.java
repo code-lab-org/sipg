@@ -10,7 +10,7 @@ import edu.mit.sips.gui.event.ConnectionListener;
 /**
  * The Class NullConnection.
  */
-public class NullConnection implements Connection {
+public class DefaultConnection implements Connection {
 	private static final long serialVersionUID = -4649447975331252471L;
 	private String federationName, federateName;
 	private transient volatile AtomicBoolean connected = new AtomicBoolean(false);
@@ -20,7 +20,7 @@ public class NullConnection implements Connection {
 	/**
 	 * Instantiates a new null connection.
 	 */
-	public NullConnection() {
+	public DefaultConnection() {
 		federationName = "";
 		federateName = "";
 	}
@@ -31,7 +31,7 @@ public class NullConnection implements Connection {
 	 * @param federationName the federation name
 	 * @param federateName the federate name
 	 */
-	public NullConnection(String federationName, String federateName) {
+	public DefaultConnection(String federationName, String federateName) {
 		this.federationName = federationName;
 		this.federateName = federateName;
 	}

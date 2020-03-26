@@ -8,12 +8,13 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
+import edu.mit.sips.gui.ConsoleLogger;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
-import edu.mit.sips.sim.NullConnection;
-import edu.mit.sips.sim.NullSimulator;
+import edu.mit.sips.sim.DefaultConnection;
+import edu.mit.sips.sim.DefaultSimulator;
 import edu.mit.sips.sim.Simulator;
 
 /**
@@ -43,8 +44,9 @@ public class SuperPlayer {
 						Sector.PETROLEUM), isTeamScoreDisplayed);
 		
 		logger.debug("Creating simulator.");
-		final Simulator simulator = new NullSimulator(scenario, new NullConnection());
-		// simulator.addUpdateListener(new ConsoleLogger());
+		//final Simulator simulator = new HlaSimulator(scenario);
+		final Simulator simulator = new DefaultSimulator(scenario, new DefaultConnection());
+		simulator.addUpdateListener(new ConsoleLogger());
 
 		logger.debug("Launching graphical user interface.");
 		try {

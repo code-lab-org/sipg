@@ -1,11 +1,11 @@
 package edu.mit.sips.sim.hla;
 
-import edu.mit.sips.sim.NullConnection;
+import edu.mit.sips.sim.DefaultConnection;
 
 /**
  * The Class HLA connection.
  */
-public class HlaConnection extends NullConnection {
+public class HlaConnection extends DefaultConnection {
 	private static final long serialVersionUID = 8956180748476596664L;
 	private String fomPath, federateType;
 	
