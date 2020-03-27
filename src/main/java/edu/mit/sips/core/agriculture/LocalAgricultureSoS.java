@@ -721,10 +721,18 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	@Override
 	public void tick() {
 		super.tick();
-		this.foodSecurityHistory.add(1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0));
+		this.foodSecurityHistory.add(computeFoodSecurityScore());
 	}
 	
-
+	/**
+	 * Compute food security score.
+	 *
+	 * @return the double
+	 */
+	private double computeFoodSecurityScore() {
+		return 1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0);
+	}
+	
 	@Override
 	public double getFoodSecurityScore() {
 		double value = 0;
