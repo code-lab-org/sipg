@@ -40,7 +40,7 @@ import edu.mit.sips.sim.util.WaterUnits;
 /**
  * The Class SaudiScenario2.
  */
-public final class CompletedGameScenario extends DefaultScenario {
+public final class GameScenarioComplete extends DefaultScenario {
 	public static final String INDUSTRIAL = "Industrial", URBAN = "Urban", RURAL = "Rural";
 	private static DomesticProductionModel agricultureSystemDomesticProductionModel = 
 			new AgricultureSystemDomesticProductionModel(0),
@@ -78,7 +78,7 @@ public final class CompletedGameScenario extends DefaultScenario {
 	 * @param assignedCityNames the assigned city names
 	 * @param assignedSectors the assigned sectors
 	 */
-	public CompletedGameScenario(Collection<String> assignedCityNames, 
+	public GameScenarioComplete(Collection<String> assignedCityNames, 
 			List<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
 		super(Country.buildCountry("Idas Abara", 25e9, Arrays.asList(
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 

@@ -20,7 +20,6 @@ import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.gui.DataFrame;
 import edu.mit.sips.gui.SimulationControlEvent;
-import edu.mit.sips.scenario.CompletedGameScenario;
 import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
@@ -41,7 +40,6 @@ public class ScenarioCombinator {
 		String[] energyPaths = new String[]{
 		};
 
-		/*
 		for(int i=0; i < agriculturePaths.length; i++) {
 			runSimulation(getScenario(
 					basePath+sessionPath+agricultureBasePath+agriculturePaths[i]));
@@ -65,10 +63,10 @@ public class ScenarioCombinator {
 			Scenario energyScenario = getScenario(
 					basePath+sessionPath+energyBasePath+energyPaths[i]);
 
-			Scenario masterScenario = new SaudiScenario2g(
-					Arrays.asList(SaudiScenario2.INDUSTRIAL, 
-							SaudiScenario2.URBAN, 
-							SaudiScenario2.RURAL),
+			Scenario masterScenario = new GameScenario(
+					Arrays.asList(GameScenario.INDUSTRIAL, 
+							GameScenario.URBAN, 
+							GameScenario.RURAL),
 							Arrays.asList(Sector.AGRICULTURE,
 									Sector.WATER,
 									Sector.ELECTRICITY,
@@ -122,7 +120,6 @@ public class ScenarioCombinator {
 			
 			runSimulation(masterScenario);
 		}
-		*/
 	}
 	
 	private static void runSimulation(Scenario scenario) {
