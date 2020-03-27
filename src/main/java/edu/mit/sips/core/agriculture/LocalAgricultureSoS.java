@@ -32,7 +32,8 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
-
+	private List<Double> foodSecurityHistory = new ArrayList<Double>();
+	
 	/**
 	 * Instantiates a new local.
 	 */
@@ -40,6 +41,11 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		super("Agriculture");
 	}
 	
+	/**
+	 * Gets the food security.
+	 *
+	 * @return the food security
+	 */
 	public double getFoodSecurity() {
 		return getTotalFoodSupply() == 0 ? 1 
 				: (getFoodProduction() / getTotalFoodSupply());
@@ -704,5 +710,72 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 			}
 		}
 		return false;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		foodSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.foodSecurityHistory.add(1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0));
+	}
+	
+
+	@Override
+	public double getFoodSecurityScore() {
+		double value = 0;
+		for(double item : foodSecurityHistory) {
+			value += item;
+		}
+		return value / foodSecurityHistory.size();
+	}
+
+	@Override
+	public double getFinancialSecurityScore(long year) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 50e9;
+		double growthRate = 0.05;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCashFlow() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCashFlow() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCashFlow() - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getPoliticalPowerScore(long year) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 10e9;
+		double growthRate = 0.06;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCapitalExpense() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCapitalExpense() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCapitalExpense() - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getAggregateScore(long year) {
+		return (getFoodSecurityScore() + getFinancialSecurityScore(year) + getPoliticalPowerScore(year))/3d;
 	}
 }

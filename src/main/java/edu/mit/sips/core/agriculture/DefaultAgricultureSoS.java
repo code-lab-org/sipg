@@ -19,6 +19,7 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
+	private List<Double> foodSecurityHistory = new ArrayList<Double>();
 	
 	/**
 	 * Instantiates a new default agriculture so s.
@@ -165,5 +166,26 @@ public class DefaultAgricultureSoS extends DefaultInfrastructureSoS implements A
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		foodSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.foodSecurityHistory.add(1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0));
+	}
+
+	@Override
+	public double getFoodSecurityScore() {
+		double value = 0;
+		for(double item : foodSecurityHistory) {
+			value += item;
+		}
+		return value / foodSecurityHistory.size();
 	}
 }
