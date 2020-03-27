@@ -9,6 +9,13 @@ import edu.mit.sips.core.OptimizationOptions;
 public interface PetroleumSoS extends InfrastructureSoS, PetroleumSystem {
 	
 	/**
+	 * Gets the reservoir security score.
+	 *
+	 * @return the reservoir security score
+	 */
+	public double getReservoirSecurityScore();
+	
+	/**
 	 * The Interface Local.
 	 */
 	public interface Local extends PetroleumSoS, PetroleumSystem.Local {

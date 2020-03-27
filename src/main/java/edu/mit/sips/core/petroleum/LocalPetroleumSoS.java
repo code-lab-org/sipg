@@ -31,6 +31,7 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
+	private List<Double> reservoirSecurityHistory = new ArrayList<Double>();
 
 	public double getReservoirLifetime() {
 		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
@@ -622,5 +623,43 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		reservoirSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.reservoirSecurityHistory.add(computeReservoirSecurityScore());
+	}
+	
+	/**
+	 * Compute reservoir security score.
+	 *
+	 * @return the double
+	 */
+	private double computeReservoirSecurityScore() {
+		double minLifetime = 0;
+		double maxLifetime = 200;
+		if(getReservoirLifetime() < minLifetime) {
+			return 0;
+		} else if(getReservoirLifetime() > maxLifetime) {
+			return 1000;
+		} else {
+			return 1000*(getReservoirLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+	
+	@Override
+	public double getReservoirSecurityScore() {
+		double value = 0;
+		for(double item : reservoirSecurityHistory) {
+			value += item;
+		}
+		return value / reservoirSecurityHistory.size();
 	}
 }
