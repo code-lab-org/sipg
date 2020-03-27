@@ -23,13 +23,10 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
-import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.LocalWaterSoS;
-import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.Scenario;
 
@@ -62,16 +59,12 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		switch(name) {
 		case "Energy":
 			return 0e9;
-		case "Country":
-			return -10e9;
 		}
 		return 0;
 	}
 	private static double getProfitGrowthRate(String name) {
 		switch(name) {
 		case "Energy":
-			return 0.04;
-		case "Country":
 			return 0.04;
 		}
 		return 0;
@@ -81,8 +74,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		switch(name) {
 		case "Energy":
 			return 500e9;
-		case "Country":
-			return 550e9;
 		}
 		return 0;
 	}
@@ -242,12 +233,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		return (reservoirSecurity + sectorProfit + sectorInvestment)/3d;
 	}
 	
-	private double getTeamScore(double foodSecurity, double aquiferSecurity,
-			double reservoirSecurity, double nationalProfit) {
-		return (foodSecurity + aquiferSecurity 
-				+ reservoirSecurity + nationalProfit)/4d;
-	}
-	
 	private double getSectorProfit(int year, LocalPetroleumSoS system1,
 			LocalElectricitySoS system2) {
 		return getTotalScoreAtYear(year, system1.getCumulativeCashFlow() 
@@ -321,8 +306,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 			fw.write(overBudgetYear + ", ");
 			fw.write(nationalProfit + ", ");
-			fw.write(getTeamScore(foodScore, aquiferScore, 
-					reservoirScore, nationalProfit) + "\n");
+			fw.write(country.getAggregatedScore(year) + "\n");
 			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -535,10 +519,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			overBudgetValue = country.getTotalCapitalExpense();
 		}
 
-		double nationalProfit = getTotalScoreAtYear(year, 
-				country.getCumulativeCashFlow(),
-				getProfitDystopia("Country"), getProfitUtopia("Country"), 
-				getProfitGrowthRate("Country"));
+		double financialScore = country.getFinancialSecurityScore(year);
 
 		updateSeries(teamScore, "Food Security", 
 				year, foodScore);
@@ -547,15 +528,14 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		updateSeries(teamScore, "Oil Reservoir Security", 
 				year, reservoirScore);
 		updateSeries(teamScore, "National Profit", 
-				year, nationalProfit);
+				year, financialScore);
 
-		double totalScore = getTeamScore(foodScore, aquiferScore, 
-				reservoirScore, nationalProfit);
+		double aggregateScore = country.getAggregatedScore(year);
 
 		updateSeries(teamScore, "Total Score", 
-				year, totalScore);
+				year, aggregateScore);
 		String scoreText = "Round " + roundNumber + " Team Score: " 
-				+ NumberFormat.getIntegerInstance().format(totalScore)
+				+ NumberFormat.getIntegerInstance().format(aggregateScore)
 				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":"");
 		teamScoreLabel.setText(scoreText);
 		if(scenario.isTeamScoreDisplayed()) {

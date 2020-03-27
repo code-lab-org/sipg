@@ -244,4 +244,66 @@ public class Country extends DefaultSociety implements Society {
 	public SocialSoS getSocialSystem() {
 		return (SocialSoS) super.getSocialSystem();
 	}
+	
+	/**
+	 * Gets the financial security score.
+	 *
+	 * @param year the year
+	 * @return the financial security score
+	 */
+	public double getFinancialSecurityScore(long year) {
+		double dystopiaTotal = -10e9;
+		double utopiaTotal = 550e9;
+		double growthRate = 0.04;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCashFlow() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCashFlow() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCashFlow() - minValue)/(maxValue - minValue);
+		}
+	}
+	
+	/**
+	 * Gets the food security score.
+	 *
+	 * @return the food security score
+	 */
+	public double getFoodSecurityScore() {
+		return getAgricultureSystem().getFoodSecurityScore();
+	}
+	
+	/**
+	 * Gets the aquifer security score.
+	 *
+	 * @return the aquifer security score
+	 */
+	public double getAquiferSecurityScore() {
+		return getWaterSystem().getAquiferSecurityScore();
+	}
+	
+	/**
+	 * Gets the reservoir security score.
+	 *
+	 * @return the reservoir security score
+	 */
+	public double getReservoirSecurityScore() {
+		return getPetroleumSystem().getReservoirSecurityScore();
+	}
+	
+	/**
+	 * Gets the aggregated score.
+	 *
+	 * @param year the year
+	 * @return the aggregated score
+	 */
+	public double getAggregatedScore(long year) {
+		return (getFinancialSecurityScore(year) + getFoodSecurityScore() + getAquiferSecurityScore() + getReservoirSecurityScore())/4d;
+	}
 }
