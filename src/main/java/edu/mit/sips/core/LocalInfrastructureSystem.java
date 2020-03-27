@@ -190,5 +190,9 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		this.cumulativeCapitalExpense += nextTotalCapitalExpense;
 		this.cumulativeCashFlow += nextTotalCashFlow;
 	}
-	
+
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
 }

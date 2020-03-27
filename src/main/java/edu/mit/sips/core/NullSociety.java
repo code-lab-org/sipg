@@ -6,10 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
@@ -159,16 +155,16 @@ public abstract class NullSociety implements Society {
 	@Override
 	public final Collection<Sector> getLocalSectors() {
 		List<Sector> sectors = new ArrayList<Sector>();
-		if(getAgricultureSystem() instanceof AgricultureSystem.Local){
+		if(getAgricultureSystem().isLocal()){
 			sectors.add(Sector.AGRICULTURE);
 		}
-		if(getWaterSystem() instanceof WaterSystem.Local) {
+		if(getWaterSystem().isLocal()) {
 			sectors.add(Sector.WATER);
 		}
-		if(getPetroleumSystem() instanceof PetroleumSystem.Local) {
+		if(getPetroleumSystem().isLocal()) {
 			sectors.add(Sector.PETROLEUM);
 		}
-		if(getElectricitySystem() instanceof ElectricitySystem.Local) {
+		if(getElectricitySystem().isLocal()) {
 			sectors.add(Sector.ELECTRICITY);
 		}
 		return sectors;

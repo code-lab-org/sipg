@@ -4,6 +4,7 @@ import java.util.List;
 
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface InfrastructureSystem.
  */
@@ -168,4 +169,11 @@ public interface InfrastructureSystem extends SimEntity, CurrencyUnitsOutput {
 	 * @param society the new society
 	 */
 	public void setSociety(Society society);
+	
+	/**
+	 * Checks if is local.
+	 *
+	 * @return true, if is local
+	 */
+	public boolean isLocal();
 }

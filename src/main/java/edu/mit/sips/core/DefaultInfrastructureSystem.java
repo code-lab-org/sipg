@@ -26,96 +26,66 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	 * @param name the name
 	 */
 	public DefaultInfrastructureSystem(String name) {
-		// Validate name.
 		if(name == null) {
 			throw new IllegalArgumentException("Name cannot be null.");
 		}
 		this.name = name;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
-	 */
 	@Override
 	public double getCapitalExpense() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
-	 */
 	@Override
 	public double getCashFlow() {
 		return 0;
 	}
 
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-	 */
+
 	@Override
 	public double getDomesticProduction() {
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
-	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
-	 */
 	@Override
 	public final Society getSociety() {
 		return society;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Remote#setSociety(edu.mit.sips.core.Society)
-	 */
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
 	@Override
 	public void tock() {
+	}
+
+	@Override
+	public boolean isLocal() {
+		return false;
 	}
 }

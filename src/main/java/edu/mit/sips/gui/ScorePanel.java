@@ -98,7 +98,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write("Aquifer Security, ");
 			fw.write("Reservoir Security, ");
 
-			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
+			if(country.getAgricultureSystem().isLocal()) {
 				agricultureScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, agriculturePlayerScore);
@@ -111,7 +111,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Agriculture Investment, ");
 				fw.write("Agriculture Score, ");
 			}
-			if(country.getWaterSystem() instanceof WaterSoS.Local) {
+			if(country.getWaterSystem().isLocal()) {
 				waterScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, waterPlayerScore);
@@ -124,8 +124,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Water Investment, ");
 				fw.write("Water Score, ");
 			}
-			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local
-					&& country.getElectricitySystem() instanceof ElectricitySoS.Local) {
+			if(country.getPetroleumSystem().isLocal() && country.getElectricitySystem().isLocal()) {
 				energyScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, energyPlayerScore);
