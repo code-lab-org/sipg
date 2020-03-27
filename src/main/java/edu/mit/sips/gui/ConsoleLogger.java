@@ -393,11 +393,11 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "m^3", 
-					waterSystem.getReservoirWithdrawals()
+					waterSystem.getAquiferWithdrawals()
 					+ waterSystem.getWaterFromPrivateProduction());
 			for(WaterSystem.Local system : getLocalWaterSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getReservoirWithdrawals()
+						system.getAquiferWithdrawals()
 						+ waterSystem.getWaterFromPrivateProduction());
 			}
 			System.out.println();
@@ -589,17 +589,17 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 			PetroleumSystem.Local energySystem = (PetroleumSystem.Local) country.getPetroleumSystem(); 
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "Reservoir Vol.", "toe", 
-					energySystem.getPetroleumReservoirVolume());
+					energySystem.getReservoirVolume());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
-				System.out.printf(" %,15.0f", system.getPetroleumReservoirVolume());
+				System.out.printf(" %,15.0f", system.getReservoirVolume());
 			}
 			System.out.println();
 			
 			System.out.printf("%-15s %-5s %,15.0f |", "  Withdrawals", "toe", 
-					energySystem.getPetroleumWithdrawals());
+					energySystem.getReservoirWithdrawals());
 			for(PetroleumSystem.Local system : getLocalPetroleumSystems(country.getCities())) {
 				System.out.printf(" %,15.0f", 
-						system.getPetroleumWithdrawals());
+						system.getReservoirWithdrawals());
 			}
 			System.out.println();
 			

@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.InfrastructureElement;
@@ -5,12 +20,15 @@ import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Interface WaterElement.
+ * An interface to water sector infrastructure elements.
+ * 
+ * @author Paul T. Grogan
  */
-public interface WaterElement extends InfrastructureElement, WaterUnitsOutput, ElectricityUnitsOutput {
+public interface WaterElement extends InfrastructureElement, 
+		WaterUnitsOutput, ElectricityUnitsOutput {
 
 	/**
-	 * Gets the distribution efficiency.
+	 * Gets the water distribution efficiency.
 	 *
 	 * @return the distribution efficiency
 	 */
@@ -31,32 +49,32 @@ public interface WaterElement extends InfrastructureElement, WaterUnitsOutput, E
 	public double getElectricalIntensityOfWaterProduction();
 	
 	/**
-	 * Gets the electricity consumption.
+	 * Gets the quantity of electricity consumed by this element.
 	 *
 	 * @return the electricity consumption
 	 */
 	public double getElectricityConsumption();
 	
 	/**
-	 * Gets the max water input.
+	 * Gets the maximum water input to this element.
 	 *
 	 * @return the max water input
 	 */
 	public double getMaxWaterInput();
 	
 	/**
-	 * Gets the max water production.
+	 * Gets the maximum water produced by this element.
 	 *
 	 * @return the max water production
 	 */
 	public double getMaxWaterProduction();
 	
 	/**
-	 * Gets the reservoir intensity of water production.
+	 * Gets the aquifer intensity of water production.
 	 *
-	 * @return the reservoir intensity of water production
+	 * @return the aquifer intensity of water production
 	 */
-	public double getReservoirIntensityOfWaterProduction();
+	public double getAquiferIntensityOfWaterProduction();
 	
 	/**
 	 * Gets the variable operations cost of water distribution.
@@ -73,49 +91,49 @@ public interface WaterElement extends InfrastructureElement, WaterUnitsOutput, E
 	public double getVariableOperationsCostOfWaterProduction();
 
 	/**
-	 * Gets the water input.
+	 * Gets the quantity of water input to this element.
 	 *
 	 * @return the water input
 	 */
 	public double getWaterInput();
 	
 	/**
-	 * Gets the water output.
+	 * Gets the quantity of water output from this element.
 	 *
 	 * @return the water output
 	 */
 	public double getWaterOutput();
 	
 	/**
-	 * Gets the water production.
+	 * Gets the quantity of water produced by this element.
 	 *
 	 * @return the water production
 	 */
 	public double getWaterProduction();
 	
 	/**
-	 * Gets the water withdrawals.
+	 * Gets the quantity of aquifer withdrawals from this element.
 	 *
-	 * @return the water withdrawals
+	 * @return the aquifer withdrawals
 	 */
-	public double getWaterWithdrawals();
+	public double getAquiferWithdrawals();
 
 	/**
-	 * Checks if is coastal access required.
+	 * Checks if coastal access is required for this element.
 	 *
 	 * @return true, if is coastal access required
 	 */
 	public boolean isCoastalAccessRequired();
 
 	/**
-	 * Sets the water input.
+	 * Sets the quantity of water input to this element.
 	 *
 	 * @param waterInput the new water input
 	 */
 	public void setWaterInput(double waterInput);
 
 	/**
-	 * Sets the water production.
+	 * Sets the quantity of water produced by this element.
 	 *
 	 * @param waterProduction the new water production
 	 */

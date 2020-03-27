@@ -571,13 +571,13 @@ public class LocalPetroleumSystemPanel extends PetroleumSystemPanel
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(petroleumReservoirDataset, nestedSociety.getName(), year, 
 						OilUnits.convertStock(((PetroleumSystem.Local)nestedSociety.
-								getPetroleumSystem()).getPetroleumReservoirVolume(),
+								getPetroleumSystem()).getReservoirVolume(),
 								nestedSociety.getPetroleumSystem(), this));
 			}
 		} else {
 			updateSeries(petroleumReservoirDataset, "Reservoir", year, 
 					OilUnits.convertStock(
-							getPetroleumSystem().getPetroleumReservoirVolume(), 
+							getPetroleumSystem().getReservoirVolume(), 
 							getPetroleumSystem(), this));
 			updateSeries(petroleumSourceAggregatedData, "Distribution", year, 
 					OilUnits.convertFlow(getPetroleumSystem().getPetroleumInDistribution(),

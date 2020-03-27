@@ -34,8 +34,8 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	private List<Double> aquiferSecurityHistory = new ArrayList<Double>();
 	
 	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	/**
@@ -172,11 +172,11 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getMaxWaterReservoirVolume()
 	 */
 	@Override
-	public double getMaxWaterReservoirVolume() {
+	public double getMaxAquiferVolume() {
 		double value = 0;
 		for(WaterSystem.Local system : getNestedSystems()) {
 			value += WaterUnits.convertStock(
-					system.getMaxWaterReservoirVolume(), 
+					system.getMaxAquiferVolume(), 
 					system, this);
 		}
 		return value;
@@ -227,11 +227,11 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawals()
 	 */
 	@Override
-	public double getReservoirWithdrawals() {
+	public double getAquiferWithdrawals() {
 		double value = 0;
 		for(WaterSystem.Local system : getNestedSystems()) {
 			value += WaterUnits.convertFlow(
-					system.getReservoirWithdrawals(),
+					system.getAquiferWithdrawals(),
 					system, this);
 		}
 		return value;
@@ -241,11 +241,11 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPrivateProduction()
 	 */
 	@Override
-	public double getReservoirWithdrawalsFromPrivateProduction() {
+	public double getAquiferWithdrawalsFromPrivateProduction() {
 		double value = 0;
 		for(WaterSystem.Local system : getNestedSystems()) {
 			value += WaterUnits.convertFlow(
-					system.getReservoirWithdrawalsFromPrivateProduction(),
+					system.getAquiferWithdrawalsFromPrivateProduction(),
 					system, this);
 		}
 		return value;
@@ -255,11 +255,11 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
 	 */
 	@Override
-	public double getReservoirWithdrawalsFromPublicProduction() {
+	public double getAquiferWithdrawalsFromPublicProduction() {
 		double value = 0;
 		for(WaterSystem.Local system : getNestedSystems()) {
 			value += WaterUnits.convertFlow(
-					system.getReservoirWithdrawalsFromPublicProduction(),
+					system.getAquiferWithdrawalsFromPublicProduction(),
 					system, this);
 		}
 		return value;
@@ -418,10 +418,10 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
 	 */
 	@Override
-	public double getWaterReservoirRechargeRate() {
+	public double getAquiferRechargeRate() {
 		double value = 0;
 		for(WaterSystem.Local system : getNestedSystems()) {
-			value += WaterUnits.convertFlow(system.getWaterReservoirRechargeRate(), system, this);
+			value += WaterUnits.convertFlow(system.getAquiferRechargeRate(), system, this);
 		}
 		return value;
 	}
@@ -635,7 +635,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 			// Set a distribution cost using variable operations expense.
 			costCoefficients[elements.size() + elements.indexOf(element)] 
 					= element.getVariableOperationsCostOfWaterDistribution()
-					+ element.getReservoirIntensityOfWaterProduction()
+					+ element.getAquiferIntensityOfWaterProduction()
 					+ element.getElectricalIntensityOfWaterDistribution()
 					* (DefaultUnits.convert(
 							getSociety().getElectricitySystem().getElectricityDomesticPrice(),
@@ -659,7 +659,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 			for(WaterElement element : elements) {
 				if(city.getName().equals(element.getOrigin())) {
 					resourceConstraint[elements.indexOf(element)] 
-							= element.getReservoirIntensityOfWaterProduction();
+							= element.getAquiferIntensityOfWaterProduction();
 				}
 			}
 			//resourceConstraint[2*elements.size() + cities.size() + cities.indexOf(city)] = 1;
@@ -756,18 +756,6 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public double getWaterAgriculturalPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
 	}
 	
 	@Override

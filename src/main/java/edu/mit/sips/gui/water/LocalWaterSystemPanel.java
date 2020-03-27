@@ -93,7 +93,7 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		indicatorsPanel.add(localWaterIndicatorPanel);
 		waterAquiferIndicatorPanel = new LinearIndicatorPanel(
 				"Water Aquifer", 0, WaterUnits.convertStock(
-						waterSystem.getMaxWaterReservoirVolume(), 
+						waterSystem.getMaxAquiferVolume(), 
 						waterSystem, this));
 		indicatorsPanel.add(waterAquiferIndicatorPanel);
 		renewableWaterIndicatorPanel = new LinearIndicatorPanel(

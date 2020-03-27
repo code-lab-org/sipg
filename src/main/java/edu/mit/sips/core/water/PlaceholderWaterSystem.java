@@ -58,7 +58,7 @@ public class PlaceholderWaterSystem extends DefaultWaterSystem implements Serial
 	 * @see edu.mit.sips.core.water.DefaultWaterSystem#getReservoirWithdrawals()
 	 */
 	@Override
-	public double getReservoirWithdrawals() {
+	public double getAquiferWithdrawals() {
 		if(reservoirWithdrawalsMap.containsKey(time)) {
 			return reservoirWithdrawalsMap.get(time);
 		} else {

@@ -352,7 +352,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumWithdrawals()
 	 */
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		if(isOperational()) {
 			return getPetroleumProduction() * reservoirIntensityOfPetroleumProduction;
 		} else {

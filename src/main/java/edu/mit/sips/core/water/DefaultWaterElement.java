@@ -346,7 +346,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @see edu.mit.sips.core.water.WaterElement#getReservoirIntensityOfWaterProduction()
 	 */
 	@Override
-	public double getReservoirIntensityOfWaterProduction() {
+	public double getAquiferIntensityOfWaterProduction() {
 		if(isOperational()) {
 			return reservoirIntensityOfWaterProduction;
 		} else {
@@ -436,7 +436,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @see edu.mit.sips.core.water.WaterElement#getWaterWithdrawals()
 	 */
 	@Override
-	public double getWaterWithdrawals() {
+	public double getAquiferWithdrawals() {
 		if(isOperational()) {
 			return getWaterProduction() * reservoirIntensityOfWaterProduction;
 		} else {

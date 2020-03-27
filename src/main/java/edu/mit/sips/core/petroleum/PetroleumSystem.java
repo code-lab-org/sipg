@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.petroleum;
 
 import java.util.List;
@@ -7,118 +22,117 @@ import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnitsOutput;
 
 /**
- * The Interface PetroleumSystem.
+ * An interface to petroleum sector infrastructure systems.
+ * 
+ * @author Paul T. Grogan
  */
 public interface PetroleumSystem extends InfrastructureSystem, 
 		ElectricityUnitsOutput, OilUnitsOutput {
 	
 	/**
-	 * The Interface Local.
+	 * An interface to locally-controlled petroleum infrastructure 
+	 * systems which provide greater details.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public interface Local extends PetroleumSystem, InfrastructureSystem.Local {
 
 		/**
-		 * Adds the element.
+		 * Adds a petroleum element to this system.
 		 *
 		 * @param element the element
 		 * @return true, if successful
 		 */
 		public boolean addElement(PetroleumElement element);
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getElements()
-		 */
+		@Override
 		public List<? extends PetroleumElement> getElements();
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
-		 */
+		@Override
 		public List<? extends PetroleumElement> getExternalElements();
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
-		 */
+
+		@Override
 		public List<? extends PetroleumElement> getInternalElements();
 
 		/**
-		 * Gets the local petroleum fraction.
+		 * Gets the fraction of petroleum consumed from local sources.
 		 *
 		 * @return the local petroleum fraction
 		 */
 		public double getLocalPetroleumFraction();
 
 		/**
-		 * Gets the max petroleum reservoir volume.
+		 * Gets the maximum petroleum reservoir volume.
 		 *
 		 * @return the max petroleum reservoir volume
 		 */
 		public double getMaxPetroleumReservoirVolume();
 
 		/**
-		 * Gets the petroleum export.
+		 * Gets the quantity of petroleum exported from this system.
 		 *
 		 * @return the petroleum export
 		 */
 		public double getPetroleumExport();
 
 		/**
-		 * Gets the petroleum import.
+		 * Gets the quantity of petroleum imported by this system.
 		 *
 		 * @return the petroleum import
 		 */
 		public double getPetroleumImport();
 
 		/**
-		 * Gets the petroleum in distribution.
+		 * Gets the quantity of petroleum sent for distribution.
 		 *
 		 * @return the petroleum in distribution
 		 */
 		public double getPetroleumInDistribution();
 
 		/**
-		 * Gets the petroleum out distribution.
+		 * Gets the quantity of petroleum received via distribution.
 		 *
 		 * @return the petroleum out distribution
 		 */
 		public double getPetroleumOutDistribution();
 
 		/**
-		 * Gets the petroleum out distribution losses.
+		 * Gets the quantity of petroleum lost due to distribution inefficiency.
 		 *
 		 * @return the petroleum out distribution losses
 		 */
 		public double getPetroleumOutDistributionLosses();
 		
 		/**
-		 * Gets the petroleum production.
+		 * Gets the quantity of petroleum produced.
 		 *
 		 * @return the petroleum production
 		 */
 		public double getPetroleumProduction();
 
 		/**
-		 * Gets the total petroleum supply.
+		 * Gets the total quantity of petroleum supplied.
 		 *
 		 * @return the total petroleum supply
 		 */
 		public double getTotalPetroleumSupply();
 
 		/**
-		 * Gets the unit production cost.
+		 * Gets the unit petroleum production cost.
 		 *
 		 * @return the unit production cost
 		 */
 		public double getUnitProductionCost();
 		
 		/**
-		 * Gets the unit supply cost.
+		 * Gets the unit petroleum supply profit.
 		 *
-		 * @return the unit supply cost
+		 * @return the unit supply profit
 		 */
 		public double getUnitSupplyProfit();
 		
 		/**
-		 * Removes the element.
+		 * Removes a petroleum element from this system.
 		 *
 		 * @param element the element
 		 * @return true, if successful
@@ -134,7 +148,7 @@ public interface PetroleumSystem extends InfrastructureSystem,
 	public double getReservoirLifetime();
 	
 	/**
-	 * Gets the electricity consumed.
+	 * Gets the quantity of electricity consumed by this system.
 	 *
 	 * @return the electricity consumed
 	 */
@@ -162,16 +176,16 @@ public interface PetroleumSystem extends InfrastructureSystem,
 	public double getPetroleumImportPrice();
 
 	/**
-	 * Gets the petroleum reservoir volume.
+	 * Gets the current reservoir volume.
 	 *
-	 * @return the petroleum reservoir volume
+	 * @return the reservoir volume
 	 */
-	public double getPetroleumReservoirVolume();
+	public double getReservoirVolume();
 
 	/**
-	 * Gets the petroleum withdrawals.
+	 * Gets the quantity of reservoir withdrawals by this system.
 	 *
-	 * @return the petroleum withdrawals
+	 * @return the reservoir withdrawals
 	 */
-	public double getPetroleumWithdrawals();
+	public double getReservoirWithdrawals();
 }

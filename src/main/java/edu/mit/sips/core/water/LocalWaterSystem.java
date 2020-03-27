@@ -9,7 +9,6 @@ import java.util.Map;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.LocalInfrastructureSystem;
-import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
@@ -158,8 +157,8 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 */
 	@Override
 	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	/* (non-Javadoc)
@@ -330,7 +329,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 * @see edu.mit.sips.WaterSystem#getMaxWaterReservoirVolume()
 	 */
 	@Override
-	public double getMaxWaterReservoirVolume() {
+	public double getMaxAquiferVolume() {
 		return maxWaterReservoirVolume;
 	}
 
@@ -370,12 +369,12 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	public double getRenewableWaterProduction() {
 		double renewableProduction = 0;
 		for(WaterElement e : getInternalElements()) {
-			if(e.getReservoirIntensityOfWaterProduction() < 1) {
+			if(e.getAquiferIntensityOfWaterProduction() < 1) {
 				renewableProduction += WaterUnits.convertFlow(e.getWaterProduction(), e, this)
-						* (1 - e.getReservoirIntensityOfWaterProduction());
+						* (1 - e.getAquiferIntensityOfWaterProduction());
 			}
 		}
-		renewableProduction += Math.min(getWaterReservoirRechargeRate(), 
+		renewableProduction += Math.min(getAquiferRechargeRate(), 
 				getWaterProduction() + getWaterFromPrivateProduction() 
 				- renewableProduction);
 		return renewableProduction;
@@ -385,16 +384,16 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 * @see edu.mit.sips.WaterSystem#getWaterWithdrawals()
 	 */
 	@Override
-	public double getReservoirWithdrawals() {
-		return getReservoirWithdrawalsFromPublicProduction() + 
-				getReservoirWithdrawalsFromPrivateProduction();
+	public double getAquiferWithdrawals() {
+		return getAquiferWithdrawalsFromPublicProduction() + 
+				getAquiferWithdrawalsFromPrivateProduction();
 	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPrivateProduction()
 	 */
 	@Override
-	public double getReservoirWithdrawalsFromPrivateProduction() {
+	public double getAquiferWithdrawalsFromPrivateProduction() {
 		return getWaterFromPrivateProduction() *
 				reservoirIntensityOfPrivateProduction;
 	}
@@ -403,10 +402,10 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getReservoirWithdrawalsFromPublicProduction()
 	 */
 	@Override
-	public double getReservoirWithdrawalsFromPublicProduction() {
+	public double getAquiferWithdrawalsFromPublicProduction() {
 		double waterWithdrawals = 0;
 		for(WaterElement e : getInternalElements()) {
-			waterWithdrawals += WaterUnits.convertFlow(e.getWaterWithdrawals(), e, this);
+			waterWithdrawals += WaterUnits.convertFlow(e.getAquiferWithdrawals(), e, this);
 		}
 		return waterWithdrawals;
 	}
@@ -485,18 +484,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
-	 */
-	@Override
-	public double getWaterAgriculturalPrice() {
-		ElectricitySystem electSys = getSociety().getElectricitySystem();
-		return electricalIntensityOfPrivateProduction 
-				* DefaultUnits.convert(electSys.getElectricityDomesticPrice(),
-						electSys.getCurrencyUnits(), electSys.getElectricityUnits(),
-						getCurrencyUnits(), getElectricityUnits());
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
 	@Override
@@ -519,7 +506,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	@Override
 	public double getWaterFromPrivateProduction() {
 		// Artesian water used to meet shortfall in reaching minimum demand.
-		return Math.min(getWaterReservoirVolume() - getReservoirWithdrawalsFromPublicProduction(), 
+		return Math.min(getWaterReservoirVolume() - getAquiferWithdrawalsFromPublicProduction(), 
 				Math.max(0, getSocietyDemand()
 						+ getWaterOutDistribution()
 						- getWaterInDistribution()
@@ -616,7 +603,7 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 * @see edu.mit.sips.core.water.WaterSystem.Local#getWaterReservoirRechargeRate()
 	 */
 	@Override
-	public double getWaterReservoirRechargeRate() {
+	public double getAquiferRechargeRate() {
 		return waterReservoirRechargeRate;
 	}
 
@@ -704,14 +691,14 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 		super.tick();
 		nextWaterReservoirVolume = Math.min(maxWaterReservoirVolume, 
 				waterReservoirVolume + waterReservoirRechargeRate 
-				- getReservoirWithdrawals());
+				- getAquiferWithdrawals());
 		if(nextWaterReservoirVolume < 0) {
 			throw new IllegalStateException(
 					"Water reservoir volume cannot be negative.");
 		}
 		electricityConsumptionMap.put(time, getElectricityConsumption());
 		waterReservoirVolumeMap.put(time, getWaterReservoirVolume());
-		reservoirWithdrawalsMap.put(time, getReservoirWithdrawals());
+		reservoirWithdrawalsMap.put(time, getAquiferWithdrawals());
 		waterDomesticPriceMap.put(time, getWaterDomesticPrice());
 		waterImportPriceMap.put(time, getWaterImportPrice());
 	}

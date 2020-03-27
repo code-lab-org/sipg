@@ -142,10 +142,10 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumReservoirVolume()
 	 */
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		double value = 0;
 		for(PetroleumSystem system : getNestedSystems()) {
-			value += system.getPetroleumReservoirVolume();
+			value += system.getReservoirVolume();
 		}
 		return value;
 	}
@@ -154,10 +154,10 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumWithdrawals()
 	 */
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		double value = 0;
 		for(PetroleumSystem system : getNestedSystems()) {
-			value += system.getPetroleumWithdrawals();
+			value += system.getReservoirWithdrawals();
 		}
 		return value;
 	}
@@ -167,8 +167,8 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 	 */
 	@Override
 	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	@Override

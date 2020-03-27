@@ -45,7 +45,7 @@ public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel
 		productionLabel = new JLabel(format.format(OilUnits.convertFlow(
 				element.getPetroleumProduction(), element, this)), JLabel.RIGHT);
 		withdrawalsLabel = new JLabel(format.format(OilUnits.convertFlow(
-				element.getPetroleumWithdrawals(), element, this)), JLabel.RIGHT);
+				element.getReservoirWithdrawals(), element, this)), JLabel.RIGHT);
 		inputLabel = new JLabel(format.format(OilUnits.convertFlow(
 				element.getPetroleumInput(), element, this)), JLabel.RIGHT);
 		outputLabel = new JLabel(format.format(OilUnits.convertFlow(
@@ -85,7 +85,7 @@ public class PetroleumPopupInfoPanel extends DefaultPopupInfoPanel
 		productionLabel.setText(
 				format.format(element.getPetroleumProduction()));
 		withdrawalsLabel.setText(
-				format.format(element.getPetroleumWithdrawals()));
+				format.format(element.getReservoirWithdrawals()));
 		inputLabel.setText(
 				format.format(element.getPetroleumInput()));
 		outputLabel.setText(

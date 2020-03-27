@@ -253,24 +253,24 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 			petroleumDomesticPrice.setValue(petroleumSystem.getPetroleumDomesticPrice());
 			petroleumImportPrice.setValue(petroleumSystem.getPetroleumImportPrice());
 			petroleumExportPrice.setValue(petroleumSystem.getPetroleumExportPrice());
-			sustainabilityMetricNumerator.setValue(petroleumSystem.getPetroleumReservoirVolume());
-			sustainabilityMetricDenominator.setValue(petroleumSystem.getPetroleumWithdrawals());
+			sustainabilityMetricNumerator.setValue(petroleumSystem.getReservoirVolume());
+			sustainabilityMetricDenominator.setValue(petroleumSystem.getReservoirWithdrawals());
 		}
 	}
 
 	@Override
 	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		return sustainabilityMetricNumerator.getValue();
 	}
 
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		return sustainabilityMetricDenominator.getValue();
 	}
 }

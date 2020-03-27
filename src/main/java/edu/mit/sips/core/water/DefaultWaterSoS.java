@@ -33,8 +33,8 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	 */
 	@Override
 	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	/* (non-Javadoc)
@@ -81,27 +81,12 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	 * @see edu.mit.sips.core.water.WaterSystem#getReservoirWithdrawals()
 	 */
 	@Override
-	public double getReservoirWithdrawals() {
+	public double getAquiferWithdrawals() {
 		double value = 0;
 		for(WaterSystem system : getNestedSystems()) {
-			value += system.getReservoirWithdrawals();
+			value += system.getAquiferWithdrawals();
 		}
 		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
-	 */
-	@Override
-	public double getWaterAgriculturalPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += CurrencyUnits.convertStock(system.getWaterAgriculturalPrice(), system, this);
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
 	}
 
 	/* (non-Javadoc)

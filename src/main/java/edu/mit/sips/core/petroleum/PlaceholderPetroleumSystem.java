@@ -95,7 +95,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumReservoirVolume()
 	 */
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		if(petroleumReservoirVolumeMap.containsKey(time)) {
 			return petroleumReservoirVolumeMap.get(time);
 		} else {
@@ -107,7 +107,7 @@ public class PlaceholderPetroleumSystem extends DefaultPetroleumSystem implement
 	 * @see edu.mit.sips.core.petroleum.DefaultPetroleumSystem#getPetroleumWithdrawals()
 	 */
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		if(petroleumWithdrawalsMap.containsKey(time)) {
 			return petroleumWithdrawalsMap.get(time);
 		} else {

@@ -31,7 +31,6 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	public static final String 
 	ELECTRICITY_CONSUMPTION_ATTRIBUTE = "ElectricityConsumption",
 	WATER_DOMESTIC_PRICE_ATTRIBUTE = "WaterDomesticPrice",
-	WATER_AGRICULTURAL_PRICE_ATTRIBUTE = "WaterAgriculturalPrice",
 	WATER_IMPORT_PRICE_ATTRIBUTE = "WaterImportPrice";
 	
 	public static final String[] ATTRIBUTES = new String[]{
@@ -43,7 +42,6 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		WATER_DOMESTIC_PRICE_ATTRIBUTE,
-		WATER_AGRICULTURAL_PRICE_ATTRIBUTE,
 		WATER_IMPORT_PRICE_ATTRIBUTE
 	};
 
@@ -125,7 +123,6 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	
 	private transient final HLAfloat64BE electricityConsumption;
 	private transient final HLAfloat64BE waterDomesticPrice;
-	private transient final HLAfloat64BE waterAgriculturalPrice;
 	private transient final HLAfloat64BE waterImportPrice;
 
 	/**
@@ -141,14 +138,11 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 		super(rtiAmbassador, encoderFactory, instanceName);
 		electricityConsumption = encoderFactory.createHLAfloat64BE();
 		waterDomesticPrice = encoderFactory.createHLAfloat64BE();
-		waterAgriculturalPrice = encoderFactory.createHLAfloat64BE();
 		waterImportPrice = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
 		attributeValues.put(getAttributeHandle(WATER_DOMESTIC_PRICE_ATTRIBUTE), 
 				waterDomesticPrice);
-		attributeValues.put(getAttributeHandle(WATER_AGRICULTURAL_PRICE_ATTRIBUTE), 
-				waterAgriculturalPrice);
 		attributeValues.put(getAttributeHandle(WATER_IMPORT_PRICE_ATTRIBUTE), 
 				waterImportPrice);
 	}
@@ -202,14 +196,6 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	}
 
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
-	 */
-	@Override
-	public double getWaterAgriculturalPrice() {
-		return waterAgriculturalPrice.getValue();
-	}
-
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
 	@Override
@@ -251,17 +237,16 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 			WaterSystem waterSystem = (WaterSystem) system;
 			electricityConsumption.setValue(waterSystem.getElectricityConsumption());
 			waterDomesticPrice.setValue(waterSystem.getWaterDomesticPrice());
-			waterAgriculturalPrice.setValue(waterSystem.getWaterAgriculturalPrice());
 			waterImportPrice.setValue(waterSystem.getWaterImportPrice());
 			sustainabilityMetricNumerator.setValue(waterSystem.getWaterReservoirVolume());
-			sustainabilityMetricDenominator.setValue(waterSystem.getReservoirWithdrawals());
+			sustainabilityMetricDenominator.setValue(waterSystem.getAquiferWithdrawals());
 		}
 	}
 
 	@Override
 	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	@Override
@@ -270,7 +255,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	}
 
 	@Override
-	public double getReservoirWithdrawals() {
+	public double getAquiferWithdrawals() {
 		return sustainabilityMetricDenominator.getValue();
 	}
 }

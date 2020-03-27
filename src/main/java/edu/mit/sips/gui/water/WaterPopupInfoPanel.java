@@ -49,7 +49,7 @@ public class WaterPopupInfoPanel extends DefaultPopupInfoPanel
 						JLabel.RIGHT);
 		withdrawalsLabel = new JLabel(
 				format.format(WaterUnits.convertFlow(
-						element.getWaterWithdrawals(), element, this)),
+						element.getAquiferWithdrawals(), element, this)),
 						JLabel.RIGHT);
 		inputLabel = new JLabel(
 				format.format(WaterUnits.convertFlow(
@@ -98,7 +98,7 @@ public class WaterPopupInfoPanel extends DefaultPopupInfoPanel
 				element.getWaterProduction(), 
 						element, this)));
 		withdrawalsLabel.setText(format.format(WaterUnits.convertFlow(
-				element.getWaterWithdrawals(), 
+				element.getAquiferWithdrawals(), 
 						element, this)));
 		inputLabel.setText(format.format(WaterUnits.convertFlow(
 				element.getWaterInput(),

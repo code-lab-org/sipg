@@ -39,14 +39,6 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 	}
 	
 	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterAgriculturalPrice()
-	 */
-	@Override
-	public double getWaterAgriculturalPrice() {
-		return 0;
-	}
-	
-	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
 	 */
 	@Override
@@ -80,8 +72,8 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 
 	@Override
 	public double getAquiferLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getReservoirWithdrawals());
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	@Override
@@ -90,7 +82,7 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 	}
 
 	@Override
-	public double getReservoirWithdrawals() {
+	public double getAquiferWithdrawals() {
 		return 0;
 	}
 }

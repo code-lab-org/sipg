@@ -432,7 +432,7 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumReservoirVolume()
 	 */
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		return petroleumReservoirVolume;
 	}
 
@@ -450,10 +450,10 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 * @see edu.mit.sips.PetroleumSystem#getPetroleumWithdrawals()
 	 */
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		double petroleumWithdrawals = 0;
 		for(PetroleumElement e : getInternalElements()) {
-			petroleumWithdrawals += OilUnits.convertFlow(e.getPetroleumWithdrawals(), e, this);
+			petroleumWithdrawals += OilUnits.convertFlow(e.getReservoirWithdrawals(), e, this);
 		}
 		return petroleumWithdrawals;
 	}
@@ -471,8 +471,8 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getReservoirLifetime()
 	 */
 	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	/* (non-Javadoc)
@@ -557,10 +557,10 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	public void tick() {
 		super.tick();
 		nextPetroleumReservoirVolume = Math.min(maxPetroleumReservoirVolume, 
-				petroleumReservoirVolume - getPetroleumWithdrawals());
+				petroleumReservoirVolume - getReservoirWithdrawals());
 		electricityConsumptionMap.put(time, getElectricityConsumption());
-		petroleumReservoirVolumeMap.put(time, getPetroleumReservoirVolume());
-		petroleumWithdrawalsMap.put(time, getPetroleumWithdrawals());
+		petroleumReservoirVolumeMap.put(time, getReservoirVolume());
+		petroleumWithdrawalsMap.put(time, getReservoirWithdrawals());
 		petroleumDomesticPriceMap.put(time, getPetroleumDomesticPrice());
 		petroleumImportPriceMap.put(time, getPetroleumImportPrice());
 		petroleumExportPriceMap.put(time, getPetroleumExportPrice());

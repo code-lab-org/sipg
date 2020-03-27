@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import java.util.List;
@@ -7,16 +22,23 @@ import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Interface EnergySystem.
+ * An interface to water sector infrastructure systems.
+ * 
+ * @author Paul T. Grogan
  */
-public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, ElectricityUnitsOutput {
+public interface WaterSystem extends InfrastructureSystem, 
+		WaterUnitsOutput, ElectricityUnitsOutput {
+	
 	/**
-	 * The Interface Local.
+	 * An interface to locally-controlled water infrastructure 
+	 * systems which provide greater details.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static interface Local extends WaterSystem, InfrastructureSystem.Local {
 		
 		/**
-		 * Adds the element.
+		 * Adds a water element to this system.
 		 *
 		 * @param element the element
 		 * @return true, if successful
@@ -37,169 +59,149 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 		 */
 		public double getElectricityConsumptionFromPublicProduction();
 		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getElements()
-		 */
+		@Override
 		public List<? extends WaterElement> getElements();
 
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
-		 */
+		@Override
 		public List<? extends WaterElement> getExternalElements();
-		
-		/* (non-Javadoc)
-		 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
-		 */
+
+		@Override
 		public List<? extends WaterElement> getInternalElements();
 		
 		/**
-		 * Gets the local water fraction.
+		 * Gets the fraction of water supplied from local sources.
 		 *
 		 * @return the local water fraction
 		 */
 		public double getLocalWaterFraction();
 		
 		/**
-		 * Gets the max water reservoir volume.
+		 * Gets the maximum aquifer reservoir volume.
 		 *
-		 * @return the max water reservoir volume
+		 * @return the max aquifer reservoir volume
 		 */
-		public double getMaxWaterReservoirVolume();
+		public double getMaxAquiferVolume();
 		
 		/**
-		 * Gets the renewable water fraction.
+		 * Gets the fraction of water consumed from renewable sources.
 		 *
 		 * @return the renewable water fraction
 		 */
 		public double getRenewableWaterFraction();
 		
 		/**
-		 * Gets the renewable water production.
+		 * Gets the quantity of water produced from renewable sources.
 		 *
 		 * @return the renewable water production
 		 */
 		public double getRenewableWaterProduction();
 		
 		/**
-		 * Gets the reservoir withdrawals from private production.
+		 * Gets the aquifer withdrawals from private production.
 		 *
-		 * @return the reservoir withdrawals from private production
+		 * @return the aquifer withdrawals from private production
 		 */
-		public double getReservoirWithdrawalsFromPrivateProduction();
+		public double getAquiferWithdrawalsFromPrivateProduction();
 		
 		/**
-		 * Gets the reservoir withdrawals from public production.
+		 * Gets the aquifer withdrawals from public production.
 		 *
-		 * @return the reservoir withdrawals from public production
+		 * @return the aquifer withdrawals from public production
 		 */
-		public double getReservoirWithdrawalsFromPublicProduction();
+		public double getAquiferWithdrawalsFromPublicProduction();
 		
 		/**
-		 * Gets the total water supply.
+		 * Gets the total quantity of water supplied by this system.
 		 *
 		 * @return the total water supply
 		 */
 		public double getTotalWaterSupply();
 		
 		/**
-		 * Gets the unit production cost.
+		 * Gets the unit water production cost.
 		 *
 		 * @return the unit production cost
 		 */
 		public double getUnitProductionCost();
 		
 		/**
-		 * Gets the unit supply cost.
+		 * Gets the unit water supply profit.
 		 *
-		 * @return the unit supply cost
+		 * @return the unit supply profit
 		 */
 		public double getUnitSupplyProfit();
 		
 		/**
-		 * Gets the water from private production.
+		 * Gets the quantity of water from private production.
 		 *
 		 * @return the water from private production
 		 */
 		public double getWaterFromPrivateProduction();
 		
 		/**
-		 * Gets the water import.
+		 * Gets the quantity of water imported by this system.
 		 *
 		 * @return the water import
 		 */
 		public double getWaterImport();
 		
 		/**
-		 * Gets the water in distribution.
+		 * Gets the water sent to distribution by this system.
 		 *
 		 * @return the water in distribution
 		 */
 		public double getWaterInDistribution();
 		
 		/**
-		 * Gets the water out distribution.
+		 * Gets the water received from distribution by this system.
 		 *
 		 * @return the water out distribution
 		 */
 		public double getWaterOutDistribution();
 		
 		/**
-		 * Gets the water out distribution losses.
+		 * Gets the quantity of water lost due to distribution inefficiency.
 		 *
 		 * @return the water out distribution losses
 		 */
 		public double getWaterOutDistributionLosses();
 		
 		/**
-		 * Gets the water production.
+		 * Gets the quantity of water produced by this system.
 		 *
 		 * @return the water production
 		 */
 		public double getWaterProduction();
 		
 		/**
-		 * Gets the water reservoir recharge rate.
+		 * Gets the aquifer recharge rate.
 		 *
-		 * @return the water reservoir recharge rate
+		 * @return the aquifer reservoir recharge rate
 		 */
-		public double getWaterReservoirRechargeRate();
+		public double getAquiferRechargeRate();
 		
 		/**
-		 * Gets the water wasted.
+		 * Gets the quantity of water wasted.
 		 *
 		 * @return the water wasted
 		 */
 		public double getWaterWasted();
 		
 		/**
-		 * Checks if is coastal access.
+		 * Checks if this system provides coastal access.
 		 *
-		 * @return true, if is coastal access
+		 * @return true, if coastal access
 		 */
 		public boolean isCoastalAccess();
 		
 		/**
-		 * Removes the element.
+		 * Removes a water element from this system.
 		 *
 		 * @param element the element
 		 * @return true, if successful
 		 */
 		public boolean removeElement(WaterElement element);
 	}
-	
-	/**
-	 * Gets the water reservoir volume.
-	 *
-	 * @return the water reservoir volume
-	 */
-	public double getWaterReservoirVolume();
-	
-	/**
-	 * Gets the reservoir withdrawals.
-	 *
-	 * @return the reservoir withdrawals
-	 */
-	public double getReservoirWithdrawals();
 	
 	/**
 	 * Gets the aquifer lifetime.
@@ -209,11 +211,18 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 	public double getAquiferLifetime();
 	
 	/**
-	 * Gets the energy consumption.
+	 * Gets the quantity of energy consumed by this system.
 	 *
 	 * @return the energy consumption
 	 */
 	public double getElectricityConsumption();
+	
+	/**
+	 * Gets the quantity of aquifer withdrawals.
+	 *
+	 * @return the aquifer withdrawals
+	 */
+	public double getAquiferWithdrawals();
 	
 	/**
 	 * Gets the water domestic price.
@@ -230,9 +239,9 @@ public interface WaterSystem extends InfrastructureSystem, WaterUnitsOutput, Ele
 	public double getWaterImportPrice();
 	
 	/**
-	 * Gets the water agricultural price.
+	 * Gets the water reservoir volume.
 	 *
-	 * @return the water agricultural price
+	 * @return the water reservoir volume
 	 */
-	public double getWaterAgriculturalPrice();
+	public double getWaterReservoirVolume();
 }

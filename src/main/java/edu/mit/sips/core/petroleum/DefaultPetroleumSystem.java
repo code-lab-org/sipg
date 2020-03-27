@@ -80,17 +80,17 @@ public class DefaultPetroleumSystem extends DefaultInfrastructureSystem implemen
 
 	@Override
 	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		return 0;
 	}
 
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		return 0;
 	}
 }

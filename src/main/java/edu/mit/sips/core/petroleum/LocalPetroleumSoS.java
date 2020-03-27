@@ -34,8 +34,8 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	private List<Double> reservoirSecurityHistory = new ArrayList<Double>();
 
 	public double getReservoirLifetime() {
-		return getPetroleumWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getPetroleumReservoirVolume() / getPetroleumWithdrawals());
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
 	}
 
 	/**
@@ -308,10 +308,10 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumReservoirVolume()
 	 */
 	@Override
-	public double getPetroleumReservoirVolume() {
+	public double getReservoirVolume() {
 		double value = 0;
 		for(PetroleumSystem.Local system : getNestedSystems()) {
-			value += system.getPetroleumReservoirVolume();
+			value += system.getReservoirVolume();
 		}
 		return value;
 	}
@@ -320,10 +320,10 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumWithdrawals()
 	 */
 	@Override
-	public double getPetroleumWithdrawals() {
+	public double getReservoirWithdrawals() {
 		double value = 0;
 		for(PetroleumSystem.Local system : getNestedSystems()) {
-			value += system.getPetroleumWithdrawals();
+			value += system.getReservoirWithdrawals();
 		}
 		return value;
 	}
@@ -539,7 +539,7 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 				}
 			}
 			constraints.add(new LinearConstraint(resourceConstraint, 
-					Relationship.LEQ, energySystem.getPetroleumReservoirVolume()));
+					Relationship.LEQ, energySystem.getReservoirVolume()));
 
 			// Constrain supply = demand in each city.
 			double[] flowCoefficients = new double[numVariables];
