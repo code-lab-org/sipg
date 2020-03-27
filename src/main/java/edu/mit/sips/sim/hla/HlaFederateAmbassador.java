@@ -62,8 +62,8 @@ import hla.rti1516e.time.HLAinteger64TimeFactory;
 /**
  * The Class SimAmbassador.
  */
-public class SimAmbassador extends NullFederateAmbassador {
-	private static Logger logger = Logger.getLogger(SimAmbassador.class);
+public class HlaFederateAmbassador extends NullFederateAmbassador {
+	private static Logger logger = Logger.getLogger(HlaFederateAmbassador.class);
 	
 	private final int unitsPerYear;
 	private final int numberIterations; // must be a factor of unitsPerYear
@@ -102,7 +102,7 @@ public class SimAmbassador extends NullFederateAmbassador {
 	 * Instantiates a new sim ambassador.
 	 * @throws RTIinternalError 
 	 */
-	public SimAmbassador(Simulator simulator, int unitsPerYear, int numberIterations) throws RTIexception {
+	public HlaFederateAmbassador(Simulator simulator, int unitsPerYear, int numberIterations) throws RTIexception {
 		this.simulator = simulator;
 		this.unitsPerYear = unitsPerYear;
 		this.numberIterations = numberIterations;

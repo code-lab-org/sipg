@@ -15,7 +15,7 @@ import hla.rti1516e.exceptions.RTIexception;
 public class HlaSimulator extends DefaultSimulator {	
 	private static Logger logger = Logger.getLogger(HlaSimulator.class);
 
-	private transient SimAmbassador simAmbassador;
+	private transient HlaFederateAmbassador simAmbassador;
 	
 	/**
 	 * Instantiates a new simulator.
@@ -27,7 +27,7 @@ public class HlaSimulator extends DefaultSimulator {
 		
 		logger.trace("Creating federate ambassador.");
 		try {
-			simAmbassador = new SimAmbassador(this, numberIterations*250, numberIterations);
+			simAmbassador = new HlaFederateAmbassador(this, numberIterations*250, numberIterations);
 		} catch (RTIexception e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
