@@ -406,8 +406,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				LocalAgricultureSystem system = (LocalAgricultureSystem) city.getAgricultureSystem();
 				PlaceholderAgricultureSystem placeholder = new PlaceholderAgricultureSystem();
 				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
-				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
+				placeholder.setCashFlowMap(system.getCashFlowLog());
 				placeholder.setFoodProductionMap(system.getFoodProductionMap());
 				placeholder.setTotalFoodSupplyMap(system.getTotalFoodSupplyMap());
 				placeholder.setFoodDomesticPriceMap(system.getFoodDomesticPriceMap());
@@ -480,8 +480,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				LocalPetroleumSystem system = (LocalPetroleumSystem) city.getPetroleumSystem();
 				PlaceholderPetroleumSystem placeholder = new PlaceholderPetroleumSystem();
 				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
-				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
+				placeholder.setCashFlowMap(system.getCashFlowLog());
 				placeholder.setPetroleumReservoirVolumeMap(system.getPetroleumReservoirVolumeMap());
 				placeholder.setPetroleumWithdrawalsMap(system.getPetroleumWithdrawalsMap());
 				placeholder.setPetroleumDomesticPriceMap(system.getPetroleumDomesticPriceMap());
@@ -494,8 +494,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				PlaceholderElectricitySystem placeholder = new PlaceholderElectricitySystem();
 				placeholder.setPetroleumConsumptionMap(system.getPetroleumConsumptionMap());
 				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
-				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
+				placeholder.setCashFlowMap(system.getCashFlowLog());
 				placeholder.setElectricityDomesticPriceMap(system.getElectricityDomesticPriceMap());
 				data.get(city.getName())[1] = placeholder;
 			}
@@ -515,8 +515,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 				LocalWaterSystem system = (LocalWaterSystem) city.getWaterSystem();
 				PlaceholderWaterSystem placeholder = new PlaceholderWaterSystem();
 				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseMap());
-				placeholder.setCashFlowMap(system.getCashFlowMap());
+				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
+				placeholder.setCashFlowMap(system.getCashFlowLog());
 				placeholder.setWaterReservoirVolumeMap(system.getWaterReservoirVolumeMap());
 				placeholder.setReservoirWithdrawalsMap(system.getReservoirWithdrawalsMap());
 				placeholder.setWaterDomesticPriceMap(system.getWaterDomesticPriceMap());
@@ -660,7 +660,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 				this.simulator.getConnection().removeConnectionListener(connectionPanel);
 				this.simulator.getConnection().removeConnectionListener(connectionToolbar);
 				this.simulator.removeUpdateListener(this);
-				this.simulator.getConnection().removeConnectionListener(simulationPane);
 				this.simulator.removeUpdateListener(simulationPane);
 				this.simulator.removeUpdateListener(societyPane);
 				this.simulator = null;
@@ -688,7 +687,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
 			this.simulationPane = new SimulationControlPane(this, this.simulator);
-			this.simulator.getConnection().addConnectionListener(simulationPane);
 			this.simulator.addUpdateListener(simulationPane);
 			nationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			JPanel leftPanel = new JPanel();

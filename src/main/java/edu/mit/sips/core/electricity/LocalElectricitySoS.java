@@ -19,7 +19,6 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.LocalInfrastructureSoS;
-import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
@@ -493,7 +492,7 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 	 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityProductionAndDistribution(edu.mit.sips.core.OptimizationOptions)
 	 */
 	@Override
-	public void optimizeElectricityProductionAndDistribution(OptimizationOptions optimizationOptions) {
+	public void optimizeElectricityProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
 		List<? extends ElectricityElement> elements = getInternalElements();
 
@@ -526,14 +525,12 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 					* (DefaultUnits.convert(getSociety().getWaterSystem().getWaterDomesticPrice(),
 							getSociety().getWaterSystem().getCurrencyUnits(),
 							getSociety().getWaterSystem().getWaterUnits(),
-							getCurrencyUnits(), getWaterUnits())
-							+ optimizationOptions.getDeltaDomesticWaterPrice())
+							getCurrencyUnits(), getWaterUnits()))
 							+ element.getPetroleumIntensityOfElectricityProduction()
 							* (DefaultUnits.convert(getSociety().getPetroleumSystem().getPetroleumDomesticPrice(),
 									getSociety().getPetroleumSystem().getCurrencyUnits(),
 									getSociety().getPetroleumSystem().getOilUnits(),
-									getCurrencyUnits(), getOilUnits())
-									+ optimizationOptions.getDeltaDomesticOilPrice());
+									getCurrencyUnits(), getOilUnits()));
 			initialValues[elements.indexOf(element)] 
 					= element.getElectricityProduction();
 
@@ -583,8 +580,7 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 					DefaultUnits.convert(city.getPetroleumSystem().getPetroleumDomesticPrice(),
 							city.getPetroleumSystem().getCurrencyUnits(),
 							city.getPetroleumSystem().getOilUnits(),
-							getCurrencyUnits(), getOilUnits())
-							+ optimizationOptions.getDeltaDomesticOilPrice();
+							getCurrencyUnits(), getOilUnits());
 			initialValues[2*elements.size() + cities.indexOf(city)] = 
 					Math.max(0,electricitySystem.getPetroleumConsumptionFromPrivateProduction());
 		}

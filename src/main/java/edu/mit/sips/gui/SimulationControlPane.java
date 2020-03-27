@@ -3,30 +3,24 @@ package edu.mit.sips.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingWorker;
 
-import edu.mit.sips.gui.event.ConnectionEvent;
-import edu.mit.sips.gui.event.ConnectionListener;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
 
 /**
  * The Class SimulationControlPanel.
  */
-public class SimulationControlPane extends JPanel implements ConnectionListener, UpdateListener {
+public class SimulationControlPane extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = -7014074954503228524L;
 
 	private final DataFrame frame;
@@ -34,138 +28,12 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	private final JSlider timeSlider;
 	private final AtomicBoolean working = new AtomicBoolean(false);
 
-	private final Action toggleConnection = 
-			new AbstractAction(null, Icons.DISCONNECTED) {
-		private static final long serialVersionUID = 8065337353804878751L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			working.set(true);
-			updateActions();
-			
-			new SwingWorker<Void,Void>() {
-				@Override
-				protected Void doInBackground() {
-					try {
-						if(simulator.getConnection().isConnected()) {
-							simulator.disconnect();
-						} else {
-							simulator.connect();
-						}
-					} catch (Exception ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(getParent(), 
-								ex.getMessage(), "Error", 
-								JOptionPane.ERROR_MESSAGE);
-					}
-					return null;
-				}
-				
-				@Override
-				protected void done() {
-					working.set(false);
-					updateActions();
-				}
-			}.execute();
-		}
-	};
-
-	private final Action autoOptimizeDistribution = 
-			new AbstractAction("Distribution") {
-		private static final long serialVersionUID = 4589751151727368209L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() instanceof JCheckBox) {
-				boolean selected = ((JCheckBox)e.getSource()).isSelected();
-				simulator.setAutoOptimizeDistribution(selected);
-				autoOptimizeProductionAndDistribution.setEnabled(selected);
-			}
-		}
-	};
-
-	private final Action autoOptimizeProductionAndDistribution = 
-			new AbstractAction("Production") {
-		private static final long serialVersionUID = 4589751151727368209L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() instanceof JCheckBox) {
-				boolean selected = ((JCheckBox)e.getSource()).isSelected();
-				simulator.setAutoOptimizeProductionAndDistribution(selected);
-				autoOptimizeDistribution.setEnabled(!selected);
-			}
-		}
-	};
-	
-	private final Action configureOptimization = 
-			new AbstractAction(null, Icons.CONFIGURATION) {
-		private static final long serialVersionUID = 1172926404685767961L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(getTopLevelAncestor(), new OptimizationOptionsPanel(
-					simulator.getScenario().getCountry(), simulator.getOptimizationOptions()),
-					"Configure Optimization Settings", JOptionPane.PLAIN_MESSAGE);
-		}
-	};
-
-	private final Action runOptimization = 
-			new AbstractAction(null, Icons.RECALC) {
-		private static final long serialVersionUID = 4589751151727368209L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			working.set(true);
-			updateActions();
-			
-			new SwingWorker<Void,Void>() {
-				@Override
-				protected Void doInBackground() {
-					try {
-						simulator.runOptimization();
-					} catch(Exception ex) {
-						JOptionPane.showMessageDialog(getTopLevelAncestor(), 
-								ex.getMessage(), "Error", 
-								JOptionPane.ERROR_MESSAGE);
-						ex.printStackTrace();
-					}
-					return null;
-				}
-				
-				@Override
-				protected void done() {
-					working.set(false);
-					updateActions();
-				}
-			}.execute();
-		}
-	};
-
 	private final Action initializeSim = new AbstractAction(null, Icons.INITIALIZE) {
 		private static final long serialVersionUID = 4589751151727368209L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			fireSimulationInitialize();
-		}
-	};
-
-	private final Action stepSim = new AbstractAction(null, Icons.STEP) {
-		private static final long serialVersionUID = 4589751151727368209L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			fireSimulationAdvance(1);
-		}
-	};
-
-	private final Action advanceSim = new AbstractAction(null, Icons.ADVANCE) {
-		private static final long serialVersionUID = 4589751151727368209L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			fireSimulationAdvance(5);
 		}
 	};
 
@@ -191,22 +59,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		this.simulator = simulator;
 		this.frame = frame;
 		
-		toggleConnection.putValue(Action.SHORT_DESCRIPTION, 
-				"Toggle the network connection.");
-		autoOptimizeDistribution.putValue(Action.SHORT_DESCRIPTION, 
-				"Optimize resource distribution at each time step.");
-		autoOptimizeProductionAndDistribution.putValue(Action.SHORT_DESCRIPTION, 
-				"Optimize resource production and distribution at each time step.");
-		configureOptimization.putValue(Action.SHORT_DESCRIPTION, 
-				"Edit optimization settings.");
-		runOptimization.putValue(Action.SHORT_DESCRIPTION, 
-				"Run the optimization routine.");
 		initializeSim.putValue(Action.SHORT_DESCRIPTION, 
 				"Initialize the simulation.");
-		stepSim.putValue(Action.SHORT_DESCRIPTION, 
-				"Step the simulation by one year.");
-		advanceSim.putValue(Action.SHORT_DESCRIPTION, 
-				"Advance the simulation by five years.");
 		endSim.putValue(Action.SHORT_DESCRIPTION, 
 				"Run the simulation until the end.");
 		
@@ -220,91 +74,15 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
 
-		// TODO buttonPanel.add(new JButton(toggleConnection));
 		buttonPanel.add(new JButton(initializeSim));
-		// TODO buttonPanel.add(new JButton(stepSim));
-		// TODO buttonPanel.add(new JButton(advanceSim));
 		buttonPanel.add(new JButton(endSim));
 
 		add(buttonPanel, BorderLayout.CENTER);
-
-		JPanel optimizationPanel = new JPanel();
-		optimizationPanel.setLayout(new GridBagLayout());
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 0;
-		c.gridy = 0;
-		c.anchor = GridBagConstraints.LINE_START;
-		optimizationPanel.add(new JLabel("Auto-optimize: "));
-		c.gridx++;
-		JCheckBox optimizeDistributionCheck = new JCheckBox(autoOptimizeDistribution);
-		optimizeDistributionCheck.setSelected(simulator.isAutoOptimizeDistribution());
-		optimizationPanel.add(optimizeDistributionCheck, c);
-		c.gridy++;
-		JCheckBox optimizeProductionCheck = new JCheckBox(autoOptimizeProductionAndDistribution);
-		optimizeProductionCheck.setSelected(simulator.isAutoOptimizeProductionAndDistribution());
-		optimizationPanel.add(optimizeProductionCheck, c);
-		c.gridy--;
-		c.gridx++;
-		c.gridheight = 2;
-		c.fill = GridBagConstraints.BOTH;
-		optimizationPanel.add(new JButton(configureOptimization), c);
-		c.gridx++;
-		optimizationPanel.add(new JButton(runOptimization), c);
-		// TODO add(optimizationPanel, BorderLayout.SOUTH);
 		
 		setMinimumSize(new Dimension(300,1));
 		
 		updateActions();
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.event.ConnectionListener#connectionEventOccurred(edu.mit.sips.gui.event.ConnectionEvent)
-	 */
-	@Override
-	public void connectionEventOccurred(ConnectionEvent e) {
-		if(e.getConnection().isConnected()) {
-			toggleConnection.putValue(
-					Action.SMALL_ICON, Icons.CONNECTED);
-		} else {
-			toggleConnection.putValue(
-					Action.SMALL_ICON, Icons.DISCONNECTED);
-		}
-	}
-
-	/**
-	 * Fire simulation advance.
-	 *
-	 * @param duration the duration
-	 */
-	private void fireSimulationAdvance(final long duration) {
-		final JPanel panel = this;
-		working.set(true);
-		updateActions();
-		
-		new SwingWorker<Void,Void>() {
-			@Override
-			protected Void doInBackground() {
-				try {
-					simulator.advanceSimulation(
-							new SimulationControlEvent.Advance(
-									panel, duration));
-				} catch(Exception ex) {
-					JOptionPane.showMessageDialog(getTopLevelAncestor(), 
-							ex.getMessage(), "Error", 
-							JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();
-				}
-				return null;
-			}
-			
-			@Override
-			protected void done() {
-				working.set(false);
-				updateActions();
-			}
-		}.execute();
-	}
-
 
 	/**
 	 * Fire simulation advance to end.
@@ -382,22 +160,8 @@ public class SimulationControlPane extends JPanel implements ConnectionListener,
 	 * Update actions.
 	 */
 	private void updateActions() {
-		toggleConnection.setEnabled(!working.get());
-		autoOptimizeDistribution.setEnabled(!working.get()
-				&& !simulator.isAutoOptimizeProductionAndDistribution());
-		autoOptimizeProductionAndDistribution.setEnabled(!working.get()
-				&& simulator.isAutoOptimizeDistribution());
-		runOptimization.setEnabled(!working.get()
-				&& simulator.isInitialized() 
-				&& !simulator.isCompleted());
 		initializeSim.setEnabled(!working.get()
-				&& (!simulator.isInitialized() || simulator.isCompleted())); // TODO
-		stepSim.setEnabled(!working.get()
-				&& simulator.isInitialized() 
-				&& !simulator.isCompleted());
-		advanceSim.setEnabled(!working.get()
-				&& simulator.isInitialized() 
-				&& !simulator.isCompleted());
+				&& (!simulator.isInitialized() || simulator.isCompleted()));
 		endSim.setEnabled(!working.get()
 				&& simulator.isInitialized() 
 				&& !simulator.isCompleted());

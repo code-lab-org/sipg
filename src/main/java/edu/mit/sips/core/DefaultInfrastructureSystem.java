@@ -1,10 +1,27 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class DefaultInfrastructureSystem.
+ * A default implementation of the infrastructure system interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	protected static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
@@ -63,24 +80,21 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	}
 
 	@Override
-	public void initialize(long time) {
-	}
+	public void initialize(long time) { }
 	
+	@Override
+	public boolean isLocal() {
+		return false;
+	}
+
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
 	}
 
 	@Override
-	public void tick() {
-	}
+	public void tick() { }
 
 	@Override
-	public void tock() {
-	}
-
-	@Override
-	public boolean isLocal() {
-		return false;
-	}
+	public void tock() { }
 }

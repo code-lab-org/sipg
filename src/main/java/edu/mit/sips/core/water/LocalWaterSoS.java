@@ -19,7 +19,6 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.LocalInfrastructureSoS;
-import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.DefaultUnits;
@@ -588,7 +587,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	 * @see edu.mit.sips.core.water.WaterSoS.Local#optimizeWaterProductionAndDistribution(edu.mit.sips.core.OptimizationOptions)
 	 */
 	@Override
-	public void optimizeWaterProductionAndDistribution(OptimizationOptions optimizationOptions) {
+	public void optimizeWaterProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
 		List<? extends WaterElement> elements = getInternalElements();
 
@@ -629,8 +628,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 							getSociety().getElectricitySystem().getElectricityDomesticPrice(),
 							getSociety().getElectricitySystem().getCurrencyUnits(), 
 							getSociety().getElectricitySystem().getElectricityUnits(),
-							getCurrencyUnits(), getElectricityUnits())
-							+ optimizationOptions.getDeltaDomesticElectricityPrice());
+							getCurrencyUnits(), getElectricityUnits()));
 			initialValues[elements.indexOf(element)] 
 					= element.getWaterProduction();
 
@@ -638,14 +636,12 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 			costCoefficients[elements.size() + elements.indexOf(element)] 
 					= element.getVariableOperationsCostOfWaterDistribution()
 					+ element.getReservoirIntensityOfWaterProduction()
-					* optimizationOptions.getDeltaAquiferWaterPrice()
 					+ element.getElectricalIntensityOfWaterDistribution()
 					* (DefaultUnits.convert(
 							getSociety().getElectricitySystem().getElectricityDomesticPrice(),
 							getSociety().getElectricitySystem().getCurrencyUnits(), 
 							getSociety().getElectricitySystem().getElectricityUnits(),
-							getCurrencyUnits(), getElectricityUnits())
-							+ optimizationOptions.getDeltaDomesticElectricityPrice());
+							getCurrencyUnits(), getElectricityUnits()));
 			initialValues[elements.size() + elements.indexOf(element)] 
 					= element.getWaterInput();
 		}
@@ -700,8 +696,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 
 			// Set import cost in each city.
 			costCoefficients[2*elements.size() + cities.indexOf(city)] 
-					= city.getWaterSystem().getWaterImportPrice() 
-					+ optimizationOptions.getDeltaImportWaterPrice();
+					= city.getWaterSystem().getWaterImportPrice();
 			initialValues[2*elements.size() + cities.indexOf(city)] 
 					= waterSystem.getWaterImport();
 

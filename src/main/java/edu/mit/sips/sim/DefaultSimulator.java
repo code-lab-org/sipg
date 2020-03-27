@@ -6,7 +6,6 @@ import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 
-import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
@@ -29,7 +28,6 @@ public class DefaultSimulator implements Simulator {
 	
 	protected boolean autoOptimizeDistribution = true;
 	protected boolean autoOptimizeProductionAndDistribution = true;
-	protected final OptimizationOptions optimizationOptions = new OptimizationOptions();
 
 	protected final AtomicBoolean initialized = new AtomicBoolean(false);
 	protected final AtomicBoolean completed = new AtomicBoolean(false);
@@ -167,11 +165,6 @@ public class DefaultSimulator implements Simulator {
 	public long getEndTime() {
 		return endTime;
 	}
-
-	@Override
-	public OptimizationOptions getOptimizationOptions() {
-		return optimizationOptions;
-	}
 	
 	@Override
 	public long getStartTime() {
@@ -254,22 +247,22 @@ public class DefaultSimulator implements Simulator {
 		if(autoOptimizeProductionAndDistribution) {
 			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {
 				((AgricultureSoS.Local)scenario.getCountry().getAgricultureSystem())
-				.optimizeFoodProductionAndDistribution(optimizationOptions);
+				.optimizeFoodProductionAndDistribution();
 			}
 			
 			if(scenario.getCountry().getWaterSystem() instanceof WaterSoS.Local) {
 				((WaterSoS.Local)scenario.getCountry().getWaterSystem())
-				.optimizeWaterProductionAndDistribution(optimizationOptions);
+				.optimizeWaterProductionAndDistribution();
 			}
 			
 			if(scenario.getCountry().getElectricitySystem() instanceof ElectricitySoS.Local) {
 				((ElectricitySoS.Local)scenario.getCountry().getElectricitySystem())
-				.optimizeElectricityProductionAndDistribution(optimizationOptions);
+				.optimizeElectricityProductionAndDistribution();
 			}
 			
 			if(scenario.getCountry().getPetroleumSystem() instanceof PetroleumSoS.Local) {
 				((PetroleumSoS.Local)scenario.getCountry().getPetroleumSystem())
-				.optimizePetroleumProductionAndDistribution(optimizationOptions);
+				.optimizePetroleumProductionAndDistribution();
 			}
 		} else if(autoOptimizeDistribution) {
 			if(scenario.getCountry().getAgricultureSystem() instanceof AgricultureSoS.Local) {

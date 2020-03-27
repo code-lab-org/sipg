@@ -1,7 +1,6 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.InfrastructureSoS;
-import edu.mit.sips.core.OptimizationOptions;
 
 /**
  * The Interface AgricultureSoS.
@@ -26,10 +25,8 @@ public interface AgricultureSoS extends InfrastructureSoS, AgricultureSystem {
 
 		/**
 		 * Optimize food production and distribution.
-		 *
-		 * @param optimizationOptions the optimization options
 		 */
-		public void optimizeFoodProductionAndDistribution(OptimizationOptions optimizationOptions);
+		public void optimizeFoodProductionAndDistribution();
 		
 		/**
 		 * Gets the financial security score.

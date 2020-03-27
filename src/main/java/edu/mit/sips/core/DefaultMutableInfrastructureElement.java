@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
@@ -5,9 +20,10 @@ import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
-
 /**
- * The Class DefaultMutableElement.
+ * A default implementation of the mutable infrastructure element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class DefaultMutableInfrastructureElement implements MutableInfrastructureElement {
 	private String templateName;
@@ -15,97 +31,61 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	private String origin = "", destination = "";
 	private MutableLifecycleModel lifecycleModel = new DefaultLifecycleModel();
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return lifecycleModel.getCurrencyTimeUnits();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return lifecycleModel.getCurrencyUnits();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#getDestination()
-	 */
 	@Override
 	public final String getDestination() {
 		return destination;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#getLifecycleModel()
-	 */
 	@Override
 	public final MutableLifecycleModel getLifecycleModel() {
 		return lifecycleModel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#getName()
-	 */
 	@Override
 	public final String getName() {
 		return name;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#getOrigin()
-	 */
 	@Override
 	public final String getOrigin() {
 		return origin;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.MutableInfrastructureElement#getTemplate()
-	 */
 	@Override
 	public final String getTemplateName() {
 		return templateName;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#setDestination(String)
-	 */
 	@Override
 	public final void setDestination(String destination) {
 		this.destination = destination;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#setLifecycleModel(edu.mit.sips.LifecycleModel)
-	 */
 	@Override
 	public final void setLifecycleModel(MutableLifecycleModel lifecycleModel) {
 		this.lifecycleModel = lifecycleModel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#setName(java.lang.String)
-	 */
 	@Override
 	public final void setName(String name) {
 		this.name = name;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#setOrigin(int)
-	 */
 	@Override
 	public final void setOrigin(String origin) {
 		this.origin = origin;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.MutableInfrastructureElement#setTemplateName(java.lang.String)
-	 */
 	@Override
 	public final void setTemplateName(String templateName) {
 		this.templateName = templateName;

@@ -19,7 +19,6 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.LocalInfrastructureSoS;
-import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.sim.util.DefaultUnits;
@@ -478,7 +477,7 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumProductionAndDistribution(double)
 	 */
 	@Override
-	public void optimizePetroleumProductionAndDistribution(OptimizationOptions optimizationOptions) {
+	public void optimizePetroleumProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
 		List<? extends PetroleumElement> elements = getInternalElements();
 
@@ -514,14 +513,12 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 			costCoefficients[elements.size() + elements.indexOf(element)] 
 					= element.getVariableOperationsCostOfPetroleumDistribution()
 					+ element.getReservoirIntensityOfPetroleumProduction() 
-					* optimizationOptions.getDeltaReservoirOilPrice()
 					+ element.getElectricalIntensityOfPetroleumDistribution()
 					* (DefaultUnits.convert(
 							getSociety().getElectricitySystem().getElectricityDomesticPrice(),
 							getSociety().getElectricitySystem().getCurrencyUnits(),
 							getSociety().getElectricitySystem().getElectricityUnits(),
-							getCurrencyUnits(), getElectricityUnits())
-							+ optimizationOptions.getDeltaDomesticElectricityPrice());
+							getCurrencyUnits(), getElectricityUnits()));
 			initialValues[elements.size() + elements.indexOf(element)] 
 					= element.getPetroleumInput();
 		}
@@ -573,14 +570,12 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 
 			// Set import cost in each city.
 			costCoefficients[2*elements.size() + cities.indexOf(city)] 
-					= city.getPetroleumSystem().getPetroleumImportPrice() 
-					+ optimizationOptions.getDeltaImportOilPrice();
+					= city.getPetroleumSystem().getPetroleumImportPrice();
 			initialValues[2*elements.size() + cities.indexOf(city)] 
 					= energySystem.getPetroleumImport();
 			// Set export price in each city.
 			costCoefficients[2*elements.size() + cities.size() + cities.indexOf(city)] 
-					= -city.getPetroleumSystem().getPetroleumExportPrice() 
-					- optimizationOptions.getDeltaExportOilPrice();
+					= -city.getPetroleumSystem().getPetroleumExportPrice();
 			initialValues[2*elements.size() + cities.size() + cities.indexOf(city)] 
 					= energySystem.getPetroleumExport();
 		}

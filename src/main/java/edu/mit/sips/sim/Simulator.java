@@ -3,7 +3,6 @@
  */
 package edu.mit.sips.sim;
 
-import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.gui.SimulationControlListener;
 import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.scenario.Scenario;
@@ -47,13 +46,6 @@ public interface Simulator extends SimulationControlListener {
 	 * @return the end time
 	 */
 	long getEndTime();
-
-	/**
-	 * Gets the optimization options.
-	 *
-	 * @return the optimization options
-	 */
-	OptimizationOptions getOptimizationOptions();
 
 	/**
 	 * Gets the start time.

@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import java.util.HashMap;
@@ -6,7 +21,11 @@ import java.util.Map;
 import edu.mit.sips.sim.util.CurrencyUnits;
 
 /**
- * The Class LocalInfrastructureSystem.
+ * A locally-controlled implementation of the infrastructure system interface.
+ * 
+ * Includes variables to record cash flow and capital expenses over time.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSystem implements InfrastructureSystem.Local {
 	private double cumulativeCapitalExpense;
@@ -14,22 +33,21 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 	private double cumulativeCashFlow;
 	private transient double nextTotalCashFlow;
 
-	
 	protected transient long time;
-	private transient final Map<Long, Double> cashFlowMap = 
+	private transient final Map<Long, Double> cashFlowLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> capitalExpenseMap = 
+	private transient final Map<Long, Double> capitalExpenseLog = 
 			new HashMap<Long, Double>();
 	
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local infrastructure system.
 	 */
 	protected LocalInfrastructureSystem() {
 		super("Infrastructure");
 	}
 	
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local infrastructure system.
 	 *
 	 * @param name the name
 	 */
@@ -37,9 +55,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		super(name);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getCapitalExpense()
-	 */
 	@Override
 	public double getCapitalExpense() {
 		double value = 0;
@@ -50,50 +65,38 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 	}
 
 	/**
-	 * Gets the capital expense map.
+	 * Gets the capital expense log.
 	 *
-	 * @return the capital expense map
+	 * @return the capital expense log
 	 */
-	public Map<Long, Double> getCapitalExpenseMap() {
-		return new HashMap<Long, Double>(capitalExpenseMap);
+	public Map<Long, Double> getCapitalExpenseLog() {
+		return new HashMap<Long, Double>(capitalExpenseLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
-	 */
 	@Override
 	public double getCashFlow() {
 		return getTotalRevenue() - getTotalExpense();
 	}
 
 	/**
-	 * Gets the cash flow map.
+	 * Gets the cash flow log.
 	 *
 	 * @return the cash flow map
 	 */
-	public Map<Long, Double> getCashFlowMap() {
-		return new HashMap<Long, Double>(cashFlowMap);
+	public Map<Long, Double> getCashFlowLog() {
+		return new HashMap<Long, Double>(cashFlowLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCumulativeCapitalExpense()
-	 */
 	@Override
 	public double getCumulativeCapitalExpense() {
 		return cumulativeCapitalExpense;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getCumulativeCashFlow()
-	 */
 	@Override
 	public double getCumulativeCashFlow() {
 		return cumulativeCashFlow;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getDecommissionExpense()
-	 */
 	@Override
 	public double getDecommissionExpense() {
 		double value = 0;
@@ -103,9 +106,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getLifecycleExpense()
-	 */
 	@Override
 	public double getLifecycleExpense() {
 		 return getCapitalExpense() 
@@ -113,9 +113,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 			+ getDecommissionExpense();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSystem#getName()
-	 */
 	@Override
 	public String getName() {
 		if(getSociety() != null) {
@@ -124,9 +121,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		return super.getName();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getOperationsExpense()
-	 */
 	@Override
 	public double getOperationsExpense() {
 		double value = 0;
@@ -136,9 +130,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalExpense()
-	 */
 	@Override
 	public double getTotalExpense() {
 		return getLifecycleExpense()  
@@ -147,9 +138,6 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 				+ getImportExpense();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getTotalRevenue()
-	 */
 	@Override
 	public double getTotalRevenue() {
 		return getSalesRevenue() 
@@ -157,41 +145,32 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 				+ getExportRevenue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		this.time = time;
 		cumulativeCapitalExpense = 0;
 		cumulativeCashFlow = 0;
-		capitalExpenseMap.clear();
-		cashFlowMap.clear();
+		capitalExpenseLog.clear();
+		cashFlowLog.clear();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
+	@Override
+	public boolean isLocal() {
+		return true;
+	}
+	
 	@Override
 	public void tick() {
 		nextTotalCapitalExpense = getCapitalExpense();
-		capitalExpenseMap.put(time, getCapitalExpense());
+		capitalExpenseLog.put(time, getCapitalExpense());
 		nextTotalCashFlow = getCashFlow();
-		cashFlowMap.put(time, getCashFlow());
+		cashFlowLog.put(time, getCashFlow());
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
+
 	@Override
 	public void tock() {
 		time++;
 		this.cumulativeCapitalExpense += nextTotalCapitalExpense;
 		this.cumulativeCashFlow += nextTotalCashFlow;
-	}
-
-	@Override
-	public boolean isLocal() {
-		return true;
 	}
 }
