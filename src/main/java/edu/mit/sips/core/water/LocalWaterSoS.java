@@ -32,6 +32,7 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private List<Double> aquiferSecurityHistory = new ArrayList<Double>();
 	
 	public double getAquiferLifetime() {
 		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
@@ -772,5 +773,88 @@ public class LocalWaterSoS extends LocalInfrastructureSoS implements WaterSoS.Lo
 			return value / getNestedSystems().size();
 		}
 		return 0;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		aquiferSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.aquiferSecurityHistory.add(computeAquiferSecurityScore());
+	}
+	
+	/**
+	 * Compute aquifer security score.
+	 *
+	 * @return the double
+	 */
+	private double computeAquiferSecurityScore() {
+		double minLifetime = 20;
+		double maxLifetime = 200;
+		if(getAquiferLifetime() < minLifetime) {
+			return 0;
+		} else if(getAquiferLifetime() > maxLifetime) {
+			return 1000;
+		} else {
+			return 1000 * (getAquiferLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+	
+	@Override
+	public double getAquiferSecurityScore() {
+		double value = 0;
+		for(double item : aquiferSecurityHistory) {
+			value += item;
+		}
+		return value / aquiferSecurityHistory.size();
+	}
+
+	@Override
+	public double getFinancialSecurityScore(long year) {
+		double dystopiaTotal = -10e9;
+		double utopiaTotal = 0;
+		double growthRate = 0.06;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCashFlow() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCashFlow() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCashFlow() - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getPoliticalPowerScore(long year) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 15e9;
+		double growthRate = 0.06;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCapitalExpense() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCapitalExpense() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCapitalExpense() - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getAggregateScore(long year) {
+		return (getAquiferSecurityScore() + getFinancialSecurityScore(year) + getPoliticalPowerScore(year))/3d;
 	}
 }

@@ -19,6 +19,7 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private List<Double> aquiferSecurityHistory = new ArrayList<Double>();
 
 	/**
 	 * Instantiates a new default water so s.
@@ -159,5 +160,43 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		aquiferSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.aquiferSecurityHistory.add(computeAquiferSecurityScore());
+	}
+	
+	/**
+	 * Compute aquifer security score.
+	 *
+	 * @return the double
+	 */
+	private double computeAquiferSecurityScore() {
+		double minLifetime = 20;
+		double maxLifetime = 200;
+		if(getAquiferLifetime() < minLifetime) {
+			return 0;
+		} else if(getAquiferLifetime() > maxLifetime) {
+			return 1000;
+		} else {
+			return 1000 * (getAquiferLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+	
+	@Override
+	public double getAquiferSecurityScore() {
+		double value = 0;
+		for(double item : aquiferSecurityHistory) {
+			value += item;
+		}
+		return value / aquiferSecurityHistory.size();
 	}
 }

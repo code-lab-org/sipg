@@ -9,6 +9,13 @@ import edu.mit.sips.core.OptimizationOptions;
 public interface WaterSoS extends InfrastructureSoS, WaterSystem {
 	
 	/**
+	 * Gets the aquifer security score.
+	 *
+	 * @return the aquifer security score
+	 */
+	public double getAquiferSecurityScore();
+	
+	/**
 	 * The Interface Local.
 	 */
 	public static interface Local extends WaterSoS, WaterSystem.Local {
@@ -24,5 +31,29 @@ public interface WaterSoS extends InfrastructureSoS, WaterSystem {
 		 * @param optimizationOptions the optimization options
 		 */
 		public void optimizeWaterProductionAndDistribution(OptimizationOptions optimizationOptions);
+		
+		/**
+		 * Gets the financial security score.
+		 *
+		 * @param year the year
+		 * @return the financial security score
+		 */
+		public double getFinancialSecurityScore(long year);
+		
+		/**
+		 * Gets the political power score.
+		 *
+		 * @param year the year
+		 * @return the political power score
+		 */
+		public double getPoliticalPowerScore(long year);
+		
+		/**
+		 * Gets the aggregate score.
+		 *
+		 * @param year the year
+		 * @return the aggregate score
+		 */
+		public double getAggregateScore(long year);
 	}
 }
