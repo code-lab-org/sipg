@@ -21,6 +21,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.LocalInfrastructureSoS;
 import edu.mit.sips.core.OptimizationOptions;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
@@ -661,5 +662,52 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 			value += item;
 		}
 		return value / reservoirSecurityHistory.size();
+	}
+
+	@Override
+	public double getFinancialSecurityScore(long year, ElectricitySoS.Local electricitySystem) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 500e9;
+		double growthRate = 0.04;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		double cumulativeCashFlow = getCumulativeCashFlow() + electricitySystem.getCumulativeCashFlow();
+		if(cumulativeCashFlow < minValue) {
+			return 0;
+		} else if(cumulativeCashFlow > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(cumulativeCashFlow - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getPoliticalPowerScore(long year, ElectricitySoS.Local electricitySystem) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 50e9;
+		double growthRate = 0.03;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		double cumulativeCapitalExpense = getCumulativeCapitalExpense() + electricitySystem.getCumulativeCapitalExpense();
+		if(cumulativeCapitalExpense < minValue) {
+			return 0;
+		} else if(cumulativeCapitalExpense > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(cumulativeCapitalExpense - minValue)/(maxValue - minValue);
+		}
+	}
+
+	@Override
+	public double getAggregateScore(long year, ElectricitySoS.Local electricitySystem) {
+		return (getReservoirSecurityScore() + getFinancialSecurityScore(year, electricitySystem) + getPoliticalPowerScore(year, electricitySystem))/3d;
 	}
 }

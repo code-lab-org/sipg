@@ -23,60 +23,15 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
-import edu.mit.sips.core.electricity.LocalElectricitySoS;
-import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
-import edu.mit.sips.core.water.LocalWaterSoS;
+import edu.mit.sips.core.agriculture.AgricultureSoS;
+import edu.mit.sips.core.electricity.ElectricitySoS;
+import edu.mit.sips.core.petroleum.PetroleumSoS;
+import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.Scenario;
 
 public class ScorePanel extends InfrastructureSystemPanel {
 	private static final long serialVersionUID = 355808870154994451L;
-
-	private static double getInvestmentDystopia(String name) {
-		switch(name) {
-		case "Energy":
-			return 0;
-		}
-		return 0;
-	}
-	private static double getInvestmentGrowthRate(String name) {
-		switch(name) {
-		case "Energy":
-			return 0.03;
-		}
-		return 0;
-	}
-
-	private static double getInvestmentUtopia(String name) {
-		switch(name) {
-		case "Energy":
-			return 50e9;
-		}
-		return 0;
-	}
-	private static double getProfitDystopia(String name) {
-		switch(name) {
-		case "Energy":
-			return 0e9;
-		}
-		return 0;
-	}
-	private static double getProfitGrowthRate(String name) {
-		switch(name) {
-		case "Energy":
-			return 0.04;
-		}
-		return 0;
-	}
-
-	private static double getProfitUtopia(String name) {
-		switch(name) {
-		case "Energy":
-			return 500e9;
-		}
-		return 0;
-	}
 
 	private final Country country;
 	private final Scenario scenario;
@@ -143,7 +98,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write("Aquifer Security, ");
 			fw.write("Reservoir Security, ");
 
-			if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
+			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
 				agricultureScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, agriculturePlayerScore);
@@ -156,7 +111,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Agriculture Investment, ");
 				fw.write("Agriculture Score, ");
 			}
-			if(country.getWaterSystem() instanceof LocalWaterSoS) {
+			if(country.getWaterSystem() instanceof WaterSoS.Local) {
 				waterScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, waterPlayerScore);
@@ -169,8 +124,8 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				fw.write("Water Investment, ");
 				fw.write("Water Score, ");
 			}
-			if(country.getPetroleumSystem() instanceof LocalPetroleumSoS
-					&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
+			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local
+					&& country.getElectricitySystem() instanceof ElectricitySoS.Local) {
 				energyScorePanel = createStackedAreaChart(null, "Score", null,
 						new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
 						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, energyPlayerScore);
@@ -193,22 +148,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		}
 	}
 
-	private double getTotalScoreAtYear(int year, double value, 
-			double dystopiaTotal, double utopiaTotal, double growthRate) {
-		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		
-		if(value < minValue) {
-			return 0;
-		} else if(value > maxValue) {
-			return 1000;
-		} else {
-			return 1000*(value - minValue)/(maxValue - minValue);
-		}
-	}
-
 	private void initialize() {
 		scoreLabel.setText("");
 		
@@ -226,27 +165,6 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		
 		overBudgetYear = 0;
 		overBudgetValue = 0;
-	}
-	
-	private double getEnergyScore(double reservoirSecurity, 
-			double sectorProfit, double sectorInvestment) {
-		return (reservoirSecurity + sectorProfit + sectorInvestment)/3d;
-	}
-	
-	private double getSectorProfit(int year, LocalPetroleumSoS system1,
-			LocalElectricitySoS system2) {
-		return getTotalScoreAtYear(year, system1.getCumulativeCashFlow() 
-				+ system2.getCumulativeCashFlow(),
-				getProfitDystopia("Energy"), getProfitUtopia("Energy"), 
-				getProfitGrowthRate("Energy"));
-	}
-	
-	private double getSectorInvestment(int year, LocalPetroleumSoS system1,
-			LocalElectricitySoS system2) {
-		return getTotalScoreAtYear(year, system1.getCumulativeCapitalExpense()
-				+ system2.getCumulativeCapitalExpense(),
-				getInvestmentDystopia("Energy"), getInvestmentUtopia("Energy"), 
-				getInvestmentGrowthRate("Energy"));
 	}
 
 	@Override
@@ -266,46 +184,40 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write(aquiferScore + ", ");
 			fw.write(reservoirScore + ", ");
 			
-			if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {	
-				double politicalScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getPoliticalPowerScore(year);
-				double financialScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getFinancialSecurityScore(year);
-				double aggregateScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getAggregateScore(year);
+			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {	
+				double politicalScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getPoliticalPowerScore(year);
+				double financialScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getFinancialSecurityScore(year);
+				double aggregateScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getAggregateScore(year);
 
 				fw.write(financialScore + ", ");
 				fw.write(politicalScore + ", ");
 				fw.write(aggregateScore + ", ");
 			}
-			if(country.getWaterSystem() instanceof LocalWaterSoS) {
-				double politicalScore = ((LocalWaterSoS) country.getWaterSystem()).getPoliticalPowerScore(year);
-				double financialScore = ((LocalWaterSoS) country.getWaterSystem()).getFinancialSecurityScore(year);
-				double aggregateScore = ((LocalWaterSoS) country.getWaterSystem()).getAggregateScore(year);
+			if(country.getWaterSystem() instanceof WaterSoS.Local) {
+				double politicalScore = ((WaterSoS.Local) country.getWaterSystem()).getPoliticalPowerScore(year);
+				double financialScore = ((WaterSoS.Local) country.getWaterSystem()).getFinancialSecurityScore(year);
+				double aggregateScore = ((WaterSoS.Local) country.getWaterSystem()).getAggregateScore(year);
 
 				fw.write(financialScore + ", ");
 				fw.write(politicalScore + ", ");
 				fw.write(aggregateScore + ", ");
 			}
-			if(country.getPetroleumSystem() instanceof LocalPetroleumSoS
-					&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
-				double sectorInvest = getSectorInvestment(year,
-						(LocalPetroleumSoS) country.getPetroleumSystem(),
-						(LocalElectricitySoS) country.getElectricitySystem());
-				double sectorProfit = getSectorProfit(year,
-						(LocalPetroleumSoS) country.getPetroleumSystem(),
-						(LocalElectricitySoS) country.getElectricitySystem());
+			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local
+					&& country.getElectricitySystem() instanceof ElectricitySoS.Local) {
+				double politicalScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getPoliticalPowerScore(
+						year, (ElectricitySoS.Local) country.getElectricitySystem());
+				double financialScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getFinancialSecurityScore(
+						year, (ElectricitySoS.Local) country.getElectricitySystem());
+				double aggregateScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getAggregateScore(
+						year, (ElectricitySoS.Local) country.getElectricitySystem());
 
-				fw.write(sectorProfit + ", ");
-				fw.write(sectorInvest + ", ");
-				fw.write(getEnergyScore(reservoirScore, sectorProfit, 
-						sectorInvest) + ", ");
+				fw.write(financialScore + ", ");
+				fw.write(politicalScore + ", ");
+				fw.write(aggregateScore + ", ");
 			}
-
-			double nationalProfit = getTotalScoreAtYear(year, 
-					country.getCumulativeCashFlow(),
-					getProfitDystopia("Country"), getProfitUtopia("Country"), 
-					getProfitGrowthRate("Country"));
 
 			fw.write(overBudgetYear + ", ");
-			fw.write(nationalProfit + ", ");
+			fw.write(country.getFinancialSecurityScore(year) + ", ");
 			fw.write(country.getAggregatedScore(year) + "\n");
 			fw.close();
 		} catch (IOException e) {
@@ -446,69 +358,52 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		double aquiferScore = country.getWaterSystem().getAquiferSecurityScore();
 		double reservoirScore = country.getPetroleumSystem().getReservoirSecurityScore();
 
-		if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
-			double politicalScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getPoliticalPowerScore(year);
-			double financialScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getFinancialSecurityScore(year);
-			double aggregateScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getAggregateScore(year);
+		if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {
+			double politicalScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getPoliticalPowerScore(year);
+			double financialScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getFinancialSecurityScore(year);
+			double aggregateScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getAggregateScore(year);
 
-			updateSeries(agriculturePlayerScore, "Food Security", 
-					year, foodScore);
-			updateSeries(agriculturePlayerScore, "Agricultural Investment", 
-					year, politicalScore);
-			updateSeries(agriculturePlayerScore, "Agricultural Profit", 
-					year, financialScore);
-
-			updateSeries(agriculturePlayerScore, "Total Score", 
-					year, aggregateScore);
+			updateSeries(agriculturePlayerScore, "Food Security", year, foodScore);
+			updateSeries(agriculturePlayerScore, "Agricultural Investment", year, politicalScore);
+			updateSeries(agriculturePlayerScore, "Agricultural Profit", year, financialScore);
+			updateSeries(agriculturePlayerScore, "Total Score", year, aggregateScore);
 			String scoreText = "Round " + roundNumber + " Agriculture Score: " 
 					+ NumberFormat.getIntegerInstance().format(aggregateScore);
 			agricultureScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
 				scoreLabel.getText() + ", ") + scoreText);
 		}
-		if(country.getWaterSystem() instanceof LocalWaterSoS) {
-			double politicalScore = ((LocalWaterSoS) country.getWaterSystem()).getPoliticalPowerScore(year);
-			double financialScore = ((LocalWaterSoS) country.getWaterSystem()).getFinancialSecurityScore(year);
-			double aggregateScore = ((LocalWaterSoS) country.getWaterSystem()).getAggregateScore(year);
+		if(country.getWaterSystem() instanceof WaterSoS.Local) {
+			double politicalScore = ((WaterSoS.Local) country.getWaterSystem()).getPoliticalPowerScore(year);
+			double financialScore = ((WaterSoS.Local) country.getWaterSystem()).getFinancialSecurityScore(year);
+			double aggregateScore = ((WaterSoS.Local) country.getWaterSystem()).getAggregateScore(year);
 
-			updateSeries(waterPlayerScore, "Aquifer Security", 
-					year, aquiferScore);
-			updateSeries(waterPlayerScore, "Water Investment", 
-					year, politicalScore);
-			updateSeries(waterPlayerScore, "Water Profit", 
-					year, financialScore);
-
-			updateSeries(waterPlayerScore, "Total Score", 
-					year, aggregateScore);
+			updateSeries(waterPlayerScore, "Aquifer Security", year, aquiferScore);
+			updateSeries(waterPlayerScore, "Water Investment", year, politicalScore);
+			updateSeries(waterPlayerScore, "Water Profit", year, financialScore);
+			updateSeries(waterPlayerScore, "Total Score", year, aggregateScore);
 			String scoreText = "Round " + roundNumber + " Water Score: " 
 					+ NumberFormat.getIntegerInstance().format(aggregateScore);
 			waterScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
 				scoreLabel.getText() + ", ") + scoreText);
 		}
-		if(country.getPetroleumSystem() instanceof LocalPetroleumSoS 
-				&& country.getElectricitySystem() instanceof LocalElectricitySoS) {
-			double sectorInvest = getSectorInvestment(year,
-					(LocalPetroleumSoS) country.getPetroleumSystem(),
-					(LocalElectricitySoS) country.getElectricitySystem());
-			double sectorProfit = getSectorProfit(year,
-					(LocalPetroleumSoS) country.getPetroleumSystem(),
-					(LocalElectricitySoS) country.getElectricitySystem());
+		if(country.getPetroleumSystem() instanceof PetroleumSoS.Local 
+				&& country.getElectricitySystem() instanceof ElectricitySoS.Local) {
+			double politicalScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getPoliticalPowerScore(
+					year, (ElectricitySoS.Local) country.getElectricitySystem());
+			double financialScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getFinancialSecurityScore(
+					year, (ElectricitySoS.Local) country.getElectricitySystem());
+			double aggregateScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getAggregateScore(
+					year, (ElectricitySoS.Local) country.getElectricitySystem());
 
-			updateSeries(energyPlayerScore, "Oil Reservoir Security", 
-					year, reservoirScore);
-			updateSeries(energyPlayerScore, "Energy Investment", 
-					year, sectorInvest);
-			updateSeries(energyPlayerScore, "Energy Profit", 
-					year, sectorProfit);
+			updateSeries(energyPlayerScore, "Oil Reservoir Security", year, reservoirScore);
+			updateSeries(energyPlayerScore, "Energy Investment", year, politicalScore);
+			updateSeries(energyPlayerScore, "Energy Profit", year, financialScore);
 
-			double totalScore = getEnergyScore(reservoirScore, 
-					sectorProfit, sectorInvest);
-
-			updateSeries(energyPlayerScore, "Total Score", 
-					year, totalScore);
+			updateSeries(energyPlayerScore, "Total Score", year, aggregateScore);
 			String scoreText = "Round " + roundNumber + " Energy Score: " 
-					+ NumberFormat.getIntegerInstance().format(totalScore);
+					+ NumberFormat.getIntegerInstance().format(aggregateScore);
 			energyScoreLabel.setText(scoreText);
 			scoreLabel.setText((scoreLabel.getText().isEmpty()?"":
 				scoreLabel.getText() + ", ") + scoreText);
@@ -521,19 +416,13 @@ public class ScorePanel extends InfrastructureSystemPanel {
 
 		double financialScore = country.getFinancialSecurityScore(year);
 
-		updateSeries(teamScore, "Food Security", 
-				year, foodScore);
-		updateSeries(teamScore, "Aquifer Security", 
-				year, aquiferScore);
-		updateSeries(teamScore, "Oil Reservoir Security", 
-				year, reservoirScore);
-		updateSeries(teamScore, "National Profit", 
-				year, financialScore);
+		updateSeries(teamScore, "Food Security", year, foodScore);
+		updateSeries(teamScore, "Aquifer Security", year, aquiferScore);
+		updateSeries(teamScore, "Oil Reservoir Security", year, reservoirScore);
+		updateSeries(teamScore, "National Profit", year, financialScore);
 
 		double aggregateScore = country.getAggregatedScore(year);
-
-		updateSeries(teamScore, "Total Score", 
-				year, aggregateScore);
+		updateSeries(teamScore, "Total Score", year, aggregateScore);
 		String scoreText = "Round " + roundNumber + " Team Score: " 
 				+ NumberFormat.getIntegerInstance().format(aggregateScore)
 				+ (overBudgetYear>0?"* (Over budget in " + overBudgetYear + ")":"");
