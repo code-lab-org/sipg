@@ -63,8 +63,7 @@ public abstract class LocalInfrastructureSystem extends DefaultInfrastructureSys
 	 */
 	@Override
 	public double getCashFlow() {
-		return getTotalRevenue() 
-				- getTotalExpense();
+		return getTotalRevenue() - getTotalExpense();
 	}
 
 	/**

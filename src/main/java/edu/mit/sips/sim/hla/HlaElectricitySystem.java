@@ -40,7 +40,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		PETROLEUM_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
 		ELECTRICITY_DOMESTIC_PRICE_ATTRIBUTE
@@ -52,8 +52,8 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param electricitySystem the electricity system
-	 * @return the hL aelectricity system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA electricity system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaElectricitySystem createLocalElectricitySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -65,13 +65,13 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	}
 	
 	/**
-	 * Creates the remote energy system.
+	 * Creates the remote electricity system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL aenergy system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA electricity system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaElectricitySystem createRemoteElectricitySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -86,7 +86,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -106,7 +106,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -127,13 +127,13 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	private transient final HLAfloat64BE electricityDomesticPrice;
 	
 	/**
-	 * Instantiates a new hL aenergy system.
+	 * Instantiates a new HLA electricity system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @param energySystem the energy system
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaElectricitySystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {

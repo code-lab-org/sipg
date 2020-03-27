@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import java.util.ArrayList;
@@ -15,16 +30,15 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultSociety.
+ * The default implementation of the society interface.
+ * 
+ * @author Paul T. Grogan
  */
-public abstract class NullSociety implements Society {
-	private String name;
-	private transient Society society;
-	private final List<? extends Society> nestedSocieties;
-	
+public abstract class DefaultSociety implements Society {
 	private static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
 	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
+	
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
@@ -32,37 +46,27 @@ public abstract class NullSociety implements Society {
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+	private String name;
+	private transient Society society;
+	private final List<? extends Society> nestedSocieties;
 
 	private double cumulativeCashFlow;
 	private transient double nextTotalCashFlow;
 	private double cumulativeCapitalExpense;
 	private transient double nextTotalCapitalExpense;
-	private double domesticProduct;
-	private transient double nextDomesticProduct;
 
-	@Override
-	public double getCumulativeCapitalExpense() {
-		return cumulativeCapitalExpense;
-	}
-
-	@Override
-	public double getDomesticProduct() {
-		return domesticProduct;
-	}
-
-	@Override
-	public long getPopulation() {
-		return getSocialSystem().getPopulation();
-	}
-	
-	public NullSociety(String name, List<? extends Society> nestedSocieties) {
-		// Validate name.
+	/**
+	 * Instantiates a new default society.
+	 *
+	 * @param name the society name
+	 * @param nestedSocieties the set of nested societies
+	 */
+	public DefaultSociety(String name, List<? extends Society> nestedSocieties) {
 		if(name == null) {
 			throw new IllegalArgumentException("Name cannot be null.");
 		}
 		this.name = name;
 		
-		// Validate cities.
 		if(nestedSocieties == null) {
 			throw new IllegalArgumentException(
 					"Nested societies list cannot be null.");
@@ -79,35 +83,22 @@ public abstract class NullSociety implements Society {
 			nestedSociety.setSociety(this);
 		}
 	}
-	
+
+	@Override
+	public double getCumulativeCapitalExpense() {
+		return cumulativeCapitalExpense;
+	}
+
 	@Override
 	public double getCumulativeCashFlow() {
 		return cumulativeCashFlow;
-	}
-
-	@Override
-	public double getTotalCashFlow() {
-		double value = 0;
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			value += system.getCashFlow();
-		}
-		return value;
-	}
-
-	@Override
-	public double getTotalCapitalExpense() {
-		double value = 0;
-		for(InfrastructureSystem system : getInfrastructureSystems()) {
-			value += system.getCapitalExpense();
-		}
-		return value;
 	}
 	
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
-
+	
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
@@ -117,7 +108,7 @@ public abstract class NullSociety implements Society {
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
-
+	
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
@@ -126,8 +117,8 @@ public abstract class NullSociety implements Society {
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
-	}	
-	
+	}
+
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
@@ -150,7 +141,7 @@ public abstract class NullSociety implements Society {
 			}
 		}
 		return Collections.unmodifiableList(elements);
-	}
+	}	
 	
 	@Override
 	public final Collection<Sector> getLocalSectors() {
@@ -191,6 +182,11 @@ public abstract class NullSociety implements Society {
 	}
 
 	@Override
+	public long getPopulation() {
+		return getSocialSystem().getPopulation();
+	}
+
+	@Override
 	public List<? extends Society> getSocieties() {
 		List<Society> societies = new ArrayList<Society>();
 		societies.add(this);
@@ -203,6 +199,24 @@ public abstract class NullSociety implements Society {
 	@Override
 	public final Society getSociety() {
 		return society;
+	}
+
+	@Override
+	public double getTotalCapitalExpense() {
+		double value = 0;
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			value += system.getCapitalExpense();
+		}
+		return value;
+	}
+
+	@Override
+	public double getTotalCashFlow() {
+		double value = 0;
+		for(InfrastructureSystem system : getInfrastructureSystems()) {
+			value += system.getCashFlow();
+		}
+		return value;
 	}
 
 	@Override
@@ -268,7 +282,6 @@ public abstract class NullSociety implements Society {
 		for(Society society : getNestedSocieties()) {
 			society.initialize(time);
 		}
-		domesticProduct = getNextDomesticProduct(); // TODO need initial value
 	}
 
 	@Override
@@ -276,24 +289,10 @@ public abstract class NullSociety implements Society {
 		this.society = society;
 	}
 
-	/**
-	 * Gets the next domestic product.
-	 *
-	 * @return the next domestic product
-	 */
-	private double getNextDomesticProduct() {
-		double nextDomesticProduct = 0;
-		for(InfrastructureSystem s : getInfrastructureSystems()) {
-			nextDomesticProduct += s.getDomesticProduction();
-		}
-		return nextDomesticProduct;
-	}
-
 	@Override
 	public void tick() {
 		nextTotalCashFlow = getTotalCashFlow();
 		nextTotalCapitalExpense = getTotalCapitalExpense();
-		nextDomesticProduct = getNextDomesticProduct();
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			system.tick();
 		}
@@ -306,7 +305,6 @@ public abstract class NullSociety implements Society {
 	public void tock() {
 		cumulativeCashFlow += nextTotalCashFlow;
 		cumulativeCapitalExpense += nextTotalCapitalExpense;
-		domesticProduct = nextDomesticProduct;
 		for(InfrastructureSystem system : getInfrastructureSystems()) {
 			system.tock();
 		}

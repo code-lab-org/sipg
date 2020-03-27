@@ -44,18 +44,6 @@ public abstract class LocalInfrastructureSoS extends LocalInfrastructureSystem
 		}
 		return value;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		double value = 0;
-		for(InfrastructureSystem system : getNestedSystems()) {
-			value += system.getCashFlow();
-		}
-		return value;
-	}
 
 	/* (non-Javadoc)
 	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getConsumptionExpense()

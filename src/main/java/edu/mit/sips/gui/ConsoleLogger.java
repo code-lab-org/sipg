@@ -152,27 +152,6 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 		}
 		System.out.println();
 		
-		System.out.printf("%-15s %-5s %,15.0f |", "Domest. Product", "SAR", 
-				country.getDomesticProduct());
-		for(City city : country.getCities()) {
-			System.out.printf(" %,15.0f", 
-					city.getDomesticProduct());
-		}
-		System.out.println();
-		if(country.getSocialSystem().getPopulation() > 0) {
-			System.out.printf("%-15s %-5s %,15.0f |", "  per capita", "SAR", 
-					country.getDomesticProduct() 
-					/ country.getSocialSystem().getPopulation());
-			for(City city : country.getCities()) {
-				if(city.getSocialSystem().getPopulation() > 0) {
-					System.out.printf(" %,15.0f", 
-							city.getDomesticProduct() 
-							/ country.getSocialSystem().getPopulation());
-				}
-			}
-			System.out.println();
-		}
-		
 		System.out.printf("%-15s %-5s %,15.0f |", "Net Cash Flow", "SAR", 
 				country.getTotalCashFlow());
 		for(City city : country.getCities()) {

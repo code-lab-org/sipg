@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultDomesticProductionModel;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
@@ -31,7 +29,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	private final double petroleumIntensityOfPrivateProduction;
-	private final DomesticProductionModel domesticProductionModel;
 	private final PriceModel domesticPriceModel;
 	private final List<ElectricityElement> elements = 
 			Collections.synchronizedList(new ArrayList<ElectricityElement>());
@@ -49,7 +46,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	public LocalElectricitySystem() {
 		super("Electricity");
 		this.petroleumIntensityOfPrivateProduction = 0;
-		this.domesticProductionModel = new DefaultDomesticProductionModel();
 		this.domesticPriceModel = new DefaultPriceModel();
 	}
 
@@ -58,12 +54,10 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	 *
 	 * @param petroleumIntensityOfPrivateProduction the electrical intensity of burning petroleum
 	 * @param elements the elements
-	 * @param domesticProductionModel the domestic production model
 	 * @param domesticPriceModel the domestic price model
 	 */
 	public LocalElectricitySystem(double petroleumIntensityOfPrivateProduction,
 			Collection<? extends ElectricityElement> elements,
-			DomesticProductionModel domesticProductionModel,
 			PriceModel domesticPriceModel) {
 		super("Electricity");
 
@@ -77,13 +71,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		if(elements != null) {
 			this.elements.addAll(elements);
 		}
-
-		// Validate domestic production model.
-		if(domesticProductionModel == null) {
-			throw new IllegalArgumentException(
-					"Domestic production model cannot be null.");
-		}
-		this.domesticProductionModel = domesticProductionModel;
 
 		// Validate domestic price model.
 		if(domesticPriceModel == null) {
@@ -128,14 +115,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	public double getDistributionRevenue() {
 		return getElectricityDomesticPrice() * (getElectricityOutDistribution() 
 				- getElectricityOutDistributionLosses());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		return domesticProductionModel.getDomesticProduction(this);
 	}
 
 	/* (non-Javadoc)

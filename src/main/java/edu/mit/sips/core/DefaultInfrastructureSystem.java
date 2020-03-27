@@ -51,11 +51,6 @@ public class DefaultInfrastructureSystem implements InfrastructureSystem {
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-
-	@Override
-	public double getDomesticProduction() {
-		return 0;
-	}
 	
 	@Override
 	public String getName() {

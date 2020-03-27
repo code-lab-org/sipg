@@ -7,31 +7,25 @@ import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.agriculture.AgricultureElement;
-import edu.mit.sips.core.agriculture.AgricultureSystemDomesticProductionModel;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
-import edu.mit.sips.core.electricity.ElectricitySystemDomesticProductionModel;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
-import edu.mit.sips.core.petroleum.PetroleumSystemDomesticProductionModel;
 import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
 import edu.mit.sips.core.social.LocalSocialSystem;
-import edu.mit.sips.core.social.SocialSystemDomesticProductionModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
-import edu.mit.sips.core.water.WaterSystemDomesticProductionModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -42,12 +36,6 @@ import edu.mit.sips.sim.util.WaterUnits;
  */
 public final class GameScenarioComplete extends DefaultScenario {
 	public static final String INDUSTRIAL = "Industrial", URBAN = "Urban", RURAL = "Rural";
-	private static DomesticProductionModel agricultureSystemDomesticProductionModel = 
-			new AgricultureSystemDomesticProductionModel(0),
-			waterSystemDomesticProductionModel = new WaterSystemDomesticProductionModel(0),
-			electricitySystemDomesticProductionModel = new ElectricitySystemDomesticProductionModel(0),
-			petroleumSystemDomesticProductionModel = new PetroleumSystemDomesticProductionModel(100),
-			socialSystemDomesticProductionModel = new SocialSystemDomesticProductionModel(5000, 100, 2000);
 	private static DemandModel 
 			foodDemandModel = new LogisticTimeDemandModel(1975, 
 					FoodUnits.convertFlow(2300, FoodUnits.kcal, TimeUnits.day, FoodUnits.GJ, TimeUnits.year), 0.20, 
@@ -108,7 +96,6 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL),
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(2004, 2008-2004, INDUSTRIAL, INDUSTRIAL)
 										),
-								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
@@ -120,7 +107,6 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(WaterElement) GameElementTemplate.RO_PLANT_1.createElement(1994, INDUSTRIAL, INDUSTRIAL),
 										(WaterElement) GameElementTemplate.RO_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
 										),
-								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
@@ -150,7 +136,6 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(PetroleumElement) GameElementTemplate.OIL_PIPELINE_2.createElement(2004, INDUSTRIAL, URBAN),
 										(PetroleumElement) GameElementTemplate.OIL_PIPELINE_1.createElement(2008, INDUSTRIAL, RURAL)
 										),
-								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
@@ -169,12 +154,10 @@ public final class GameScenarioComplete extends DefaultScenario {
 										//(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2005, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)
 										),
-								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
-								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
@@ -205,18 +188,15 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(1988, RURAL, RURAL),
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(2002, RURAL, RURAL)
 										),
-								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
 								new ArrayList<WaterElement>(),
-								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, new ArrayList<PetroleumElement>(),
-								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
@@ -227,12 +207,10 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_1.createElement(1996, RURAL, RURAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_1.createElement(2000, RURAL, RURAL)
 										),
-								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
-								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 0.75e6, 0.05, (long) 4e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
@@ -259,7 +237,6 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(1992, 1994-1992, URBAN, URBAN),
 										(AgricultureElement) GameElementTemplate.WHEAT_2.createElement(2004, 2008-2004, URBAN, URBAN)
 										),
-								agricultureSystemDomesticProductionModel,
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new DefaultAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
@@ -271,13 +248,11 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(WaterElement) GameElementTemplate.RO_PLANT_2.createElement(1992, URBAN, URBAN),
 										(WaterElement) GameElementTemplate.RO_PLANT_2.createElement(2002, URBAN, URBAN)
 										),
-								waterSystemDomesticProductionModel,
 								waterDomesticPriceModel, waterImportPriceModel):
 							new DefaultWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, 
 								new ArrayList<PetroleumElement>(),
-								petroleumSystemDomesticProductionModel,
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new DefaultPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
@@ -298,12 +273,10 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2006, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2008, URBAN, URBAN)
 										),
-								electricitySystemDomesticProductionModel,
 								electricityDomesticPriceModel):
 							new DefaultElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
-								socialSystemDomesticProductionModel,
 								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());

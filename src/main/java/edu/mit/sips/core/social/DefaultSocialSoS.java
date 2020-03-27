@@ -192,16 +192,4 @@ public class DefaultSocialSoS extends LocalSocialSystem implements SocialSoS {
 		}
 		return value;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		double value = 0;
-		for(InfrastructureSystem system : getNestedSystems()) {
-			value += system.getCashFlow();
-		}
-		return value;
-	}
 }

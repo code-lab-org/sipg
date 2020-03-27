@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultDomesticProductionModel;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
@@ -27,7 +25,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
-	private final DomesticProductionModel domesticProductionModel;
 	private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 	private final double arableLandArea;	
 	private final double laborParticipationRate;
@@ -52,7 +49,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	 */
 	public LocalAgricultureSystem() {
 		super("Agriculture");
-		this.domesticProductionModel = new DefaultDomesticProductionModel();
 		this.domesticPriceModel = new DefaultPriceModel();
 		this.importPriceModel = new DefaultPriceModel();
 		this.exportPriceModel = new DefaultPriceModel();
@@ -66,14 +62,12 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	 * @param arableLandArea the arable land area
 	 * @param laborParticipationRate the labor participation rate
 	 * @param elements the elements
-	 * @param domesticProductionModel the domestic production model
 	 * @param domesticPriceModel the domestic price model
 	 * @param importPriceModel the import price model
 	 * @param exportPriceModel the export price model
 	 */
 	public LocalAgricultureSystem(double arableLandArea, double laborParticipationRate,
 			Collection<? extends AgricultureElement> elements, 
-			DomesticProductionModel domesticProductionModel,
 			PriceModel domesticPriceModel, 
 			PriceModel importPriceModel, 
 			PriceModel exportPriceModel) {
@@ -96,13 +90,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		if(elements != null) {
 			this.elements.addAll(elements);
 		}
-
-		// Validate domestic production model.
-		if(domesticProductionModel == null) {
-			throw new IllegalArgumentException(
-					"Domestic production model cannot be null.");
-		}
-		this.domesticProductionModel = domesticProductionModel;
 
 		// Validate domestic price model.
 		if(domesticPriceModel == null) {
@@ -169,14 +156,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	public double getDistributionRevenue() {
 		return getFoodDomesticPrice() * (getFoodOutDistribution() 
 				- getFoodOutDistributionLosses());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		return domesticProductionModel.getDomesticProduction(this);
 	}
 
 	/* (non-Javadoc)

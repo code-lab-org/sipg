@@ -1,13 +1,5 @@
 package edu.mit.sips.sim.hla;
 
-import hla.rti1516e.AttributeHandle;
-import hla.rti1516e.AttributeHandleSet;
-import hla.rti1516e.RTIambassador;
-import hla.rti1516e.encoding.DataElement;
-import hla.rti1516e.encoding.EncoderFactory;
-import hla.rti1516e.encoding.HLAfloat64BE;
-import hla.rti1516e.exceptions.RTIexception;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +8,13 @@ import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
+import hla.rti1516e.AttributeHandle;
+import hla.rti1516e.AttributeHandleSet;
+import hla.rti1516e.RTIambassador;
+import hla.rti1516e.encoding.DataElement;
+import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAfloat64BE;
+import hla.rti1516e.exceptions.RTIexception;
 
 /**
  * The Class HLA water system.
@@ -38,7 +37,7 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
@@ -50,11 +49,11 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	/**
 	 * Creates the local water system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param agricultureSystem the agriculture system
-	 * @return the hL awater system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA water system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaAgricultureSystem createLocalAgricultureSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -68,11 +67,11 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	/**
 	 * Creates the remote agriculture system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL aagriculture system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA agriculture system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaAgricultureSystem createRemoteAgricultureSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -87,7 +86,7 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -107,7 +106,7 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -129,13 +128,13 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	private transient final HLAfloat64BE foodExportPrice;
 
 	/**
-	 * Instantiates a new hL aagriculture system.
+	 * Instantiates a new HLA agriculture system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @param agricultureSystem the agriculture system
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaAgricultureSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {

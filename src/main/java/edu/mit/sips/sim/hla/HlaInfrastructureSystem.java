@@ -28,7 +28,7 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 	public static final String NAME_ATTRIBUTE = "Name",
 			SOCIETY_NAME_ATTRIBUTE = "SocietyName",
 			NET_CASH_FLOW_ATTRIBUTE = "NetCashFlow",
-			DOMESTIC_PRODUCTION_ATTRIBUTE = "DomesticProduction",
+			CAPITAL_EXPENSE_ATTRIBUTE = "CapitalExpense",
 			SUSTAINABILITY_NUMERATOR_ATTRIBUTE = "SustainabilityMetricNumerator",
 			SUSTAINABILITY_DENOMINATOR_ATTRIBUTE = "SustainabilityMetricDenominator";
 	
@@ -36,7 +36,7 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE
 	};
@@ -44,8 +44,8 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @param rtiAmbassador the RTI ambassador
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -65,8 +65,8 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @param rtiAmbassador the RTI ambassador
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -86,7 +86,7 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 	private transient final HLAunicodeString name;
 	private transient final HLAunicodeString societyName;
 	private transient final HLAfloat64BE netCashFlow;
-	private transient final HLAfloat64BE domesticProduction;
+	private transient final HLAfloat64BE capitalExpense;
 	protected transient final HLAfloat64BE sustainabilityMetricNumerator;
 	protected transient final HLAfloat64BE sustainabilityMetricDenominator;
 	protected transient final Map<AttributeHandle,DataElement> attributeValues = 
@@ -95,10 +95,10 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 	/**
 	 * Instantiates a new HLA infrastructure system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaInfrastructureSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
@@ -106,7 +106,7 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 		name = encoderFactory.createHLAunicodeString();
 		societyName = encoderFactory.createHLAunicodeString();
 		netCashFlow = encoderFactory.createHLAfloat64BE();
-		domesticProduction = encoderFactory.createHLAfloat64BE();
+		capitalExpense = encoderFactory.createHLAfloat64BE();
 		sustainabilityMetricNumerator = encoderFactory.createHLAfloat64BE();
 		sustainabilityMetricDenominator = encoderFactory.createHLAfloat64BE();
 		attributeValues.put(getAttributeHandle(NAME_ATTRIBUTE), 
@@ -115,8 +115,8 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 				societyName);
 		attributeValues.put(getAttributeHandle(NET_CASH_FLOW_ATTRIBUTE), 
 				netCashFlow);
-		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCTION_ATTRIBUTE), 
-				domesticProduction);
+		attributeValues.put(getAttributeHandle(CAPITAL_EXPENSE_ATTRIBUTE), 
+				capitalExpense);
 		attributeValues.put(getAttributeHandle(
 				SUSTAINABILITY_NUMERATOR_ATTRIBUTE), 
 				sustainabilityMetricNumerator);
@@ -125,81 +125,46 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 				sustainabilityMetricDenominator);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
-	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
-	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCapitalExpense()
-	 */
-	@Override
-	public double getCapitalExpense() {
-		return domesticProduction.getValue(); // TODO using existing variable for capex
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getCashFlow()
-	 */
 	@Override
 	public double getCashFlow() {
 		return netCashFlow.getValue();
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
+
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getDomesticProduction()
-	 */
 	@Override
-	public double getDomesticProduction() {
-		return domesticProduction.getValue();
+	public double getCapitalExpense() {
+		return capitalExpense.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getName()
-	 */
 	@Override
 	public String getName() {
 		return name.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
-	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#getSociety()
-	 */
 	@Override
 	public Society getSociety() {
 		return society;
@@ -214,12 +179,8 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 		return societyName.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
 	@Override
-	public void initialize(long time) {
-	}
+	public void initialize(long time) { }
 	
 	/**
 	 * Sets the infrastructure system.
@@ -232,7 +193,7 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 				: infrastructureSystem.getSociety().getName());
 		netCashFlow.setValue(infrastructureSystem.getCashFlow());
 		// TODO domesticProduction.setValue(infrastructureSystem.getDomesticProduction());
-		domesticProduction.setValue(infrastructureSystem.getCapitalExpense()); // TODO using existing variable for capex
+		capitalExpense.setValue(infrastructureSystem.getCapitalExpense()); // TODO using existing variable for capex
 	}
 	
 	/* (non-Javadoc)

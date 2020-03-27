@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import java.util.ArrayList;
@@ -5,89 +20,78 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSoS;
-import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.electricity.DefaultElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
-import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSoS;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.DefaultSocialSoS;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.water.DefaultWaterSoS;
 import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.core.water.WaterSoS;
-import edu.mit.sips.core.water.WaterSystem;
 
 /**
- * The Class Country.
+ * A country models the national-level unit of a society.
+ * 
+ * @author Paul T. Grogan
  */
-public class Country extends NullSociety {
-	private AgricultureSoS agricultureSystem;
-	private WaterSoS waterSystem;
-	private ElectricitySoS electricitySystem;
-	private PetroleumSoS petroleumSystem;
-	private SocialSoS socialSystem;
-	
+public class Country extends DefaultSociety {
 	/**
-	 * Builds the country.
+	 * Static method to build a country from a set of nested societies.
 	 *
-	 * @param name the name
+	 * @param name the country name
 	 * @param initialFunds the initial funds
 	 * @param nestedSocieties the nested societies
 	 * @return the country
 	 */
 	public static Country buildCountry(String name, double initialFunds, 
 			List<? extends Society> nestedSocieties) {
+		// determine if local or remote sos is required for each sector
 		AgricultureSoS agricultureSystem = new DefaultAgricultureSoS();
-		// agriculture system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
-			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
+			if(society.getAgricultureSystem().isLocal()) {
 				agricultureSystem = new LocalAgricultureSoS();
 				break;
 			}
 		}
-		
 		WaterSoS waterSystem = new DefaultWaterSoS();
-		// water system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
-			if(society.getWaterSystem() instanceof WaterSystem.Local) {
+			if(society.getWaterSystem().isLocal()) {
 				waterSystem = new LocalWaterSoS();
 				break;
 			}
 		}
-		
 		ElectricitySoS electricitySystem = new DefaultElectricitySoS();
-		// electricity system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
-			if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
+			if(society.getElectricitySystem().isLocal()) {
 				electricitySystem = new LocalElectricitySoS();
 				break;
 			}
 		}
-		
 		PetroleumSoS petroleumSystem = new DefaultPetroleumSoS();
-		// petroleum system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
-			if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
+			if(society.getPetroleumSystem().isLocal()) {
 				petroleumSystem = new LocalPetroleumSoS();
 				break;
 			}
 		}
-
-		// social system is always national
 		SocialSoS socialSystem = new DefaultSocialSoS();
 		
 		return new Country(name, initialFunds, nestedSocieties, agricultureSystem, 
 				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
+	private AgricultureSoS agricultureSystem;
+	private WaterSoS waterSystem;
+	private ElectricitySoS electricitySystem;
+	private PetroleumSoS petroleumSystem;
+	private SocialSoS socialSystem;
 	private final double initialFunds;
-
+	
 	/**
 	 * Instantiates a new country.
 	 */
@@ -114,8 +118,8 @@ public class Country extends NullSociety {
 	 * @param nestedSocieties the nested societies
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
-	 * @param electricitySystem the electricity system
 	 * @param petroleumSystem the petroleum system
+	 * @param electricitySystem the electricity system
 	 * @param socialSystem the social system
 	 */
 	private Country(String name, double initialFunds, List<? extends Society> nestedSocieties,
@@ -136,6 +140,30 @@ public class Country extends NullSociety {
 		this.initialFunds = initialFunds;
 	}
 	
+	/**
+	 * Gets the aggregated score.
+	 *
+	 * @param year the year
+	 * @return the aggregated score
+	 */
+	public double getAggregatedScore(long year) {
+		return (getFinancialSecurityScore(year) + getFoodSecurityScore() + getAquiferSecurityScore() + getReservoirSecurityScore())/4d;
+	}
+
+	@Override
+	public AgricultureSoS getAgricultureSystem() {
+		return this.agricultureSystem;
+	}
+	
+	/**
+	 * Gets the aquifer security score.
+	 *
+	 * @return the aquifer security score
+	 */
+	public double getAquiferSecurityScore() {
+		return getWaterSystem().getAquiferSecurityScore();
+	}
+	
 	@Override
 	public List<City> getCities() {
 		List<City> cities = new ArrayList<City>();
@@ -144,9 +172,9 @@ public class Country extends NullSociety {
 		}
 		return Collections.unmodifiableList(cities);
 	}
-	
+
 	/**
-	 * Gets the city.
+	 * Gets a city by name. Returns null if no matching city found.
 	 *
 	 * @param name the name
 	 * @return the city
@@ -160,99 +188,16 @@ public class Country extends NullSociety {
 		return null;
 	}
 
-	/**
-	 * Gets the society.
-	 *
-	 * @param name the name
-	 * @return the society
-	 */
-	public Society getSociety(String name) {
-		return getSocietyRecursive(name, this);
-	}
-	
-	/**
-	 * Gets the funds.
-	 *
-	 * @return the funds
-	 */
-	public double getFunds() {
-		return initialFunds + getCumulativeCashFlow();
-	}
-	
-	/**
-	 * Gets the society recursive.
-	 *
-	 * @param name the name
-	 * @param root the root
-	 * @return the society recursive
-	 */
-	private static Society getSocietyRecursive(String name, Society root) {
-		if(root.getName().equals(name)) {
-			return root;
-		}
-		for(Society child : root.getNestedSocieties()) {
-			Society sociey = getSocietyRecursive(name, child);
-			if(sociey != null) {
-				return sociey;
-			}
-		}
-		return null;
-	}
-
 	@Override
 	public Country getCountry() {
 		return this;
 	}
 
 	@Override
-	public void initialize(long time) {
-		super.initialize(time); // initializes systems
-		for(InfrastructureElement e : getInternalElements()) {
-			e.initialize(time);
-		}
-	}
-
-	@Override
-	public void tick() {
-		super.tick(); // ticks systems
-		for(InfrastructureElement e : getInternalElements()) {
-			e.tick();
-		}
-	}
-
-	@Override
-	public void tock() {
-		super.tock(); // tocks systems
-		for(InfrastructureElement e : getInternalElements()) {
-			e.tock();
-		}
-	}
-	
-	@Override
-	public AgricultureSoS getAgricultureSystem() {
-		return this.agricultureSystem;
-	}
-	
-	@Override
-	public WaterSoS getWaterSystem() {
-		return this.waterSystem;
-	}
-	
-	@Override
-	public PetroleumSoS getPetroleumSystem() {
-		return this.petroleumSystem;
-	}
-	
-	@Override
 	public ElectricitySoS getElectricitySystem() {
 		return this.electricitySystem;
 	}
-	
-	@Override
-	public SocialSoS getSocialSystem() {
-		return this.socialSystem;
-	}
-	
+
 	/**
 	 * Gets the financial security score.
 	 *
@@ -288,12 +233,17 @@ public class Country extends NullSociety {
 	}
 	
 	/**
-	 * Gets the aquifer security score.
+	 * Gets the funds.
 	 *
-	 * @return the aquifer security score
+	 * @return the funds
 	 */
-	public double getAquiferSecurityScore() {
-		return getWaterSystem().getAquiferSecurityScore();
+	public double getFunds() {
+		return initialFunds + getCumulativeCashFlow();
+	}
+	
+	@Override
+	public PetroleumSoS getPetroleumSystem() {
+		return this.petroleumSystem;
 	}
 	
 	/**
@@ -305,13 +255,37 @@ public class Country extends NullSociety {
 		return getPetroleumSystem().getReservoirSecurityScore();
 	}
 	
-	/**
-	 * Gets the aggregated score.
-	 *
-	 * @param year the year
-	 * @return the aggregated score
-	 */
-	public double getAggregatedScore(long year) {
-		return (getFinancialSecurityScore(year) + getFoodSecurityScore() + getAquiferSecurityScore() + getReservoirSecurityScore())/4d;
+	@Override
+	public SocialSoS getSocialSystem() {
+		return this.socialSystem;
+	}
+	
+	@Override
+	public WaterSoS getWaterSystem() {
+		return this.waterSystem;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		for(InfrastructureElement e : getInternalElements()) {
+			e.initialize(time);
+		}
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		for(InfrastructureElement e : getInternalElements()) {
+			e.tick();
+		}
+	}
+	
+	@Override
+	public void tock() {
+		super.tock();
+		for(InfrastructureElement e : getInternalElements()) {
+			e.tock();
+		}
 	}
 }

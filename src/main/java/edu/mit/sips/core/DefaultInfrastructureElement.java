@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import javax.swing.event.EventListenerList;
@@ -8,7 +23,9 @@ import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class DefaultInfrastructureElement.
+ * The default implementation of the infrastructure element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class DefaultInfrastructureElement implements InfrastructureElement {
 	private final String templateName;
@@ -42,42 +59,32 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 			String destination, LifecycleModel lifecycleModel) {
 		this.templateName = templateName;
 		
-		// Validate the name.
 		if(name == null) {
 			throw new IllegalArgumentException("Name cannot be null.");
 		}
 		this.name = name;
 		
-		// Validate the origin.
 		if(origin == null) {
 			throw new IllegalArgumentException("Origin cannot be null.");
 		}
 		this.origin = origin;
 		
-		// Validate the destination.
 		if(destination == null) {
 			throw new IllegalArgumentException("Destination cannot be null.");
 		}
 		this.destination = destination;
 		
-		// Validate the lifecycle model.
 		if(lifecycleModel == null) {
 			throw new IllegalArgumentException("Lifecycle model cannot be null.");
 		}
 		this.lifecycleModel = lifecycleModel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureElement#addElementChangeListener(edu.mit.sips.core.ElementChangeListener)
-	 */
 	@Override
 	public final void addElementChangeListener(ElementChangeListener listener) {
 		listenerList.add(ElementChangeListener.class, listener);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureElement#fireElementChangeEvent()
-	 */
 	@Override
 	public final void fireElementChangeEvent() {
 		ElementChangeEvent evt = new ElementChangeEvent(this);
@@ -88,89 +95,56 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getCapitalExpense()
-	 */
 	@Override
 	public final double getCapitalExpense() { 
 		return lifecycleModel.getCapitalExpense();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return lifecycleModel.getCurrencyTimeUnits();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnitsNumerator()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return lifecycleModel.getCurrencyUnits();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getDecommissionExpense()
-	 */
 	@Override
 	public final double getDecommissionExpense() { 
 		return lifecycleModel.getDecommissionExpense();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getDestination()
-	 */
 	@Override
 	public final String getDestination() {
 		return destination;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getFixedOperationsExpense()
-	 */
 	@Override
 	public final double getFixedOperationsExpense() { 
 		return lifecycleModel.getFixedOperationsExpense();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureElement#getLifecycleModel()
-	 */
 	@Override
 	public LifecycleModel getLifecycleModel() {
 		return lifecycleModel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getName()
-	 */
 	@Override
 	public final String getName() {
 		return name;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getOrigin()
-	 */
 	@Override
 	public final String getOrigin() {
 		return origin;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureElement#getTemplateName()
-	 */
 	@Override
 	public String getTemplateName() {
 		return templateName;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getTotalExpense()
-	 */
 	@Override
 	public final double getTotalExpense() {
 		return getCapitalExpense() 
@@ -178,42 +152,30 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 				+ getDecommissionExpense();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(int)
-	 */
 	@Override
 	public void initialize(long time) {
 		lifecycleModel.initialize(time);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#isExists()
-	 */
 	@Override
 	public final boolean isExists() {
 		return lifecycleModel.isExists();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#isOperational()
-	 */
 	@Override
 	public final boolean isOperational() { 
 		return lifecycleModel.isOperational();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureElement#removeElementChangeListener(edu.mit.sips.core.ElementChangeListener)
-	 */
 	@Override
 	public final void removeElementChangeListener(ElementChangeListener listener) {
 		listenerList.remove(ElementChangeListener.class, listener);
 	}
 	
 	/**
-	 * Sets the mutable fields.
+	 * Sets mutable fields from values in a mutable element.
 	 *
-	 * @param element the new mutable fields
+	 * @param element the mutable element containing new field values
 	 */
 	protected final void setMutableFields(DefaultMutableInfrastructureElement element) {
 		element.setTemplateName(templateName);
@@ -223,25 +185,16 @@ public abstract class DefaultInfrastructureElement implements InfrastructureElem
 		element.setLifecycleModel(lifecycleModel.getMutableLifecycleModel());
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 		lifecycleModel.tick();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
 	@Override
 	public void tock() {
 		lifecycleModel.tock();
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public final String toString() {
 		return name;

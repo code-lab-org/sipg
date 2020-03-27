@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultDomesticProductionModel;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
@@ -27,7 +25,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	private static final OilUnits oilUnits = OilUnits.toe;
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 
-	private final DomesticProductionModel domesticProductionModel;
 	private final PriceModel domesticPriceModel, importPriceModel, exportPriceModel;
 	private final List<PetroleumElement> elements = 
 			Collections.synchronizedList(new ArrayList<PetroleumElement>());
@@ -56,7 +53,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 */
 	public LocalPetroleumSystem() {
 		super("Petroleum");
-		this.domesticProductionModel = new DefaultDomesticProductionModel();
 		this.domesticPriceModel = new DefaultPriceModel();
 		this.importPriceModel = new DefaultPriceModel();
 		this.exportPriceModel = new DefaultPriceModel();
@@ -70,7 +66,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	 * @param maxPetroleumReservoirVolume the max petroleum reservoir volume
 	 * @param initialPetroleumReservoirVolume the initial petroleum reservoir volume
 	 * @param elements the elements
-	 * @param domesticProductionModel the domestic production model
 	 * @param domesticPriceModel the domestic price model
 	 * @param importPriceModel the import price model
 	 * @param exportPriceModel the export price model
@@ -78,7 +73,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	public LocalPetroleumSystem(double maxPetroleumReservoirVolume,
 			double initialPetroleumReservoirVolume,
 			Collection<? extends PetroleumElement> elements,
-			DomesticProductionModel domesticProductionModel,
 			PriceModel domesticPriceModel, 
 			PriceModel importPriceModel, 
 			PriceModel exportPriceModel) {
@@ -104,13 +98,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 		if(elements != null) {
 			this.elements.addAll(elements);
 		}
-
-		// Validate domestic production model.
-		if(domesticProductionModel == null) {
-			throw new IllegalArgumentException(
-					"Domestic production model cannot be null.");
-		}
-		this.domesticProductionModel = domesticProductionModel;
 
 		// Validate domestic price model.
 		if(domesticPriceModel == null) {
@@ -175,14 +162,6 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	public double getDistributionRevenue() {
 		return getPetroleumDomesticPrice() * (getPetroleumOutDistribution()
 				- getPetroleumOutDistributionLosses());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		return domesticProductionModel.getDomesticProduction(this);
 	}
 
 	/* (non-Javadoc)

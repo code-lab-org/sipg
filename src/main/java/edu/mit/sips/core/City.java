@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core;
 
 import java.util.ArrayList;
@@ -16,7 +31,12 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
-public class City extends NullSociety {
+/**
+ * A city models the most detailed local-level unit of society.
+ * 
+ * @author Paul T. Grogan
+ */
+public class City extends DefaultSociety {
 	private AgricultureSystem agricultureSystem;
 	private WaterSystem waterSystem;
 	private ElectricitySystem electricitySystem;
@@ -67,6 +87,11 @@ public class City extends NullSociety {
 	}
 	
 	@Override
+	public AgricultureSystem getAgricultureSystem() {
+		return agricultureSystem;
+	}
+
+	@Override
 	public List<City> getCities() {
 		return Collections.unmodifiableList(Arrays.asList(this));
 	}
@@ -77,11 +102,6 @@ public class City extends NullSociety {
 			throw new IllegalStateException("Society cannot be null.");
 		}
 		return getSociety().getCountry();
-	}
-
-	@Override
-	public AgricultureSystem getAgricultureSystem() {
-		return agricultureSystem;
 	}
 
 	@Override

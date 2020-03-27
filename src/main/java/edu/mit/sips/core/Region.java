@@ -18,7 +18,7 @@ import edu.mit.sips.core.water.WaterSoS;
 /**
  * The Class Country.
  */
-public class Region extends NullSociety {
+public class Region extends DefaultSociety {
 	private AgricultureSoS agricultureSystem;
 	private WaterSoS waterSystem;
 	private ElectricitySoS electricitySystem;

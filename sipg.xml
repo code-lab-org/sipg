@@ -62,7 +62,7 @@
                     <semantics>Net cash flow (sim) from this infrastructure system.</semantics>
                 </attribute>
                 <attribute>
-                    <name>DomesticProduction</name>
+                    <name>CapitalExpense</name>
                     <dataType>HLAfloat64BE</dataType>
                     <updateType>Periodic</updateType>
                     <updateCondition>Every time step.</updateCondition>
@@ -71,7 +71,7 @@
                     <dimensions/>
                     <transportation>HLAreliable</transportation>
                     <order>TimeStamp</order>
-                    <semantics>Domestic production (sim) contributed from this infrastructure system.</semantics>
+                    <semantics>Capital expenses (sim) contributed from this infrastructure system.</semantics>
                 </attribute>
                 <attribute>
                     <name>SustainabilityMetricNumerator</name>

@@ -38,7 +38,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
@@ -53,8 +53,8 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param waterSystem the water system
-	 * @return the hL awater system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA water system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaWaterSystem createLocalWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -71,8 +71,8 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL awater system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA water system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaWaterSystem createRemoteWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -87,7 +87,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -107,7 +107,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -129,12 +129,12 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	private transient final HLAfloat64BE waterImportPrice;
 
 	/**
-	 * Instantiates a new hL awater system.
+	 * Instantiates a new HLA water system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaWaterSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {

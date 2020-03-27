@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.DefaultDomesticProductionModel;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
@@ -28,7 +26,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 	
-	private final DomesticProductionModel domesticProductionModel;
 	private final PopulationModel populationModel;
 	private final DemandModel electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel;
 
@@ -37,7 +34,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	 */
 	public LocalSocialSystem() {
 		super("Society");
-		this.domesticProductionModel = new DefaultDomesticProductionModel();
 		this.populationModel = new DefaultPopulationModel();
 		this.electricityDemandModel = new DefaultDemandModel();
 		this.foodDemandModel = new DefaultDemandModel();
@@ -48,27 +44,18 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	/**
 	 * Instantiates a new local.
 	 *
-	 * @param domesticProductionModel the domestic production model
 	 * @param populationModel the population model
 	 * @param electricityDemandModel the electricity demand model
 	 * @param foodDemandModel the food demand model
 	 * @param waterDemandModel the water demand model
 	 * @param petroleumDemandModel the petroleum demand model
 	 */
-	public LocalSocialSystem(DomesticProductionModel domesticProductionModel,
-			PopulationModel populationModel, 
+	public LocalSocialSystem(PopulationModel populationModel, 
 			DemandModel electricityDemandModel, 
 			DemandModel foodDemandModel,
 			DemandModel waterDemandModel, 
 			DemandModel petroleumDemandModel) {
 		super("Society");
-
-		// Validate domestic production model.
-		if(domesticProductionModel == null) {
-			throw new IllegalArgumentException(
-					"Domestic production model cannot be null.");
-		}
-		this.domesticProductionModel = domesticProductionModel;
 
 		// Validate population model.
 		if(populationModel == null) {
@@ -133,14 +120,6 @@ public class LocalSocialSystem extends LocalInfrastructureSystem implements Soci
 	@Override
 	public double getDistributionRevenue() {
 		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		return domesticProductionModel.getDomesticProduction(this);
 	}
 
 	/* (non-Javadoc)

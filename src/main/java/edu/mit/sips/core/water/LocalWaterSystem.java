@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.DefaultDomesticProductionModel;
-import edu.mit.sips.core.DomesticProductionModel;
 import edu.mit.sips.core.LocalInfrastructureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
@@ -31,7 +29,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 
 	private final List<WaterElement> elements = 
 			Collections.synchronizedList(new ArrayList<WaterElement>());
-	private final DomesticProductionModel domesticProductionModel;
 	private final PriceModel domesticPriceModel, importPriceModel;
 	private final double maxWaterReservoirVolume;
 	private final double initialWaterReservoirVolume;
@@ -59,7 +56,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 */
 	protected LocalWaterSystem() {
 		super("Water");
-		domesticProductionModel = new DefaultDomesticProductionModel();
 		this.domesticPriceModel = new DefaultPriceModel();
 		this.importPriceModel = new DefaultPriceModel();
 		this.maxWaterReservoirVolume = 0;
@@ -80,7 +76,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	 * @param electricalIntensityOfProduction the electrical intensity of production
 	 * @param aquiferIntensityOfProduction the aquifer intensity of production
 	 * @param elements the elements
-	 * @param domesticProductionModel the domestic production model
 	 * @param domesticPriceModel the domestic price model
 	 * @param importPriceModel the import price model
 	 */
@@ -90,7 +85,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 			double electricalIntensityOfProduction, 
 			double aquiferIntensityOfProduction,
 			Collection<? extends WaterElement> elements,
-			DomesticProductionModel domesticProductionModel,
 			PriceModel domesticPriceModel, 
 			PriceModel importPriceModel) {
 		super("Water");
@@ -134,13 +128,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 		if(elements != null) {
 			this.elements.addAll(elements);
 		}
-
-		// Validate domestic production model.
-		if(domesticProductionModel == null) {
-			throw new IllegalArgumentException(
-					"Domestic production model cannot be null.");
-		}
-		this.domesticProductionModel = domesticProductionModel;
 
 		// Validate domestic price model.
 		if(domesticPriceModel == null) {
@@ -202,14 +189,6 @@ public class LocalWaterSystem extends LocalInfrastructureSystem implements Water
 	public double getDistributionRevenue() {
 		return getWaterDomesticPrice() * (getWaterOutDistribution() 
 				- getWaterOutDistributionLosses());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getEconomicProduction()
-	 */
-	@Override
-	public double getDomesticProduction() {
-		return domesticProductionModel.getDomesticProduction(this);
 	}
 
 	/* (non-Javadoc)

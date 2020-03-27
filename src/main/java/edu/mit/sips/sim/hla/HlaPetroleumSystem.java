@@ -38,7 +38,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		SUSTAINABILITY_NUMERATOR_ATTRIBUTE,
 		SUSTAINABILITY_DENOMINATOR_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE, 
@@ -48,13 +48,13 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	};
 
 	/**
-	 * Creates the local energy system.
+	 * Creates the local petroleum system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param petroleumSystem the petroleum system
-	 * @return the hL aenergy system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA petroleum system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaPetroleumSystem createLocalPetroleumSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -66,13 +66,13 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	}
 	
 	/**
-	 * Creates the remote energy system.
+	 * Creates the remote petroleum system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL aenergy system
-	 * @throws RTIexception the rT iexception
+	 * @return the HLA petroleum system
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaPetroleumSystem createRemotePetroleumSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -87,7 +87,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -107,7 +107,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -129,12 +129,12 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	private transient final HLAfloat64BE petroleumExportPrice;
 
 	/**
-	 * Instantiates a new hL aenergy system.
+	 * Instantiates a new HLA petroleum system.
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaPetroleumSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {

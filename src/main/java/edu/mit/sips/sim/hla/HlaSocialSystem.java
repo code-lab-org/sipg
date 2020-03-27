@@ -47,7 +47,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 		NAME_ATTRIBUTE,
 		SOCIETY_NAME_ATTRIBUTE,
 		NET_CASH_FLOW_ATTRIBUTE,
-		DOMESTIC_PRODUCTION_ATTRIBUTE,
+		CAPITAL_EXPENSE_ATTRIBUTE,
 		ELECTRICITY_CONSUMPTION_ATTRIBUTE,
 		FOOD_CONSUMPTION_ATTRIBUTE,
 		WATER_CONSUMPTION_ATTRIBUTE,
@@ -63,7 +63,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	 * @param encoderFactory the encoder factory
 	 * @param socialSystem the social system
 	 * @return the hL asocial system
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaSocialSystem createLocalSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -81,7 +81,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @return the hL asocial system
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaSocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
@@ -96,7 +96,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	 * Publish all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -116,7 +116,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	 * Subscribe all.
 	 *
 	 * @param rtiAmbassador the rti ambassador
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
 			throws RTIexception {
@@ -145,7 +145,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	 * @param rtiAmbassador the rti ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaSocialSystem(RTIambassador rtiAmbassador, 
 			EncoderFactory encoderFactory, String instanceName) throws RTIexception {
