@@ -4,19 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.electricity.DefaultElectricitySoS;
+import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.LocalElectricitySoS;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSoS;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
+import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.DefaultSocialSoS;
-import edu.mit.sips.core.social.SocialSystem;
+import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.water.DefaultWaterSoS;
 import edu.mit.sips.core.water.LocalWaterSoS;
+import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 
 /**
@@ -34,7 +38,7 @@ public class Country extends DefaultSociety implements Society {
 	 */
 	public static Country buildCountry(String name, double initialFunds, 
 			List<? extends Society> nestedSocieties) {
-		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
+		AgricultureSoS agricultureSystem = new DefaultAgricultureSoS();
 		// agriculture system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -43,7 +47,7 @@ public class Country extends DefaultSociety implements Society {
 			}
 		}
 		
-		WaterSystem waterSystem = new DefaultWaterSoS();
+		WaterSoS waterSystem = new DefaultWaterSoS();
 		// water system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getWaterSystem() instanceof WaterSystem.Local) {
@@ -52,7 +56,7 @@ public class Country extends DefaultSociety implements Society {
 			}
 		}
 		
-		ElectricitySystem electricitySystem = new DefaultElectricitySoS();
+		ElectricitySoS electricitySystem = new DefaultElectricitySoS();
 		// electricity system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
@@ -61,7 +65,7 @@ public class Country extends DefaultSociety implements Society {
 			}
 		}
 		
-		PetroleumSystem petroleumSystem = new DefaultPetroleumSoS();
+		PetroleumSoS petroleumSystem = new DefaultPetroleumSoS();
 		// petroleum system is national if there is a nested local system
 		for(Society society : nestedSocieties) {
 			if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
@@ -71,7 +75,7 @@ public class Country extends DefaultSociety implements Society {
 		}
 
 		// social system is always national
-		SocialSystem socialSystem = new DefaultSocialSoS();
+		SocialSoS socialSystem = new DefaultSocialSoS();
 		
 		return new Country(name, initialFunds, nestedSocieties, agricultureSystem, 
 				waterSystem, petroleumSystem, electricitySystem, socialSystem);
@@ -99,9 +103,9 @@ public class Country extends DefaultSociety implements Society {
 	 * @param socialSystem the social system
 	 */
 	private Country(String name, double initialFunds, List<? extends Society> nestedSocieties,
-			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
-			SocialSystem socialSystem) {
+			AgricultureSoS agricultureSystem, WaterSoS waterSystem,
+			PetroleumSoS petroleumSystem, ElectricitySoS electricitySystem, 
+			SocialSoS socialSystem) {
 		super(name, nestedSocieties, agricultureSystem, 
 				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 		
@@ -214,5 +218,30 @@ public class Country extends DefaultSociety implements Society {
 		for(InfrastructureElement e : getInternalElements()) {
 			e.tock();
 		}
+	}
+	
+	@Override
+	public AgricultureSoS getAgricultureSystem() {
+		return (AgricultureSoS) super.getAgricultureSystem();
+	}
+	
+	@Override
+	public WaterSoS getWaterSystem() {
+		return (WaterSoS) super.getWaterSystem();
+	}
+	
+	@Override
+	public PetroleumSoS getPetroleumSystem() {
+		return (PetroleumSoS) super.getPetroleumSystem();
+	}
+	
+	@Override
+	public ElectricitySoS getElectricitySystem() {
+		return (ElectricitySoS) super.getElectricitySystem();
+	}
+	
+	@Override
+	public SocialSoS getSocialSystem() {
+		return (SocialSoS) super.getSocialSystem();
 	}
 }

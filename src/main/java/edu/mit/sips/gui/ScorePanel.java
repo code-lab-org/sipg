@@ -273,18 +273,9 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			fw.write(new Date().getTime() + ", ");
 			fw.write(roundNumber + ", ");
 			
-			double foodScore = 0;
-			if(country.getAgricultureSystem() instanceof AgricultureSoS) {
-				foodScore = ((AgricultureSoS) country.getAgricultureSystem()).getFoodSecurityScore();
-			}
-			double aquiferScore = 0;
-			if(country.getWaterSystem() instanceof WaterSoS) {
-				aquiferScore = ((WaterSoS) country.getWaterSystem()).getAquiferSecurityScore();
-			}
-			double reservoirScore = 0;
-			if(country.getPetroleumSystem() instanceof PetroleumSoS) {
-				reservoirScore = ((PetroleumSoS) country.getPetroleumSystem()).getReservoirSecurityScore();
-			}
+			double foodScore = country.getAgricultureSystem().getFoodSecurityScore();
+			double aquiferScore = country.getWaterSystem().getAquiferSecurityScore();
+			double reservoirScore = country.getPetroleumSystem().getReservoirSecurityScore();
 			
 			fw.write(foodScore + ", ");
 			fw.write(aquiferScore + ", ");
@@ -467,18 +458,9 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		
 		scoreLabel.setText("");
 		
-		double foodScore = 0;
-		if(country.getAgricultureSystem() instanceof AgricultureSoS) {
-			foodScore = ((AgricultureSoS) country.getAgricultureSystem()).getFoodSecurityScore();
-		}
-		double aquiferScore = 0;
-		if(country.getWaterSystem() instanceof WaterSoS) {
-			aquiferScore = ((WaterSoS) country.getWaterSystem()).getAquiferSecurityScore();
-		}
-		double reservoirScore = 0;
-		if(country.getPetroleumSystem() instanceof PetroleumSoS) {
-			aquiferScore = ((PetroleumSoS) country.getPetroleumSystem()).getReservoirSecurityScore();
-		}
+		double foodScore = country.getAgricultureSystem().getFoodSecurityScore();
+		double aquiferScore = country.getWaterSystem().getAquiferSecurityScore();
+		double reservoirScore = country.getPetroleumSystem().getReservoirSecurityScore();
 
 		if(country.getAgricultureSystem() instanceof LocalAgricultureSoS) {
 			double politicalScore = ((LocalAgricultureSoS) country.getAgricultureSystem()).getPoliticalPowerScore(year);
