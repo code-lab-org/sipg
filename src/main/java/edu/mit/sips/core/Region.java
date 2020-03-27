@@ -4,100 +4,73 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
-import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
 import edu.mit.sips.core.electricity.DefaultElectricitySoS;
-import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.electricity.LocalElectricitySoS;
+import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSoS;
-import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
+import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.social.DefaultSocialSoS;
-import edu.mit.sips.core.social.SocialSystem;
-import edu.mit.sips.core.water.LocalWaterSoS;
-import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.core.social.SocialSoS;
+import edu.mit.sips.core.water.DefaultWaterSoS;
+import edu.mit.sips.core.water.WaterSoS;
 
 /**
- * The Class Region.
+ * The Class Country.
  */
-public class Region extends DefaultSociety implements Society {
+public class Region extends NullSociety {
+	private AgricultureSoS agricultureSystem;
+	private WaterSoS waterSystem;
+	private ElectricitySoS electricitySystem;
+	private PetroleumSoS petroleumSystem;
+	private SocialSoS socialSystem;
 	
-	/**
-	 * Builds the region.
-	 *
-	 * @param name the name
-	 * @param nestedSocieties the nested societies
-	 * @return the region
-	 */
-	public static Region buildRegion(String name, List<? extends Society> nestedSocieties) {
-		AgricultureSystem agricultureSystem = new DefaultAgricultureSoS();
-		// agriculture system is local if there is a nested local system
-		for(Society society : nestedSocieties) {
-			if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
-				agricultureSystem = new LocalAgricultureSoS();
-				break;
-			}
-		}
-		
-		WaterSystem waterSystem = null;
-		// water system is local if there is a nested local system
-		for(Society society : nestedSocieties) {
-			if(society.getWaterSystem() instanceof WaterSystem.Local) {
-				waterSystem = new LocalWaterSoS();
-				break;
-			}
-		}
-		
-		ElectricitySystem electricitySystem = new DefaultElectricitySoS();
-		// electricity system is national if there is a nested local system
-		for(Society society : nestedSocieties) {
-			if(society.getElectricitySystem() instanceof ElectricitySystem.Local) {
-				electricitySystem = new LocalElectricitySoS();
-				break;
-			}
-		}
-		
-		PetroleumSystem petroleumSystem = new DefaultPetroleumSoS();
-		// petroleum system is national if there is a nested local system
-		for(Society society : nestedSocieties) {
-			if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
-				petroleumSystem = new LocalPetroleumSoS();
-				break;
-			}
-		}
-
-		// social system is always local
-		SocialSystem socialSystem = new DefaultSocialSoS();
-		
-		return new Region(name, nestedSocieties, agricultureSystem, 
-				waterSystem, petroleumSystem, electricitySystem, socialSystem);
-	}
-
 	/**
 	 * Instantiates a new region.
 	 */
-	protected Region() {
-		
+	public Region() {
+		super("Region", Collections.unmodifiableList(new ArrayList<Society>()));
+		agricultureSystem = new DefaultAgricultureSoS();
+		agricultureSystem.setSociety(this);
+		waterSystem = new DefaultWaterSoS();
+		waterSystem.setSociety(this);
+		petroleumSystem = new DefaultPetroleumSoS();
+		petroleumSystem.setSociety(this);
+		electricitySystem = new DefaultElectricitySoS();
+		electricitySystem.setSociety(this);
+		socialSystem = new DefaultSocialSoS();
+		socialSystem.setSociety(this);
 	}
 	
 	/**
 	 * Instantiates a new region.
 	 *
 	 * @param name the name
+	 * @param initialFunds the initial funds
 	 * @param nestedSocieties the nested societies
+	 * @param agricultureSystem the agriculture system
+	 * @param waterSystem the water system
+	 * @param electricitySystem the electricity system
+	 * @param petroleumSystem the petroleum system
+	 * @param socialSystem the social system
 	 */
-	private Region(String name, List<? extends Society> nestedSocieties,
-			AgricultureSystem agricultureSystem, WaterSystem waterSystem,
-			PetroleumSystem petroleumSystem, ElectricitySystem electricitySystem, 
-			SocialSystem socialSystem) {
-		super(name, nestedSocieties, agricultureSystem, 
-				waterSystem, petroleumSystem, electricitySystem, socialSystem);
+	private Region(String name, double initialFunds, List<? extends Society> nestedSocieties,
+			AgricultureSoS agricultureSystem, WaterSoS waterSystem,
+			PetroleumSoS petroleumSystem, ElectricitySoS electricitySystem, 
+			SocialSoS socialSystem) {
+		super(name, nestedSocieties);
+		this.agricultureSystem = agricultureSystem;
+		this.agricultureSystem.setSociety(this);
+		this.waterSystem = waterSystem;
+		this.waterSystem.setSociety(this);
+		this.electricitySystem = electricitySystem;
+		this.electricitySystem.setSociety(this);
+		this.petroleumSystem = petroleumSystem;
+		this.petroleumSystem.setSociety(this);
+		this.socialSystem = socialSystem;
+		this.socialSystem.setSociety(this);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SocialSystem#getCities()
-	 */
 	@Override
 	public List<City> getCities() {
 		List<City> cities = new ArrayList<City>();
@@ -106,15 +79,37 @@ public class Region extends DefaultSociety implements Society {
 		}
 		return Collections.unmodifiableList(cities);
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getCountry()
-	 */
+	
 	@Override
 	public Country getCountry() {
 		if(getSociety() == null) {
 			throw new IllegalStateException("Society cannot be null.");
 		}
 		return getSociety().getCountry();
+	}
+		
+	@Override
+	public AgricultureSoS getAgricultureSystem() {
+		return this.agricultureSystem;
+	}
+	
+	@Override
+	public WaterSoS getWaterSystem() {
+		return this.waterSystem;
+	}
+	
+	@Override
+	public PetroleumSoS getPetroleumSystem() {
+		return this.petroleumSystem;
+	}
+	
+	@Override
+	public ElectricitySoS getElectricitySystem() {
+		return this.electricitySystem;
+	}
+	
+	@Override
+	public SocialSoS getSocialSystem() {
+		return this.socialSystem;
 	}
 }

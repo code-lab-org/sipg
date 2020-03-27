@@ -12,7 +12,6 @@ import org.apache.log4j.Logger;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.InfrastructureSystem;
-import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
@@ -663,23 +662,23 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 				if(theAttributes.containsKey(rtiAmbassador.getAttributeHandle(
 						rtiAmbassador.getObjectClassHandle(HlaInfrastructureSystem.CLASS_NAME), 
 						HlaInfrastructureSystem.SOCIETY_NAME_ATTRIBUTE))) {
-					for(Society society : simulator.getScenario().getCountry().getSocieties()) {
-						if(society.getName().equals(system.getSocietyName())) {
-							if(!(society.getAgricultureSystem() instanceof AgricultureSystem.Local)
+					for(City city : simulator.getScenario().getCountry().getCities()) {
+						if(city.getName().equals(system.getSocietyName())) {
+							if(!(city.getAgricultureSystem() instanceof AgricultureSystem.Local)
 									&& system instanceof AgricultureSystem) {
-								society.setAgricultureSystem((AgricultureSystem)system);
-							} else if(!(society.getWaterSystem() instanceof WaterSystem.Local)
+								city.setAgricultureSystem((AgricultureSystem)system);
+							} else if(!(city.getWaterSystem() instanceof WaterSystem.Local)
 									&& system instanceof WaterSystem) {
-								society.setWaterSystem((WaterSystem)system);
-							} else if(!(society.getPetroleumSystem() instanceof PetroleumSystem.Local)
+								city.setWaterSystem((WaterSystem)system);
+							} else if(!(city.getPetroleumSystem() instanceof PetroleumSystem.Local)
 									&& system instanceof PetroleumSystem) {
-								society.setPetroleumSystem((PetroleumSystem)system);
-							} else if(!(society.getElectricitySystem() instanceof ElectricitySystem.Local)
+								city.setPetroleumSystem((PetroleumSystem)system);
+							} else if(!(city.getElectricitySystem() instanceof ElectricitySystem.Local)
 									&& system instanceof ElectricitySystem) {
-								society.setElectricitySystem((ElectricitySystem)system);
-							} else if(!(society.getSocialSystem() instanceof SocialSystem.Local)
+								city.setElectricitySystem((ElectricitySystem)system);
+							} else if(!(city.getSocialSystem() instanceof SocialSystem.Local)
 									&& system instanceof SocialSystem) {
-								society.setSocialSystem((SocialSystem)system);
+								city.setSocialSystem((SocialSystem)system);
 							} else {
 								logger.warn("Unknown infrastructure class, skipping.");
 							}

@@ -184,34 +184,6 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	public WaterSystem getWaterSystem();
 	
 	/**
-	 * Sets the agriculture system.
-	 *
-	 * @param agricultureSystem the new agriculture system
-	 */
-	public void setAgricultureSystem(AgricultureSystem agricultureSystem);
-	
-	/**
-	 * Sets the electricity system.
-	 *
-	 * @param electricitySystem the new electricity system
-	 */
-	public void setElectricitySystem(ElectricitySystem electricitySystem);
-	
-	/**
-	 * Sets the petroleum system.
-	 *
-	 * @param petroluemSystem the new petroleum system
-	 */
-	public void setPetroleumSystem(PetroleumSystem petroluemSystem);
-	
-	/**
-	 * Sets the social system.
-	 *
-	 * @param socialSystem the new social system
-	 */
-	public void setSocialSystem(SocialSystem socialSystem);
-	
-	/**
 	 * Sets the society.
 	 *
 	 * @param society the new society
@@ -224,11 +196,4 @@ public interface Society extends SimEntity, CurrencyUnitsOutput,
 	 * @return the population
 	 */
 	public long getPopulation();
-	
-	/**
-	 * Sets the water system.
-	 *
-	 * @param waterSystem the new water system
-	 */
-	public void setWaterSystem(WaterSystem waterSystem);
 }

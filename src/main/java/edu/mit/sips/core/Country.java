@@ -26,7 +26,12 @@ import edu.mit.sips.core.water.WaterSystem;
 /**
  * The Class Country.
  */
-public class Country extends DefaultSociety implements Society {
+public class Country extends NullSociety {
+	private AgricultureSoS agricultureSystem;
+	private WaterSoS waterSystem;
+	private ElectricitySoS electricitySystem;
+	private PetroleumSoS petroleumSystem;
+	private SocialSoS socialSystem;
 	
 	/**
 	 * Builds the country.
@@ -87,6 +92,17 @@ public class Country extends DefaultSociety implements Society {
 	 * Instantiates a new country.
 	 */
 	public Country() {
+		super("Country", Collections.unmodifiableList(new ArrayList<Society>()));
+		agricultureSystem = new DefaultAgricultureSoS();
+		agricultureSystem.setSociety(this);
+		waterSystem = new DefaultWaterSoS();
+		waterSystem.setSociety(this);
+		petroleumSystem = new DefaultPetroleumSoS();
+		petroleumSystem.setSociety(this);
+		electricitySystem = new DefaultElectricitySoS();
+		electricitySystem.setSociety(this);
+		socialSystem = new DefaultSocialSoS();
+		socialSystem.setSociety(this);
 		initialFunds = 0;
 	}
 	
@@ -106,16 +122,20 @@ public class Country extends DefaultSociety implements Society {
 			AgricultureSoS agricultureSystem, WaterSoS waterSystem,
 			PetroleumSoS petroleumSystem, ElectricitySoS electricitySystem, 
 			SocialSoS socialSystem) {
-		super(name, nestedSocieties, agricultureSystem, 
-				waterSystem, petroleumSystem, electricitySystem, socialSystem);
-		
-		// no need to validate initial funds
+		super(name, nestedSocieties);
+		this.agricultureSystem = agricultureSystem;
+		this.agricultureSystem.setSociety(this);
+		this.waterSystem = waterSystem;
+		this.waterSystem.setSociety(this);
+		this.electricitySystem = electricitySystem;
+		this.electricitySystem.setSociety(this);
+		this.petroleumSystem = petroleumSystem;
+		this.petroleumSystem.setSociety(this);
+		this.socialSystem = socialSystem;
+		this.socialSystem.setSociety(this);
 		this.initialFunds = initialFunds;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SocialSystem#getCities()
-	 */
 	@Override
 	public List<City> getCities() {
 		List<City> cities = new ArrayList<City>();
@@ -179,17 +199,11 @@ public class Country extends DefaultSociety implements Society {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.Society#getCountry()
-	 */
 	@Override
 	public Country getCountry() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(int)
-	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time); // initializes systems
@@ -198,9 +212,6 @@ public class Country extends DefaultSociety implements Society {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 		super.tick(); // ticks systems
@@ -209,9 +220,6 @@ public class Country extends DefaultSociety implements Society {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
 	@Override
 	public void tock() {
 		super.tock(); // tocks systems
@@ -222,27 +230,27 @@ public class Country extends DefaultSociety implements Society {
 	
 	@Override
 	public AgricultureSoS getAgricultureSystem() {
-		return (AgricultureSoS) super.getAgricultureSystem();
+		return this.agricultureSystem;
 	}
 	
 	@Override
 	public WaterSoS getWaterSystem() {
-		return (WaterSoS) super.getWaterSystem();
+		return this.waterSystem;
 	}
 	
 	@Override
 	public PetroleumSoS getPetroleumSystem() {
-		return (PetroleumSoS) super.getPetroleumSystem();
+		return this.petroleumSystem;
 	}
 	
 	@Override
 	public ElectricitySoS getElectricitySystem() {
-		return (ElectricitySoS) super.getElectricitySystem();
+		return this.electricitySystem;
 	}
 	
 	@Override
 	public SocialSoS getSocialSystem() {
-		return (SocialSoS) super.getSocialSystem();
+		return this.socialSystem;
 	}
 	
 	/**
