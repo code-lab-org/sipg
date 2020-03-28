@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
@@ -22,6 +37,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -50,10 +66,14 @@ import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.gui.UpdateListener;
 
 /**
- * The Class InfrastructureSystemPanel.
+ * A generic panel to investigate infrastructure system outputs.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class InfrastructureSystemPanel extends JTabbedPane implements UpdateListener {
 	private static final long serialVersionUID = -5223317851664526305L;
+	private static Logger logger = Logger.getLogger(InfrastructureSystemPanel.class);
+	
 	private final InfrastructureSystem infrastructureSystem;
 	private final JFileChooser fileChooser = new JFileChooser();
 
@@ -67,23 +87,18 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	}
 	
 	/**
-	 * Gets the infrastructure system.
+	 * Creates the chart.
 	 *
-	 * @return the infrastructure system
+	 * @param title the title
+	 * @param isArea the is area
+	 * @param valueAxis the value axis
+	 * @param areaDataset the area dataset
+	 * @param colors the colors
+	 * @param lineDataset the line dataset
+	 * @param valueAxis2 the value axis 2
+	 * @param lineDataset2 the line dataset 2
+	 * @return the j free chart
 	 */
-	public InfrastructureSystem getInfrastructureSystem() {
-		return infrastructureSystem;
-	}
-	
-	/**
-	 * Gets the society.
-	 *
-	 * @return the society
-	 */
-	public Society getSociety() {
-		return infrastructureSystem.getSociety();
-	}
-	
 	private JFreeChart createChart(String title, boolean isArea, final String valueAxis,
 			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset, 
 			final String valueAxis2, final TableXYDataset lineDataset2) {
@@ -177,27 +192,88 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	}
 	
 	/**
-	 * Creates the toggle-able stacked area chart.
+	 * Creates the single line chart.
 	 *
+	 * @param title the title
 	 * @param valueAxis the value axis
-	 * @param areaDataset the dataset
-	 * @return the j free chart
+	 * @param lineDataset the line dataset
+	 * @return the j panel
 	 */
-	protected JTabbedPane createToggleableStackedAreaChart(final String title, final String valueAxis,
-			final TableXYDataset areaDataset, final Color[] colors, 
-			final TableXYDataset areaDataset2, final Color[] colors2) {
-		final JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab("Aggregated", createStackedAreaChart(title, valueAxis, areaDataset, colors));
-		tabbedPane.addTab("Disaggregated", createStackedAreaChart(title, valueAxis, areaDataset2, colors2));
-		return tabbedPane;
+	protected JPanel createSingleLineChart(String title, String valueAxis,
+			TableXYDataset lineDataset) {
+		return createStackedAreaChart(title, valueAxis, null, null, lineDataset, null, null);
 	}
 	
 	/**
 	 * Creates the stacked area chart.
 	 *
+	 * @param title the title
 	 * @param valueAxis the value axis
-	 * @param areaDataset the dataset
-	 * @return the j free chart
+	 * @param areaDataset the area dataset
+	 * @return the j panel
+	 */
+	protected JPanel createStackedAreaChart(String title, String valueAxis,
+			TableXYDataset areaDataset) {
+		return createStackedAreaChart(title, valueAxis, areaDataset, null, null, null, null);
+	}
+	
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param title the title
+	 * @param valueAxis the value axis
+	 * @param areaDataset the area dataset
+	 * @param colors the colors
+	 * @return the j panel
+	 */
+	protected JPanel createStackedAreaChart(String title, String valueAxis,
+			TableXYDataset areaDataset, Color[] colors) {
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, null);
+	}
+
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param title the title
+	 * @param valueAxis the value axis
+	 * @param areaDataset the area dataset
+	 * @param colors the colors
+	 * @param valueAxis2 the value axis 2
+	 * @param lineDataset the line dataset
+	 * @return the j panel
+	 */
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
+			final TableXYDataset areaDataset, Color[] colors, final String valueAxis2, 
+			final TableXYDataset lineDataset) {
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, valueAxis2, lineDataset);
+	}
+	
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param title the title
+	 * @param valueAxis the value axis
+	 * @param areaDataset the area dataset
+	 * @param colors the colors
+	 * @param lineDataset the line dataset
+	 * @return the j panel
+	 */
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
+			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset) {
+		return createStackedAreaChart(title, valueAxis, areaDataset, colors, lineDataset, null, null);
+	}
+	
+	/**
+	 * Creates the stacked area chart.
+	 *
+	 * @param title the title
+	 * @param valueAxis the value axis
+	 * @param areaDataset the area dataset
+	 * @param colors the colors
+	 * @param lineDataset the line dataset
+	 * @param valueAxis2 the value axis 2
+	 * @param lineDataset2 the line dataset 2
+	 * @return the j panel
 	 */
 	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final Color[] colors, final TableXYDataset lineDataset, 
@@ -218,7 +294,8 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 				}
 			}
 		});
-		//TODO buttonPanel.add(exportAreaButton);
+		// disable export (for now) 
+		// buttonPanel.add(exportAreaButton);
 		if(areaDataset != null) {
 			final JCheckBox areaToggle = new JCheckBox("Stacked Area", true);
 			areaToggle.addActionListener(new ActionListener() {
@@ -244,26 +321,13 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	/**
 	 * Creates the stacked area chart.
 	 *
+	 * @param title the title
 	 * @param valueAxis the value axis
-	 * @param areaDataset the dataset
-	 * @return the j free chart
+	 * @param areaDataset the area dataset
+	 * @param valueAxis2 the value axis 2
+	 * @param lineDataset the line dataset
+	 * @return the j panel
 	 */
-	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
-			final TableXYDataset areaDataset, Color[] colors, final String valueAxis2, 
-			final TableXYDataset lineDataset) {
-		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, valueAxis2, lineDataset);
-	}
-	
-	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
-			final TableXYDataset areaDataset, Color[] colors, final TableXYDataset lineDataset) {
-		return createStackedAreaChart(title, valueAxis, areaDataset, colors, lineDataset, null, null);
-	}
-	
-	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
-			final TableXYDataset areaDataset, final TableXYDataset lineDataset) {
-		return createStackedAreaChart(title, valueAxis, areaDataset, null, lineDataset, null, null);
-	}
-	
 	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final String valueAxis2, 
 			final TableXYDataset lineDataset) {
@@ -273,28 +337,21 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	/**
 	 * Creates the stacked area chart.
 	 *
+	 * @param title the title
 	 * @param valueAxis the value axis
 	 * @param areaDataset the area dataset
-	 * @return the chart panel
+	 * @param lineDataset the line dataset
+	 * @return the j panel
 	 */
-	protected JPanel createStackedAreaChart(String title, String valueAxis,
-			TableXYDataset areaDataset, Color[] colors) {
-		return createStackedAreaChart(title, valueAxis, areaDataset, colors, null, null);
-	}
-
-	protected JPanel createStackedAreaChart(String title, String valueAxis,
-			TableXYDataset areaDataset) {
-		return createStackedAreaChart(title, valueAxis, areaDataset, null, null, null, null);
-	}
-
-	protected JPanel createSingleLineChart(String title, String valueAxis,
-			TableXYDataset lineDataset) {
-		return createStackedAreaChart(title, valueAxis, null, null, lineDataset, null, null);
+	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
+			final TableXYDataset areaDataset, final TableXYDataset lineDataset) {
+		return createStackedAreaChart(title, valueAxis, areaDataset, null, lineDataset, null, null);
 	}
 	
 	/**
 	 * Creates the chart.
 	 *
+	 * @param title the title
 	 * @param valueAxis the value axis
 	 * @param seriesCollection the series collection
 	 * @return the j free chart
@@ -323,62 +380,48 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 				exportDataset(valueAxis, seriesCollection);
 			}
 		});
-		//TODO panel.add(exportAreaButton, BorderLayout.SOUTH);
+		panel.add(exportAreaButton, BorderLayout.SOUTH);
 		return panel;
 	}
-	
 
-	
 	/**
-	 * Update series.
+	 * Creates the toggle-able stacked area chart.
 	 *
-	 * @param series the series
-	 * @param year the year
-	 * @param value the value
+	 * @param title the title
+	 * @param valueAxis the value axis
+	 * @param areaDataset the dataset
+	 * @param colors the colors
+	 * @param areaDataset2 the area dataset 2
+	 * @param colors2 the colors 2
+	 * @return the j free chart
 	 */
-	protected void updateSeries(DefaultTableXYDataset dataset, Comparable<?> key, int year, double value) {
-		int index = dataset.indexOf(key);
-		if(index < 0) {
-			dataset.addSeries(new XYSeries(key, true, false));
-			index = dataset.indexOf(key);
-		}
-		dataset.getSeries(index).addOrUpdate(new Year(year).getFirstMillisecond(), value);
-	}
-	
-	/**
-	 * Update a series collection.
-	 *
-	 * @param seriesCollection the series collection
-	 * @param key the key
-	 * @param year the year
-	 * @param value the value
-	 */
-	protected void updateSeriesCollection(TimeSeriesCollection seriesCollection, 
-			Comparable<?> key, int year, double value) {
-		// Note: TimeSeriesCollection.getSeries returns a null TimeSeries
-		// if the key does not exist, however XYSeriesCollection.getSeries
-		// actually throws an UnknownKeyException which must be handled 
-		// differently. Both are included here for good programming practice.
-		TimeSeries series;
-		try {
-			series = seriesCollection.getSeries(key);
-		} catch(UnknownKeyException ex) {
-			series = null;
-		}
-		if(series == null) {
-			series = new TimeSeries(key);
-			seriesCollection.addSeries(series);
-		}
-		series.addOrUpdate(new Year(year), value);
+	protected JTabbedPane createToggleableStackedAreaChart(final String title, final String valueAxis,
+			final TableXYDataset areaDataset, final Color[] colors, 
+			final TableXYDataset areaDataset2, final Color[] colors2) {
+		final JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane.addTab("Aggregated", createStackedAreaChart(title, valueAxis, areaDataset, colors));
+		tabbedPane.addTab("Disaggregated", createStackedAreaChart(title, valueAxis, areaDataset2, colors2));
+		return tabbedPane;
 	}
 
 	/**
 	 * Export dataset.
+	 *
+	 * @param valueAxis the value axis
+	 * @param dataset the dataset
 	 */
 	protected void exportDataset(String valueAxis, XYDataset dataset) {
 		exportDataset(valueAxis, dataset, null, null);
 	}
 	
+	/**
+	 * Export dataset.
+	 *
+	 * @param valueAxis the value axis
+	 * @param dataset the dataset
+	 * @param dataset2 the dataset 2
+	 * @param dataset3 the dataset 3
+	 */
 	protected void exportDataset(String valueAxis, XYDataset dataset, XYDataset dataset2, XYDataset dataset3) {
 		if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(this)) {
 			File f = fileChooser.getSelectedFile();
@@ -387,7 +430,6 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 					JOptionPane.showConfirmDialog(this, 
 							"Overwrite existing file " + f.getName() + "?",
 							"File Exists", JOptionPane.YES_NO_OPTION)) {
-
 				try {
 					BufferedWriter bw = Files.newBufferedWriter(
 							Paths.get(f.getPath()), Charset.defaultCharset());
@@ -432,25 +474,75 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 							b.append("\n");
 						}
 					}
-					/*
-					for(int i = 0; i < dataset.getSeriesCount(); i++) {
-						b.append(dataset.getSeriesKey(i))
-							.append("\n");
-						for(int j = 0; j < dataset.getItemCount(i); j++) {
-							b.append(dataset.getXValue(i, j))
-								.append(", ")
-								.append(dataset.getYValue(i, j))
-								.append("\n");
-						}
-					}
-					*/
 					
 					bw.write(b.toString());
 					bw.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
+				} catch (IOException e) {
+					logger.error(e);
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Gets the infrastructure system.
+	 *
+	 * @return the infrastructure system
+	 */
+	public InfrastructureSystem getInfrastructureSystem() {
+		return infrastructureSystem;
+	}
+	
+	/**
+	 * Gets the society.
+	 *
+	 * @return the society
+	 */
+	public Society getSociety() {
+		return infrastructureSystem.getSociety();
+	}
+
+	/**
+	 * Update series.
+	 *
+	 * @param dataset the dataset
+	 * @param key the key
+	 * @param year the year
+	 * @param value the value
+	 */
+	protected void updateSeries(DefaultTableXYDataset dataset, Comparable<?> key, int year, double value) {
+		int index = dataset.indexOf(key);
+		if(index < 0) {
+			dataset.addSeries(new XYSeries(key, true, false));
+			index = dataset.indexOf(key);
+		}
+		dataset.getSeries(index).addOrUpdate(new Year(year).getFirstMillisecond(), value);
+	}
+	
+	/**
+	 * Update a series collection.
+	 *
+	 * @param seriesCollection the series collection
+	 * @param key the key
+	 * @param year the year
+	 * @param value the value
+	 */
+	protected void updateSeriesCollection(TimeSeriesCollection seriesCollection, 
+			Comparable<?> key, int year, double value) {
+		// Note: TimeSeriesCollection.getSeries returns a null TimeSeries
+		// if the key does not exist, however XYSeriesCollection.getSeries
+		// actually throws an UnknownKeyException which must be handled 
+		// differently. Both are included here for good programming practice.
+		TimeSeries series;
+		try {
+			series = seriesCollection.getSeries(key);
+		} catch(UnknownKeyException ex) {
+			series = null;
+		}
+		if(series == null) {
+			series = new TimeSeries(key);
+			seriesCollection.addSeries(series);
+		}
+		series.addOrUpdate(new Year(year), value);
 	}
 }

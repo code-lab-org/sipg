@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.BasicStroke;
@@ -26,7 +41,9 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.gui.PlottingUtils;
 
 /**
- * The Class ResourceStatePanel.
+ * A generic panel to visualize spatial state of an infrastructure system.
+ * 
+ * @author Paul T. Grogan
  */
 public class SpatialStatePanel extends JPanel {
 	private static final long serialVersionUID = -8936760551671238274L;
@@ -46,9 +63,10 @@ public class SpatialStatePanel extends JPanel {
 	private static final int MIN_SOCIETY_RADIUS = 40;
 
 	/**
-	 * Instantiates a new resource state panel.
+	 * Instantiates a new spatial state panel.
 	 *
 	 * @param society the society
+	 * @param stateProvider the state provider
 	 */
 	public SpatialStatePanel(Society society, SpatialStateProvider stateProvider) {
 		this.society = society;
@@ -60,7 +78,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw arrow line.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param line the line
 	 */
 	private void drawArrowLine(Graphics2D g2d, Line2D.Float line) {
@@ -70,9 +88,7 @@ public class SpatialStatePanel extends JPanel {
 				Math.round(line.y1), 
 				Math.round(line.x2), 
 				Math.round(line.y2));
-
-		// http://stackoverflow.com/questions/2027613/how-to-draw-a-directed-arrow-line-in-java
-		// code based on Vicente Reig's example
+		
 		AffineTransform tx = new AffineTransform();
 	    tx.setToIdentity();
 	    double angle = Math.atan2(line.y2-line.y1, line.x2-line.x1);
@@ -90,7 +106,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw arrow line with head label.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param line the line
 	 * @param label the label
 	 */
@@ -104,7 +120,6 @@ public class SpatialStatePanel extends JPanel {
 		g.drawString(label, 
 				(int) Math.round(line.x2 + margin*Math.cos(theta)
 						+ (Math.abs(Math.sin(theta))>.9?-g.getFontMetrics().stringWidth(label)/2:(line.x2 < line.x1?-g.getFontMetrics().stringWidth(label):0))), 
-						//- (line.x2 < line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y2 + margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
 		g.dispose();
@@ -113,7 +128,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw arrow line with tail label.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param line the line
 	 * @param label the label
 	 */
@@ -127,16 +142,15 @@ public class SpatialStatePanel extends JPanel {
 		g.drawString(label, 
 				(int) Math.round(line.x1 - margin*Math.cos(theta)
 						+ (Math.abs(Math.sin(theta))>.9?-g.getFontMetrics().stringWidth(label)/2:(line.x2 > line.x1?-g.getFontMetrics().stringWidth(label):0))), 
-						//- (line.x2 > line.x1?g.getFontMetrics().stringWidth(label):0)), 
 						(int) Math.round(line.y1 - margin*Math.sin(theta) 
 								+ g.getFontMetrics().getHeight()/2));
 		g.dispose();
 	}
 	
 	/**
-	 * Draw country boundary.
+	 * Draw boundaries.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 */
 	private void drawBoundaries(Graphics2D g2d) {
 		Graphics2D g = (Graphics2D)g2d.create();
@@ -192,14 +206,29 @@ public class SpatialStatePanel extends JPanel {
 		g.dispose();
 	}
 	
+	/**
+	 * Gets the surplus color.
+	 *
+	 * @return the surplus color
+	 */
 	private Color getSurplusColor() {
 		return PlottingUtils.YELLOW_GREEN;
 	}
 	
+	/**
+	 * Gets the deficit color.
+	 *
+	 * @return the deficit color
+	 */
 	private Color getDeficitColor() {
 		return PlottingUtils.CRIMSON;
 	}
 	
+	/**
+	 * Gets the neutral color.
+	 *
+	 * @return the neutral color
+	 */
 	private Color getNeutralColor() {
 		return PlottingUtils.GRAY;
 	}
@@ -207,7 +236,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw city.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param city the city
 	 */
 	private void drawCity(Graphics2D g2d, City city) {
@@ -289,8 +318,7 @@ public class SpatialStatePanel extends JPanel {
 					+ g.getFontMetrics().getHeight()/2);
 			
 			double productionValue = stateProvider.getOtherProduction(city);
-			// double maxProduction = stateProvider.getConsumption(city);
-			int fillDiameter = 2*getElementRadius(); //(int) Math.min(2*getElementRadius(), productionValue/maxProduction*2*getElementRadius());
+			int fillDiameter = 2*getElementRadius();
 			g.setColor(getSurplusColor());
 			g.fillOval(loc.x - fillDiameter/2, loc.y - fillDiameter/2, 
 					fillDiameter, fillDiameter);
@@ -310,9 +338,9 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw distribution.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param society the society
-	 * @param dest the dest
+	 * @param dest the destination
 	 */
 	private void drawDistribution(Graphics2D g2d, Society society, Society dest) {
 		Graphics2D g = (Graphics2D)g2d.create();
@@ -371,7 +399,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw element.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param element the element
 	 * @param city the city
 	 */
@@ -443,6 +471,11 @@ public class SpatialStatePanel extends JPanel {
 		g.dispose();
 	}
 	
+	/**
+	 * Draw legend.
+	 *
+	 * @param g2d the graphics
+	 */
 	private void drawLegend(Graphics2D g2d) {
 		Graphics2D g = (Graphics2D)g2d.create();
 		
@@ -470,7 +503,7 @@ public class SpatialStatePanel extends JPanel {
 	/**
 	 * Draw society.
 	 *
-	 * @param g2d the g2d
+	 * @param g2d the graphics
 	 * @param society the society
 	 */
 	private void drawSociety(Graphics2D g2d, Society society) {
@@ -805,9 +838,6 @@ public class SpatialStatePanel extends JPanel {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -835,17 +865,12 @@ public class SpatialStatePanel extends JPanel {
 						drawDistribution(g2d, society, dest);
 					}
 				}
-				
-				// TODO draw distribution to non-nested societies
 			}
 		}
 		
 		drawLegend(g2d);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.awt.Component#setBounds(int, int, int, int)
-	 */
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);

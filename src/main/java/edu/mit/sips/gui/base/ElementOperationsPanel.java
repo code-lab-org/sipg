@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.GridBagConstraints;
@@ -14,11 +29,34 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementOperationsPanel;
 
 /**
- * The Class ElementOperationsPanel.
+ * Generic panel to control operational settings for infrastructure elements.
+ * 
+ * @author Paul T. Grogan
  */
 public class ElementOperationsPanel extends JPanel {
 	private static final long serialVersionUID = -7019424706322479152L;
 		
+	/**
+	 * Creates a new ElementPanel object.
+	 *
+	 * @param element the element
+	 * @return the element panel
+	 */
+	public static ElementOperationsPanel createElementOperationsPanel(
+			InfrastructureElement element) {
+		if(element instanceof AgricultureElement) {
+			return new AgricultureElementOperationsPanel((AgricultureElement)element);
+		} /* FIXME else if(element instanceof WaterElement) {
+			return new WaterElementOperationsPanel((WaterElement)element);
+		} else if(element instanceof PetroleumElement) {
+			return new PetroleumElementOperationsPanel((PetroleumElement)element);
+		} else if(element instanceof ElectricityElement) {
+			return new ElectricityElementOperationsPanel((ElectricityElement)element);
+		} */ else {
+			throw new IllegalArgumentException("Element panel not implemented.");
+		}
+	}
+	
 	/**
 	 * Instantiates a new element operations panel.
 	 *
@@ -66,6 +104,7 @@ public class ElementOperationsPanel extends JPanel {
 	 * @param c the c
 	 * @param labelText the label text
 	 * @param component the component
+	 * @param units the units
 	 */
 	protected void addInput(JPanel panel, GridBagConstraints c, String labelText, 
 			JComponent component, String units) {
@@ -85,28 +124,5 @@ public class ElementOperationsPanel extends JPanel {
 		panel.add(new JLabel(units), c);
 		c.gridy++;
 		c.gridx-=2;
-	}
-	
-	/**
-	 * Creates a new ElementPanel object.
-	 *
-	 * @param element the element
-	 * @return the element panel
-	 */
-	public static ElementOperationsPanel createElementOperationsPanel(
-			InfrastructureElement element) {
-		if(element instanceof AgricultureElement) {
-			return new AgricultureElementOperationsPanel((AgricultureElement)element);
-			/*
-		} else if(element instanceof WaterElement) {
-			return new WaterElementOperationsPanel((WaterElement)element);
-		} else if(element instanceof PetroleumElement) {
-			return new PetroleumElementOperationsPanel((PetroleumElement)element);
-		} else if(element instanceof ElectricityElement) {
-			return new ElectricityElementOperationsPanel((ElectricityElement)element);
-			*/
-		} else {
-			throw new IllegalArgumentException("Element panel not implemented.");
-		}
 	}
 }

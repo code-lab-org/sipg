@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.Color;
@@ -13,13 +28,17 @@ import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.gui.DocumentChangeListener;
+import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.TimeUnitsOutput;
 
 /**
- * The Class SimpleLifecycleModelPanel.
+ * A second implementation of a lifecycle model panel for 
+ * the simple lifecycle model interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements CurrencyUnitsOutput, TimeUnitsOutput {
 	private static final long serialVersionUID = 4823361209584020543L;
@@ -36,11 +55,11 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 		timeDecommissionedLabel;
 	
 	/**
-	 * Instantiates a new simple lifecycle model panel.
+	 * Instantiates a new simple lifecycle model panel 2.
 	 *
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public SimpleLifecycleModelPanel2(final EditableSimpleLifecycleModel lifecycleModel) {
+	public SimpleLifecycleModelPanel2(Scenario scenario, final EditableSimpleLifecycleModel lifecycleModel) {
 		super(lifecycleModel);
 		setLayout(new GridBagLayout());
 		
@@ -149,13 +168,6 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.LifecycleModelPanel#setTemplateMode(boolean)
-	 */
-	@Override
-	public void setTemplateMode(String templateName) {
-	}
-	
 	/**
 	 * Adds the input.
 	 *
@@ -183,28 +195,22 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 		c.gridy++;
 		c.gridx-=2;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
+	
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return timeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
-	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
 	@Override
 	public TimeUnits getTimeUnits() {
 		return timeUnits;
 	}
+
+	@Override
+	public void setTemplateMode(String templateName) { }
 }

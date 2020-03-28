@@ -33,12 +33,13 @@ public class DefaultScenario implements Scenario {
 	private final boolean displayRemotePanels;
 	private final long startTime;
 	private final long endTime;
+	private final long presentTime;
 	
 	/**
 	 * Instantiates a new default scenario.
 	 */
 	public DefaultScenario() {
-		this(new Country(), new ArrayList<ElementTemplate>(), 0, 0, true, false);
+		this(new Country(), new ArrayList<ElementTemplate>(), 0, 0, 0, true, false);
 	}
 	
 	/**
@@ -53,7 +54,7 @@ public class DefaultScenario implements Scenario {
 	 */
 	public DefaultScenario(Country country, 
 			List<? extends ElementTemplate> templates, 
-			long startTime, long endTime,
+			long startTime, long presentTime, long endTime,
 			boolean displayTeamScore, boolean isRemotePanelsDisplayed) {
 		this.displayTeamScore = displayTeamScore;
 		this.displayRemotePanels = isRemotePanelsDisplayed;
@@ -61,6 +62,7 @@ public class DefaultScenario implements Scenario {
 		this.templates = templates;
 		this.startTime = startTime;
 		this.endTime = endTime;
+		this.presentTime = presentTime;
 	}
 	
 	@Override
@@ -71,6 +73,11 @@ public class DefaultScenario implements Scenario {
 	@Override
 	public long getEndTime() {
 		return endTime;
+	}
+
+	@Override
+	public long getPresentTime() {
+		return presentTime;
 	}
 
 	@Override

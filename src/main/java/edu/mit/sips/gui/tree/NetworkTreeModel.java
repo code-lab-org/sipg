@@ -1,4 +1,19 @@
-package edu.mit.sips.gui.comp;
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+package edu.mit.sips.gui.tree;
 
 import java.util.Enumeration;
 
@@ -11,7 +26,9 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureElement;
 
 /**
- * The Class ElementsTreeModel.
+ * A tree model that represents a network of societies and infrastructure systems.
+ * 
+ * @author Paul T. Grogan
  */
 public class NetworkTreeModel extends DefaultTreeModel {
 	private static final long serialVersionUID = 7544013230179337273L;
@@ -25,7 +42,12 @@ public class NetworkTreeModel extends DefaultTreeModel {
 		super(new DefaultMutableTreeNode());
 	}
 	
-	public void setState(Society society) {
+	/**
+	 * Initialize this tree with a top-level society.
+	 *
+	 * @param society the new state
+	 */
+	public void initialize(Society society) {
 		this.society = society;
 		setRoot(new SocietyTreeNode(society, society.getInternalElements()));
 		nodeStructureChanged(getRoot());
@@ -61,8 +83,10 @@ public class NetworkTreeModel extends DefaultTreeModel {
 		return null;
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.swing.tree.DefaultTreeModel#getRoot()
+	/**
+	 * Gets the root.
+	 *
+	 * @return the root
 	 */
 	public DefaultMutableTreeNode getRoot() {
 		if(super.getRoot() instanceof DefaultMutableTreeNode) {
@@ -72,12 +96,12 @@ public class NetworkTreeModel extends DefaultTreeModel {
 	}
 	
 	/**
-	 * Gets the location node.
+	 * Gets the society node.
 	 *
-	 * @param location the location
+	 * @param society the society
 	 * @return the location node
 	 */
-	private SocietyTreeNode getLocationNode(Society society) {
+	private SocietyTreeNode getSocietyNode(Society society) {
 		for(Enumeration<?> e = getRoot().breadthFirstEnumeration(); e.hasMoreElements();) {
 			Object o = e.nextElement();
 			if(o instanceof SocietyTreeNode) {
@@ -133,11 +157,11 @@ public class NetworkTreeModel extends DefaultTreeModel {
 	/**
 	 * Gets the path.
 	 *
-	 * @param location the location
+	 * @param society the society
 	 * @return the path
 	 */
 	public TreePath getPath(Society society) {
-		SocietyTreeNode locationTreeNode = getLocationNode(society);
+		SocietyTreeNode locationTreeNode = getSocietyNode(society);
 		if(locationTreeNode != null) {
 			return new TreePath(locationTreeNode.getPath());
 		} else {
@@ -163,7 +187,7 @@ public class NetworkTreeModel extends DefaultTreeModel {
 	/**
 	 * Element added.
 	 *
-	 * @param event the event
+	 * @param element the element
 	 */
 	public void elementAdded(InfrastructureElement element) {
 		if(getRoot() == null) return;
@@ -179,7 +203,7 @@ public class NetworkTreeModel extends DefaultTreeModel {
 	/**
 	 * Element modified.
 	 *
-	 * @param event the event
+	 * @param element the element
 	 */
 	public void elementModified(InfrastructureElement element) {
 		if(getRoot() == null) return;
@@ -215,7 +239,7 @@ public class NetworkTreeModel extends DefaultTreeModel {
 	/**
 	 * Element removed.
 	 *
-	 * @param event the event
+	 * @param element the element
 	 */
 	public void elementRemoved(InfrastructureElement element) {
 		if(getRoot() == null) return;

@@ -72,7 +72,7 @@ public final class GameScenarioComplete extends DefaultScenario {
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
 				Arrays.asList(GameElementTemplate.values()), 
-				1950, 2010, isTeamScoreDisplayed, false);
+				1950, 1980, 2010, isTeamScoreDisplayed, false);
 	}
 
 	/**

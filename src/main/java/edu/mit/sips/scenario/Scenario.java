@@ -42,6 +42,13 @@ public interface Scenario {
 	public long getEndTime();
 	
 	/**
+	 * Gets the present time.
+	 *
+	 * @return the present time
+	 */
+	public long getPresentTime();
+	
+	/**
 	 * Gets the start time.
 	 *
 	 * @return the start time

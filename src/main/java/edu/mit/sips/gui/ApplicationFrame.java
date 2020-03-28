@@ -62,7 +62,7 @@ import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.RecordedWaterSystem;
-import edu.mit.sips.gui.base.ElementsPane;
+import edu.mit.sips.gui.base.InfrastructurePanel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.log.ScoreFileLogger;
@@ -87,7 +87,7 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 	private Simulator simulator;
 	private JSplitPane nationalPane;
 	private SimulationControlPanel simulationPane;
-	private ElementsPane elementsPane;
+	private InfrastructurePanel elementsPane;
 	private SocietyPane societyPane;
 	private ScoreFileLogger scoreLogger;
 	private final JFileChooser scenarioFileChooser;
@@ -257,7 +257,7 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 		scenarioFileChooser.setFileFilter(
 				new FileNameExtensionFilter("JSON files","json"));
 
-		recordedDataChooser = new JFileChooser(System.getProperty("user.home"));
+		recordedDataChooser = new JFileChooser();
 		recordedDataChooser.setFileFilter(new FileNameExtensionFilter("Data files", "dat"));
 
 		JMenuBar menuBar = new JMenuBar();
@@ -726,7 +726,7 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 			simulator.addUpdateListener(societyPane);
 			scoreLogger = new ScoreFileLogger();
 			simulator.addUpdateListener(scoreLogger);
-			elementsPane = new ElementsPane(simulator);
+			elementsPane = new InfrastructurePanel(simulator);
 			elementsPane.initialize();
 			simulationPane = new SimulationControlPanel(simulator);
 			simulator.addUpdateListener(simulationPane);

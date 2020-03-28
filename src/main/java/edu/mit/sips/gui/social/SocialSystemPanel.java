@@ -1,7 +1,19 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.social;
-
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 
 import org.jfree.data.xy.DefaultTableXYDataset;
 
@@ -13,22 +25,21 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.base.InfrastructureSystemPanel;
-import edu.mit.sips.gui.base.LinearIndicatorPanel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class SocialSystemPanel.
+ * An implementation of the infrastructure system panel for the social sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class SocialSystemPanel extends InfrastructureSystemPanel implements CurrencyUnitsOutput {
 	private static final long serialVersionUID = -8472419089458128152L;
 	
 	private static final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
 	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
-	
-	private final LinearIndicatorPanel domesticProductIndicatorPanel;
 
 	DefaultTableXYDataset infrastructureSystemRevenue = new DefaultTableXYDataset();
 	DefaultTableXYDataset infrastructureSystemNetRevenue = new DefaultTableXYDataset();
@@ -39,7 +50,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	DefaultTableXYDataset cashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset cumulativeBalance = new DefaultTableXYDataset();
-	
 	DefaultTableXYDataset capitalExpense = new DefaultTableXYDataset();
 	DefaultTableXYDataset capitalExpenseTotal = new DefaultTableXYDataset();
 	DefaultTableXYDataset cumulativeCapitalExpense = new DefaultTableXYDataset();
@@ -51,17 +61,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 	 */
 	public SocialSystemPanel(SocialSystem socialSystem) {
 		super(socialSystem);
-
-		JPanel indicatorsPanel = new JPanel();
-		indicatorsPanel.setLayout(
-				new BoxLayout(indicatorsPanel, BoxLayout.LINE_AXIS));
-		domesticProductIndicatorPanel = new LinearIndicatorPanel(
-				"Economic Production", 0, 100000);
-		indicatorsPanel.add(domesticProductIndicatorPanel);
-
-		/* temporarily removed
-		 * addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		 */
 
 		addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
 				getSocialSystem().getName() + " Net Revenue",
@@ -96,27 +95,13 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					societyRevenue, null, societyNetRevenue));
 		}
 		*/
-		
-		/* temporarily removed
-		 * addTab("Domestic Product", Icons.PRODUCT, createStackedAreaChart(
-				"Domestic Product (" + getCurrencyUnits() 
-				+ "/" + getCurrencyTimeUnits() + ")", domesticProduct, 
-				"Domestic Product per Capita (" + CurrencyUnits.sim 
-				+ "/" + TimeUnits.year + ")", domesticProductPerCapita));
-		 */
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
@@ -131,6 +116,9 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		return (SocialSystem) getInfrastructureSystem(); 
 	}
 
+	/**
+	 * Initialize this social system panel.
+	 */
 	private void initialize() {
 		cumulativeBalance.removeAllSeries();
 		infrastructureSystemRevenue.removeAllSeries();
@@ -141,36 +129,30 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		domesticProductPerCapita.removeAllSeries();
 		cashFlow.removeAllSeries();
 		netCashFlow.removeAllSeries();
-		domesticProductIndicatorPanel.initialize();
 		capitalExpense.removeAllSeries();
 		capitalExpenseTotal.removeAllSeries();
 		cumulativeCapitalExpense.removeAllSeries();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
-	 */
-	@Override
-	public void simulationCompleted(UpdateEvent event) {
-		// nothing to do here
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
+	@Override
+	public void simulationCompleted(UpdateEvent event) { }
+
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param year the year
+	 */
 	private void update(int year) {
 		if(getSociety() instanceof Country) {
 			updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
@@ -191,35 +173,8 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 					CurrencyUnits.convertFlow(nestedSociety.getCashFlow(), 
 							nestedSociety, this));
 		}
-
-		/* temporarily removed
-		if(getSocialSystem().getPopulation() > 0) {
-			updateSeries(domesticProductPerCapita, getSociety().getName() + " (per capita)", 
-					year, DefaultUnits.convertFlow(getSociety().getDomesticProduct(), 
-							getSociety().getCurrencyUnits(), 
-							getSociety().getCurrencyTimeUnits(), 
-							CurrencyUnits.sim,
-							TimeUnits.year) 
-					/ getSocialSystem().getPopulation());
-			domesticProductIndicatorPanel.setValue(
-					DefaultUnits.convertFlow(getSociety().getDomesticProduct(), 
-							getSociety().getCurrencyUnits(), 
-							getSociety().getCurrencyTimeUnits(), 
-							CurrencyUnits.sim,
-							TimeUnits.year) 
-					/ getSocialSystem().getPopulation());
-		}
-		*/
 		
 		if(getSocialSystem() instanceof SocialSoS) {
-			/* temporarily removed
-			for(Society nestedSociety : getSociety().getNestedSocieties()) {
-				updateSeries(domesticProduct, nestedSociety.getName(), year, 
-						CurrencyUnits.convertFlow(nestedSociety.getDomesticProduct(), 
-								nestedSociety, this));
-			}
-			*/
-
 			for(Society nestedSociety : getSociety().getNestedSocieties()) {
 				updateSeries(cashFlow, nestedSociety.getName(), year, 
 						CurrencyUnits.convertFlow(nestedSociety.getTotalCashFlow(), 
@@ -228,22 +183,7 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 			updateSeries(netCashFlow, "Net Revenue", year, 
 					CurrencyUnits.convertFlow(getSociety().getTotalCashFlow(), 
 							getSociety(), this));
-		} else {
-			/* temporarily removed
-			updateSeries(domesticProduct, getSociety().getName(), year, 
-					CurrencyUnits.convertFlow(getSociety().getDomesticProduct(), 
-							getSocialSystem(), this));
-			*/
 		}
-
-		/* temporarily removed
-		for(Society nestedSociety : getSociety().getNestedSocieties()) {
-			updateSeries(populationDataset, nestedSociety.getName(), year, 
-					nestedSociety.getSocialSystem().getPopulation());
-		}
-		updateSeries(populationTotalDataset, getSociety().getName(), year, 
-				getSocialSystem().getPopulation());
-		*/
 
 		for(InfrastructureSystem nestedSystem : getSociety().getInfrastructureSystems()) {
 			updateSeries(capitalExpense, nestedSystem.getName(), year, 

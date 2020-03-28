@@ -1,4 +1,19 @@
-package edu.mit.sips.gui.comp;
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+package edu.mit.sips.gui.tree;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -11,7 +26,9 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
 
 /**
- * The Class LocationTreeNode.
+ * A tree node that represents a society.
+ * 
+ * @author Paul T. Grogan
  */
 public class SocietyTreeNode extends DefaultMutableTreeNode {
 	private static final long serialVersionUID = 8920194303101671363L;
@@ -42,7 +59,7 @@ public class SocietyTreeNode extends DefaultMutableTreeNode {
 	};
 
 	/**
-	 * Instantiates a new location tree node.
+	 * Instantiates a new society tree node.
 	 *
 	 * @param location the location
 	 * @param allElements the all elements
@@ -59,16 +76,11 @@ public class SocietyTreeNode extends DefaultMutableTreeNode {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see javax.swing.tree.DefaultMutableTreeNode#getUserObject()
-	 */
+	@Override
 	public Society getUserObject() {
 		return (Society) super.getUserObject();
 	}
 	
-	/* (non-Javadoc)
-	 * @see javax.swing.tree.DefaultMutableTreeNode#add(javax.swing.tree.MutableTreeNode)
-	 */
 	@Override
 	public void add(MutableTreeNode newChild) {
 		if(newChild instanceof SocietyTreeNode) {

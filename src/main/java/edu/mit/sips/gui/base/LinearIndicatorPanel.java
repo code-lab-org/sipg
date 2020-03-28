@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.Color;
@@ -11,7 +26,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * The Class IndicatorPanel.
+ * A panel that displays a linear indicator.
+ * 
+ * @author Paul T. Grogan
  */
 public class LinearIndicatorPanel extends JPanel {
 	private static final long serialVersionUID = 529051523530028975L;
@@ -72,6 +89,11 @@ public class LinearIndicatorPanel extends JPanel {
 		barPanel.repaint();
 	}
 	
+	/**
+	 * Gets the value.
+	 *
+	 * @return the value
+	 */
 	public double getValue() {
 		return barPanel.value;
 	}
@@ -114,9 +136,6 @@ public class LinearIndicatorPanel extends JPanel {
 			this.value = minValue;
 		}
 		
-		/* (non-Javadoc)
-		 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
-		 */
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);

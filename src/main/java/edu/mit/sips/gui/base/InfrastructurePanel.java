@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
@@ -26,13 +41,10 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.Country;
-import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
@@ -40,11 +52,11 @@ import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.core.base.DefaultInfrastructureElement;
 import edu.mit.sips.core.base.EditableInfrastructureElement;
 import edu.mit.sips.core.base.InfrastructureElement;
+import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.electricity.EditableElectricityElement;
-import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
@@ -53,17 +65,18 @@ import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.gui.UpdateListener;
-import edu.mit.sips.gui.comp.ElementTreeNode;
-import edu.mit.sips.gui.comp.NetworkTreeModel;
-import edu.mit.sips.gui.comp.SocietyTreeNode;
+import edu.mit.sips.gui.tree.ElementTreeCellRenderer;
+import edu.mit.sips.gui.tree.NetworkTreeModel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.ElementTemplate;
 import edu.mit.sips.sim.Simulator;
 
 /**
- * The Class ElementsPane.
+ * Panel to display and edit infrastructure elements.
+ * 
+ * @author Paul T. Grogan
  */
-public class ElementsPane extends JPanel implements UpdateListener {
+public class InfrastructurePanel extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
 	private final JPopupMenu contextPopup;
@@ -72,11 +85,11 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	private final JTree elementsTree;
 	private final Simulator simulator;
 
-	private final ListCellRenderer templateRenderer = new DefaultListCellRenderer() {
+	private final ListCellRenderer<Object> templateRenderer = new DefaultListCellRenderer() {
 		private static final long serialVersionUID = 3761951866857845749L;
 
 		@Override
-		public Component getListCellRendererComponent(JList list,
+		public Component getListCellRendererComponent(JList<?> list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, 
@@ -101,70 +114,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			return this;
 		}
 	};
-	private final TreeCellRenderer elementCellRenderer = new DefaultTreeCellRenderer() {
-		private static final long serialVersionUID = -923629724878442949L;
-
-		@Override
-		public Component getTreeCellRendererComponent(JTree tree,
-				Object value, boolean sel, boolean expanded, boolean leaf,
-				int row, boolean hasFocus) {
-			super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-			if(value instanceof SocietyTreeNode) {
-				SocietyTreeNode node = (SocietyTreeNode) value;
-				setText(node.getUserObject().getName());
-				if(node.getUserObject() instanceof Country) {
-					setIcon(Icons.COUNTRY);
-				} else if(node.getUserObject() instanceof Region) {
-					setIcon(Icons.REGION);
-				} else if(node.getUserObject() instanceof City) {
-					setIcon(Icons.CITY);
-				}
-			} else if(value instanceof ElementTreeNode) {
-				ElementTreeNode node = (ElementTreeNode) value;
-				if(node.getUserObject() instanceof DefaultInfrastructureElement) {
-					DefaultInfrastructureElement element = (DefaultInfrastructureElement) node.getUserObject();
-					if(element.getLifecycleModel() instanceof DefaultSimpleLifecycleModel) {
-						DefaultSimpleLifecycleModel model = (DefaultSimpleLifecycleModel) element.getLifecycleModel();
-						setText(element.getName() + " (" 
-								+ (model.getTimeCommissionStart() 
-										+ model.getCommissionDuration()) + "-" 
-								+ model.getTimeDecommissionStart() + ")");
-					} else {
-						setText(element.getName());
-					}
-				} else {
-					setText(node.getUserObject().getName());
-				}
-				if(node.getUserObject() instanceof AgricultureElement) {
-					if(node.getUserObject().isOperational()) {
-						setIcon(Icons.AGRICULTURE);
-					} else {
-						setIcon(Icons.AGRICULTURE_PLANNED);
-					}
-				} else if(node.getUserObject() instanceof WaterElement) {
-					if(node.getUserObject().isOperational()) {
-						setIcon(Icons.WATER);
-					} else {
-						setIcon(Icons.WATER_PLANNED);
-					}
-				} else if(node.getUserObject() instanceof ElectricityElement) {
-					if(node.getUserObject().isOperational()) {
-						setIcon(Icons.ELECTRICITY);
-					} else {
-						setIcon(Icons.ELECTRICITY_PLANNED);
-					}
-				} else if(node.getUserObject() instanceof PetroleumElement) {
-					if(node.getUserObject().isOperational()) {
-						setIcon(Icons.PETROLEUM);
-					} else {
-						setIcon(Icons.PETROLEUM_PLANNED);
-					}
-				}
-			}
-			return this;
-		}
-	};
-
+	private final TreeCellRenderer elementCellRenderer = new ElementTreeCellRenderer();
 	private final Action addElementTemplate = new AbstractAction(
 			"Add Project",Icons.ADD) { // TODO  Icons.ADD_WIZARD) {
 		private static final long serialVersionUID = -6723630338741885195L;
@@ -174,7 +124,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			addElementTemplateDialog();
 		}
 	};
-	
 	private final Action addElement = new AbstractAction(
 			"Add Custom", Icons.ADD) {
 		private static final long serialVersionUID = -3748518859196760510L;
@@ -184,7 +133,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			addElementDialog();
 		}
 	};
-	
 	private final Action editElement = new AbstractAction( 
 			"Edit Project", Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
@@ -199,7 +147,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			}
 		}
 	};
-	
 	private final Action editElementOperations = new AbstractAction( 
 			"Edit Operational Properties", Icons.EDIT) {
 		private static final long serialVersionUID = -3748518859196760510L;
@@ -214,7 +161,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			}
 		}
 	};
-	
 	private final Action removeElement = new AbstractAction(
 			"Delete", Icons.DELETE) {
 		private static final long serialVersionUID = -3748518859196760510L;
@@ -225,12 +171,14 @@ public class ElementsPane extends JPanel implements UpdateListener {
 		}
 	};
 	
+	private boolean isSimulating = false;
+	
 	/**
 	 * Instantiates a new elements pane.
 	 *
 	 * @param simulator the simulator
 	 */
-	public ElementsPane(Simulator simulator) {
+	public InfrastructurePanel(Simulator simulator) {
 		this.simulator = simulator;
 		simulator.addUpdateListener(this);
 		
@@ -275,8 +223,13 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				KeyEvent.VK_ENTER, 0), "editElement");
 		elementsTree.getActionMap().put("editElement", editElement);
 		
-		
 		elementsTree.addMouseListener(new MouseAdapter() {
+			private void maybeShowPopup(MouseEvent e) {
+				if(e.isPopupTrigger()) {
+					contextPopup.show(e.getComponent(), e.getX(), e.getY());
+				}
+			}
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(e.getButton() == MouseEvent.BUTTON1 
@@ -294,15 +247,13 @@ public class ElementsPane extends JPanel implements UpdateListener {
 			public void mouseReleased(MouseEvent e) {
 				maybeShowPopup(e);
 			}
-
-			private void maybeShowPopup(MouseEvent e) {
-				if(e.isPopupTrigger()) {
-					contextPopup.show(e.getComponent(), e.getX(), e.getY());
-				}
-			}
 		});
-		/* TODO temporarily removed
+		/*
 		elementsTree.addMouseMotionListener(new MouseAdapter() {
+			@Override
+			public void mouseExited(MouseEvent e) {
+				elementPopup.setVisible(false);
+			}
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				InfrastructureElement element = elementsTreeModel.getElement(
@@ -315,10 +266,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 					}
 					elementPopup.show(e.getComponent(), e.getX()+10, e.getY()+10);
 				}
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				elementPopup.setVisible(false);
 			}
 		});
 		*/
@@ -354,39 +301,10 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	}
 	
 	/**
-	 * Adds the element template dialog.
-	 */
-	private void addElementTemplateDialog() {
-		JList templateList = new JList(simulator.getScenario().getTemplates(
-				simulator.getScenario().getCountry().getLocalSectors()).toArray(new ElementTemplate[0]));
-		templateList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		templateList.setCellRenderer(templateRenderer);
-		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, new JScrollPane(templateList), 
-				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
-			if(templateList.getSelectedValue() instanceof ElementTemplate) {
-				ElementTemplate template = (ElementTemplate)templateList.getSelectedValue();
-				City selectedCity = (City)elementsTreeModel.getSociety(
-						elementsTree.getSelectionPath());
-				if(selectedCity == null) {
-					selectedCity = simulator.getScenario().getCountry().getCities().get(0);
-				}
-				EditableInfrastructureElement element = template.createElement(
-						template.getTimeAvailable(), selectedCity.getName(), 
-						selectedCity.getName()).getMutableElement();
-				// TODO set time initialized to 1980
-				if(element.getLifecycleModel() instanceof EditableSimpleLifecycleModel) {
-					((EditableSimpleLifecycleModel)element.getLifecycleModel()).setTimeCommissionStart(1980);
-				}
-				openElementDialog(element.createElement());
-			}
-		}
-	}
-	
-	/**
 	 * Adds the element dialog.
 	 */
 	private void addElementDialog() {
-		JComboBox elementTypeCombo = new JComboBox(new String[]{
+		JComboBox<String> elementTypeCombo = new JComboBox<String>(new String[]{
 				"Agriculture", "Water", "Petroleum", "Electricity"});
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, elementTypeCombo, 
 				"Select Element Type", JOptionPane.OK_CANCEL_OPTION)) {
@@ -412,16 +330,32 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	}
 	
 	/**
-	 * Initialize.
+	 * Adds the element template dialog.
 	 */
-	public void initialize() {
-		elementsTreeModel.setState(simulator.getScenario().getCountry());
-		
-		for(int i = 0; i < elementsTree.getRowCount(); i++) {
-			elementsTree.expandRow(i);
+	private void addElementTemplateDialog() {
+		JList<ElementTemplate> templateList = new JList<ElementTemplate>(simulator.getScenario().getTemplates(
+				simulator.getScenario().getCountry().getLocalSectors()).toArray(new ElementTemplate[0]));
+		templateList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		templateList.setCellRenderer(templateRenderer);
+		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, new JScrollPane(templateList), 
+				"Select Element Template", JOptionPane.OK_CANCEL_OPTION)) {
+			if(templateList.getSelectedValue() instanceof ElementTemplate) {
+				ElementTemplate template = (ElementTemplate)templateList.getSelectedValue();
+				City selectedCity = (City)elementsTreeModel.getSociety(
+						elementsTree.getSelectionPath());
+				if(selectedCity == null) {
+					selectedCity = simulator.getScenario().getCountry().getCities().get(0);
+				}
+				EditableInfrastructureElement element = template.createElement(
+						template.getTimeAvailable(), selectedCity.getName(), 
+						selectedCity.getName()).getMutableElement();
+				if(element.getLifecycleModel() instanceof EditableSimpleLifecycleModel) {
+					((EditableSimpleLifecycleModel)element.getLifecycleModel()).setTimeCommissionStart(
+							simulator.getScenario().getPresentTime());
+				}
+				openElementDialog(element.createElement());
+			}
 		}
-		
-		updateActions();
 	}
 	
 	/**
@@ -457,6 +391,19 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				ElementOperationsPanel.createElementOperationsPanel(element), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 		}
+	}
+	
+	/**
+	 * Initialize this infrastructure panel.
+	 */
+	public void initialize() {
+		elementsTreeModel.initialize(simulator.getScenario().getCountry());
+		
+		for(int i = 0; i < elementsTree.getRowCount(); i++) {
+			elementsTree.expandRow(i);
+		}
+		
+		updateActions();
 	}
 	
 	/**
@@ -546,30 +493,6 @@ public class ElementsPane extends JPanel implements UpdateListener {
 		}
 	}
 	
-	private void updateActions() {		
-		Society society = elementsTreeModel.getSociety(
-				elementsTree.getSelectionPath());
-		addElement.setEnabled(!isSimulating && society != null);
-		addElementTemplate.setEnabled(!isSimulating && society != null);
-		InfrastructureElement element = elementsTreeModel.getElement(
-				elementsTree.getSelectionPath());
-		editElement.setEnabled(!isSimulating && element != null);
-		editElementOperations.setEnabled(!isSimulating && element != null 
-				&& element.isOperational());
-		boolean canRemove = !isSimulating && element != null;
-		// TODO temporary to disallow removing pre-1980 elements
-		if(element instanceof DefaultInfrastructureElement 
-				&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
-				instanceof DefaultSimpleLifecycleModel) {
-			DefaultSimpleLifecycleModel model = (DefaultSimpleLifecycleModel) 
-					((DefaultInfrastructureElement) element).getLifecycleModel();
-			canRemove = canRemove && model.getTimeCommissionStart() >= 1980;
-		}
-		removeElement.setEnabled(canRemove);
-	}
-	
-	private boolean isSimulating = false;
-
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		elementsTree.repaint();
@@ -589,5 +512,30 @@ public class ElementsPane extends JPanel implements UpdateListener {
 		isSimulating = true;
 		elementsTree.repaint();
 		updateActions();
+	}
+
+	/**
+	 * Update actions.
+	 */
+	private void updateActions() {		
+		Society society = elementsTreeModel.getSociety(
+				elementsTree.getSelectionPath());
+		addElement.setEnabled(!isSimulating && society != null);
+		addElementTemplate.setEnabled(!isSimulating && society != null);
+		InfrastructureElement element = elementsTreeModel.getElement(
+				elementsTree.getSelectionPath());
+		editElement.setEnabled(!isSimulating && element != null);
+		editElementOperations.setEnabled(!isSimulating && element != null 
+				&& element.isOperational());
+		boolean canRemove = !isSimulating && element != null;
+		
+		if(element instanceof DefaultInfrastructureElement 
+				&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
+				instanceof DefaultSimpleLifecycleModel) {
+			DefaultSimpleLifecycleModel model = (DefaultSimpleLifecycleModel) 
+					((DefaultInfrastructureElement) element).getLifecycleModel();
+			canRemove = canRemove && model.getTimeCommissionStart() >= simulator.getScenario().getPresentTime();
+		}
+		removeElement.setEnabled(canRemove);
 	}
 }

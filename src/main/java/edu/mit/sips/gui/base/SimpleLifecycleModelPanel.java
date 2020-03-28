@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.base;
 
 import java.awt.Color;
@@ -16,13 +31,17 @@ import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.gui.DocumentChangeListener;
+import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.TimeUnitsOutput;
 
 /**
- * The Class SimpleLifecycleModelPanel.
+ * A lifecycle model panel implementation for 
+ * the simple lifecycle model interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements CurrencyUnitsOutput, TimeUnitsOutput {
 	private static final long serialVersionUID = 4823361209584020543L;
@@ -45,7 +64,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 	 *
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public SimpleLifecycleModelPanel(final EditableSimpleLifecycleModel lifecycleModel) {
+	public SimpleLifecycleModelPanel(Scenario scenario, final EditableSimpleLifecycleModel lifecycleModel) {
 		super(lifecycleModel);
 		setLayout(new GridBagLayout());
 		
@@ -83,8 +102,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		timeCommissionStartText.setHorizontalAlignment(JTextField.RIGHT);
 		timeCommissionStartText.setValue((long) TimeUnits.convert(
 				lifecycleModel.getTimeCommissionStart(), lifecycleModel, this));
-		// TODO temporary to only allow initialization editing after 1980
-		timeCommissionStartText.setEnabled(lifecycleModel.getTimeCommissionStart() >= 1980);
+		timeCommissionStartText.setEnabled(lifecycleModel.getTimeCommissionStart() >= scenario.getPresentTime());
 		timeCommissionStartText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -92,10 +110,9 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 							long timeInitialized = (long) TimeUnits.convert(
 									(Long) timeCommissionStartText.getValue(), 
 									thisPanel, lifecycleModel);
-							// TODO temporary to only allow initialization after 1980
-							if(timeInitialized < 1980) {
+							if(timeInitialized < scenario.getPresentTime()) {
 								throw new NumberFormatException(
-										"Commisstion start time must be >= 1980.");
+										"Commisstion start time must be after present time.");
 							}
 							lifecycleModel.setTimeCommissionStart(timeInitialized);
 							timeCommissionStartText.setForeground(Color.black);
@@ -208,14 +225,13 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		//TODO addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
+		addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
 		timeDecommissionStartText = new JFormattedTextField(timeFormat);
 		timeDecommissionStartText.setColumns(10);
 		timeDecommissionStartText.setHorizontalAlignment(JTextField.RIGHT);
 		timeDecommissionStartText.setValue((long) TimeUnits.convert(
 				lifecycleModel.getTimeDecommissionStart(), lifecycleModel, this));
-		// TODO temporary to only allow initialization editing after 1980
-		timeDecommissionStartText.setEnabled(lifecycleModel.getTimeDecommissionStart() >= 1980);
+		timeDecommissionStartText.setEnabled(lifecycleModel.getTimeDecommissionStart() >= scenario.getPresentTime());
 		timeDecommissionStartText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -223,10 +239,9 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 							long timeDecommissioned = (long) TimeUnits.convert(
 									(Long) timeDecommissionStartText.getValue(), 
 									thisPanel, lifecycleModel);
-							// TODO temporary to only allow decommission after 1980
-							if(timeDecommissioned < 1980) {
+							if(timeDecommissioned < scenario.getPresentTime()) {
 								throw new IllegalArgumentException(
-										"Decommission time must be >= 1980.");
+										"Decommission time must be after present time.");
 							} else if(timeDecommissioned > lifecycleModel.getMaxTimeDecommissionStart()) {
 								throw new IllegalArgumentException(
 										"Decommission time cannot exceed maximum operations time.");
@@ -288,21 +303,6 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		addInput(c, "Spread Costs", spreadCostsCheck, "");
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.LifecycleModelPanel#setTemplateMode(boolean)
-	 */
-	@Override
-	public void setTemplateMode(String templateName) {
-		timeAvailableText.setEnabled(templateName == null);
-		commissionDurationText.setEnabled(templateName == null);
-		capitalCostText.setEnabled(templateName == null);
-		fixedOperationsCostText.setEnabled(templateName == null);
-		maxOperationsDurationText.setEnabled(templateName == null);
-		decommissionDurationText.setEnabled(templateName == null);
-		decommissionCostText.setEnabled(templateName == null);
-		spreadCostsCheck.setEnabled(templateName == null);
-	}
-	
 	/**
 	 * Adds the input.
 	 *
@@ -330,28 +330,31 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		c.gridy++;
 		c.gridx-=2;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
+	
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return timeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
-	 */
+	@Override
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
+	}
+
 	@Override
 	public TimeUnits getTimeUnits() {
 		return timeUnits;
+	}
+
+	@Override
+	public void setTemplateMode(String templateName) {
+		timeAvailableText.setEnabled(templateName == null);
+		commissionDurationText.setEnabled(templateName == null);
+		capitalCostText.setEnabled(templateName == null);
+		fixedOperationsCostText.setEnabled(templateName == null);
+		maxOperationsDurationText.setEnabled(templateName == null);
+		decommissionDurationText.setEnabled(templateName == null);
+		decommissionCostText.setEnabled(templateName == null);
+		spreadCostsCheck.setEnabled(templateName == null);
 	}
 }
