@@ -12,7 +12,7 @@ import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.core.agriculture.RecordedAgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
-import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
+import edu.mit.sips.core.electricity.RecordedElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
@@ -153,7 +153,7 @@ public final class GameScenario extends DefaultScenario {
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								electricityDomesticPriceModel):
-							new PlaceholderElectricitySystem(),
+							new RecordedElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
@@ -223,7 +223,7 @@ public final class GameScenario extends DefaultScenario {
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(2000, RURAL, RURAL)*/
 										),
 								electricityDomesticPriceModel):
-							new PlaceholderElectricitySystem(),
+							new RecordedElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								new LogisticGrowthModel(1980, (long) 0.75e6, 0.05, (long) 4e6),
@@ -286,7 +286,7 @@ public final class GameScenario extends DefaultScenario {
 										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2008, URBAN, URBAN)*/
 										),
 								electricityDomesticPriceModel):
-							new PlaceholderElectricitySystem(),
+							new RecordedElectricitySystem(),
 				assigned?
 						new LocalSocialSystem(
 								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),

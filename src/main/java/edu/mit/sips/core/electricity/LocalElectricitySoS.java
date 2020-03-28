@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
 import java.util.ArrayList;
@@ -26,6 +41,11 @@ import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
+/**
+ * The locally-controlled implementation of the electricity system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
+ */
 public class LocalElectricitySoS  extends LocalInfrastructureSoS implements ElectricitySoS.Local {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
@@ -35,15 +55,12 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local electricity system-of-systems.
 	 */
 	public LocalElectricitySoS() {
 		super("Electricity");
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#addElement(edu.mit.sips.core.electricity.ElectricityElement)
-	 */
 	@Override
 	public boolean addElement(ElectricityElement element) {
 		for(ElectricitySystem.Local system : getNestedSystems()) {
@@ -54,25 +71,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
-	 */
-	@Override
-	public double getPetroleumIntensityOfPrivateProduction() {
-		if(getNestedSystems().size() > 0) {
-			double value = 0;
-			for(ElectricitySystem.Local system : getNestedSystems()) {
-				value += system.getPetroleumIntensityOfPrivateProduction();
-			}
-			return value / getNestedSystems().size();
-		} else {
-			return 0;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
-	 */
 	@Override
 	public double getElectricityDomesticPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -87,9 +85,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityFromBurningPetroleum()
-	 */
 	@Override
 	public double getElectricityFromPrivateProduction() {
 		double value = 0;
@@ -99,9 +94,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
-	 */
 	@Override
 	public double getElectricityInDistribution() {
 		double value = 0;
@@ -114,9 +106,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistribution()
-	 */
 	@Override
 	public double getElectricityOutDistribution() {
 		double value = 0;
@@ -129,9 +118,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistributionLosses()
-	 */
 	@Override
 	public double getElectricityOutDistributionLosses() {
 		double value = 0;
@@ -141,9 +127,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityProduction()
-	 */
 	@Override
 	public double getElectricityProduction() {
 		double value = 0;
@@ -153,25 +136,16 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityWasted()
-	 */
 	@Override
 	public double getElectricityWasted() {
 		double value = 0;
@@ -181,9 +155,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
-	 */
 	@Override
 	public List<? extends ElectricityElement> getElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
@@ -192,9 +163,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
-	 */
 	@Override
 	public List<? extends ElectricityElement> getExternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
@@ -207,9 +175,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getInternalElements()
-	 */
 	@Override
 	public List<? extends ElectricityElement> getInternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
@@ -219,9 +184,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
-	 */
 	@Override
 	public double getLocalElectricityFraction() {
 		if(getSociety().getTotalElectricityDemand() > 0) {
@@ -232,9 +194,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSoS.Local#getNestedSystems()
-	 */
 	@Override
 	public List<ElectricitySystem.Local> getNestedSystems() {
 		List<ElectricitySystem.Local> systems = new ArrayList<ElectricitySystem.Local>();
@@ -246,25 +205,16 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return Collections.unmodifiableList(systems);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumConsumption()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		double value = 0;
@@ -274,9 +224,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumBurned()
-	 */
 	@Override
 	public double getPetroleumConsumptionFromPrivateProduction() {
 		double value = 0;
@@ -286,9 +233,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getPetroleumConsumptionFromPublicProduction()
-	 */
 	@Override
 	public double getPetroleumConsumptionFromPublicProduction() {
 		double value = 0;
@@ -297,10 +241,20 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		}
 		return value;
 	}
+	
+	@Override
+	public double getPetroleumIntensityOfPrivateProduction() {
+		if(getNestedSystems().size() > 0) {
+			double value = 0;
+			for(ElectricitySystem.Local system : getNestedSystems()) {
+				value += system.getPetroleumIntensityOfPrivateProduction();
+			}
+			return value / getNestedSystems().size();
+		} else {
+			return 0;
+		}
+	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
-	 */
 	@Override
 	public double getRenewableElectricityFraction() {
 		if(getSociety().getTotalElectricityDemand() > 0) {
@@ -310,9 +264,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityProduction()
-	 */
 	@Override
 	public double getRenewableElectricityProduction() {
 		double value = 0;
@@ -322,9 +273,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getTotalElectricitySupply()
-	 */
 	@Override
 	public double getTotalElectricitySupply() {
 		double value = 0;
@@ -334,9 +282,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
-	 */
 	@Override
 	public double getUnitProductionCost() {
 		if(getElectricityProduction() > 0) {
@@ -346,9 +291,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyProfit()
-	 */
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalElectricitySupply() > 0) {
@@ -357,9 +299,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		double value = 0;
@@ -369,25 +308,16 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityDistribution()
-	 */
 	@Override
 	public void optimizeElectricityDistribution() {
 		// Make a list of cities and infrastructure elements. The vector
@@ -488,9 +418,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySoS.Local#optimizeElectricityProductionAndDistribution(edu.mit.sips.core.OptimizationOptions)
-	 */
 	@Override
 	public void optimizeElectricityProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
@@ -613,9 +540,6 @@ public class LocalElectricitySoS  extends LocalInfrastructureSoS implements Elec
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#removeElement(edu.mit.sips.core.electricity.ElectricityElement)
-	 */
 	@Override
 	public boolean removeElement(ElectricityElement element) {
 		for(ElectricitySystem.Local system : getNestedSystems()) {

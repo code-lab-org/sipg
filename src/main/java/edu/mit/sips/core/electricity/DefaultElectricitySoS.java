@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
 import java.util.ArrayList;
@@ -13,7 +28,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultElectricitySoS.
+ * The default implementation of the electricity system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements ElectricitySoS {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -24,15 +41,12 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 
 	/**
-	 * Instantiates a new default electricity so s.
+	 * Instantiates a new default electricity system-of-systems.
 	 */
 	public DefaultElectricitySoS() {
 		super("Electricity");
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
-	 */
 	@Override
 	public double getElectricityDomesticPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -47,25 +61,16 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
-	 */
 	@Override
 	public List<ElectricitySystem> getNestedSystems() {
 		List<ElectricitySystem> systems = new ArrayList<ElectricitySystem>();
@@ -75,25 +80,16 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		return Collections.unmodifiableList(systems);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getPetroleumConsumption()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		double value = 0;
@@ -103,9 +99,6 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		double value = 0;
@@ -115,17 +108,11 @@ public class DefaultElectricitySoS extends DefaultInfrastructureSoS implements E
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;

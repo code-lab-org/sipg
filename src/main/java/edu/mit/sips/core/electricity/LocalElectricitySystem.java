@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
 import java.util.ArrayList;
@@ -18,7 +33,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class LocalElectricitySystem.
+ * The locally-controlled implementation of the electricity system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class LocalElectricitySystem extends LocalInfrastructureSystem implements ElectricitySystem.Local {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -33,15 +50,15 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	private final List<ElectricityElement> elements = 
 			Collections.synchronizedList(new ArrayList<ElectricityElement>());
 	
-	private transient final Map<Long, Double> petroleumConsumptionMap = 
+	private transient final Map<Long, Double> petroleumConsumptionLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> waterConsumptionMap = 
+	private transient final Map<Long, Double> waterConsumptionLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> electricityDomesticPriceMap = 
+	private transient final Map<Long, Double> electricityDomesticPriceLog = 
 			new HashMap<Long, Double>();
 
 	/**
-	 * Instantiates a new default electricity system.
+	 * Instantiates a new local electricity system.
 	 */
 	public LocalElectricitySystem() {
 		super("Electricity");
@@ -50,7 +67,7 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/**
-	 * Instantiates a new default electricity system.
+	 * Instantiates a new local electricity system.
 	 *
 	 * @param petroleumIntensityOfPrivateProduction the electrical intensity of burning petroleum
 	 * @param elements the elements
@@ -61,7 +78,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 			PriceModel domesticPriceModel) {
 		super("Electricity");
 
-		// Validate electrical intensity of burning petroleum.
 		if(petroleumIntensityOfPrivateProduction < 0){ 
 			throw new IllegalArgumentException(
 					"Electrical intensity of burning petrleum cannot be negative.");
@@ -72,7 +88,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 			this.elements.addAll(elements);
 		}
 
-		// Validate domestic price model.
 		if(domesticPriceModel == null) {
 			throw new IllegalArgumentException(
 					"Domestic price model cannot be null.");
@@ -80,17 +95,11 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		this.domesticPriceModel = domesticPriceModel;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#addElement(edu.mit.sips.core.electricity.ElectricityElement)
-	 */
 	@Override
 	public synchronized boolean addElement(ElectricityElement element) {
 		return elements.add(element);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
-	 */
 	@Override
 	public double getConsumptionExpense() {
 		return DefaultUnits.convert(getSociety().getPetroleumSystem().getPetroleumDomesticPrice(),
@@ -100,43 +109,31 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 				* getPetroleumConsumptionFromPublicProduction();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
-	 */
 	@Override
 	public double getDistributionExpense() {
 		return getElectricityDomesticPrice() * getElectricityInDistribution();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
-	 */
 	@Override
 	public double getDistributionRevenue() {
 		return getElectricityDomesticPrice() * (getElectricityOutDistribution() 
 				- getElectricityOutDistributionLosses());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem#getElectricityDomesticPrice()
-	 */
 	@Override
 	public double getElectricityDomesticPrice() {
 		return domesticPriceModel.getUnitPrice();
 	}
 
 	/**
-	 * Gets the electricity domestic price map.
+	 * Gets the electricity domestic price log.
 	 *
-	 * @return the electricity domestic price map
+	 * @return the electricity domestic price log
 	 */
-	public Map<Long, Double> getElectricityDomesticPriceMap() {
-		return new HashMap<Long, Double>(electricityDomesticPriceMap);
+	public Map<Long, Double> getElectricityDomesticPriceLog() {
+		return new HashMap<Long, Double>(electricityDomesticPriceLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getEnergyFromBurningPetroleum()
-	 */
 	@Override
 	public double getElectricityFromPrivateProduction() {
 		return Math.max(0, getSocietyDemand()
@@ -145,9 +142,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 				- getElectricityProduction());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityInDistribution()
-	 */
 	@Override
 	public double getElectricityInDistribution() {
 		double distribution = 0;
@@ -157,9 +151,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistribution()
-	 */
 	@Override
 	public double getElectricityOutDistribution() {
 		double distribution = 0;
@@ -172,9 +163,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getElectricityOutDistributionLosses()
-	 */
 	@Override
 	public double getElectricityOutDistributionLosses() {
 		double distribution = 0;
@@ -185,9 +173,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getEnergyProduction()
-	 */
 	@Override
 	public double getElectricityProduction() {
 		double energyProduction = 0;
@@ -197,37 +182,24 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return energyProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getEnergyWasted()
-	 */
 	@Override
 	public double getElectricityWasted() {
-		// Energy is wasted if supply exceeds maximum demand.
 		return Math.max(0, getElectricityProduction() 
 				+ getElectricityInDistribution()
 				- getElectricityOutDistribution()
 				- getSocietyDemand());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getElements()
-	 */
 	@Override
 	public List<ElectricityElement> getElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
@@ -236,22 +208,15 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
-	 */
 	@Override
 	public double getExportRevenue() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
-	 */
 	@Override
 	public List<ElectricityElement> getExternalElements() {
 		List<ElectricityElement> elements = new ArrayList<ElectricityElement>();
 
-		// see if country system is also local
 		if(getSociety().getCountry().getElectricitySystem()
 				instanceof ElectricitySystem.Local) {
 			ElectricitySystem.Local system = (ElectricitySystem.Local)
@@ -273,25 +238,16 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
-	 */
 	@Override
 	public double getImportExpense() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
-	 */
 	@Override
 	public List<ElectricityElement> getInternalElements() {
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getLocalElectricityFraction()
-	 */
 	@Override
 	public double getLocalElectricityFraction() {
 		if(getSocietyDemand() > 0) {
@@ -302,44 +258,28 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getPetroleumConsumed()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		return getPetroleumConsumptionFromPrivateProduction() 
 				+ getPetroleumConsumptionFromPublicProduction();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElectricitySystem#getPetroleumBurned()
-	 */
 	@Override
 	public double getPetroleumConsumptionFromPrivateProduction() {
-		// Petroleum is burned to meet shortfall in energy demand.
 		return getElectricityFromPrivateProduction()
 				* getPetroleumIntensityOfPrivateProduction();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getPetroleumConsumptionFromPublicProduction()
-	 */
 	@Override
 	public double getPetroleumConsumptionFromPublicProduction() {
 		double petroleumConsumption = 0;
@@ -350,25 +290,19 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/**
-	 * Gets the petroleum consumption map.
+	 * Gets the petroleum consumption log.
 	 *
-	 * @return the petroleum consumption map
+	 * @return the petroleum consumption log
 	 */
-	public Map<Long, Double> getPetroleumConsumptionMap() {
-		return new HashMap<Long, Double>(petroleumConsumptionMap);
+	public Map<Long, Double> getPetroleumConsumptionLog() {
+		return new HashMap<Long, Double>(petroleumConsumptionLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#getElectricalIntensityOfBurningPetroleum()
-	 */
 	@Override
 	public double getPetroleumIntensityOfPrivateProduction() {
 		return petroleumIntensityOfPrivateProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getRenewableElectricityFraction()
-	 */
 	@Override
 	public double getRenewableElectricityFraction() {
 		if(getSocietyDemand() > 0) {
@@ -378,9 +312,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElectricitySystem#getRenewableEnergyProduction()
-	 */
 	@Override
 	public double getRenewableElectricityProduction() {
 		double production = 0;
@@ -392,9 +323,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return production;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
-	 */
 	@Override
 	public double getSalesRevenue() {
 		return getElectricityDomesticPrice() * (getSocietyDemand()
@@ -402,7 +330,7 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/**
-	 * Gets the society demand.
+	 * Gets the society demand for electricity.
 	 *
 	 * @return the society demand
 	 */
@@ -410,9 +338,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return ElectricityUnits.convertFlow(getSociety().getTotalElectricityDemand(), getSociety(), this);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getNetEnergySupply()
-	 */
 	@Override
 	public double getTotalElectricitySupply() {
 		return getElectricityProduction() 
@@ -420,9 +345,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 				- getElectricityOutDistribution();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitProductionCost()
-	 */
 	@Override
 	public double getUnitProductionCost() {
 		if(getElectricityProduction() > 0) {
@@ -432,9 +354,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricitySystem#getUnitSupplyCost()
-	 */
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalElectricitySupply() > 0) {
@@ -443,9 +362,6 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.EnergySystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		double waterConsumption = 0;
@@ -456,57 +372,42 @@ public class LocalElectricitySystem extends LocalInfrastructureSystem implements
 	}
 
 	/**
-	 * Gets the water consumption map.
+	 * Gets the water consumption log.
 	 *
-	 * @return the water consumption map
+	 * @return the water consumption log
 	 */
-	public Map<Long, Double> getWaterConsumptionMap() {
-		return new HashMap<Long, Double>(waterConsumptionMap);
+	public Map<Long, Double> getWaterConsumptionLog() {
+		return new HashMap<Long, Double>(waterConsumptionLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		petroleumConsumptionMap.clear();
-		waterConsumptionMap.clear();
-		electricityDomesticPriceMap.clear();
+		petroleumConsumptionLog.clear();
+		waterConsumptionLog.clear();
+		electricityDomesticPriceLog.clear();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.electricity.ElectricitySystem.Local#removeElement(edu.mit.sips.core.electricity.ElectricityElement)
-	 */
 	@Override
 	public synchronized boolean removeElement(ElectricityElement element) {
 		return elements.remove(element);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
-	 */
 	@Override
 	public void tick() {
 		super.tick();
-		petroleumConsumptionMap.put(time, getPetroleumConsumption());
-		waterConsumptionMap.put(time, getWaterConsumption());
-		electricityDomesticPriceMap.put(time, getElectricityDomesticPrice());
+		petroleumConsumptionLog.put(time, getPetroleumConsumption());
+		waterConsumptionLog.put(time, getWaterConsumption());
+		electricityDomesticPriceLog.put(time, getElectricityDomesticPrice());
 	}
 }

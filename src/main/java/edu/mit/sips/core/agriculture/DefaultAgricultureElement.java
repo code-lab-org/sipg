@@ -35,7 +35,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	private final static WaterUnits waterUnits = WaterUnits.m3;
 	
 	/**
-	 * Creates the distribution element.
+	 * Builder function to create a new distribution element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -60,7 +60,7 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 	
 	/**
-	 * Creates the production element.
+	 * Builder function to create a new production element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name

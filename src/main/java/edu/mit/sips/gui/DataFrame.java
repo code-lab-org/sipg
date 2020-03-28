@@ -44,7 +44,7 @@ import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.core.agriculture.RecordedAgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
-import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
+import edu.mit.sips.core.electricity.RecordedElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
@@ -360,8 +360,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 			if(city.getPetroleumSystem() instanceof PlaceholderPetroleumSystem) {
 				city.setPetroleumSystem(new PlaceholderPetroleumSystem());
 			}
-			if(city.getElectricitySystem() instanceof PlaceholderElectricitySystem) {
-				city.setElectricitySystem(new PlaceholderElectricitySystem());
+			if(city.getElectricitySystem() instanceof RecordedElectricitySystem) {
+				city.setElectricitySystem(new RecordedElectricitySystem());
 			}
 		}
 		JOptionPane.showMessageDialog(this, 
@@ -491,12 +491,12 @@ public class DataFrame extends JFrame implements UpdateListener {
 			}
 			if(city.getElectricitySystem() instanceof LocalElectricitySystem) {
 				LocalElectricitySystem system = (LocalElectricitySystem) city.getElectricitySystem();
-				PlaceholderElectricitySystem placeholder = new PlaceholderElectricitySystem();
-				placeholder.setPetroleumConsumptionMap(system.getPetroleumConsumptionMap());
-				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
-				placeholder.setCashFlowMap(system.getCashFlowLog());
-				placeholder.setElectricityDomesticPriceMap(system.getElectricityDomesticPriceMap());
+				RecordedElectricitySystem placeholder = new RecordedElectricitySystem();
+				placeholder.setRecordedPetroleumConsumption(system.getPetroleumConsumptionLog());
+				placeholder.setRecordedWaterConsumption(system.getWaterConsumptionLog());
+				placeholder.setRecordedCapitalExpense(system.getCapitalExpenseLog());
+				placeholder.setRecordedCashFlow(system.getCashFlowLog());
+				placeholder.setRecordedElectricityDomesticPrice(system.getElectricityDomesticPriceLog());
 				data.get(city.getName())[1] = placeholder;
 			}
 		}
@@ -601,10 +601,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					if(city.getElectricitySystem() instanceof PlaceholderElectricitySystem
-							&& objects[1] instanceof PlaceholderElectricitySystem) {
+					if(city.getElectricitySystem() instanceof RecordedElectricitySystem
+							&& objects[1] instanceof RecordedElectricitySystem) {
 						city.setElectricitySystem(
-								(PlaceholderElectricitySystem) objects[1]);
+								(RecordedElectricitySystem) objects[1]);
 					} else {
 						JOptionPane.showMessageDialog(this, 
 								"File is not electricity data.", null, 

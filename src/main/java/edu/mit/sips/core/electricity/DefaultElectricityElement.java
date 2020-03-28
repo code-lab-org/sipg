@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
@@ -8,7 +23,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultElectricityElement.
+ * The default implementation of the electricity element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultElectricityElement extends DefaultInfrastructureElement
 		implements ElectricityElement {
@@ -20,7 +37,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
 	
 	/**
-	 * Creates the distribution element.
+	 * Builder function to create a new distribution element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -45,7 +62,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 				initialElectricityInput, variableOperationsCostOfElectricityDistribution);
 	}
 	/**
-	 * Creates the production element.
+	 * Builder function to create a new production element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -134,14 +151,12 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 			double variableOperationsCostOfElectricityDistribution) {
 		super(templateName, name, origin, destination, lifecycleModel);
 		
-		// Validate maximum electricity production.
 		if(maxElectricityProduction < 0) {
 			throw new IllegalArgumentException(
 					"Maximum electricity production cannot be negative.");
 		}
 		this.maxElectricityProduction = maxElectricityProduction;
 		
-		// Validate initial electricity production parameter.
 		if(initialElectricityProduction > maxElectricityProduction) {
 			throw new IllegalArgumentException(
 					"Initial electricity production cannot exceed maximum.");
@@ -151,42 +166,36 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 		this.initialElectricityProduction = initialElectricityProduction;
 		
-		// Validate petroleum intensity.
 		if(petroleumIntensityOfElectricityProduction < 0) {
 			throw new IllegalArgumentException(
 					"Petroleum intensity cannot be negative.");
 		}
 		this.petroleumIntensityOfElectricityProduction = petroleumIntensityOfElectricityProduction;
 		
-		// Validate water intensity.
 		if(waterIntensityOfElectricityProduction < 0) {
 			throw new IllegalArgumentException(
 					"Water intensity cannot be negative.");
 		}
 		this.waterIntensityOfElectricityProduction = waterIntensityOfElectricityProduction;
 		
-		// Validate production cost.
 		if(variableOperationsCostOfElectricityProduction < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of production cannot be negative.");
 		}
 		this.variableOperationsCostOfElectricityProduction = variableOperationsCostOfElectricityProduction;
 		
-		// Validate distribution efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
 			throw new IllegalArgumentException(
 					"Distribution efficiency must be between 0 and 1.");
 		}
 		this.distributionEfficiency = distributionEfficiency;
 		
-		// Validate maximum food input.
 		if(maxElectricityInput < 0) {
 			throw new IllegalArgumentException(
 					"Maximum electricity input cannot be negative.");
 		}
 		this.maxElectricityInput = maxElectricityInput;
 		
-		// Validate initial electricity input.
 		if(initialElectricityInput > maxElectricityInput) {
 			throw new IllegalArgumentException(
 					"Initial electricity input cannot exceed maximum.");
@@ -196,7 +205,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 		this.initialElectricityInput = initialElectricityInput;
 		
-		// Validate distribution cost.
 		if(variableOperationsCostOfElectricityDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of distribution cannot be negative.");
@@ -204,9 +212,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		this.variableOperationsCostOfElectricityDistribution = variableOperationsCostOfElectricityDistribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getDistributionEfficiency()
-	 */
 	@Override
 	public double getDistributionEfficiency() {
 		if(isOperational()) {
@@ -216,9 +221,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getElectricityInput()
-	 */
 	@Override
 	public double getElectricityInput() {
 		if(isOperational()) {
@@ -228,9 +230,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getElectricityOutput()
-	 */
 	@Override
 	public double getElectricityOutput() {
 		if(isOperational()) {
@@ -240,9 +239,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getElectricityProduction()
-	 */
 	@Override
 	public double getElectricityProduction() {
 		if(isOperational()) {
@@ -252,25 +248,16 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnitsNumerator()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getMaxElectricityInput()
-	 */
 	@Override
 	public double getMaxElectricityInput() {
 		if(isOperational()) {
@@ -280,9 +267,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getMaxElectricityProduction()
-	 */
 	@Override
 	public double getMaxElectricityProduction() {
 		if(isOperational()) {
@@ -292,9 +276,6 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
-	 */
 	@Override
 	public MutableElectricityElement getMutableElement() {
 		MutableElectricityElement element = new MutableElectricityElement();
@@ -317,25 +298,16 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		return element;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnitsNumerator()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getPetroleumConsumption()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		if(isOperational()) {
@@ -345,17 +317,11 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getPetroleumIntensityOfElectricityProduction()
-	 */
 	@Override
 	public double getPetroleumIntensityOfElectricityProduction() {
 		return petroleumIntensityOfElectricityProduction;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
-	 */
 	@Override
 	public double getTotalOperationsExpense() {
 		return getFixedOperationsExpense() 
@@ -363,25 +329,16 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 				+ variableOperationsCostOfElectricityDistribution * electricityInput;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getVariableOperationsCostOfElectricityDistribution()
-	 */
 	@Override
 	public double getVariableOperationsCostOfElectricityDistribution() {
 		return variableOperationsCostOfElectricityDistribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getVariableOperationsCostOfElectricityProduction()
-	 */
 	@Override
 	public double getVariableOperationsCostOfElectricityProduction() {
 		return variableOperationsCostOfElectricityProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		if(isOperational()) {
@@ -391,58 +348,35 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#getWaterIntensityOfElectricityProduction()
-	 */
 	@Override
 	public double getWaterIntensityOfElectricityProduction() {
 		return waterIntensityOfElectricityProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		
-		// Use mutator method to validate electricity input.
 		setElectricityInput(initialElectricityInput);
-
-		// Use mutator method to validate electricity production.
 		setElectricityProduction(initialElectricityProduction);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#isRenewableElectricity()
-	 */
 	@Override
 	public boolean isRenewableElectricity() {
 		return petroleumIntensityOfElectricityProduction == 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#setElectricityInput(double)
-	 */
 	@Override
 	public void setElectricityInput(double electricityInput) {
-		// Validate water input.
 		if(electricityInput < 0) {
 			throw new IllegalArgumentException(
 					"Electricity input cannot be negative.");
@@ -454,12 +388,8 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 		fireElementChangeEvent();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.ElectricityElement#setElectricityProduction(double)
-	 */
 	@Override
 	public void setElectricityProduction(double electricityProduction) {
-		// Validate electricity production parameter.
 		if(electricityProduction > maxElectricityProduction) {
 			throw new IllegalArgumentException(
 					"Electricity production cannot exceed maximum.");

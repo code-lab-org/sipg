@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
@@ -10,7 +25,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class MutableElectricityElement.
+ * An implementation of the mutable infrastructure element class for the electricity sector.
+ * 
+ * @author Paul T. Grogan
  */
 public final class MutableElectricityElement extends DefaultMutableInfrastructureElement 
 		implements WaterUnitsOutput, OilUnitsOutput, ElectricityUnitsOutput {
@@ -32,9 +49,6 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	private double distributionEfficiency;
 	private double variableOperationsCostOfElectricityDistribution;
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#createElement()
-	 */
 	@Override
 	public ElectricityElement createElement() {
 		return new DefaultElectricityElement(getTemplateName(), getName(), 
@@ -58,24 +72,18 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 		return distributionEfficiency;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
 	/**
-	 * Gets the initial electricity input.
+	 * Gets the initial electricity input to this element.
 	 *
 	 * @return the initial electricity input
 	 */
@@ -84,7 +92,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Gets the initial electricity production.
+	 * Gets the initial electricity production from this element.
 	 *
 	 * @return the initial electricity production
 	 */
@@ -93,7 +101,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Gets the max electricity input.
+	 * Gets the max electricity input to this element.
 	 *
 	 * @return the max electricity input
 	 */
@@ -102,7 +110,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Gets the max electricity production.
+	 * Gets the max electricity production from this element.
 	 *
 	 * @return the max electricity production
 	 */
@@ -110,17 +118,11 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 		return maxElectricityProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
@@ -162,17 +164,11 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 		return waterIntensityOfElectricityProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
@@ -188,7 +184,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Sets the initial electricity input.
+	 * Sets the initial electricity input to this element.
 	 *
 	 * @param initialElectricityInput the new initial electricity input
 	 */
@@ -197,7 +193,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Sets the initial electricity production.
+	 * Sets the initial electricity production of this element.
 	 *
 	 * @param initialElectricityProduction the new initial electricity production
 	 */
@@ -206,7 +202,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Sets the max electricity input.
+	 * Sets the max electricity input to this element.
 	 *
 	 * @param maxElectricityInput the new max electricity input
 	 */
@@ -215,7 +211,7 @@ public final class MutableElectricityElement extends DefaultMutableInfrastructur
 	}
 
 	/**
-	 * Sets the max electricity production.
+	 * Sets the max electricity production of this element.
 	 *
 	 * @param maxElectricityProduction the new max electricity production
 	 */
