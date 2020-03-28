@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
@@ -10,7 +25,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class MutableWaterElement.
+ * An implementation of the editable infrastructure element class for the petroleum sector.
+ * 
+ * @author Paul T. Grogan
  */
 public final class EditableWaterElement extends DefaultMutableInfrastructureElement 
 		implements WaterUnitsOutput, ElectricityUnitsOutput, CurrencyUnitsOutput {
@@ -32,9 +49,6 @@ public final class EditableWaterElement extends DefaultMutableInfrastructureElem
 	private double electricalIntensityOfWaterDistribution;
 	private double variableOperationsCostOfWaterDistribution;
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#createElement()
-	 */
 	@Override
 	public WaterElement createElement() {
 		DefaultWaterElement e = new DefaultWaterElement(); // for units
@@ -88,17 +102,11 @@ public final class EditableWaterElement extends DefaultMutableInfrastructureElem
 		return electricalIntensityOfWaterProduction;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
@@ -167,17 +175,11 @@ public final class EditableWaterElement extends DefaultMutableInfrastructureElem
 		return variableOperationsCostOfWaterProduction;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;

@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureSystem;
@@ -6,7 +21,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultWaterSystem.
+ * The default implementation of the water system interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultWaterSystem extends DefaultInfrastructureSystem implements WaterSystem {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -14,66 +31,40 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
-	 */
+	@Override
+	public double getAquiferLifetime() {
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
+	}
+	
+	@Override
+	public double getAquiferWithdrawals() {
+		return 0;
+	}
+	
 	@Override
 	public double getElectricityConsumption() {
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
-	 */
 	@Override
 	public double getWaterDomesticPrice() {
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
-	 */
 	@Override
 	public double getWaterImportPrice() {
 		return 0;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
-	@Override
-	public TimeUnits getWaterTimeUnits() {
-		return waterTimeUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
-	@Override
-	public WaterUnits getWaterUnits() {
-		return waterUnits;
-	}
-
-	@Override
-	public double getAquiferLifetime() {
-		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getAquiferWithdrawals());
 	}
 
 	@Override
@@ -82,7 +73,12 @@ public class DefaultWaterSystem extends DefaultInfrastructureSystem implements W
 	}
 
 	@Override
-	public double getAquiferWithdrawals() {
-		return 0;
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
 	}
 }

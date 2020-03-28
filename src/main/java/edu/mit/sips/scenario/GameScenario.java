@@ -24,7 +24,7 @@ import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.demand.LogisticTimeDemandModel;
 import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.LocalWaterSystem;
-import edu.mit.sips.core.water.PlaceholderWaterSystem;
+import edu.mit.sips.core.water.RecordedWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.FoodUnits;
@@ -108,7 +108,7 @@ public final class GameScenario extends DefaultScenario {
 										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								waterDomesticPriceModel, waterImportPriceModel):
-							new PlaceholderWaterSystem(),
+							new RecordedWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(65e9, 65e9,
 								Arrays.asList(
@@ -209,7 +209,7 @@ public final class GameScenario extends DefaultScenario {
 						new LocalWaterSystem(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
 								new ArrayList<WaterElement>(),
 								waterDomesticPriceModel, waterImportPriceModel):
-							new PlaceholderWaterSystem(),
+							new RecordedWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
@@ -264,7 +264,7 @@ public final class GameScenario extends DefaultScenario {
 										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, URBAN, URBAN)
 										)*/ new ArrayList<WaterElement>(),
 								waterDomesticPriceModel, waterImportPriceModel):
-							new PlaceholderWaterSystem(),
+							new RecordedWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, 
 								new ArrayList<PetroleumElement>(),

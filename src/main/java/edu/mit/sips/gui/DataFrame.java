@@ -49,7 +49,7 @@ import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
-import edu.mit.sips.core.water.PlaceholderWaterSystem;
+import edu.mit.sips.core.water.RecordedWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
@@ -370,8 +370,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 	private void clearWaterData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
-			if(city.getWaterSystem() instanceof PlaceholderWaterSystem) {
-				city.setWaterSystem(new PlaceholderWaterSystem());
+			if(city.getWaterSystem() instanceof RecordedWaterSystem) {
+				city.setWaterSystem(new RecordedWaterSystem());
 			}
 		}
 		JOptionPane.showMessageDialog(this, 
@@ -482,11 +482,11 @@ public class DataFrame extends JFrame implements UpdateListener {
 				placeholder.setRecordedElectricityConsumption(system.getElectricityConsumptionMap());
 				placeholder.setRecordedCapitalExpense(system.getCapitalExpenseLog());
 				placeholder.setRecordedCashFlow(system.getCashFlowLog());
-				placeholder.setRecordedPetroleumReservoirVolume(system.getPetroleumReservoirVolumeMap());
-				placeholder.setRecordedPetroleumWithdrawals(system.getPetroleumWithdrawalsMap());
-				placeholder.setRecordedPetroleumDomesticPrice(system.getPetroleumDomesticPriceMap());
-				placeholder.setRecordedPetroleumImportPrice(system.getPetroleumImportPriceMap());
-				placeholder.setRecordedPetroleumExportPrice(system.getPetroleumExportPriceMap());
+				placeholder.setRecordedPetroleumReservoirVolume(system.getPetroleumReservoirVolumeLog());
+				placeholder.setRecordedPetroleumWithdrawals(system.getPetroleumWithdrawalsLog());
+				placeholder.setRecordedPetroleumDomesticPrice(system.getPetroleumDomesticPriceLog());
+				placeholder.setRecordedPetroleumImportPrice(system.getPetroleumImportPriceLog());
+				placeholder.setRecordedPetroleumExportPrice(system.getPetroleumExportPriceLog());
 				data.get(city.getName())[0] = placeholder;
 			}
 			if(city.getElectricitySystem() instanceof LocalElectricitySystem) {
@@ -508,19 +508,19 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 
 	private void exportWaterData() {
-		Map<String, PlaceholderWaterSystem> data = 
-				new HashMap<String, PlaceholderWaterSystem>();
+		Map<String, RecordedWaterSystem> data = 
+				new HashMap<String, RecordedWaterSystem>();
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getWaterSystem() instanceof LocalWaterSystem) {
 				LocalWaterSystem system = (LocalWaterSystem) city.getWaterSystem();
-				PlaceholderWaterSystem placeholder = new PlaceholderWaterSystem();
-				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
-				placeholder.setCashFlowMap(system.getCashFlowLog());
-				placeholder.setWaterReservoirVolumeMap(system.getWaterReservoirVolumeMap());
-				placeholder.setReservoirWithdrawalsMap(system.getReservoirWithdrawalsMap());
-				placeholder.setWaterDomesticPriceMap(system.getWaterDomesticPriceMap());
-				placeholder.setWaterImportPriceMap(system.getWaterImportPriceMap());
+				RecordedWaterSystem placeholder = new RecordedWaterSystem();
+				placeholder.setRecordedElectricityConsumption(system.getElectricityConsumptionLog());
+				placeholder.setRecordedCapitalExpense(system.getCapitalExpenseLog());
+				placeholder.setRecordedCashFlow(system.getCashFlowLog());
+				placeholder.setRecordedWaterReservoirVolume(system.getWaterReservoirVolumeMap());
+				placeholder.setRecordedReservoirWithdrawals(system.getReservoirWithdrawalsLog());
+				placeholder.setRecordedWaterDomesticPrice(system.getWaterDomesticPriceLog());
+				placeholder.setRecordedWaterImportPrice(system.getWaterImportPriceLog());
 				data.put(city.getName(), placeholder);
 			}
 		}
@@ -629,10 +629,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 		if(map != null) {
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(map.containsKey(city.getName()) 
-						&& city.getWaterSystem() instanceof PlaceholderWaterSystem
-						&& map.get(city.getName()) instanceof PlaceholderWaterSystem) {
+						&& city.getWaterSystem() instanceof RecordedWaterSystem
+						&& map.get(city.getName()) instanceof RecordedWaterSystem) {
 					city.setWaterSystem(
-							(PlaceholderWaterSystem) map.get(city.getName()));
+							(RecordedWaterSystem) map.get(city.getName()));
 				} else {
 					JOptionPane.showMessageDialog(this, 
 							"File is not water data.", null, 

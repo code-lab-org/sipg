@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social;
 
 import edu.mit.sips.core.DefaultInfrastructureSystem;
@@ -8,7 +23,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultSocialSystem.
+ * The default implementation of the social system interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultSocialSystem extends DefaultInfrastructureSystem implements SocialSystem {
 	private static final OilUnits oilUnits = OilUnits.toe;
@@ -20,105 +37,66 @@ public class DefaultSocialSystem extends DefaultInfrastructureSystem implements 
 	private static final FoodUnits foodUnits = FoodUnits.GJ;
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
-	 */
 	@Override
 	public double getElectricityConsumption() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
-	 */
 	@Override
 	public double getFoodConsumption() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
-	 */
 	@Override
 	public long getPopulation() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;

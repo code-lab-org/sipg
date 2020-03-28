@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import java.util.ArrayList;
@@ -12,7 +27,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultWaterSoS.
+ * The default implementation of the water system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSoS {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -22,143 +39,12 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 	private List<Double> aquiferSecurityHistory = new ArrayList<Double>();
 
 	/**
-	 * Instantiates a new default water so s.
+	 * Instantiates a new default water system-of-systems.
 	 */
 	public DefaultWaterSoS() {
 		super("Water");
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getAquiferLifetime()
-	 */
-	@Override
-	public double getAquiferLifetime() {
-		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getWaterReservoirVolume() / getAquiferWithdrawals());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getElectricityConsumption()
-	 */
-	@Override
-	public double getElectricityConsumption() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += ElectricityUnits.convertFlow(system.getElectricityConsumption(), system, this);
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
-	@Override
-	public TimeUnits getElectricityTimeUnits() {
-		return electricityTimeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
-	@Override
-	public ElectricityUnits getElectricityUnits() {
-		return electricityUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
-	 */
-	@Override
-	public List<WaterSystem> getNestedSystems() {
-		List<WaterSystem> systems = new ArrayList<WaterSystem>();
-		for(Society society : getSociety().getNestedSocieties()) {
-			systems.add(society.getWaterSystem());
-		}
-		return Collections.unmodifiableList(systems);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getReservoirWithdrawals()
-	 */
-	@Override
-	public double getAquiferWithdrawals() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += system.getAquiferWithdrawals();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterDomesticPrice()
-	 */
-	@Override
-	public double getWaterDomesticPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += CurrencyUnits.convertStock(system.getWaterDomesticPrice(), system, this);
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterImportPrice()
-	 */
-	@Override
-	public double getWaterImportPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(WaterSystem system : getNestedSystems()) {
-				value += CurrencyUnits.convertStock(system.getWaterImportPrice(), system, this);
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterSystem#getWaterReservoirVolume()
-	 */
-	@Override
-	public double getWaterReservoirVolume() {
-		double value = 0;
-		for(WaterSystem system : getNestedSystems()) {
-			value += system.getWaterReservoirVolume();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
-	@Override
-	public TimeUnits getWaterTimeUnits() {
-		return waterTimeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
-	@Override
-	public WaterUnits getWaterUnits() {
-		return waterUnits;
-	}
-	
-	@Override
-	public void initialize(long time) {
-		super.initialize(time);
-		aquiferSecurityHistory.clear();
-	}
-	
-	@Override
-	public void tick() {
-		super.tick();
-		this.aquiferSecurityHistory.add(computeAquiferSecurityScore());
-	}
-	
 	/**
 	 * Compute aquifer security score.
 	 *
@@ -175,7 +61,13 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			return 1000 * (getAquiferLifetime() - minLifetime)/(maxLifetime - minLifetime);
 		}
 	}
-	
+
+	@Override
+	public double getAquiferLifetime() {
+		return getAquiferWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getWaterReservoirVolume() / getAquiferWithdrawals());
+	}
+
 	@Override
 	public double getAquiferSecurityScore() {
 		double value = 0;
@@ -183,5 +75,97 @@ public class DefaultWaterSoS extends DefaultInfrastructureSoS implements WaterSo
 			value += item;
 		}
 		return value / aquiferSecurityHistory.size();
+	}
+
+	@Override
+	public double getAquiferWithdrawals() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getAquiferWithdrawals();
+		}
+		return value;
+	}
+
+	@Override
+	public double getElectricityConsumption() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += ElectricityUnits.convertFlow(system.getElectricityConsumption(), system, this);
+		}
+		return value;
+	}
+
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	@Override
+	public List<WaterSystem> getNestedSystems() {
+		List<WaterSystem> systems = new ArrayList<WaterSystem>();
+		for(Society society : getSociety().getNestedSocieties()) {
+			systems.add(society.getWaterSystem());
+		}
+		return Collections.unmodifiableList(systems);
+	}
+
+	@Override
+	public double getWaterDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += CurrencyUnits.convertStock(system.getWaterDomesticPrice(), system, this);
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getWaterImportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(WaterSystem system : getNestedSystems()) {
+				value += CurrencyUnits.convertStock(system.getWaterImportPrice(), system, this);
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getWaterReservoirVolume() {
+		double value = 0;
+		for(WaterSystem system : getNestedSystems()) {
+			value += system.getWaterReservoirVolume();
+		}
+		return value;
+	}
+	
+	@Override
+	public TimeUnits getWaterTimeUnits() {
+		return waterTimeUnits;
+	}
+	
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		aquiferSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.aquiferSecurityHistory.add(computeAquiferSecurityScore());
 	}
 }

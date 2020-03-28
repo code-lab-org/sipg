@@ -264,11 +264,11 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/**
-	 * Gets the petroleum domestic price map.
+	 * Gets the petroleum domestic price log.
 	 *
-	 * @return the petroleum domestic price map
+	 * @return the petroleum domestic price log
 	 */
-	public Map<Long, Double> getPetroleumDomesticPriceMap() {
+	public Map<Long, Double> getPetroleumDomesticPriceLog() {
 		return new HashMap<Long, Double>(petroleumDomesticPriceLog);
 	}
 
@@ -286,11 +286,11 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/**
-	 * Gets the petroleum export price map.
+	 * Gets the petroleum export price log.
 	 *
-	 * @return the petroleum export price map
+	 * @return the petroleum export price log
 	 */
-	public Map<Long, Double> getPetroleumExportPriceMap() {
+	public Map<Long, Double> getPetroleumExportPriceLog() {
 		return new HashMap<Long, Double>(petroleumExportPriceLog);
 	}
 
@@ -308,11 +308,11 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/**
-	 * Gets the petroleum import price map.
+	 * Gets the petroleum import price log.
 	 *
-	 * @return the petroleum import price map
+	 * @return the petroleum import price log
 	 */
-	public Map<Long, Double> getPetroleumImportPriceMap() {
+	public Map<Long, Double> getPetroleumImportPriceLog() {
 		return new HashMap<Long, Double>(petroleumImportPriceLog);
 	}
 
@@ -357,20 +357,20 @@ public class LocalPetroleumSystem  extends LocalInfrastructureSystem implements 
 	}
 
 	/**
-	 * Gets the petroleum reservoir volume map.
+	 * Gets the petroleum reservoir volume log.
 	 *
-	 * @return the petroleum reservoir volume map
+	 * @return the petroleum reservoir volume log
 	 */
-	public Map<Long, Double> getPetroleumReservoirVolumeMap() {
+	public Map<Long, Double> getPetroleumReservoirVolumeLog() {
 		return new HashMap<Long, Double>(petroleumReservoirVolumeLog);
 	}
 
 	/**
-	 * Gets the petroleum withdrawals map.
+	 * Gets the petroleum withdrawals log.
 	 *
-	 * @return the petroleum withdrawals map
+	 * @return the petroleum withdrawals log
 	 */
-	public Map<Long, Double> getPetroleumWithdrawalsMap() {
+	public Map<Long, Double> getPetroleumWithdrawalsLog() {
 		return new HashMap<Long, Double>(petroleumWithdrawalsLog);
 	}
 

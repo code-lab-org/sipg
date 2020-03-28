@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
@@ -8,7 +23,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultWaterElement.
+ * The default implementation of the water element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public final class DefaultWaterElement extends DefaultInfrastructureElement implements WaterElement {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -17,7 +34,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
 	
 	/**
-	 * Instantiates a new distribution water element.
+	 * Builder function to create a new distribution water element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -44,8 +61,9 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 				electricalIntensityOfWaterDistribution,
 				variableOperationsCostOfWaterDistribution);
 	}
+	
 	/**
-	 * Instantiates a new fixed water element.
+	 * Builder function to create a new production water element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -93,7 +111,7 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	private double waterInput;
 	
 	/**
-	 * Instantiates a new water element.
+	 * Instantiates a new default water element.
 	 */
 	protected DefaultWaterElement() {
 		super();
@@ -144,21 +162,18 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			double variableOperationsCostOfWaterDistribution) {
 		super(templateName, name, origin, destination, lifecycleModel);
 		
-		// Validate reservoir efficiency.
 		if(reservoirIntensityOfWaterProduction < 0) {
 			throw new IllegalArgumentException(
 					"Reservoir intensity cannot be negative.");
 		}
 		this.reservoirIntensityOfWaterProduction = reservoirIntensityOfWaterProduction;
 		
-		// Validate maximum water production.
 		if(maxWaterProduction < 0) {
 			throw new IllegalArgumentException(
 					"Maximum water production cannot be negative.");
 		}
 		this.maxWaterProduction = maxWaterProduction;
 		
-		// Validate initial water production parameter.
 		if(initialWaterProduction > maxWaterProduction) {
 			throw new IllegalArgumentException(
 					"Initial water production cannot exceed maximum.");
@@ -168,38 +183,32 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 		this.initialWaterProduction = initialWaterProduction;
 				
-		// Validate energy intensity.
 		if(electricalIntensityOfWaterProduction < 0) {
 			throw new IllegalArgumentException(
 					"Electrical intensity cannot be negative.");
 		}
 		this.electricalIntensityOfWaterProduction = electricalIntensityOfWaterProduction;
 		
-		// Validate production cost.
 		if(variableOperationsCostOfWaterProduction < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of production cannot be negative.");
 		}
 		this.variableOperationsCostOfWaterProduction = variableOperationsCostOfWaterProduction;
 		
-		// No need to validate coastal access requirement.
 		this.coastalAccessRequired = coastalAccessRequired;
 		
-		// Validate distribution efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
 			throw new IllegalArgumentException(
 					"Distribution efficiency must be between 0 and 1.");
 		}
 		this.distributionEfficiency = distributionEfficiency;
 		
-		// Validate maximum food input.
 		if(maxWaterInput < 0) {
 			throw new IllegalArgumentException(
 					"Maximum food input cannot be negative.");
 		}
 		this.maxWaterInput = maxWaterInput;
 		
-		// Validate initial water input.
 		if(initialWaterInput > maxWaterInput) {
 			throw new IllegalArgumentException(
 					"Initial water input cannot exceed maximum.");
@@ -209,24 +218,37 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 		this.initialWaterInput = initialWaterInput;
 
-		// Validate energy intensity.
 		if(electricalIntensityOfWaterDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Electrical intensity cannot be negative.");
 		}
 		this.electricalIntensityOfWaterDistribution = electricalIntensityOfWaterDistribution;
 		
-		// Validate distribution cost.
 		if(variableOperationsCostOfWaterDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of distribution cannot be negative.");
 		}
 		this.variableOperationsCostOfWaterDistribution = variableOperationsCostOfWaterDistribution;
 	}
+
+	@Override
+	public double getAquiferIntensityOfWaterProduction() {
+		if(isOperational()) {
+			return reservoirIntensityOfWaterProduction;
+		} else {
+			return 0;
+		}
+	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getDistributionEfficiency()
-	 */
+	@Override
+	public double getAquiferWithdrawals() {
+		if(isOperational()) {
+			return getWaterProduction() * reservoirIntensityOfWaterProduction;
+		} else {
+			return 0;
+		}
+	}
+
 	@Override
 	public double getDistributionEfficiency() {
 		if(isOperational()) {
@@ -235,26 +257,17 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			return 0;
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getElectricalIntensityOfWaterDistribution()
-	 */
+
 	@Override
 	public double getElectricalIntensityOfWaterDistribution() {
 		return electricalIntensityOfWaterDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getElectricalIntensityOfWaterProduction()
-	 */
 	@Override
 	public double getElectricalIntensityOfWaterProduction() {
 		return electricalIntensityOfWaterProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getElectricityConsumption()
-	 */
 	@Override
 	public double getElectricityConsumption() {
 		if(isOperational()) {
@@ -264,26 +277,17 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 			return 0;
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
+	
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getMaxWaterInput()
-	 */
+
 	@Override
 	public double getMaxWaterInput() {
 		if(isOperational()) {
@@ -293,9 +297,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getMaxWaterProduction()
-	 */
 	@Override
 	public double getMaxWaterProduction() {
 		if(isOperational()) {
@@ -305,9 +306,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
-	 */
 	@Override
 	public EditableWaterElement getMutableElement() {
 		EditableWaterElement element = new EditableWaterElement();
@@ -342,21 +340,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		return element;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getReservoirIntensityOfWaterProduction()
-	 */
-	@Override
-	public double getAquiferIntensityOfWaterProduction() {
-		if(isOperational()) {
-			return reservoirIntensityOfWaterProduction;
-		} else {
-			return 0;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
-	 */
 	@Override
 	public double getTotalOperationsExpense() {
 		return getFixedOperationsExpense() 
@@ -364,25 +347,16 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 				+ variableOperationsCostOfWaterDistribution * waterInput;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getVariableOperationsCostOfWaterDistribution()
-	 */
 	@Override
 	public double getVariableOperationsCostOfWaterDistribution() {
 		return variableOperationsCostOfWaterDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getVariableOperationsCostOfWaterProduction()
-	 */
 	@Override
 	public double getVariableOperationsCostOfWaterProduction() {
 		return variableOperationsCostOfWaterProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getWaterInput()
-	 */
 	@Override
 	public double getWaterInput() {
 		if(isOperational()) {
@@ -392,9 +366,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getWaterOutput()
-	 */
 	@Override
 	public double getWaterOutput() {
 		if(isOperational()) {
@@ -404,9 +375,6 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getWaterProduction()
-	 */
 	@Override
 	public double getWaterProduction() {
 		if(isOperational()) {
@@ -416,62 +384,30 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
+	
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#getWaterWithdrawals()
-	 */
-	@Override
-	public double getAquiferWithdrawals() {
-		if(isOperational()) {
-			return getWaterProduction() * reservoirIntensityOfWaterProduction;
-		} else {
-			return 0;
-		}
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
-	 */
 	@Override 
 	public void initialize(long time) {
 		super.initialize(time);
-
-		// Use mutator method to validate water production.
 		setWaterProduction(initialWaterProduction);
-		
-		// Use mutator method to validate water input.
 		setWaterInput(initialWaterInput);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#isCoastalAccessRequired()
-	 */
 	@Override
 	public boolean isCoastalAccessRequired() {
 		return coastalAccessRequired;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#setWaterInput(double)
-	 */
 	@Override
 	public void setWaterInput(double waterInput) {
-		// Validate water input.
 		if(waterInput < 0) {
 			throw new IllegalArgumentException(
 					"Water input cannot be negative.");
@@ -483,12 +419,8 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 		fireElementChangeEvent();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.water.WaterElement#setWaterProduction(double)
-	 */
 	@Override
 	public void setWaterProduction(double waterProduction) {
-		// Validate water production parameter.
 		if(waterProduction > maxWaterProduction) {
 			throw new IllegalArgumentException(
 					"Water production cannot exceed maximum.");

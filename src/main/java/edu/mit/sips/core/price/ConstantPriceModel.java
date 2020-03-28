@@ -1,16 +1,33 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.price;
 
 /**
- * The Class ConstantPriceModel.
+ * An implementation of the price model interface that assumes constant prices.
+ * 
+ * @author Paul T. Grogan
  */
-public class ConstantPriceModel implements PriceModel {
+public class ConstantPriceModel extends DefaultPriceModel {
 	private final double unitPrice;
 	
 	/**
 	 * Instantiates a new constant price model.
 	 */
 	protected ConstantPriceModel() {
-		unitPrice = 0;
+		this(0);
 	}
 	
 	/**
@@ -21,37 +38,14 @@ public class ConstantPriceModel implements PriceModel {
 	public ConstantPriceModel(double unitPrice) {
 		this.unitPrice = unitPrice;
 	}
+
+	@Override
+	public double getPrice(double amount) {
+		return unitPrice * amount;
+	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.price.PriceModel#getUnitPrice()
-	 */
 	@Override
 	public double getUnitPrice() {
 		return unitPrice;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.price.PriceModel#getPrice(double)
-	 */
-	public double getPrice(double amount) {
-		return unitPrice * amount;
 	}
 }

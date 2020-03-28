@@ -1,14 +1,31 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.demand;
 
 import edu.mit.sips.core.Society;
 
 /**
- * The Class LogisticTimeDemandModel.
+ * A demand model implementation that exhibits logistic demands over time.
+ * 
+ * @author Paul T. Grogan
  */
 public class LogisticTimeDemandModel implements DemandModel {
 	private final long baselineTime;
 	private final double baselineDemand, growthRate;
-	private final double minimumDemand, maximumDemand;
+	private final double minDemand, maxDemand;
 	private long time;
 	private transient long nextTime;
 	
@@ -20,7 +37,7 @@ public class LogisticTimeDemandModel implements DemandModel {
 	}
 	
 	/**
-	 * Instantiates a new exponential time demand model.
+	 * Instantiates a new logistic time demand model.
 	 *
 	 * @param baselineTime the baseline time
 	 * @param baselineDemand the baseline demand
@@ -34,44 +51,32 @@ public class LogisticTimeDemandModel implements DemandModel {
 		this.baselineTime = baselineTime;
 		this.baselineDemand = baselineDemand;
 		this.growthRate = growthRate;
-		this.minimumDemand = minimumDemand;
-		this.maximumDemand = maximumDemand;
+		this.minDemand = minimumDemand;
+		this.maxDemand = maximumDemand;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
+	@Override
+	public double getDemand(Society society) {
+		return (minDemand + (maxDemand-minDemand) 
+				* (baselineDemand-minDemand) 
+				* Math.exp(growthRate * (time - baselineTime)) 
+				/ ((maxDemand-minDemand) + (baselineDemand-minDemand) 
+						* (Math.exp(growthRate * (time - baselineTime)) - 1)))
+				* society.getPopulation();
+	}
+
 	@Override
 	public void initialize(long time) {
 		this.time = time;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 		nextTime = time + 1;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
+	
 	@Override
 	public void tock() {
 		time = nextTime;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
-	 */
-	@Override
-	public double getDemand(Society society) {
-		return (minimumDemand + (maximumDemand-minimumDemand) 
-				* (baselineDemand-minimumDemand) 
-				* Math.exp(growthRate * (time - baselineTime)) 
-				/ ((maximumDemand-minimumDemand) + (baselineDemand-minimumDemand) 
-						* (Math.exp(growthRate * (time - baselineTime)) - 1)))
-				* society.getPopulation();
 	}
 }

@@ -1,11 +1,28 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.demand;
 
 import edu.mit.sips.core.Society;
 
 /**
- * The Class ConstantDemandModel.
+ * A demand model implementation that exhibits constant demands over time.
+ * 
+ * @author Paul T. Grogan
  */
-public class ConstantDemandModel implements DemandModel {
+public class ConstantDemandModel extends DefaultDemandModel {
 	private final double baselineDemand;
 	
 	/**
@@ -24,29 +41,8 @@ public class ConstantDemandModel implements DemandModel {
 		this.baselineDemand = baselineDemand;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.demand.DemandModel#getDemand(edu.mit.sips.core.social.SocialSystem)
-	 */
 	@Override
 	public double getDemand(Society society) {
 		return baselineDemand * society.getPopulation();
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
-	@Override
-	public void tick() { }
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
-	@Override
-	public void tock() { }
 }
