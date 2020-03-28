@@ -8,7 +8,7 @@ import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.gui.SpatialStateProvider;
+import edu.mit.sips.gui.base.SpatialStateProvider;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;

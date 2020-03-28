@@ -14,7 +14,7 @@ import javax.swing.SwingUtilities;
 
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
-import edu.mit.sips.gui.ElementOperationsPanel;
+import edu.mit.sips.gui.base.ElementOperationsPanel;
 
 /**
  * The Class AgricultureElementOperationsPanel.

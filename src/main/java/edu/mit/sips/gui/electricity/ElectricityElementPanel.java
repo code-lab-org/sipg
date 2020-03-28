@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
-import edu.mit.sips.gui.ElementPanel;
+import edu.mit.sips.gui.base.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;

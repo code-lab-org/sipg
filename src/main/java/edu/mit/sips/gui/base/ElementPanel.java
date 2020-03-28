@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -33,6 +33,7 @@ import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.core.water.EditableWaterElement;
+import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
 import edu.mit.sips.gui.electricity.ElectricityElementPanel;
 import edu.mit.sips.gui.petroleum.PetroleumElementPanel;

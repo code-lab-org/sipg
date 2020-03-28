@@ -1,7 +1,7 @@
 package edu.mit.sips.gui.water;
 
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.gui.InfrastructureSystemPanel;
+import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 
 /**
  * The Class WaterSystemPanel.

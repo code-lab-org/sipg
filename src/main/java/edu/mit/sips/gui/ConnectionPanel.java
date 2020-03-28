@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.awt.Color;
@@ -36,9 +51,9 @@ import edu.mit.sips.sim.Simulator;
 import edu.mit.sips.sim.hla.HlaConnection;
 
 /**
- * The Class ConnectionPanel. A panel allowing connections to be specified.
+ * A panel that specifies simulation connections.
  * 
- * @author Paul T Grogan, ptgrogan@mit.edu
+ * @author Paul T Grogan
  */
 public final class ConnectionPanel extends JPanel 
 implements ActionListener, ConnectionListener {
@@ -54,7 +69,7 @@ implements ActionListener, ConnectionListener {
 	private final JButton connectButton, browseButton;
 	private final JLabel statusLabel;
 
-	private Simulator simulator;
+	private Simulator simulator; // FIXME make specific to simulation type
 	
 	/**
 	 * Instantiates a new connection panel.
@@ -172,9 +187,6 @@ implements ActionListener, ConnectionListener {
 		add(statusLabel, c);
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getActionCommand().equals(BROWSE_FOM)) {
@@ -208,7 +220,7 @@ implements ActionListener, ConnectionListener {
 	}
 	
 	/**
-	 * Connects to the RTI.
+	 * Connects to the remote server.
 	 */
 	private void connect() {
 		federateName.setEnabled(false);
@@ -267,9 +279,6 @@ implements ActionListener, ConnectionListener {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.event.ConnectionListener#connectionEventOccurred(edu.mit.sips.gui.event.ConnectionEvent)
-	 */
 	@Override
 	public void connectionEventOccurred(ConnectionEvent e) {
 		boolean isConnected = e.getConnection().isConnected();
@@ -291,9 +300,9 @@ implements ActionListener, ConnectionListener {
 	}
 	
 	/**
-	 * Sets the state.
+	 * Initializes this component.
 	 *
-	 * @param federateAmbassador the new state
+	 * @param simulator the simulator
 	 */
 	public void initialize(Simulator simulator) {
 		this.simulator = simulator;

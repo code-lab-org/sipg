@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -51,6 +51,8 @@ import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.gui.comp.ElementTreeNode;
 import edu.mit.sips.gui.comp.NetworkTreeModel;
 import edu.mit.sips.gui.comp.SocietyTreeNode;

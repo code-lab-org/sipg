@@ -1,4 +1,19 @@
-package edu.mit.sips.gui;
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+package edu.mit.sips.log;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -11,9 +26,16 @@ import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
+import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.UpdateListener;
 
 /**
- * The Class ScoreFileLogger.
+ * Logs the scores for all local infrastructure systems at the end of 
+ * each simulation execution. Writes a comma-delimited text file to 
+ * the SIPG_HOME logs directory (specified with environment variable, 
+ * defaults to user.home/SIPG/logs).
+ * 
+ * @author Paul T. Grogan
  */
 public class ScoreFileLogger implements UpdateListener {
 	private static Logger logger = Logger.getLogger(ScoreFileLogger.class);
@@ -23,6 +45,9 @@ public class ScoreFileLogger implements UpdateListener {
 	private int overBudgetYear = 0;
 	private int roundNumber = 0;
 	
+	/**
+	 * Instantiates a new score file logger.
+	 */
 	public ScoreFileLogger() {
 		File userOutputDir;
 		if(System.getenv().containsKey("SIPG_HOME")) {

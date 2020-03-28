@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +9,8 @@ import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.WaterSystem;
+import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.FoodUnits;

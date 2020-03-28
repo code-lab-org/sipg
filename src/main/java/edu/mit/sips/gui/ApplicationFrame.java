@@ -62,8 +62,10 @@ import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.RecordedWaterSystem;
+import edu.mit.sips.gui.base.ElementsPane;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
+import edu.mit.sips.log.ScoreFileLogger;
 import edu.mit.sips.scenario.DefaultScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.Simulator;
@@ -84,14 +86,13 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 	private final ConnectionToolbar connectionToolbar;
 	private Simulator simulator;
 	private JSplitPane nationalPane;
-	private SimulationControlPane simulationPane;
+	private SimulationControlPanel simulationPane;
 	private ElementsPane elementsPane;
 	private SocietyPane societyPane;
+	private ScoreFileLogger scoreLogger;
 	private final JFileChooser scenarioFileChooser;
 	private final JFileChooser recordedDataChooser;
 	
-	private ScoreFileLogger scoreLogger;
-
 	private final Action newScenario = new AbstractAction("New") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
@@ -332,7 +333,7 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 	/**
 	 * Auto save.
 	 */
-	protected void autoSave() {
+	private void autoSave() {
 		File file = new File(userOutputDir, "autosave.json");
 		try {
 			file.createNewFile();
@@ -721,13 +722,13 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 			simulator.getConnection().addConnectionListener(connectionToolbar);
 
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			societyPane = new SocietyPane(simulator.getScenario(), userOutputDir, logOutputDir);
+			societyPane = new SocietyPane(simulator.getScenario());
 			simulator.addUpdateListener(societyPane);
 			scoreLogger = new ScoreFileLogger();
 			simulator.addUpdateListener(scoreLogger);
 			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
-			simulationPane = new SimulationControlPane(this, simulator);
+			simulationPane = new SimulationControlPanel(simulator);
 			simulator.addUpdateListener(simulationPane);
 			nationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			JPanel leftPanel = new JPanel();
@@ -832,6 +833,7 @@ public class ApplicationFrame extends JFrame implements UpdateListener {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
+					autoSave();
 					setTitle("SIPG | " + event.getTime());
 				}
 			});

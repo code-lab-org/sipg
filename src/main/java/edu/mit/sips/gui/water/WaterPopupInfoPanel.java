@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import javax.swing.JLabel;
 
 import edu.mit.sips.core.water.WaterElement;
-import edu.mit.sips.gui.DefaultPopupInfoPanel;
+import edu.mit.sips.gui.base.DefaultPopupInfoPanel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.ElectricityUnits;

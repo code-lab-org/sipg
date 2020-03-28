@@ -60,7 +60,7 @@ public final class GameScenarioComplete extends DefaultScenario {
 			petroleumExportPriceModel = new ConstantPriceModel(30);
 
 	/**
-	 * Instantiates a new saudi scenario2.
+	 * Instantiates a new completed game scenario.
 	 *
 	 * @param assignedCityNames the assigned city names
 	 * @param assignedSectors the assigned sectors
@@ -71,7 +71,8 @@ public final class GameScenarioComplete extends DefaultScenario {
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
-				Arrays.asList(GameElementTemplate.values()), isTeamScoreDisplayed);
+				Arrays.asList(GameElementTemplate.values()), 
+				1950, 2010, isTeamScoreDisplayed, false);
 	}
 
 	/**

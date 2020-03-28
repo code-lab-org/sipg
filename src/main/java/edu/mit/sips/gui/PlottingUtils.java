@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.awt.Color;
@@ -14,6 +29,11 @@ import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 
+/**
+ * Provides general utilities for plotting, such as color selections.
+ * 
+ * @author Paul T. Grogan
+ */
 public abstract class PlottingUtils {
 	// color names from http://www.rapidtables.com/web/color/RGB_Color.htm
 	public static final Color MAROON = new Color(128,0,0);
@@ -156,89 +176,63 @@ public abstract class PlottingUtils {
 	public static final Color WHITE_SMOKE = new Color(245,245,245);
 	public static final Color WHITE = new Color(255,255,255);
 	
-	public static Color getSystemColor(InfrastructureSystem system) {
-		if(system instanceof AgricultureSystem) {
-			return YELLOW_GREEN;
+	/**
+	 * Gets the color of a specified type of cash flow.
+	 *
+	 * @param name the name
+	 * @return the cash flow color
+	 */
+	public static Color getCashFlowColor(String name) {
+		if(name.contains("Capital Expense")) {
+			return TOMATO;
 		}
-		if(system instanceof WaterSystem) {
-			return DODGER_BLUE;
+		if(name.contains("Operations Expense")) {
+			return LIGHT_SKY_BLUE;
 		}
-		if(system instanceof PetroleumSystem) {
-			return DIM_GRAY;
+		if(name.contains("Input Expense")) {
+			return VIOLET;
 		}
-		if(system instanceof ElectricitySystem) {
-			return MEDIUM_PURPLE;
+		if(name.contains("Decommission Expense")) {
+			return ROSY_BROWN;
 		}
-		if(system instanceof SocialSystem) {
-			return PLUM;
+		if(name.contains("Distribution Expense")) {
+			return CORNFLOWER_BLUE;
 		}
-		return null;
-	}
-	
-	public static Color[] getSystemColors(Collection<? extends InfrastructureSystem> systems) {
-		List<Color> colors = new ArrayList<Color>();
-		for(InfrastructureSystem system : systems) {
-			colors.add(getSystemColor(system));
+		if(name.contains("Import Expense")) {
+			return ORANGE;
 		}
-		return colors.toArray(new Color[0]);
-	}
-	
-	public static Color getSocietyColor(Society society) {
-		if(society instanceof Country) {
-			return LIME_GREEN;
+		if(name.contains("Distribution Revenue")) {
+			return GOLD;
 		}
-		if(society.getName().contains("Industrial")) {
-			return DARK_KHAKI;
+		if(name.contains("Export Revenue")) {
+			return MEDIUM_SLATE_BLUE;
 		}
-		if(society.getName().contains("Urban")) {
-			return OLIVE;
-		}
-		if(society.getName().contains("Rural")) {
-			return OLIVE_DRAB;
+		if(name.contains("Domestic Revenue")) {
+			return MEDIUM_SEA_GREEN;
 		}
 		return null;
 	}
 	
-	public static Color[] getSocietyColors(Collection<? extends Society> societies) {
-		List<Color> colors = new ArrayList<Color>();
-		for(Society society : societies) {
-			colors.add(getSocietyColor(society));
-		}
-		return colors.toArray(new Color[0]);
-	}
-	
-	public static Color getSocietySecondaryColor(Society society) {
-		if(society instanceof Country) {
-			return GOLDENROD;
-		}
-		if(society.getName().contains("Industrial")) {
-			return PERU;
-		}
-		if(society.getName().contains("Urban")) {
-			return SIENNA;
-		}
-		if(society.getName().contains("Rural")) {
-			return CHOCOLATE;
-		}
-		return null;
-	}
-	
-	public static Color[] getSocietySecondaryColors(Collection<? extends Society> societies) {
-		List<Color> colors = new ArrayList<Color>();
-		for(Society society : societies) {
-			colors.add(getSocietySecondaryColor(society));
-		}
-		return colors.toArray(new Color[0]);
-	}
-	
-	public static Color[] getResourceColors(Collection<String> names) {
+	/**
+	 * Gets the list of cash flow colors.
+	 *
+	 * @param names the names
+	 * @return the cash flow colors
+	 */
+	public static Color[] getCashFlowColors(Collection<String> names) {
 		List<Color> colors = new ArrayList<Color>();
 		for(String name : names) {
-			colors.add(getResourceColor(name));
+			colors.add(getCashFlowColor(name));
 		}
 		return colors.toArray(new Color[0]);
 	}
 	
+	/**
+	 * Gets the color associated with a type of resource flow.
+	 *
+	 * @param name the name
+	 * @return the resource color
+	 */
 	public static Color getResourceColor(String name) {
 		if(name.contains("Export")) {
 			return MEDIUM_SLATE_BLUE;
@@ -310,41 +304,127 @@ public abstract class PlottingUtils {
 		return null;
 	}
 	
-	public static Color getCashFlowColor(String name) {
-		if(name.contains("Capital Expense")) {
-			return TOMATO;
+	/**
+	 * Gets the list of resource colors.
+	 *
+	 * @param names the names
+	 * @return the resource colors
+	 */
+	public static Color[] getResourceColors(Collection<String> names) {
+		List<Color> colors = new ArrayList<Color>();
+		for(String name : names) {
+			colors.add(getResourceColor(name));
 		}
-		if(name.contains("Operations Expense")) {
-			return LIGHT_SKY_BLUE;
+		return colors.toArray(new Color[0]);
+	}
+	
+	/**
+	 * Gets the color associated with a society (hard-coded for specific values).
+	 *
+	 * @param society the society
+	 * @return the society color
+	 */
+	public static Color getSocietyColor(Society society) {
+		if(society instanceof Country) {
+			return LIME_GREEN;
 		}
-		if(name.contains("Input Expense")) {
-			return VIOLET;
+		if(society.getName().contains("Industrial")) {
+			return DARK_KHAKI;
 		}
-		if(name.contains("Decommission Expense")) {
-			return ROSY_BROWN;
+		if(society.getName().contains("Urban")) {
+			return OLIVE;
 		}
-		if(name.contains("Distribution Expense")) {
-			return CORNFLOWER_BLUE;
-		}
-		if(name.contains("Import Expense")) {
-			return ORANGE;
-		}
-		if(name.contains("Distribution Revenue")) {
-			return GOLD;
-		}
-		if(name.contains("Export Revenue")) {
-			return MEDIUM_SLATE_BLUE;
-		}
-		if(name.contains("Domestic Revenue")) {
-			return MEDIUM_SEA_GREEN;
+		if(society.getName().contains("Rural")) {
+			return OLIVE_DRAB;
 		}
 		return null;
 	}
 	
-	public static Color[] getCashFlowColors(Collection<String> names) {
+	/**
+	 * Gets the list of society colors.
+	 *
+	 * @param societies the societies
+	 * @return the society colors
+	 */
+	public static Color[] getSocietyColors(Collection<? extends Society> societies) {
 		List<Color> colors = new ArrayList<Color>();
-		for(String name : names) {
-			colors.add(getCashFlowColor(name));
+		for(Society society : societies) {
+			colors.add(getSocietyColor(society));
+		}
+		return colors.toArray(new Color[0]);
+	}
+	
+	/**
+	 * Gets the secondary color associated with a society (hard-coded for specific values).
+	 *
+	 * @param society the society
+	 * @return the society secondary color
+	 */
+	public static Color getSocietySecondaryColor(Society society) {
+		if(society instanceof Country) {
+			return GOLDENROD;
+		}
+		if(society.getName().contains("Industrial")) {
+			return PERU;
+		}
+		if(society.getName().contains("Urban")) {
+			return SIENNA;
+		}
+		if(society.getName().contains("Rural")) {
+			return CHOCOLATE;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the list of secondary society colors.
+	 *
+	 * @param societies the societies
+	 * @return the society secondary colors
+	 */
+	public static Color[] getSocietySecondaryColors(Collection<? extends Society> societies) {
+		List<Color> colors = new ArrayList<Color>();
+		for(Society society : societies) {
+			colors.add(getSocietySecondaryColor(society));
+		}
+		return colors.toArray(new Color[0]);
+	}
+	
+	/**
+	 * Gets the color associated with a given infrastructure system.
+	 *
+	 * @param system the system
+	 * @return the system color
+	 */
+	public static Color getSystemColor(InfrastructureSystem system) {
+		if(system instanceof AgricultureSystem) {
+			return YELLOW_GREEN;
+		}
+		if(system instanceof WaterSystem) {
+			return DODGER_BLUE;
+		}
+		if(system instanceof PetroleumSystem) {
+			return DIM_GRAY;
+		}
+		if(system instanceof ElectricitySystem) {
+			return MEDIUM_PURPLE;
+		}
+		if(system instanceof SocialSystem) {
+			return PLUM;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the list of system colors.
+	 *
+	 * @param systems the systems
+	 * @return the system colors
+	 */
+	public static Color[] getSystemColors(Collection<? extends InfrastructureSystem> systems) {
+		List<Color> colors = new ArrayList<Color>();
+		for(InfrastructureSystem system : systems) {
+			colors.add(getSystemColor(system));
 		}
 		return colors.toArray(new Color[0]);
 	}

@@ -1,15 +1,32 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.util.EventObject;
 
 /**
- * The Class AdvanceSimulationEvent.
+ * The abstract superclass of all simulation control events.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class SimulationControlEvent extends EventObject {
 	private static final long serialVersionUID = -5707468210897815237L;
 	
 	/**
-	 * Instantiates a new advance simulation event.
+	 * Instantiates a new simulation control event.
 	 *
 	 * @param source the source
 	 */
@@ -18,7 +35,10 @@ public abstract class SimulationControlEvent extends EventObject {
 	}
 	
 	/**
-	 * The Class Advance.
+	 * The initialize simulation control event. Requests a simulation be 
+	 * initialized to a start time and configured to run until an end time.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static class Initialize extends SimulationControlEvent {
 		private static final long serialVersionUID = 1063804393763397020L;
@@ -27,7 +47,7 @@ public abstract class SimulationControlEvent extends EventObject {
 		private final long endTime;
 		
 		/**
-		 * Instantiates a new advance.
+		 * Instantiates a new initialize.
 		 *
 		 * @param source the source
 		 * @param startTime the start time
@@ -59,7 +79,10 @@ public abstract class SimulationControlEvent extends EventObject {
 	}
 	
 	/**
-	 * The Class Advance.
+	 * The advance simulation control event. Requests a simulation be 
+	 * advanced by a specified duration.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static class Advance extends SimulationControlEvent {
 		private static final long serialVersionUID = -5544757601132237751L;
@@ -85,11 +108,13 @@ public abstract class SimulationControlEvent extends EventObject {
 		public long getDuration() {
 			return duration;
 		}
-		
 	}
 	
 	/**
-	 * The Class AdvanceToEnd.
+	 * The advance-to-end simulation control event. Requests a simulation be 
+	 * advanced until reaching the end time.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static class AdvanceToEnd extends SimulationControlEvent {
 		private static final long serialVersionUID = 5952299548097610846L;
@@ -105,7 +130,10 @@ public abstract class SimulationControlEvent extends EventObject {
 	}
 	
 	/**
-	 * The Class Reset.
+	 * The reset simulation control event. Requests a simulation be 
+	 * reset to the original initial conditions.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static class Reset extends SimulationControlEvent {
 		private static final long serialVersionUID = 5952299548097610846L;
@@ -121,7 +149,10 @@ public abstract class SimulationControlEvent extends EventObject {
 	}
 	
 	/**
-	 * The Class Execute.
+	 * The execute simulation control event. Requests a simulation be 
+	 * initialized and advanced until reaching the end time.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static class Execute extends SimulationControlEvent {
 		private static final long serialVersionUID = 5952299548097610846L;
@@ -130,9 +161,11 @@ public abstract class SimulationControlEvent extends EventObject {
 		private final long endTime;
 
 		/**
-		 * Instantiates a new advance to end.
+		 * Instantiates a new execute.
 		 *
 		 * @param source the source
+		 * @param startTime the start time
+		 * @param endTime the end time
 		 */
 		public Execute(Object source, long startTime, long endTime) {
 			super(source);

@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
@@ -18,12 +33,13 @@ import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
 
 /**
- * The Class SimulationControlPanel.
+ * A panel that provides simulation control.
+ * 
+ * @author Paul T. Grogan
  */
-public class SimulationControlPane extends JPanel implements UpdateListener {
+public class SimulationControlPanel extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = -7014074954503228524L;
 
-	private final ApplicationFrame frame;
 	private final Simulator simulator;
 	private final JSlider timeSlider;
 	private final AtomicBoolean working = new AtomicBoolean(false);
@@ -51,13 +67,12 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 	 *
 	 * @param simulator the simulator
 	 */
-	public SimulationControlPane(ApplicationFrame frame, Simulator simulator) {
+	public SimulationControlPanel(Simulator simulator) {
 		if(simulator == null) {
 			throw new IllegalArgumentException(
 					"Simulator cannot be null.");
 		}
 		this.simulator = simulator;
-		this.frame = frame;
 		
 		initializeSim.putValue(Action.SHORT_DESCRIPTION, 
 				"Initialize the simulation.");
@@ -68,15 +83,12 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		timeSlider = new JSlider();
 		timeSlider.setPaintTrack(false);
 		timeSlider.setEnabled(false);
-		
 		add(timeSlider, BorderLayout.NORTH);
 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-
 		buttonPanel.add(new JButton(initializeSim));
 		buttonPanel.add(new JButton(endSim));
-
 		add(buttonPanel, BorderLayout.CENTER);
 		
 		setMinimumSize(new Dimension(300,1));
@@ -117,43 +129,36 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 
 	/**
 	 * Fire simulation initialize.
-	 *
 	 */
 	private void fireSimulationInitialize() {
-		frame.autoSave();
-		final InitializationInputPanel input = new InitializationInputPanel();
-		if(true /* JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
-				getTopLevelAncestor(), input, 
-				"Initialize Simulation", JOptionPane.OK_CANCEL_OPTION)*/) {
-			final JPanel panel = this;
-			working.set(true);
-			updateActions();
+		final JPanel panel = this;
+		working.set(true);
+		updateActions();
+		
+		new SwingWorker<Void,Void>() {
+			@Override
+			protected Void doInBackground() {
+				try {
+					simulator.initializeSimulation(
+							new SimulationControlEvent.Initialize(
+									panel, simulator.getScenario().getStartTime(), 
+									simulator.getScenario().getEndTime()));
+				} catch(Exception ex) {
+					JOptionPane.showMessageDialog(getTopLevelAncestor(), 
+							ex.getMessage(), "Error", 
+							JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
+					fireSimulationInitialize();
+				}
+				return null;
+			}
 			
-			new SwingWorker<Void,Void>() {
-				@Override
-				protected Void doInBackground() {
-					try {
-						simulator.initializeSimulation(
-								new SimulationControlEvent.Initialize(
-										panel, input.getStartTime(), 
-										input.getEndTime()));
-					} catch(Exception ex) {
-						JOptionPane.showMessageDialog(getTopLevelAncestor(), 
-								ex.getMessage(), "Error", 
-								JOptionPane.ERROR_MESSAGE);
-						ex.printStackTrace();
-						fireSimulationInitialize();
-					}
-					return null;
-				}
-				
-				@Override
-				protected void done() {
-					working.set(false);
-					updateActions();
-				}
-			}.execute();
-		}
+			@Override
+			protected void done() {
+				working.set(false);
+				updateActions();
+			}
+		}.execute();
 	}
 
 	/**
@@ -167,17 +172,11 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 				&& !simulator.isCompleted());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
 		updateActions();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		timeSlider.setMinimum((int) simulator.getStartTime());
@@ -192,9 +191,6 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 		updateActions();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) { 
 		timeSlider.setValue((int) simulator.getTime());

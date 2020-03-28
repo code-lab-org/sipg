@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
+import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;

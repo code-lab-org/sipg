@@ -1,7 +1,7 @@
 package edu.mit.sips.gui.electricity;
 
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.gui.InfrastructureSystemPanel;
+import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 
 /**
  * The Class ElectricitySystemPanel.

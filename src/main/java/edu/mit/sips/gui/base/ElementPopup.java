@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
 
@@ -9,6 +9,8 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.water.WaterElement;
+import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.gui.agriculture.AgriculturePopupInfoPanel;
 import edu.mit.sips.gui.electricity.ElectricityPopupInfoPanel;
 import edu.mit.sips.gui.petroleum.PetroleumPopupInfoPanel;

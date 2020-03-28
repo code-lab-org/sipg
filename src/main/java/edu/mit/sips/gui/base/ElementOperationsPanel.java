@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

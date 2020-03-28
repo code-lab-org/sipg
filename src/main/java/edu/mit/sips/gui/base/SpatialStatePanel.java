@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,6 +23,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureElement;
+import edu.mit.sips.gui.PlottingUtils;
 
 /**
  * The Class ResourceStatePanel.

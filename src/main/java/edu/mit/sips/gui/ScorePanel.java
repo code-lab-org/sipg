@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.jfree.chart.ChartPanel;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
@@ -41,6 +42,7 @@ import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
+import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.Scenario;
 
@@ -51,6 +53,7 @@ import edu.mit.sips.scenario.Scenario;
  */
 public class ScorePanel extends InfrastructureSystemPanel {
 	private static final long serialVersionUID = 355808870154994451L;
+	private static Logger logger = Logger.getLogger(ScorePanel.class);
 
 	private final Country country;
 	private final Scenario scenario;
@@ -188,7 +191,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							try {
 								ImageIO.write(img,  "png", outputFile);
 							} catch (IOException e) {
-								e.printStackTrace();
+								logger.error(e);
 							}
 						}
 					}
@@ -212,7 +215,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							try {
 								ImageIO.write(img,  "png", outputFile);
 							} catch (IOException e) {
-								e.printStackTrace();
+								logger.error(e);
 							}
 						}
 					}
@@ -236,7 +239,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							try {
 								ImageIO.write(img,  "png", outputFile);
 							} catch (IOException e) {
-								e.printStackTrace();
+								logger.error(e);
 							}
 						}
 					}
@@ -260,7 +263,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 							try {
 								ImageIO.write(img,  "png", outputFile);
 							} catch (IOException e) {
-								e.printStackTrace();
+								logger.error(e);
 							}
 						}
 					}

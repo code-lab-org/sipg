@@ -1,7 +1,7 @@
 package edu.mit.sips.gui.petroleum;
 
 import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.gui.InfrastructureSystemPanel;
+import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 
 /**
  * The Class PetroleumSystemPanel.

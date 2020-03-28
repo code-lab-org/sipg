@@ -1,4 +1,4 @@
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.base;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -47,6 +47,7 @@ import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureSystem;
+import edu.mit.sips.gui.UpdateListener;
 
 /**
  * The Class InfrastructureSystemPanel.

@@ -1,7 +1,7 @@
 package edu.mit.sips.gui.agriculture;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.gui.InfrastructureSystemPanel;
+import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 
 /**
  * The Class AgricultureSystemPanel.
