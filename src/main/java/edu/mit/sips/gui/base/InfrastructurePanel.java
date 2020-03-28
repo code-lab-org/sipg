@@ -28,7 +28,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -48,19 +47,15 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.core.base.DefaultInfrastructureElement;
 import edu.mit.sips.core.base.EditableInfrastructureElement;
 import edu.mit.sips.core.base.InfrastructureElement;
-import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
-import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.UpdateEvent;
@@ -80,7 +75,6 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = 1265630285708384683L;
 	
 	private final JPopupMenu contextPopup;
-	private final ElementPopup elementPopup;
 	private final NetworkTreeModel elementsTreeModel;
 	private final JTree elementsTree;
 	private final Simulator simulator;
@@ -116,21 +110,12 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 	};
 	private final TreeCellRenderer elementCellRenderer = new ElementTreeCellRenderer();
 	private final Action addElementTemplate = new AbstractAction(
-			"Add Project",Icons.ADD) { // TODO  Icons.ADD_WIZARD) {
+			"Add Project",Icons.ADD) {
 		private static final long serialVersionUID = -6723630338741885195L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			addElementTemplateDialog();
-		}
-	};
-	private final Action addElement = new AbstractAction(
-			"Add Custom", Icons.ADD) {
-		private static final long serialVersionUID = -3748518859196760510L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			addElementDialog();
 		}
 	};
 	private final Action editElement = new AbstractAction( 
@@ -143,20 +128,6 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 					elementsTree.getSelectionPath());
 			if(selection != null) {
 				openElementDialog((InfrastructureElement)selection);
-				elementsTree.setSelectionPath(elementsTreeModel.getPath(selection));
-			}
-		}
-	};
-	private final Action editElementOperations = new AbstractAction( 
-			"Edit Operational Properties", Icons.EDIT) {
-		private static final long serialVersionUID = -3748518859196760510L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			InfrastructureElement selection = elementsTreeModel.getElement(
-					elementsTree.getSelectionPath());
-			if(selection != null) {
-				editElementOperationsDialog((InfrastructureElement)selection);
 				elementsTree.setSelectionPath(elementsTreeModel.getPath(selection));
 			}
 		}
@@ -184,23 +155,13 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 		
 		contextPopup = new JPopupMenu();
 		contextPopup.add(new JMenuItem(addElementTemplate));
-		// TODO contextPopup.add(new JMenuItem(addElement));
 		contextPopup.add(new JMenuItem(editElement));
-		/*TODO 
-		contextPopup.add(new JMenuItem(editElementOperations));
-		*/
 		contextPopup.add(new JMenuItem(removeElement));
-		
-		elementPopup = new ElementPopup(simulator);
 		
 		addElementTemplate.putValue(Action.SHORT_DESCRIPTION, 
 				"Add a new infrastructure project.");
-		addElement.putValue(Action.SHORT_DESCRIPTION, 
-				"Add custom element.");
 		editElement.putValue(Action.SHORT_DESCRIPTION, 
 				"Edit an existing infrastructure project.");
-		editElementOperations.putValue(Action.SHORT_DESCRIPTION, 
-				"Edit element's operational parameters.");
 		removeElement.putValue(Action.SHORT_DESCRIPTION, 
 				"Remove an existing infrastructure project.");
 		
@@ -283,50 +244,13 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 		JButton addTemplateButton = new JButton(addElementTemplate);
 		addTemplateButton.setText(null);
 		buttonPanel.add(addTemplateButton);
-		JButton addButton = new JButton(addElement);
-		addButton.setText(null);
-		// TODO buttonPanel.add(addButton);
 		JButton editButton = new JButton(editElement);
 		editButton.setText(null);
 		buttonPanel.add(editButton);
-		/*TODO 
-		JButton editOperationsButton = new JButton(editElementOperations);
-		editOperationsButton.setText(null);
-		buttonPanel.add(editOperationsButton);
-		 */
 		JButton removeButton = new JButton(removeElement);
 		removeButton.setText(null);
 		buttonPanel.add(removeButton);
 		add(buttonPanel, BorderLayout.SOUTH);
-	}
-	
-	/**
-	 * Adds the element dialog.
-	 */
-	private void addElementDialog() {
-		JComboBox<String> elementTypeCombo = new JComboBox<String>(new String[]{
-				"Agriculture", "Water", "Petroleum", "Electricity"});
-		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, elementTypeCombo, 
-				"Select Element Type", JOptionPane.OK_CANCEL_OPTION)) {
-			EditableInfrastructureElement element;
-			if(elementTypeCombo.getSelectedItem().equals("Agriculture")) {
-				element = new EditableAgricultureElement();
-			} else if(elementTypeCombo.getSelectedItem().equals("Water")) {
-				element = new EditableWaterElement();
-			} else if(elementTypeCombo.getSelectedItem().equals("Petroleum")) {
-				element = new EditablePetroleumElement();
-			} else if(elementTypeCombo.getSelectedItem().equals("Electricity")) {
-				element = new EditableElectricityElement();
-			} else {
-				throw new IllegalStateException(
-						"Selection was not a known element type.");
-			}
-			element.setOrigin(((City)elementsTreeModel.getSociety(
-					elementsTree.getSelectionPath())).getName());
-			element.setDestination(((City)elementsTreeModel.getSociety(
-					elementsTree.getSelectionPath())).getName());
-			openElementDialog(element.createElement());
-		}
 	}
 	
 	/**
@@ -378,18 +302,6 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 			}
 		} else {
 			return null;
-		}
-	}
-
-	/**
-	 * Edits the element operations dialog.
-	 *
-	 * @param element the element
-	 */
-	private void editElementOperationsDialog(InfrastructureElement element) {		
-		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
-				ElementOperationsPanel.createElementOperationsPanel(element), 
-				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
 		}
 	}
 	
@@ -520,13 +432,10 @@ public class InfrastructurePanel extends JPanel implements UpdateListener {
 	private void updateActions() {		
 		Society society = elementsTreeModel.getSociety(
 				elementsTree.getSelectionPath());
-		addElement.setEnabled(!isSimulating && society != null);
 		addElementTemplate.setEnabled(!isSimulating && society != null);
 		InfrastructureElement element = elementsTreeModel.getElement(
 				elementsTree.getSelectionPath());
 		editElement.setEnabled(!isSimulating && element != null);
-		editElementOperations.setEnabled(!isSimulating && element != null 
-				&& element.isOperational());
 		boolean canRemove = !isSimulating && element != null;
 		
 		if(element instanceof DefaultInfrastructureElement 
