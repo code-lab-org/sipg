@@ -13,7 +13,6 @@ public class DefaultScenario implements Scenario {
 	private final Country country;
 	private final List<? extends ElementTemplate> templates;
 	private final boolean isTeamScoreDisplayed;
-	private final double maxAnnualInvestment = 4e9;
 	
 	/**
 	 * Instantiates a new default scenario.
@@ -38,17 +37,11 @@ public class DefaultScenario implements Scenario {
 		this.templates = templates;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.scenario.Scenario#getCountry()
-	 */
 	@Override
 	public Country getCountry() {
 		return country;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.scenario.Scenario#getTemplates(java.util.Collection)
-	 */
 	@Override
 	public List<? extends ElementTemplate> getTemplates(Collection<Sector> sectors) {
 		List<ElementTemplate> filteredTemplates = new ArrayList<ElementTemplate>();
@@ -60,9 +53,6 @@ public class DefaultScenario implements Scenario {
 		return filteredTemplates;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.scenario.Scenario#getTemplate(java.lang.String)
-	 */
 	@Override
 	public ElementTemplate getTemplate(String name) {
 		for(ElementTemplate template : templates) {
@@ -73,9 +63,6 @@ public class DefaultScenario implements Scenario {
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.scenario.Scenario#getTemplates()
-	 */
 	@Override
 	public List<? extends ElementTemplate> getTemplates() {
 		return new ArrayList<ElementTemplate>(templates);
@@ -84,10 +71,5 @@ public class DefaultScenario implements Scenario {
 	@Override
 	public boolean isTeamScoreDisplayed() {
 		return isTeamScoreDisplayed;
-	}
-
-	@Override
-	public double getMaxAnnualInvestment() {
-		return maxAnnualInvestment;
 	}
 }

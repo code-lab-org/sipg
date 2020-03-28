@@ -46,11 +46,4 @@ public interface Scenario {
 	 * @return true, if is team score displayed
 	 */
 	public boolean isTeamScoreDisplayed();
-	
-	/**
-	 * Gets the max annual investment.
-	 *
-	 * @return the max annual investment
-	 */
-	public double getMaxAnnualInvestment();
 }

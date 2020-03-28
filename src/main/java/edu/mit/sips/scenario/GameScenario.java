@@ -67,8 +67,8 @@ public final class GameScenario extends DefaultScenario {
 	 * @param assignedSectors the assigned sectors
 	 */
 	public GameScenario(Collection<String> assignedCityNames, 
-			List<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
-		super(Country.buildCountry("Idas Abara", 25e9, Arrays.asList(
+			Collection<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
+		super(Country.buildCountry("Idas Abara", 25e9, 4e9, Arrays.asList(
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),

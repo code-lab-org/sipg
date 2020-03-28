@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim;
 
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,35 +34,31 @@ import edu.mit.sips.gui.UpdateListener;
 import edu.mit.sips.scenario.Scenario;
 
 /**
- * The Class NullSimulator.
+ * The default implementation of the simulator interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultSimulator implements Simulator {	
 	private static Logger logger = Logger.getLogger(DefaultSimulator.class);
 	
-	protected final Scenario scenario;
-	
+	protected Scenario scenario;
 	protected boolean autoOptimizeDistribution = true;
 	protected boolean autoOptimizeProductionAndDistribution = true;
-
 	protected final AtomicBoolean initialized = new AtomicBoolean(false);
 	protected final AtomicBoolean completed = new AtomicBoolean(false);
 	protected long startTime, endTime;
 	protected long time;
 	protected final int numberIterations = 4;
-
 	protected final Connection connection;
-
-	protected transient EventListenerList listenerList = new EventListenerList(); // mutable
+	protected transient EventListenerList listenerList = new EventListenerList();
 	
 	/**
-	 * Instantiates a new null simulator.
+	 * Instantiates a new default simulator.
 	 *
 	 * @param scenario the scenario
+	 * @param connection the connection
 	 */
 	public DefaultSimulator(Scenario scenario, Connection connection) {
-		if(scenario == null) {
-			throw new IllegalArgumentException("Scenario cannot be null.");
-		}
 		this.scenario = scenario;
 		this.connection = connection;
 	}
@@ -68,6 +79,10 @@ public class DefaultSimulator implements Simulator {
 	 * @param duration the duration
 	 */
 	protected void advance(long duration) {
+		if(scenario == null) {
+			return;
+		}
+		
 		logger.debug("Advancing simulation with duration " + duration + ".");
 		
 		if(time + duration > endTime) {
@@ -312,5 +327,11 @@ public class DefaultSimulator implements Simulator {
 	@Override
 	public void disconnect() {
 		connection.setConnected(false);
+	}
+
+	@Override
+	public void setScenario(Scenario scenario) {
+		this.scenario = scenario;
+		initialized.set(false);
 	}
 }

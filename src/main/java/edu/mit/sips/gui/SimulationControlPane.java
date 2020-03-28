@@ -23,7 +23,7 @@ import edu.mit.sips.sim.Simulator;
 public class SimulationControlPane extends JPanel implements UpdateListener {
 	private static final long serialVersionUID = -7014074954503228524L;
 
-	private final DataFrame frame;
+	private final ApplicationFrame frame;
 	private final Simulator simulator;
 	private final JSlider timeSlider;
 	private final AtomicBoolean working = new AtomicBoolean(false);
@@ -51,7 +51,7 @@ public class SimulationControlPane extends JPanel implements UpdateListener {
 	 *
 	 * @param simulator the simulator
 	 */
-	public SimulationControlPane(DataFrame frame, Simulator simulator) {
+	public SimulationControlPane(ApplicationFrame frame, Simulator simulator) {
 		if(simulator == null) {
 			throw new IllegalArgumentException(
 					"Simulator cannot be null.");

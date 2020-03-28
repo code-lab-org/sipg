@@ -9,7 +9,7 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
-import edu.mit.sips.gui.DataFrame;
+import edu.mit.sips.gui.ApplicationFrame;
 import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;
@@ -47,8 +47,7 @@ public class NullPlayer {
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {
-					DataFrame frame = new DataFrame();
-					frame.initialize(simulator);
+					ApplicationFrame frame = new ApplicationFrame(simulator);
 					frame.pack();
 					frame.setVisible(true);
 				}

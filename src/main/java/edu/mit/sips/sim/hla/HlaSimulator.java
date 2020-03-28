@@ -33,6 +33,18 @@ public class HlaSimulator extends DefaultSimulator {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public void setScenario(Scenario scenario) {
+		super.setScenario(scenario);
+		try {
+			simAmbassador.disconnect();
+		} catch (RTIexception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+		simAmbassador.reset();
+	}
 
 	@Override
 	protected void advance(long duration) {

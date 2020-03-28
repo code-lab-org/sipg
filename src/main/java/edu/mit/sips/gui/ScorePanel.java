@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
@@ -8,7 +23,6 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Date;
@@ -30,14 +44,16 @@ import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.Scenario;
 
+/**
+ * Graphics panel to display key score information.
+ * 
+ * @author Paul T. Grogan
+ */
 public class ScorePanel extends InfrastructureSystemPanel {
 	private static final long serialVersionUID = 355808870154994451L;
 
 	private final Country country;
 	private final Scenario scenario;
-	
-	private final File outputFile;
-	private final File userOutputDir;
 
 	private JPanel agricultureScorePanel;
 	private final JLabel agricultureScoreLabel = new JLabel("");
@@ -56,29 +72,34 @@ public class ScorePanel extends InfrastructureSystemPanel {
 	DefaultTableXYDataset teamScore = new DefaultTableXYDataset();
 	
 	private double overBudgetValue = 0;
+	private double overBudgetLimit = 0;
 	private int overBudgetYear = 0;
 	private int roundNumber = 0;
 	
 	private final JLabel scoreLabel;
+	private File userOutputDir;
 
+	/**
+	 * Instantiates a new score panel.
+	 *
+	 * @param scenario the scenario
+	 * @param scoreLabel the score label
+	 */
 	public ScorePanel(Scenario scenario, JLabel scoreLabel) {
 		super(scenario.getCountry().getSocialSystem());
 		this.scenario = scenario;
 		this.country = scenario.getCountry();
 		this.scoreLabel = scoreLabel;
-
-		File logDir = new File("logs");
-		if(!logDir.exists()) {
-			logDir.mkdir();
-		}
-		outputFile = new File(logDir, System.getProperty("user.name") 
-				+ "_" + new Date().getTime() + ".log");
 		
-		userOutputDir = new File(System.getProperty("user.home"), "sips-g");
+		if(System.getenv().containsKey("SIPG_HOME")) {
+			userOutputDir = new File(System.getenv("SIPG_HOME"));
+		} else {
+			userOutputDir = new File(System.getProperty("user.home"), "SIPG");
+		}
 		if(!userOutputDir.exists()) {
 			userOutputDir.mkdir();
 		}
-
+		
 		teamScorePanel = createStackedAreaChart(null, "Score", null,
 				new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.DODGER_BLUE, 
 				PlottingUtils.DIM_GRAY, PlottingUtils.GOLDENROD, 
@@ -90,63 +111,39 @@ public class ScorePanel extends InfrastructureSystemPanel {
 			addTab("Team Score", Icons.COUNTRY, teamScorePanel);
 		}
 		
-		try {
-			FileWriter fw = new FileWriter(outputFile);
-			fw.write("Time, ");
-			fw.write("Round, ");
-			fw.write("Food Security, ");
-			fw.write("Aquifer Security, ");
-			fw.write("Reservoir Security, ");
-
-			if(country.getAgricultureSystem().isLocal()) {
-				agricultureScorePanel = createStackedAreaChart(null, "Score", null,
-						new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
-						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, agriculturePlayerScore);
-				agricultureScoreLabel.setFont(getFont().deriveFont(20f));
-				agricultureScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				agricultureScorePanel.add(agricultureScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.AGRICULTURE, agricultureScorePanel);
-
-				fw.write("Agriculture Profit, ");
-				fw.write("Agriculture Investment, ");
-				fw.write("Agriculture Score, ");
-			}
-			if(country.getWaterSystem().isLocal()) {
-				waterScorePanel = createStackedAreaChart(null, "Score", null,
-						new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
-						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, waterPlayerScore);
-				waterScoreLabel.setFont(getFont().deriveFont(20f));
-				waterScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				waterScorePanel.add(waterScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.WATER, waterScorePanel);
-
-				fw.write("Water Profit, ");
-				fw.write("Water Investment, ");
-				fw.write("Water Score, ");
-			}
-			if(country.getPetroleumSystem().isLocal() && country.getElectricitySystem().isLocal()) {
-				energyScorePanel = createStackedAreaChart(null, "Score", null,
-						new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
-						PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, energyPlayerScore);
-				energyScoreLabel.setFont(getFont().deriveFont(20f));
-				energyScoreLabel.setHorizontalAlignment(JLabel.CENTER);
-				energyScorePanel.add(energyScoreLabel, BorderLayout.NORTH);
-				addTab("Individual Score", Icons.ENERGY, energyScorePanel);
-
-				fw.write("Energy Profit, ");
-				fw.write("Energy Investment, ");
-				fw.write("Energy Score, ");
-			}
-
-			fw.write("Over Budget, ");
-			fw.write("National Profit, ");
-			fw.write("Team Score \n");
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(country.getAgricultureSystem().isLocal()) {
+			agricultureScorePanel = createStackedAreaChart(null, "Score", null,
+					new Color[]{PlottingUtils.YELLOW_GREEN, PlottingUtils.TOMATO, 
+					PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, agriculturePlayerScore);
+			agricultureScoreLabel.setFont(getFont().deriveFont(20f));
+			agricultureScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+			agricultureScorePanel.add(agricultureScoreLabel, BorderLayout.NORTH);
+			addTab("Individual Score", Icons.AGRICULTURE, agricultureScorePanel);
+		}
+		if(country.getWaterSystem().isLocal()) {
+			waterScorePanel = createStackedAreaChart(null, "Score", null,
+					new Color[]{PlottingUtils.DODGER_BLUE, PlottingUtils.TOMATO, 
+					PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, waterPlayerScore);
+			waterScoreLabel.setFont(getFont().deriveFont(20f));
+			waterScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+			waterScorePanel.add(waterScoreLabel, BorderLayout.NORTH);
+			addTab("Individual Score", Icons.WATER, waterScorePanel);
+		}
+		if(country.getPetroleumSystem().isLocal() 
+				&& country.getElectricitySystem().isLocal()) {
+			energyScorePanel = createStackedAreaChart(null, "Score", null,
+					new Color[]{PlottingUtils.DIM_GRAY, PlottingUtils.TOMATO, 
+					PlottingUtils.GOLDENROD, PlottingUtils.BLACK}, energyPlayerScore);
+			energyScoreLabel.setFont(getFont().deriveFont(20f));
+			energyScoreLabel.setHorizontalAlignment(JLabel.CENTER);
+			energyScorePanel.add(energyScoreLabel, BorderLayout.NORTH);
+			addTab("Individual Score", Icons.ENERGY, energyScorePanel);
 		}
 	}
 
+	/**
+	 * Initialize.
+	 */
 	private void initialize() {
 		scoreLabel.setText("");
 		
@@ -164,69 +161,14 @@ public class ScorePanel extends InfrastructureSystemPanel {
 		
 		overBudgetYear = 0;
 		overBudgetValue = 0;
+		overBudgetLimit = 0;
 	}
 
 	@Override
 	public void simulationCompleted(UpdateEvent event) { 
-		int year = (int) event.getTime();
-		
-		try {
-			FileWriter fw = new FileWriter(outputFile, true);
-			fw.write(new Date().getTime() + ", ");
-			fw.write(roundNumber + ", ");
-			
-			double foodScore = country.getAgricultureSystem().getFoodSecurityScore();
-			double aquiferScore = country.getWaterSystem().getAquiferSecurityScore();
-			double reservoirScore = country.getPetroleumSystem().getReservoirSecurityScore();
-			
-			fw.write(foodScore + ", ");
-			fw.write(aquiferScore + ", ");
-			fw.write(reservoirScore + ", ");
-			
-			if(country.getAgricultureSystem() instanceof AgricultureSoS.Local) {	
-				double politicalScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getPoliticalPowerScore(year);
-				double financialScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getFinancialSecurityScore(year);
-				double aggregateScore = ((AgricultureSoS.Local) country.getAgricultureSystem()).getAggregateScore(year);
-
-				fw.write(financialScore + ", ");
-				fw.write(politicalScore + ", ");
-				fw.write(aggregateScore + ", ");
-			}
-			if(country.getWaterSystem() instanceof WaterSoS.Local) {
-				double politicalScore = ((WaterSoS.Local) country.getWaterSystem()).getPoliticalPowerScore(year);
-				double financialScore = ((WaterSoS.Local) country.getWaterSystem()).getFinancialSecurityScore(year);
-				double aggregateScore = ((WaterSoS.Local) country.getWaterSystem()).getAggregateScore(year);
-
-				fw.write(financialScore + ", ");
-				fw.write(politicalScore + ", ");
-				fw.write(aggregateScore + ", ");
-			}
-			if(country.getPetroleumSystem() instanceof PetroleumSoS.Local
-					&& country.getElectricitySystem() instanceof ElectricitySoS.Local) {
-				double politicalScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getPoliticalPowerScore(
-						year, (ElectricitySoS.Local) country.getElectricitySystem());
-				double financialScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getFinancialSecurityScore(
-						year, (ElectricitySoS.Local) country.getElectricitySystem());
-				double aggregateScore = ((PetroleumSoS.Local) country.getPetroleumSystem()).getAggregateScore(
-						year, (ElectricitySoS.Local) country.getElectricitySystem());
-
-				fw.write(financialScore + ", ");
-				fw.write(politicalScore + ", ");
-				fw.write(aggregateScore + ", ");
-			}
-
-			fw.write(overBudgetYear + ", ");
-			fw.write(country.getFinancialSecurityScore(year) + ", ");
-			fw.write(country.getAggregatedScore(year) + "\n");
-			fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
 		// hack to save chart images
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				
 				if(agricultureScorePanel != null) {
 					for(Component c : agricultureScorePanel.getComponents()) {
 						if(c instanceof ChartPanel) {
@@ -333,7 +275,7 @@ public class ScorePanel extends InfrastructureSystemPanel {
 					"Total capital expenditures in " + overBudgetYear 
 					+ " (\u00a7" + format.format(overBudgetValue/1e9) 
 					+ " billion) was over the limit of \u00a7" 
-					+ format.format(scenario.getMaxAnnualInvestment()/1e9) + " billion.", 
+					+ format.format(overBudgetLimit/1e9) + " billion.", 
 					"Over-Budget Warning", JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -408,9 +350,10 @@ public class ScorePanel extends InfrastructureSystemPanel {
 				scoreLabel.getText() + ", ") + scoreText);
 		}
 		
-		if(country.getTotalCapitalExpense() > scenario.getMaxAnnualInvestment()) {
+		if(country.getTotalCapitalExpense() > country.getCapitalBudgetLimit()) {
 			overBudgetYear = year;
 			overBudgetValue = country.getTotalCapitalExpense();
+			overBudgetLimit = country.getCapitalBudgetLimit();
 		}
 
 		double financialScore = country.getFinancialSecurityScore(year);

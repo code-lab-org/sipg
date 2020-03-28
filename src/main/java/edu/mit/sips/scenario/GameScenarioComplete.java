@@ -3,7 +3,6 @@ package edu.mit.sips.scenario;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
@@ -67,8 +66,8 @@ public final class GameScenarioComplete extends DefaultScenario {
 	 * @param assignedSectors the assigned sectors
 	 */
 	public GameScenarioComplete(Collection<String> assignedCityNames, 
-			List<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
-		super(Country.buildCountry("Idas Abara", 25e9, Arrays.asList(
+			Collection<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
+		super(Country.buildCountry("Idas Abara", 25e9, 4e9, Arrays.asList(
 				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
 				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
 				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),

@@ -253,7 +253,10 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 		updateSeries(capitalExpenseTotal, "Annual Capital Expenses", year, 
 				CurrencyUnits.convertFlow(getSociety().getTotalCapitalExpense(), 
 						getSociety(), this));
-		updateSeries(capitalExpenseTotal, "Annual Maximum Budget", year, 4);
+		if(getSociety() instanceof Country) {
+			updateSeries(capitalExpenseTotal, "Annual Maximum Budget", year,
+					((Country) getSociety()).getCapitalBudgetLimit());
+		}
 
 		if(getSociety().getSocialSystem() instanceof SocialSystem.Local) { 
 			updateSeries(cumulativeCapitalExpense, "Cumulative Total", year, 

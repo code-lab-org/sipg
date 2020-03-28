@@ -50,7 +50,7 @@ public class Country extends DefaultSociety {
 	 * @return the country
 	 */
 	public static Country buildCountry(String name, double initialFunds, 
-			List<? extends Society> nestedSocieties) {
+			double budgetLimit, List<? extends Society> nestedSocieties) {
 		// determine if local or remote sos is required for each sector
 		AgricultureSoS agricultureSystem = new DefaultAgricultureSoS();
 		for(Society society : nestedSocieties) {
@@ -82,7 +82,7 @@ public class Country extends DefaultSociety {
 		}
 		SocialSoS socialSystem = new DefaultSocialSoS();
 		
-		return new Country(name, initialFunds, nestedSocieties, agricultureSystem, 
+		return new Country(name, initialFunds, budgetLimit, nestedSocieties, agricultureSystem, 
 				waterSystem, petroleumSystem, electricitySystem, socialSystem);
 	}
 	
@@ -92,6 +92,7 @@ public class Country extends DefaultSociety {
 	private PetroleumSoS petroleumSystem;
 	private SocialSoS socialSystem;
 	private final double initialFunds;
+	private final double budgetLimit;
 	
 	/**
 	 * Instantiates a new country.
@@ -109,6 +110,7 @@ public class Country extends DefaultSociety {
 		socialSystem = new DefaultSocialSoS();
 		socialSystem.setSociety(this);
 		initialFunds = 0;
+		budgetLimit = 0;
 	}
 	
 	/**
@@ -116,6 +118,7 @@ public class Country extends DefaultSociety {
 	 *
 	 * @param name the name
 	 * @param initialFunds the initial funds
+	 * @param budgetLimit the budget limit
 	 * @param nestedSocieties the nested societies
 	 * @param agricultureSystem the agriculture system
 	 * @param waterSystem the water system
@@ -123,7 +126,8 @@ public class Country extends DefaultSociety {
 	 * @param electricitySystem the electricity system
 	 * @param socialSystem the social system
 	 */
-	private Country(String name, double initialFunds, List<? extends Society> nestedSocieties,
+	private Country(String name, double initialFunds, double budgetLimit, 
+			List<? extends Society> nestedSocieties,
 			AgricultureSoS agricultureSystem, WaterSoS waterSystem,
 			PetroleumSoS petroleumSystem, ElectricitySoS electricitySystem, 
 			SocialSoS socialSystem) {
@@ -139,6 +143,7 @@ public class Country extends DefaultSociety {
 		this.socialSystem = socialSystem;
 		this.socialSystem.setSociety(this);
 		this.initialFunds = initialFunds;
+		this.budgetLimit = budgetLimit;
 	}
 	
 	/**
@@ -163,6 +168,15 @@ public class Country extends DefaultSociety {
 	 */
 	public double getAquiferSecurityScore() {
 		return getWaterSystem().getAquiferSecurityScore();
+	}
+	
+	/**
+	 * Gets the capital budget limit.
+	 *
+	 * @return the capital budget limit
+	 */
+	public double getCapitalBudgetLimit() {
+		return budgetLimit;
 	}
 	
 	@Override

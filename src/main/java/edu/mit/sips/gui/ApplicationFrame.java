@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
@@ -8,17 +23,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,52 +50,35 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
+
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
 import edu.mit.sips.core.agriculture.RecordedAgricultureSystem;
-import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.electricity.RecordedElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
-import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.RecordedWaterSystem;
-import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
+import edu.mit.sips.scenario.DefaultScenario;
+import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.Simulator;
-import edu.mit.sips.sim.hla.HlaSimulator;
 
 /**
- * The Class DataFrame.
+ * The main frame containing the application.
+ * 
+ * @author Paul T. Grogan
  */
-public class DataFrame extends JFrame implements UpdateListener {
+public class ApplicationFrame extends JFrame implements UpdateListener {
 	private static final long serialVersionUID = 809065861110839895L;
+	private static Logger logger = Logger.getLogger(ApplicationFrame.class);
 
-	/**
-	 * The main method.
-	 *
-	 * @param args the arguments
-	 */
-	public static void main(String[] args) {
-		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					DataFrame frame = new DataFrame();
-					frame.pack();
-					frame.setVisible(true);
-				}
-			});
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-	}
-
+	private File userOutputDir;
+	private File logOutputDir;
 	private final JPanel contentPane;
 	private final ConnectionPanel connectionPanel;
 	private final ConnectionToolbar connectionToolbar;
@@ -92,17 +87,17 @@ public class DataFrame extends JFrame implements UpdateListener {
 	private SimulationControlPane simulationPane;
 	private ElementsPane elementsPane;
 	private SocietyPane societyPane;
-	private final JFileChooser fileChooser, dataChooser;
+	private final JFileChooser scenarioFileChooser;
+	private final JFileChooser recordedDataChooser;
+	
+	private ScoreFileLogger scoreLogger;
 
 	private final Action newScenario = new AbstractAction("New") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
-		/* (non-Javadoc)
-		 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-		 */
 		@Override 
 		public void actionPerformed(ActionEvent e) {
-			// TODO
+			initialize(new DefaultScenario());
 		}
 	};
 	private final Action exportAgriculture = new AbstractAction("Write Data") {
@@ -177,7 +172,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 			clearEnergyData();
 		}
 	};
-
 	private final Action openScenario = new AbstractAction("Open") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
@@ -185,41 +179,28 @@ public class DataFrame extends JFrame implements UpdateListener {
 		public void actionPerformed(ActionEvent e) {
 			close();
 
-			if(JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(null)) {
-				// load experiment from file
+			if(JFileChooser.APPROVE_OPTION == scenarioFileChooser.showOpenDialog(null)) {
 				try {
-					// create a string-builder to efficiently read in JSON data
-					StringBuilder jsonBuilder = new StringBuilder();
-					// create file reader and buffered reader
-					FileReader fr = new FileReader(fileChooser.getSelectedFile());
-					BufferedReader br = new BufferedReader(fr);
-					String line;
-					// do while the next line is not null (not reached end of file)
-					while((line = br.readLine()) != null) {
-						// append line to string builder
-						jsonBuilder.append(line);
-					}
-					// close readers
-					br.close();
-					fr.close();
-					HlaSimulator sim = new HlaSimulator(Serialization.deserialize(jsonBuilder.toString()));
-					initialize(sim);
+					initialize(Serialization.deserialize(
+							FileUtils.readFileToString(
+									scenarioFileChooser.getSelectedFile(), 
+									StandardCharsets.UTF_8)));
 				} catch (IOException ex) {
 					JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
 							ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+					logger.error(ex);
 					ex.printStackTrace();
 				}
 			}
 		}
 	};
-
 	private final Action saveScenario = new AbstractAction("Save as...") {
 		private static final long serialVersionUID = 7259597700641022096L;
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(JFileChooser.APPROVE_OPTION == fileChooser.showSaveDialog(null)) {
-				save(fileChooser.getSelectedFile());
+			if(JFileChooser.APPROVE_OPTION == scenarioFileChooser.showSaveDialog(null)) {
+				save(scenarioFileChooser.getSelectedFile());
 			}
 		}
 	};
@@ -247,23 +228,36 @@ public class DataFrame extends JFrame implements UpdateListener {
 			showConnectionDialog();
 		}
 	};
+	
 	/**
-	 * Instantiates a new data frame.
+	 * Instantiates a new application frame.
+	 *
+	 * @param simulator the simulator
 	 */
-	public DataFrame() {
-		super("Data Viewer");
+	public ApplicationFrame(Simulator simulator) {
+		super("SIPG");
+		this.simulator = simulator;
 		setIconImage(Icons.SYSTEM_MONITOR);
 
-		File userOutputDir = new File(System.getProperty("user.home"), "sips-g");
+		if(System.getenv().containsKey("SIPG_HOME")) {
+			userOutputDir = new File(System.getenv("SIPG_HOME"));
+		} else {
+			userOutputDir = new File(System.getProperty("user.home"), "SIPG");
+		}
 		if(!userOutputDir.exists()) {
 			userOutputDir.mkdir();
 		}
-		fileChooser = new JFileChooser(userOutputDir);
-		fileChooser.setFileFilter(
+		logOutputDir = new File(userOutputDir, "logs");
+		if(!logOutputDir.exists()) {
+			logOutputDir.mkdir();
+		}
+		
+		scenarioFileChooser = new JFileChooser(userOutputDir);
+		scenarioFileChooser.setFileFilter(
 				new FileNameExtensionFilter("JSON files","json"));
 
-		dataChooser = new JFileChooser(System.getProperty("user.home"));
-		dataChooser.setFileFilter(new FileNameExtensionFilter("Data files", "dat"));
+		recordedDataChooser = new JFileChooser(System.getProperty("user.home"));
+		recordedDataChooser.setFileFilter(new FileNameExtensionFilter("Data files", "dat"));
 
 		JMenuBar menuBar = new JMenuBar();
 		JMenu fileMenu = new JMenu("File");
@@ -332,19 +326,26 @@ public class DataFrame extends JFrame implements UpdateListener {
 			}
 		});
 
-		initialize(null);
+		initialize(simulator.getScenario());
 	}
 
+	/**
+	 * Auto save.
+	 */
 	protected void autoSave() {
-		File file = new File("autosave.json");
+		File file = new File(userOutputDir, "autosave.json");
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("auto-saving: " + file);
+		logger.info("auto-saving: " + file);
 		save(file);
 	}
+	
+	/**
+	 * Clear agriculture data.
+	 */
 	private void clearAgricultureData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getAgricultureSystem() instanceof RecordedAgricultureSystem) {
@@ -355,6 +356,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 				"Cleared agriculture data.", null, 
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	/**
+	 * Clear energy data.
+	 */
 	private void clearEnergyData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getPetroleumSystem() instanceof RecordedPetroleumSystem) {
@@ -368,6 +373,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 				"Cleared energy data.", null, 
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	/**
+	 * Clear water data.
+	 */
 	private void clearWaterData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getWaterSystem() instanceof RecordedWaterSystem) {
@@ -378,26 +387,31 @@ public class DataFrame extends JFrame implements UpdateListener {
 				"Cleared water data.", null, 
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+	
 	/**
-	 * Close.
+	 * Close this application.
 	 */
 	private void close() {
-		if(simulator != null && JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
+		if(simulator.getScenario() != null && JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(
 				getContentPane(), "Close scenario?", "Confirm", 
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE)) {
 			initialize(null);
 		}
 	}
+	
 	/**
 	 * Exit.
 	 */
 	private void exit() {
 		close();
-		if(simulator == null) {
+		if(simulator.getScenario() == null) {
 			dispose();
 		}
 	}
 
+	/**
+	 * Export agriculture data.
+	 */
 	private void exportAgricultureData() {
 		Map<String, RecordedAgricultureSystem> data = 
 				new HashMap<String, RecordedAgricultureSystem>();
@@ -423,9 +437,15 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
+	/**
+	 * Export data.
+	 *
+	 * @param dataPack the data pack
+	 * @return true, if successful
+	 */
 	private boolean exportData(Object dataPack) {
-		if(JFileChooser.APPROVE_OPTION == dataChooser.showSaveDialog(this)) {
-			File f = dataChooser.getSelectedFile();
+		if(JFileChooser.APPROVE_OPTION == recordedDataChooser.showSaveDialog(this)) {
+			File f = recordedDataChooser.getSelectedFile();
 			String filePath = f.getPath();
 			if(!filePath.toLowerCase().endsWith(".dat")) {
 				f = new File(filePath + ".dat");
@@ -439,7 +459,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 
 			try {
 				FileOutputStream fileOut = new FileOutputStream(f);
-
 				ObjectOutputStream outStream = new ObjectOutputStream(fileOut);
 				outStream.writeObject(dataPack);
 				outStream.close();
@@ -448,21 +467,17 @@ public class DataFrame extends JFrame implements UpdateListener {
 				JOptionPane.showMessageDialog(this, 
 						"Error while writing data.", null, 
 						JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+				logger.error(e);
 				return false;
 			}
 
-			File userOutputDir = new File("logs");
-			if(!userOutputDir.exists()) {
-				userOutputDir.mkdir();
-			}
-			File userState = new File(userOutputDir, 
+			File userState = new File(logOutputDir, 
 					System.getProperty("user.name") + "-export-" + 
 							new Date().getTime() + ".json");
 			try {
 				userState.createNewFile();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error(e);
 				return false;
 			}
 			save(userState);
@@ -472,6 +487,9 @@ public class DataFrame extends JFrame implements UpdateListener {
 		return false;
 	}
 
+	/**
+	 * Export energy data.
+	 */
 	private void exportEnergyData() {
 		Map<String, Object[]> data = new HashMap<String, Object[]>();
 		for(City city : simulator.getScenario().getCountry().getCities()) {
@@ -507,6 +525,9 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
+	/**
+	 * Export water data.
+	 */
 	private void exportWaterData() {
 		Map<String, RecordedWaterSystem> data = 
 				new HashMap<String, RecordedWaterSystem>();
@@ -531,18 +552,21 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 	
+	/**
+	 * Import agriculture data.
+	 */
 	private void importAgricultureData() {
-		Map<?,?> map = importData();
-		if(map != null) {
+		Map<?,?> data = importData();
+		if(data != null) {
 			for(City city : simulator.getScenario().getCountry().getCities()) {
-				if(map.containsKey(city.getName()) 
+				if(data.containsKey(city.getName()) 
 						&& city.getAgricultureSystem() instanceof RecordedAgricultureSystem
-						&& map.get(city.getName()) instanceof RecordedAgricultureSystem) {
+						&& data.get(city.getName()) instanceof RecordedAgricultureSystem) {
 					city.setAgricultureSystem(
-							(RecordedAgricultureSystem) map.get(city.getName()));
+							(RecordedAgricultureSystem) data.get(city.getName()));
 				} else {
 					JOptionPane.showMessageDialog(this, 
-							"File is not agriculture data.", null, 
+							"File does not contain agriculture system data.", null, 
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -553,28 +577,38 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
+	/**
+	 * Import data.
+	 *
+	 * @return the map
+	 */
 	private Map<?,?> importData() {
-		if(JFileChooser.APPROVE_OPTION == dataChooser.showOpenDialog(this)) {
-			Object o = null;
+		if(JFileChooser.APPROVE_OPTION == recordedDataChooser.showOpenDialog(this)) {
+			Object obj = null;
 			try {
-				FileInputStream fileIn = new FileInputStream(dataChooser.getSelectedFile());
+				FileInputStream fileIn = new FileInputStream(recordedDataChooser.getSelectedFile());
 				ObjectInputStream inStream = new ObjectInputStream(fileIn);
-				o = inStream.readObject();
+				obj = inStream.readObject();
 				inStream.close();
 				fileIn.close();
-			} catch (IOException | ClassNotFoundException e) {
+			} catch (IOException e) {
 				JOptionPane.showMessageDialog(this, 
 						"Error while reading data.", null, 
 						JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
+				logger.error(e);
 				return null;
+			} catch(ClassNotFoundException e) {
+				JOptionPane.showMessageDialog(this, 
+						"Error while reading data.", null, 
+						JOptionPane.ERROR_MESSAGE);
+				logger.error(e);
 			}
 
-			if(o instanceof Map<?, ?>) {
-				return (Map<?, ?>) o;
+			if(obj instanceof Map<?, ?>) {
+				return (Map<?, ?>) obj;
 			} else {
 				JOptionPane.showMessageDialog(this, 
-						"File is not compatible data.", null, 
+						"File does not contain compatible data.", null, 
 						JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
@@ -583,21 +617,24 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
+	/**
+	 * Import energy data.
+	 */
 	private void importEnergyData() {
-		Map<?,?> map = importData();
-		if(map != null) {
+		Map<?,?> data = importData();
+		if(data != null) {
 			for(City city : simulator.getScenario().getCountry().getCities()) {
-				if(map.containsKey(city.getName()) 
-						&& map.get(city.getName()) instanceof Object[]
-								&& ((Object[])map.get(city.getName())).length == 2) {
-					Object[] objects = (Object[])map.get(city.getName());
+				if(data.containsKey(city.getName()) 
+						&& data.get(city.getName()) instanceof Object[]
+								&& ((Object[])data.get(city.getName())).length == 2) {
+					Object[] objects = (Object[])data.get(city.getName());
 					if(city.getPetroleumSystem() instanceof RecordedPetroleumSystem
 							&& objects[0] instanceof RecordedPetroleumSystem) {
 						city.setPetroleumSystem(
 								(RecordedPetroleumSystem) objects[0]);
 					} else {
 						JOptionPane.showMessageDialog(this, 
-								"File is not petroleum data.", null, 
+								"File does not contain petroleum system data.", null, 
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
@@ -607,13 +644,13 @@ public class DataFrame extends JFrame implements UpdateListener {
 								(RecordedElectricitySystem) objects[1]);
 					} else {
 						JOptionPane.showMessageDialog(this, 
-								"File is not electricity data.", null, 
+								"File does not contain electricity system data.", null, 
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
 				} else {
 					JOptionPane.showMessageDialog(this, 
-							"File is not energy data.", null, 
+							"File does not contain energy system data.", null, 
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -624,18 +661,21 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
+	/**
+	 * Import water data.
+	 */
 	private void importWaterData() {
-		Map<?,?> map = importData();
-		if(map != null) {
+		Map<?,?> data = importData();
+		if(data != null) {
 			for(City city : simulator.getScenario().getCountry().getCities()) {
-				if(map.containsKey(city.getName()) 
+				if(data.containsKey(city.getName()) 
 						&& city.getWaterSystem() instanceof RecordedWaterSystem
-						&& map.get(city.getName()) instanceof RecordedWaterSystem) {
+						&& data.get(city.getName()) instanceof RecordedWaterSystem) {
 					city.setWaterSystem(
-							(RecordedWaterSystem) map.get(city.getName()));
+							(RecordedWaterSystem) data.get(city.getName()));
 				} else {
 					JOptionPane.showMessageDialog(this, 
-							"File is not water data.", null, 
+							"File does not contain water system data.", null, 
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -647,23 +687,22 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 
 	/**
-	 * Sets the simulator.
+	 * Initialize the application frame for a scenario.
 	 *
-	 * @param simulator the new simulator
+	 * @param scenario the scenario
 	 */
-	public void initialize(final Simulator simulator) {
-		if(simulator == null) {
-			if(this.simulator != null) {
-				if(this.simulator.getConnection().isConnected()) {
-					this.simulator.disconnect();
-				}
-				this.simulator.getConnection().removeConnectionListener(connectionPanel);
-				this.simulator.getConnection().removeConnectionListener(connectionToolbar);
-				this.simulator.removeUpdateListener(this);
-				this.simulator.removeUpdateListener(simulationPane);
-				this.simulator.removeUpdateListener(societyPane);
-				this.simulator = null;
+	public void initialize(Scenario scenario) {
+		simulator.setScenario(scenario);
+		if(scenario == null) {
+			if(simulator.getConnection().isConnected()) {
+				simulator.disconnect();
 			}
+			simulator.getConnection().removeConnectionListener(connectionPanel);
+			simulator.getConnection().removeConnectionListener(connectionToolbar);
+			simulator.removeUpdateListener(this);
+			simulator.removeUpdateListener(simulationPane);
+			simulator.removeUpdateListener(societyPane);
+			simulator.removeUpdateListener(scoreLogger);
 			if(contentPane.getComponentCount() > 0) {
 				contentPane.removeAll();
 			}
@@ -671,23 +710,25 @@ public class DataFrame extends JFrame implements UpdateListener {
 			elementsPane = null;
 			nationalPane = null;
 			simulationPane = null;
+			
 			validate();
 			repaint();
-			setTitle("Data Viewer");
+			setTitle("SIPG");
 		} else {
-			this.simulator = simulator;
-			this.simulator.addUpdateListener(this);
+			simulator.addUpdateListener(this);
 			connectionPanel.initialize(simulator);
 			simulator.getConnection().addConnectionListener(connectionPanel);
 			simulator.getConnection().addConnectionListener(connectionToolbar);
 
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			societyPane = new SocietyPane(this.simulator.getScenario());
-			this.simulator.addUpdateListener(societyPane);
+			societyPane = new SocietyPane(simulator.getScenario(), userOutputDir, logOutputDir);
+			simulator.addUpdateListener(societyPane);
+			scoreLogger = new ScoreFileLogger();
+			simulator.addUpdateListener(scoreLogger);
 			elementsPane = new ElementsPane(simulator);
 			elementsPane.initialize();
-			this.simulationPane = new SimulationControlPane(this, this.simulator);
-			this.simulator.addUpdateListener(simulationPane);
+			simulationPane = new SimulationControlPane(this, simulator);
+			simulator.addUpdateListener(simulationPane);
 			nationalPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			JPanel leftPanel = new JPanel();
 			leftPanel.setLayout(new BorderLayout());
@@ -698,69 +739,56 @@ public class DataFrame extends JFrame implements UpdateListener {
 			nationalPane.setResizeWeight(0);
 			contentPane.add(nationalPane, BorderLayout.CENTER);
 			contentPane.add(connectionToolbar, BorderLayout.SOUTH);
-
+			
 			validate();
 			repaint();
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 
-		newScenario.setEnabled(simulator == null);
-		saveScenario.setEnabled(simulator != null);
-		closeScenario.setEnabled(simulator != null);
-		editConnection.setEnabled(simulator != null);// && false); // TODO
+		newScenario.setEnabled(scenario == null);
+		saveScenario.setEnabled(scenario != null);
+		closeScenario.setEnabled(scenario != null);
+		editConnection.setEnabled(scenario != null);
 
-		exportAgriculture.setEnabled(simulator != null 
-				&& simulator.getScenario().getCountry().getAgricultureSystem() 
-				instanceof AgricultureSystem.Local);	
-		importAgriculture.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getAgricultureSystem() 
-						instanceof AgricultureSystem.Local));
-		clearAgriculture.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getAgricultureSystem() 
-						instanceof AgricultureSystem.Local));	
+		exportAgriculture.setEnabled(scenario != null 
+				&& scenario.getCountry().getAgricultureSystem().isLocal());
+		importAgriculture.setEnabled(scenario != null 
+				&& !scenario.getCountry().getAgricultureSystem().isLocal());
+		clearAgriculture.setEnabled(scenario != null 
+				&& !scenario.getCountry().getAgricultureSystem().isLocal());
 
-		exportWater.setEnabled(simulator != null 
-				&& simulator.getScenario().getCountry().getWaterSystem() 
-				instanceof WaterSystem.Local);	
-		importWater.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getWaterSystem() 
-						instanceof WaterSystem.Local));
-		clearWater.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getWaterSystem() 
-						instanceof WaterSystem.Local));	
+		exportWater.setEnabled(scenario != null 
+				&& scenario.getCountry().getWaterSystem().isLocal());	
+		importWater.setEnabled(scenario != null 
+				&& !scenario.getCountry().getWaterSystem().isLocal());
+		clearWater.setEnabled(scenario != null
+				&& !scenario.getCountry().getWaterSystem().isLocal());	
 
-		exportEnergy.setEnabled(simulator != null 
-				&& simulator.getScenario().getCountry().getPetroleumSystem() 
-				instanceof PetroleumSystem.Local
-				&& simulator.getScenario().getCountry().getElectricitySystem() 
-				instanceof ElectricitySystem.Local);	
-		importEnergy.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getPetroleumSystem() 
-						instanceof PetroleumSystem.Local
-						&& simulator.getScenario().getCountry().getElectricitySystem() 
-						instanceof ElectricitySystem.Local));
-		clearEnergy.setEnabled(simulator != null 
-				&& ! (simulator.getScenario().getCountry().getPetroleumSystem() 
-						instanceof PetroleumSystem.Local
-						&& simulator.getScenario().getCountry().getElectricitySystem() 
-						instanceof ElectricitySystem.Local));	
+		exportEnergy.setEnabled(scenario != null 
+				&& scenario.getCountry().getPetroleumSystem().isLocal()
+				&& scenario.getCountry().getElectricitySystem().isLocal());
+		importEnergy.setEnabled(scenario != null 
+				&& !scenario.getCountry().getPetroleumSystem().isLocal()
+				&& !scenario.getCountry().getElectricitySystem().isLocal());
+		clearEnergy.setEnabled(scenario != null 
+				&& !scenario.getCountry().getPetroleumSystem().isLocal()
+				&& !scenario.getCountry().getElectricitySystem().isLocal());
 	}
 
+	/**
+	 * Save the scenario to file.
+	 *
+	 * @param file the file
+	 */
 	private void save(File file) {
 		try {
-			// create a file writer and buffered writer
-			FileWriter fw = new FileWriter(file);
-			BufferedWriter bw = new BufferedWriter(fw);
-			// write the JSON-ified experiment to file
-			bw.write(Serialization.serialize(simulator.getScenario()));
-			// flush and close writers
-			bw.flush();
-			bw.close();
-			fw.close();
-		} catch (IOException ex) {
+			FileUtils.writeStringToFile(file, 
+					Serialization.serialize(simulator.getScenario()), 
+					StandardCharsets.UTF_8);
+		} catch (IOException e) {
 			JOptionPane.showMessageDialog(contentPane.getTopLevelAncestor(), 
-					ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-			ex.printStackTrace();
+					e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+			logger.error(e);
 		}
 	}
 
@@ -773,41 +801,27 @@ public class DataFrame extends JFrame implements UpdateListener {
 				"Edit Connection", JOptionPane.PLAIN_MESSAGE);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		File logsDir = new File("logs");
-		if(!logsDir.exists()) {
-			logsDir.mkdir();
-		}
-		File finalState = new File(logsDir, System.getProperty("user.name") 
+		File finalState = new File(logOutputDir, System.getProperty("user.name") 
 				+ "-" + new Date().getTime() + ".json");
 		try {
 			finalState.createNewFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		save(finalState);
 
-		File userOutputDir = new File(System.getProperty("user.home"), "sips-g");
-		if(!userOutputDir.exists()) {
-			userOutputDir.mkdir();
-		}
 		File userFinalState = new File(userOutputDir, 
 				new Date().getTime() + "-scenario.json");
 		try {
 			userFinalState.createNewFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		save(userFinalState);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationInitialized(final UpdateEvent event) {
 		// Note: must use SwingUtilities.invokeAndWait method here because
@@ -818,9 +832,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					int year = (int) event.getTime();
-
-					setTitle("Data as of " + year);
+					setTitle("SIPG | " + event.getTime());
 				}
 			});
 		} catch (InterruptedException e) {
@@ -830,9 +842,6 @@ public class DataFrame extends JFrame implements UpdateListener {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationUpdated(final UpdateEvent event) {
 		// Note: must use SwingUtilities.invokeAndWait method here because
@@ -843,9 +852,7 @@ public class DataFrame extends JFrame implements UpdateListener {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
 				public void run() {
-					int year = (int) event.getTime();
-
-					setTitle("Data as of " + year);
+					setTitle("SIPG | " + event.getTime());
 				}
 			});
 		} catch (InterruptedException e) {

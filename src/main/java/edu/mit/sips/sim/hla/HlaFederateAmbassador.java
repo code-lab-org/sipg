@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
 
 import java.io.File;
@@ -117,7 +132,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	/**
 	 * Advance.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public void advance() throws RTIexception {
 		logger.trace("Advancing to the next timestep.");
@@ -209,13 +224,11 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	/**
 	 * Disconnect.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public void disconnect() throws RTIexception {
 		logger.info("Disconnecting from the RTI.");
-
 		resignFederation();
-		
 		rtiAmbassador.disconnect();
 		logger.trace("Disconnected from the RTI.");
 		connected.set(false);
@@ -335,12 +348,36 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	}
 	
 	/**
+	 * Reset.
+	 */
+	public void reset() {
+		connected.set(false);
+		timeConstrained.set(false);
+		timeRegulating.set(false);
+		timeAdvanceGranted.set(false);
+		syncRegistered.set(false);
+		syncRegisterSuccess.set(false);
+		syncAnnounced.set(false);
+		syncAchieved.set(false);
+		saveInitiated.set(false);
+		saveCompleted.set(false);
+		restorationConfirmed.set(false);
+		restorationBegun.set(false);
+		restorationInitiated.set(false);
+		restorationCompleted.set(false);
+		initialized.set(false);
+		hlaObjects.clear();
+		localObjects.clear();
+		attributeUpdateRequests.clear();
+	}
+	
+	/**
 	 * Initialize.
 	 *
 	 * @param startTime the start time
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
-	public void initialize(long startTime) throws RTIexception {
+	public void initialize(long startTime) throws RTIexception {		
 		logger.info("Initializing federate to time " + startTime);
 		
 		HLAinteger64TimeFactory timeFactory = 
@@ -604,7 +641,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	/**
 	 * Join federation.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 * @throws MalformedURLException 
 	 */
 	private void joinFederation() throws RTIexception, MalformedURLException {
@@ -749,7 +786,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	/**
 	 * Resign federation.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	private void resignFederation() throws RTIexception {
 		logger.info("Terminating the federation execution.");
@@ -797,7 +834,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	/**
 	 * Restore initial conditions.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public void restoreInitialConditions() throws RTIexception {
 

@@ -1,6 +1,7 @@
 package edu.mit.sips.gui;
 
 import java.awt.BorderLayout;
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.swing.JLabel;
@@ -43,7 +44,7 @@ public class SocietyPane extends JPanel implements UpdateListener {
 	 *
 	 * @param society the society
 	 */
-	public SocietyPane(Scenario scenario) {
+	public SocietyPane(Scenario scenario, File userOutputDir, File userLogDir) {
 		Country country = scenario.getCountry();
 		
 		setLayout(new BorderLayout());
