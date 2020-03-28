@@ -54,7 +54,11 @@ public final class EditableSimpleLifecycleModel implements EditableLifecycleMode
 				spreadCosts);
 	}
 
-	@Override
+	/**
+	 * Gets the commission duration.
+	 *
+	 * @return the commission duration
+	 */
 	public long getCommissionDuration() {
 		return commissionDuration;
 	}
@@ -68,43 +72,75 @@ public final class EditableSimpleLifecycleModel implements EditableLifecycleMode
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
-
-	@Override
+	
+	/**
+	 * Gets the decommission duration.
+	 *
+	 * @return the decommission duration
+	 */
 	public long getDecommissionDuration() {
 		return decommissionDuration;
 	}
 
-	@Override
+	/**
+	 * Gets the fixed operations cost.
+	 *
+	 * @return the fixed operations cost
+	 */
 	public double getFixedOperationsCost() {
 		return fixedOperationCost;
 	}
 
-	@Override
+	/**
+	 * Gets the max operations duration.
+	 *
+	 * @return the max operations duration
+	 */
 	public long getMaxOperationsDuration() {
 		return maxOperationDuration;
 	}
 
-	@Override
+	/**
+	 * Gets the max time decommission start.
+	 *
+	 * @return the max time decommission start
+	 */
 	public long getMaxTimeDecommissionStart() {
 		return timeCommissionStart + commissionDuration + maxOperationDuration;
 	}
 
-	@Override
+	/**
+	 * Gets the min time commission start.
+	 *
+	 * @return the min time commission start
+	 */
 	public long getMinTimeCommissionStart() {
 		return minTimeCommissionStart;
 	}
 
-	@Override
+	/**
+	 * Gets the operation duration.
+	 *
+	 * @return the operation duration
+	 */
 	public long getOperationDuration() {
 		return operationDuration;
 	}
 
-	@Override
+	/**
+	 * Gets the time commission start.
+	 *
+	 * @return the time commission start
+	 */
 	public long getTimeCommissionStart() {
 		return timeCommissionStart;
 	}
 
-	@Override
+	/**
+	 * Gets the time decommission start.
+	 *
+	 * @return the time decommission start
+	 */
 	public long getTimeDecommissionStart() {
 		return timeCommissionStart + commissionDuration + operationDuration;
 	}
@@ -114,72 +150,128 @@ public final class EditableSimpleLifecycleModel implements EditableLifecycleMode
 		return timeUnits;
 	}
 
-	@Override
+	/**
+	 * Gets the total commission cost.
+	 *
+	 * @return the total commission cost
+	 */
 	public double getTotalCommissionCost() {
 		return totalCommissionCost;
 	}
 	
-	@Override
+	/**
+	 * Gets the total decommission cost.
+	 *
+	 * @return the total decommission cost
+	 */
 	public double getTotalDecommissionCost() {
 		return totalDecommissionCost;
 	}
 
-	@Override
+	/**
+	 * Checks if is spread costs.
+	 *
+	 * @return true, if is spread costs
+	 */
 	public boolean isSpreadCosts() {
 		return spreadCosts;
 	}
 
-	@Override
+	/**
+	 * Sets the commission duration.
+	 *
+	 * @param commissionDuration the new commission duration
+	 */
 	public void setCommissionDuration(long commissionDuration) {
 		this.commissionDuration = commissionDuration;
 	}
 
-	@Override
+	/**
+	 * Sets the decommission duration.
+	 *
+	 * @param decommissionDuration the new decommission duration
+	 */
 	public void setDecommissionDuration(long decommissionDuration) {
 		this.decommissionDuration = decommissionDuration;
 	}
 
-	@Override
+	/**
+	 * Sets the fixed operation cost.
+	 *
+	 * @param fixedOperationCost the new fixed operation cost
+	 */
 	public void setFixedOperationCost(double fixedOperationCost) {
 		this.fixedOperationCost = fixedOperationCost;
 	}
 
-	@Override
+	/**
+	 * Sets the max operations duration.
+	 *
+	 * @param maxOperationDuration the new max operations duration
+	 */
 	public void setMaxOperationsDuration(long maxOperationDuration) {
 		this.maxOperationDuration = maxOperationDuration;
 	}
 
-	@Override
+	/**
+	 * Sets the min time commission start.
+	 *
+	 * @param minTimeCommissionStart the new min time commission start
+	 */
 	public void setMinTimeCommissionStart(long minTimeCommissionStart) {
 		this.minTimeCommissionStart = minTimeCommissionStart;
 	}
 
-	@Override
+	/**
+	 * Sets the operation duration.
+	 *
+	 * @param operationDuration the new operation duration
+	 */
 	public void setOperationDuration(long operationDuration) {
 		this.operationDuration = operationDuration;
 	}
 
-	@Override
+	/**
+	 * Sets the spread costs.
+	 *
+	 * @param spreadCosts the new spread costs
+	 */
 	public void setSpreadCosts(boolean spreadCosts) {
 		this.spreadCosts = spreadCosts;
 	}
 
-	@Override
+	/**
+	 * Sets the time commission start.
+	 *
+	 * @param timeCommissionStart the new time commission start
+	 */
 	public void setTimeCommissionStart(long timeCommissionStart) {
 		this.timeCommissionStart = timeCommissionStart;
 	}
 
-	@Override
+	/**
+	 * Sets the time decommission start.
+	 *
+	 * @param timeDecommissionStart the new time decommission start
+	 */
 	public void setTimeDecommissionStart(long timeDecommissionStart) {
 		setOperationDuration(timeDecommissionStart - timeCommissionStart - commissionDuration);
 	}
 
-	@Override
+	/**
+	 * Sets the total commission cost.
+	 *
+	 * @param totalCommissionCost the new total commission cost
+	 */
 	public void setTotalCommissionCost(double totalCommissionCost) {
 		this.totalCommissionCost = totalCommissionCost;
 	}
 
-	@Override
+	/**
+	 * Sets the total decommission cost.
+	 *
+	 * @param totalDecommissionCost the new total decommission cost
+	 */
 	public void setTotalDecommissionCost(double totalDecommissionCost) {
 		this.totalDecommissionCost = totalDecommissionCost;
 	}
