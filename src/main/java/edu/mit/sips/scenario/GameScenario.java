@@ -9,7 +9,7 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
-import edu.mit.sips.core.agriculture.PlaceholderAgricultureSystem;
+import edu.mit.sips.core.agriculture.RecordedAgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
@@ -97,7 +97,7 @@ public final class GameScenario extends DefaultScenario {
 										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new PlaceholderAgricultureSystem(),
+							new RecordedAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
 								Arrays.asList(
@@ -204,7 +204,7 @@ public final class GameScenario extends DefaultScenario {
 										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, RURAL, RURAL)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new PlaceholderAgricultureSystem(),
+							new RecordedAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(false, 250e9, 250e9, 1.2e9, 0.9e-3, 1,
 								new ArrayList<WaterElement>(),
@@ -253,7 +253,7 @@ public final class GameScenario extends DefaultScenario {
 										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, URBAN, URBAN)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
-							new PlaceholderAgricultureSystem(),
+							new RecordedAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
 								/*Arrays.asList(

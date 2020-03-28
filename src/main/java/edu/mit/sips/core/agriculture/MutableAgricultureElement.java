@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.DefaultMutableInfrastructureElement;
@@ -10,7 +25,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class MutableAgricultureElement.
+ * An implementation of the mutable infrastructure element class for the agriculture sector.
+ * 
+ * @author Paul T. Grogan
  */
 public final class MutableAgricultureElement extends DefaultMutableInfrastructureElement 
 		implements FoodUnitsOutput, WaterUnitsOutput {
@@ -38,9 +55,14 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 	 */
 	public AgricultureElement createElement() {
 		DefaultAgricultureElement e = new DefaultAgricultureElement(); // for units
-		return new DefaultAgricultureElement(getTemplateName(), getName(), getOrigin(), 
-				getDestination(), getLifecycleModel().createLifecycleModel(), 
-				getMaxLandArea(),  getInitialLandArea(), 
+		return new DefaultAgricultureElement(
+				getTemplateName(), 
+				getName(), 
+				getOrigin(), 
+				getDestination(), 
+				getLifecycleModel().createLifecycleModel(), 
+				getMaxLandArea(), 
+				getInitialLandArea(), 
 				FoodUnits.convertFlow(getFoodIntensityOfLandUsed(), this, e), 
 				CurrencyUnits.convertFlow(getCostIntensityOfLandUsed(), this, e), 
 				WaterUnits.convertFlow(getWaterIntensityOfLandUsed(), this, e), 
@@ -48,9 +70,12 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 				getDistributionEfficiency(), 
 				FoodUnits.convertFlow(getMaxFoodInput(), this, e), 
 				FoodUnits.convertFlow(getInitialFoodInput(), this, e), 
-				DefaultUnits.convert(getVariableOperationsCostOfFoodDistribution(),
-						getCurrencyUnits(), getFoodUnits(), 
-						e.getCurrencyUnits(), e.getFoodUnits()));
+				DefaultUnits.convert(
+					getVariableOperationsCostOfFoodDistribution(),
+					getCurrencyUnits(), getFoodUnits(), 
+					e.getCurrencyUnits(), e.getFoodUnits()
+				)
+			);
 	}
 	
 	/**
@@ -80,17 +105,11 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 		return foodIntensityOfLandUsed;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
@@ -168,17 +187,11 @@ public final class MutableAgricultureElement extends DefaultMutableInfrastructur
 		return waterIntensityOfLandUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;

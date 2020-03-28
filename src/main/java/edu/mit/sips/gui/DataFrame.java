@@ -41,7 +41,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.LocalAgricultureSystem;
-import edu.mit.sips.core.agriculture.PlaceholderAgricultureSystem;
+import edu.mit.sips.core.agriculture.RecordedAgricultureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.electricity.PlaceholderElectricitySystem;
@@ -347,8 +347,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 	private void clearAgricultureData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
-			if(city.getAgricultureSystem() instanceof PlaceholderAgricultureSystem) {
-				city.setAgricultureSystem(new PlaceholderAgricultureSystem());
+			if(city.getAgricultureSystem() instanceof RecordedAgricultureSystem) {
+				city.setAgricultureSystem(new RecordedAgricultureSystem());
 			}
 		}
 		JOptionPane.showMessageDialog(this, 
@@ -399,20 +399,20 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 
 	private void exportAgricultureData() {
-		Map<String, PlaceholderAgricultureSystem> data = 
-				new HashMap<String, PlaceholderAgricultureSystem>();
+		Map<String, RecordedAgricultureSystem> data = 
+				new HashMap<String, RecordedAgricultureSystem>();
 		for(City city : simulator.getScenario().getCountry().getCities()) {
 			if(city.getAgricultureSystem() instanceof LocalAgricultureSystem) {
 				LocalAgricultureSystem system = (LocalAgricultureSystem) city.getAgricultureSystem();
-				PlaceholderAgricultureSystem placeholder = new PlaceholderAgricultureSystem();
-				placeholder.setWaterConsumptionMap(system.getWaterConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
-				placeholder.setCashFlowMap(system.getCashFlowLog());
-				placeholder.setFoodProductionMap(system.getFoodProductionMap());
-				placeholder.setTotalFoodSupplyMap(system.getTotalFoodSupplyMap());
-				placeholder.setFoodDomesticPriceMap(system.getFoodDomesticPriceMap());
-				placeholder.setFoodImportPriceMap(system.getFoodImportPriceMap());
-				placeholder.setFoodExportPriceMap(system.getFoodExportPriceMap());
+				RecordedAgricultureSystem placeholder = new RecordedAgricultureSystem();
+				placeholder.setRecordedWaterConsumption(system.getWaterConsumptionLog());
+				placeholder.setRecordedCapitalExpense(system.getCapitalExpenseLog());
+				placeholder.setRecordedCashFlow(system.getCashFlowLog());
+				placeholder.setRecordedFoodProduction(system.getFoodProductionLog());
+				placeholder.setRecordedTotalFoodSupply(system.getTotalFoodSupplyLog());
+				placeholder.setRecordedFoodDomesticPrice(system.getFoodDomesticPriceLog());
+				placeholder.setRecordedFoodImportPrice(system.getFoodImportPriceLog());
+				placeholder.setRecordedFoodExportPrice(system.getFoodExportPriceLog());
 				data.put(city.getName(), placeholder);
 			}
 		}
@@ -536,10 +536,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 		if(map != null) {
 			for(City city : simulator.getScenario().getCountry().getCities()) {
 				if(map.containsKey(city.getName()) 
-						&& city.getAgricultureSystem() instanceof PlaceholderAgricultureSystem
-						&& map.get(city.getName()) instanceof PlaceholderAgricultureSystem) {
+						&& city.getAgricultureSystem() instanceof RecordedAgricultureSystem
+						&& map.get(city.getName()) instanceof RecordedAgricultureSystem) {
 					city.setAgricultureSystem(
-							(PlaceholderAgricultureSystem) map.get(city.getName()));
+							(RecordedAgricultureSystem) map.get(city.getName()));
 				} else {
 					JOptionPane.showMessageDialog(this, 
 							"File is not agriculture data.", null, 

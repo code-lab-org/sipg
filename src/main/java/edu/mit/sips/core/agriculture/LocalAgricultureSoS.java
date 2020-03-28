@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
 import java.util.ArrayList;
@@ -26,6 +41,11 @@ import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
+/**
+ * The locally-controlled implementation of the agriculture system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
+ */
 public class LocalAgricultureSoS extends LocalInfrastructureSoS implements AgricultureSoS.Local {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
 	private static final TimeUnits waterTimeUnits = TimeUnits.year;
@@ -34,25 +54,12 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 	private List<Double> foodSecurityHistory = new ArrayList<Double>();
 	
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local agriculture system-of-systems.
 	 */
 	public LocalAgricultureSoS() {
 		super("Agriculture");
 	}
 	
-	/**
-	 * Gets the food security.
-	 *
-	 * @return the food security
-	 */
-	public double getFoodSecurity() {
-		return getTotalFoodSupply() == 0 ? 1 
-				: (getFoodProduction() / getTotalFoodSupply());
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
-	 */
 	@Override
 	public boolean addElement(AgricultureElement element) {
 		for(AgricultureSystem.Local system : getNestedSystems()) {
@@ -63,9 +70,20 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getArableLandArea()
+	/**
+	 * Compute food security score.
+	 *
+	 * @return the double
 	 */
+	private double computeFoodSecurityScore() {
+		return 1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0);
+	}
+
+	@Override
+	public double getAggregateScore(long year) {
+		return (getFoodSecurityScore() + getFinancialSecurityScore(year) + getPoliticalPowerScore(year))/3d;
+	}
+
 	@Override
 	public double getArableLandArea() {
 		double value = 0;
@@ -75,9 +93,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
-	 */
 	@Override
 	public List<? extends AgricultureElement> getElements() {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
@@ -86,9 +101,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
-	 */
 	@Override
 	public List<? extends AgricultureElement> getExternalElements() {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
@@ -101,9 +113,26 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
-	 */
+	@Override
+	public double getFinancialSecurityScore(long year) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 50e9;
+		double growthRate = 0.05;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCashFlow() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCashFlow() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCashFlow() - minValue)/(maxValue - minValue);
+		}
+	}
+
 	@Override
 	public double getFoodDomesticPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -118,9 +147,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodExport()
-	 */
 	@Override
 	public double getFoodExport() {
 		double value = 0;
@@ -130,9 +156,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
-	 */
 	@Override
 	public double getFoodExportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -147,9 +170,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodImport()
-	 */
 	@Override
 	public double getFoodImport() {
 		double value = 0;
@@ -159,9 +179,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
-	 */
 	@Override
 	public double getFoodImportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -176,9 +193,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodInDistribution()
-	 */
 	@Override
 	public double getFoodInDistribution() {
 		double value = 0;
@@ -188,9 +202,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistribution()
-	 */
 	@Override
 	public double getFoodOutDistribution() {
 		double value = 0;
@@ -203,9 +214,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
-	 */
 	@Override
 	public double getFoodOutDistributionLosses() {
 		double value = 0;
@@ -215,9 +223,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodProduction()
-	 */
 	@Override
 	public double getFoodProduction() {
 		double value = 0;
@@ -227,25 +232,35 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
+	/**
+	 * Gets the food security.
+	 *
+	 * @return the food security
 	 */
+	public double getFoodSecurity() {
+		return getTotalFoodSupply() == 0 ? 1 
+				: (getFoodProduction() / getTotalFoodSupply());
+	}
+
+	@Override
+	public double getFoodSecurityScore() {
+		double value = 0;
+		for(double item : foodSecurityHistory) {
+			value += item;
+		}
+		return value / foodSecurityHistory.size();
+	}
+
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getInternalElements()
-	 */
 	@Override
 	public List<? extends AgricultureElement> getInternalElements() {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
@@ -255,9 +270,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborParticipationRate()
-	 */
 	@Override
 	public double getLaborParticipationRate() {
 		if(getSociety().getSocialSystem().getPopulation() > 0) {
@@ -271,9 +283,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborUsed()
-	 */
 	@Override
 	public long getLaborUsed() {
 		long value = 0;
@@ -283,9 +292,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLandAreaUsed()
-	 */
 	@Override
 	public double getLandAreaUsed() {
 		double value = 0;
@@ -295,9 +301,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
-	 */
 	@Override
 	public double getLocalFoodFraction() {
 		if(getSociety().getTotalFoodDemand() > 0) {
@@ -307,9 +310,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodSupply()
-	 */
 	@Override
 	public double getLocalFoodSupply() {
 		double value = 0;
@@ -319,9 +319,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSoS.Local#getNestedSystems()
-	 */
 	@Override
 	public List<AgricultureSystem.Local> getNestedSystems() {
 		List<AgricultureSystem.Local> systems = new ArrayList<AgricultureSystem.Local>();
@@ -333,9 +330,26 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return Collections.unmodifiableList(systems);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getTotalFoodSupply()
-	 */
+	@Override
+	public double getPoliticalPowerScore(long year) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 10e9;
+		double growthRate = 0.06;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		if(this.getCumulativeCapitalExpense() < minValue) {
+			return 0;
+		} else if(this.getCumulativeCapitalExpense() > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(this.getCumulativeCapitalExpense() - minValue)/(maxValue - minValue);
+		}
+	}
+
 	@Override
 	public double getTotalFoodSupply() {
 		double value = 0;
@@ -345,9 +359,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
-	 */
 	@Override
 	public double getUnitProductionCost() {
 		if(getFoodProduction() > 0) {
@@ -357,9 +368,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitSupplyProfit()
-	 */
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalFoodSupply() > 0) {
@@ -368,9 +376,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		double value = 0;
@@ -379,25 +384,23 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 		return value;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
+	
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
+	
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSoS.Local#optimizeFoodDistribution()
-	 */
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		foodSecurityHistory.clear();
+	}
+	
 	@Override
 	public void optimizeFoodDistribution() {
 		// Make a list of cities and infrastructure elements. The vector
@@ -501,9 +504,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSoS.Local#optimizeFoodProductionAndDistribution(double)
-	 */
 	@Override
 	public void optimizeFoodProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
@@ -695,9 +695,6 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
-	 */
 	@Override
 	public boolean removeElement(AgricultureElement element) {
 		for(AgricultureSystem.Local system : getNestedSystems()) {
@@ -707,79 +704,10 @@ public class LocalAgricultureSoS extends LocalInfrastructureSoS implements Agric
 		}
 		return false;
 	}
-	
-	@Override
-	public void initialize(long time) {
-		super.initialize(time);
-		foodSecurityHistory.clear();
-	}
-	
+
 	@Override
 	public void tick() {
 		super.tick();
 		this.foodSecurityHistory.add(computeFoodSecurityScore());
-	}
-	
-	/**
-	 * Compute food security score.
-	 *
-	 * @return the double
-	 */
-	private double computeFoodSecurityScore() {
-		return 1000 / 0.75 * Math.max(Math.min(this.getFoodSecurity(), 0.75), 0);
-	}
-	
-	@Override
-	public double getFoodSecurityScore() {
-		double value = 0;
-		for(double item : foodSecurityHistory) {
-			value += item;
-		}
-		return value / foodSecurityHistory.size();
-	}
-
-	@Override
-	public double getFinancialSecurityScore(long year) {
-		double dystopiaTotal = 0;
-		double utopiaTotal = 50e9;
-		double growthRate = 0.05;
-		
-		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		
-		if(this.getCumulativeCashFlow() < minValue) {
-			return 0;
-		} else if(this.getCumulativeCashFlow() > maxValue) {
-			return 1000;
-		} else {
-			return 1000*(this.getCumulativeCashFlow() - minValue)/(maxValue - minValue);
-		}
-	}
-
-	@Override
-	public double getPoliticalPowerScore(long year) {
-		double dystopiaTotal = 0;
-		double utopiaTotal = 10e9;
-		double growthRate = 0.06;
-		
-		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		
-		if(this.getCumulativeCapitalExpense() < minValue) {
-			return 0;
-		} else if(this.getCumulativeCapitalExpense() > maxValue) {
-			return 1000;
-		} else {
-			return 1000*(this.getCumulativeCapitalExpense() - minValue)/(maxValue - minValue);
-		}
-	}
-
-	@Override
-	public double getAggregateScore(long year) {
-		return (getFoodSecurityScore() + getFinancialSecurityScore(year) + getPoliticalPowerScore(year))/3d;
 	}
 }

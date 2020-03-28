@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
 import java.util.ArrayList;
@@ -17,7 +32,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class Local.
+ * The locally-controlled implementation of the agriculture system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class LocalAgricultureSystem extends LocalInfrastructureSystem implements AgricultureSystem.Local {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -31,21 +48,21 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	private final List<AgricultureElement> elements = 
 			Collections.synchronizedList(new ArrayList<AgricultureElement>());
 
-	private transient final Map<Long, Double> waterConsumptionMap = 
+	private transient final Map<Long, Double> waterConsumptionLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> totalFoodSupplyMap = 
+	private transient final Map<Long, Double> totalFoodSupplyLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> foodProductionMap = 
+	private transient final Map<Long, Double> foodProductionLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> foodDomesticPriceMap = 
+	private transient final Map<Long, Double> foodDomesticPriceLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> foodImportPriceMap = 
+	private transient final Map<Long, Double> foodImportPriceLog = 
 			new HashMap<Long, Double>();
-	private transient final Map<Long, Double> foodExportPriceMap = 
+	private transient final Map<Long, Double> foodExportPriceLog = 
 			new HashMap<Long, Double>();
 	
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local agriculture system.
 	 */
 	public LocalAgricultureSystem() {
 		super("Agriculture");
@@ -57,7 +74,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	}
 	
 	/**
-	 * Instantiates a new local.
+	 * Instantiates a new local agriculture system.
 	 *
 	 * @param arableLandArea the arable land area
 	 * @param laborParticipationRate the labor participation rate
@@ -73,14 +90,12 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 			PriceModel exportPriceModel) {
 		super("Agriculture");
 
-		// Validate arable land area.
 		if(arableLandArea < 0) {
 			throw new IllegalArgumentException(
 					"Arable land area cannot be negative.");
 		}
 		this.arableLandArea = arableLandArea;
 
-		// Validate labor participation rate.
 		if(laborParticipationRate < 0 || laborParticipationRate > 1) {
 			throw new IllegalArgumentException(
 					"Labor participation rate must be between 0 and 1.");
@@ -91,21 +106,18 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 			this.elements.addAll(elements);
 		}
 
-		// Validate domestic price model.
 		if(domesticPriceModel == null) {
 			throw new IllegalArgumentException(
 					"Domestic price model cannot be null.");
 		}
 		this.domesticPriceModel = domesticPriceModel;
 
-		// Validate import price model.
 		if(importPriceModel == null) {
 			throw new IllegalArgumentException(
 					"Import price model cannot be null.");
 		}
 		this.importPriceModel = importPriceModel;
 
-		// Validate export price model.
 		if(exportPriceModel == null) {
 			throw new IllegalArgumentException(
 					"Export price model cannot be null.");
@@ -113,25 +125,16 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		this.exportPriceModel = exportPriceModel;
 	}	
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#addElement(edu.mit.sips.core.agriculture.AgricultureElement)
-	 */
 	@Override
 	public synchronized boolean addElement(AgricultureElement element) {
 		return elements.add(element);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getArableLandArea()
-	 */
 	@Override
 	public double getArableLandArea() {
 		return arableLandArea;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getConsumptionExpense()
-	 */
 	@Override
 	public double getConsumptionExpense() {
 		return getWaterConsumption() * DefaultUnits.convert(
@@ -141,26 +144,17 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 				getCurrencyUnits(), getWaterUnits());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getDistributionExpense()
-	 */
 	@Override
 	public double getDistributionExpense() {
 		return getFoodDomesticPrice() * getFoodInDistribution();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getDistributionRevenue()
-	 */
 	@Override
 	public double getDistributionRevenue() {
 		return getFoodDomesticPrice() * (getFoodOutDistribution() 
 				- getFoodOutDistributionLosses());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getElements()
-	 */
 	@Override
 	public List<AgricultureElement> getElements() {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
@@ -169,22 +163,15 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getExportRevenue()
-	 */
 	@Override
 	public double getExportRevenue() {
 		return getFoodExportPrice() * getFoodExport();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getExternalElements()
-	 */
 	@Override
 	public List<AgricultureElement> getExternalElements() {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
 
-		// see if country system is also local
 		if(getSociety().getCountry().getAgricultureSystem() 
 				instanceof AgricultureSystem.Local) {
 			AgricultureSystem.Local system = (AgricultureSystem.Local)
@@ -206,26 +193,20 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
-	 */
 	@Override
 	public double getFoodDomesticPrice() {
 		return domesticPriceModel.getUnitPrice();
 	}
 
 	/**
-	 * Gets the food domestic price map.
+	 * Gets the food domestic price log.
 	 *
-	 * @return the food domestic price map
+	 * @return the food domestic price log
 	 */
-	public Map<Long, Double> getFoodDomesticPriceMap() {
-		return new HashMap<Long, Double>(foodDomesticPriceMap);
+	public Map<Long, Double> getFoodDomesticPriceLog() {
+		return new HashMap<Long, Double>(foodDomesticPriceLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getFoodExport()
-	 */
 	@Override
 	public double getFoodExport() {
 		return Math.max(0, getFoodProduction() 
@@ -234,26 +215,20 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 				- getSocietyDemand());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
-	 */
 	@Override
 	public double getFoodExportPrice() {
 		return exportPriceModel.getUnitPrice();
 	}
 
 	/**
-	 * Gets the food export price map.
+	 * Gets the food export price log.
 	 *
-	 * @return the food export price map
+	 * @return the food export price log
 	 */
-	public Map<Long, Double> getFoodExportPriceMap() {
-		return new HashMap<Long, Double>(foodExportPriceMap);
+	public Map<Long, Double> getFoodExportPriceLog() {
+		return new HashMap<Long, Double>(foodExportPriceLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getFoodImport()
-	 */
 	@Override
 	public double getFoodImport() {
 		return Math.max(0, getSocietyDemand()
@@ -262,26 +237,20 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 				- getFoodProduction());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
-	 */
 	@Override
 	public double getFoodImportPrice() {
 		return importPriceModel.getUnitPrice();
 	}
 
 	/**
-	 * Gets the food import price map.
+	 * Gets the food import price log.
 	 *
-	 * @return the food import price map
+	 * @return the food import price log
 	 */
-	public Map<Long, Double> getFoodImportPriceMap() {
-		return new HashMap<Long, Double>(foodImportPriceMap);
+	public Map<Long, Double> getFoodImportPriceLog() {
+		return new HashMap<Long, Double>(foodImportPriceLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getFoodInDistribution()
-	 */
 	@Override
 	public double getFoodInDistribution() {
 		double distribution = 0;
@@ -291,9 +260,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getFoodOutDistribution()
-	 */
 	@Override
 	public double getFoodOutDistribution() {
 		double distribution = 0;
@@ -306,9 +272,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getFoodOutDistributionLosses()
-	 */
 	@Override
 	public double getFoodOutDistributionLosses() {
 		double distribution = 0;
@@ -318,9 +281,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return distribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getFoodProduction()
-	 */
 	@Override
 	public double getFoodProduction() {
 		double foodProduction = 0;
@@ -331,65 +291,45 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	}
 	
 	/**
-	 * Gets the food production map.
+	 * Gets the food production log.
 	 *
-	 * @return the food production map
+	 * @return the food production log
 	 */
-	public Map<Long, Double> getFoodProductionMap() {
-		return new HashMap<Long, Double>(foodProductionMap);
+	public Map<Long, Double> getFoodProductionLog() {
+		return new HashMap<Long, Double>(foodProductionLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodSecurity()
-	 */
+	@Override
 	public double getFoodSecurity() {
 		return getTotalFoodSupply() == 0 ? 1 
 				: (getFoodProduction() / getTotalFoodSupply());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getNumeratorUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getImportExpense()
-	 */
 	@Override
 	public double getImportExpense() {
 		return getFoodImportPrice() * getFoodImport();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getInternalElements()
-	 */
 	@Override
 	public List<AgricultureElement> getInternalElements() {
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborParticipationRate()
-	 */
 	@Override
 	public double getLaborParticipationRate() {
 		return laborParticipationRate;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLaborUsed()
-	 */
 	@Override
 	public long getLaborUsed() {
 		long value = 0;
@@ -399,9 +339,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getLandAreaUsed()
-	 */
 	@Override
 	public double getLandAreaUsed() {
 		double landAreaUsed = 0;
@@ -411,9 +348,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return landAreaUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getLocalFoodFraction()
-	 */
 	@Override
 	public double getLocalFoodFraction() {
 		if(getSocietyDemand() > 0) {
@@ -423,9 +357,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getLocalFoodSupply()
-	 */
 	@Override
 	public double getLocalFoodSupply() {
 		return getFoodProduction() 
@@ -433,9 +364,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 				- getFoodOutDistribution();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureSystem#getProductionRevenue()
-	 */
 	@Override
 	public double getSalesRevenue() {
 		return getFoodDomesticPrice() * getSocietyDemand();
@@ -450,26 +378,20 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return FoodUnits.convertFlow(getSociety().getTotalFoodDemand(), getSociety(), this);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getTotalFoodSupply()
-	 */
 	@Override
 	public double getTotalFoodSupply() {
 		return getLocalFoodSupply() + getFoodImport() - getFoodExport();
 	}
 
 	/**
-	 * Gets the total food supply map.
+	 * Gets the total food supply log.
 	 *
-	 * @return the total food supply map
+	 * @return the total food supply log
 	 */
-	public Map<Long, Double> getTotalFoodSupplyMap() {
-		return new HashMap<Long, Double>(totalFoodSupplyMap);
+	public Map<Long, Double> getTotalFoodSupplyLog() {
+		return new HashMap<Long, Double>(totalFoodSupplyLog);
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#getUnitProductionCost()
-	 */
+
 	@Override
 	public double getUnitProductionCost() {
 		if(getFoodProduction() > 0) {
@@ -478,10 +400,7 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		}
 		return 0;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#geUnitSupplyCost()
-	 */
+
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalFoodSupply() > 0) {
@@ -490,9 +409,6 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.AgricultureSystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		double waterConsumption = 0;
@@ -503,63 +419,48 @@ public class LocalAgricultureSystem extends LocalInfrastructureSystem implements
 	}
 
 	/**
-	 * Gets the water consumption map.
+	 * Gets the water consumption log.
 	 *
-	 * @return the water consumption map
+	 * @return the water consumption log
 	 */
-	public Map<Long, Double> getWaterConsumptionMap() {
-		return new HashMap<Long, Double>(waterConsumptionMap);
+	public Map<Long, Double> getWaterConsumptionLog() {
+		return new HashMap<Long, Double>(waterConsumptionLog);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.LocalInfrastructureSystem#initialize(long)
-	 */
+
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		waterConsumptionMap.clear();
-		totalFoodSupplyMap.clear();
-		foodProductionMap.clear();
-		foodDomesticPriceMap.clear();
-		foodImportPriceMap.clear();
-		foodExportPriceMap.clear();
+		waterConsumptionLog.clear();
+		totalFoodSupplyLog.clear();
+		foodProductionLog.clear();
+		foodDomesticPriceLog.clear();
+		foodImportPriceLog.clear();
+		foodExportPriceLog.clear();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem.Local#removeElement(edu.mit.sips.core.agriculture.AgricultureElement)
-	 */
 	@Override
 	public synchronized boolean removeElement(AgricultureElement element) {
 		return elements.remove(element);
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.LocalInfrastructureSystem#tick()
-	 */
+
 	@Override
 	public void tick() {
 		super.tick();
-		waterConsumptionMap.put(time, getWaterConsumption());
-		totalFoodSupplyMap.put(time, getTotalFoodSupply());
-		foodProductionMap.put(time, getFoodProduction());
-		foodDomesticPriceMap.put(time, getFoodDomesticPrice());
-		foodImportPriceMap.put(time, getFoodImportPrice());
-		foodExportPriceMap.put(time, getFoodExportPrice());
+		waterConsumptionLog.put(time, getWaterConsumption());
+		totalFoodSupplyLog.put(time, getTotalFoodSupply());
+		foodProductionLog.put(time, getFoodProduction());
+		foodDomesticPriceLog.put(time, getFoodDomesticPrice());
+		foodImportPriceLog.put(time, getFoodImportPrice());
+		foodExportPriceLog.put(time, getFoodExportPrice());
 	}
 }

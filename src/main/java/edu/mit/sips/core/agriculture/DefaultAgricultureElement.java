@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
@@ -9,7 +24,9 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The Class DefaultAgricultureElement.
+ * The default implementation of the agriculture element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public final class DefaultAgricultureElement extends DefaultInfrastructureElement implements AgricultureElement {
 	private final static TimeUnits foodTimeUnits = TimeUnits.year;
@@ -135,14 +152,12 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 			double variableOperationsCostOfFoodDistribution) {
 		super(templateName, name, origin, destination, lifecycleModel);
 		
-		// Validate maximum land area.
 		if(maxLandArea < 0) {
 			throw new IllegalArgumentException(
 					"Maximum land area cannot be negative.");
 		}
 		this.maxLandArea = maxLandArea;
 		
-		// Validate initial land area parameter.
 		if(initialLandArea > maxLandArea) {
 			throw new IllegalArgumentException(
 					"Initial land area cannot exceed maximum.");
@@ -152,49 +167,42 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 		this.initialLandArea = initialLandArea;
 
-		// Validate food intensity of land used.
 		if(foodIntensityOfLandUsed < 0) {
 			throw new IllegalArgumentException(
 					"Food intensity cannot be negative.");
 		}
 		this.foodIntensityOfLandUsed = foodIntensityOfLandUsed;
 
-		// Validate cost intensity of land used.
 		if(costIntensityOfLandUsed < 0) {
 			throw new IllegalArgumentException(
 					"Cost intensity cannot be negative.");
 		}
 		this.costIntensityOfLandUsed = costIntensityOfLandUsed;
 
-		// Validate water intensity of land used.
 		if(waterIntensityOfLandUsed < 0) {
 			throw new IllegalArgumentException(
 					"Water intensity cannot be negative.");
 		}
 		this.waterIntensityOfLandUsed = waterIntensityOfLandUsed;
 
-		// Validate labor intensity of land used.
 		if(laborIntensityOfLandUsed < 0) {
 			throw new IllegalArgumentException(
 					"Labor intensity cannot be negative.");
 		}
 		this.laborIntensityOfLandUsed = laborIntensityOfLandUsed;
 		
-		// Validate efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
 			throw new IllegalArgumentException(
 					"Efficiency must be between 0 and 1.");
 		}
 		this.distributionEfficiency = distributionEfficiency;
 		
-		// Validate maximum food input.
 		if(maxFoodInput < 0) {
 			throw new IllegalArgumentException(
 					"Maximum food input cannot be negative.");
 		}
 		this.maxFoodInput = maxFoodInput;
 		
-		// Validate initial food input.
 		if(initialFoodInput > maxFoodInput) {
 			throw new IllegalArgumentException(
 					"Initial food input cannot exceed maximum.");
@@ -204,7 +212,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 		this.initialFoodInput = initialFoodInput;
 
-		// Validate distribution cost.
 		if(variableOperationsCostOfFoodDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of distribution cannot be negative.");
@@ -212,17 +219,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		this.variableOperationsCostOfFoodDistribution = variableOperationsCostOfFoodDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getCostIntensityOfLandUsed()
-	 */
 	@Override
 	public double getCostIntensityOfLandUsed() {
 		return costIntensityOfLandUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getDistributionEfficiency()
-	 */
 	@Override
 	public double getDistributionEfficiency() {
 		if(isOperational()) {
@@ -232,9 +233,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodInput()
-	 */
 	@Override
 	public double getFoodInput() {
 		if(isOperational()) {
@@ -244,17 +242,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodIntensityOfLandUsed()
-	 */
 	@Override
 	public double getFoodIntensityOfLandUsed() {
 		return foodIntensityOfLandUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodOutput()
-	 */
 	@Override
 	public double getFoodOutput() {
 		if(isOperational()) {
@@ -264,9 +256,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getFoodProduction()
-	 */
 	@Override
 	public double getFoodProduction() {
 		if(isOperational()) {
@@ -276,33 +265,21 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getNumeratorFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLaborIntensityOfLandUsed()
-	 */
 	@Override
 	public double getLaborIntensityOfLandUsed() {
 		return laborIntensityOfLandUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getLandArea()
-	 */
 	@Override
 	public double getLandArea() {
 		if(isOperational()) {
@@ -312,9 +289,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodInput()
-	 */
 	@Override
 	public double getMaxFoodInput() {
 		if(isOperational()) {
@@ -324,9 +298,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxFoodProduction()
-	 */
 	@Override
 	public double getMaxFoodProduction() {
 		if(isOperational()) {
@@ -336,9 +307,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getMaxLandArea()
-	 */
 	@Override
 	public double getMaxLandArea() {
 		if(isOperational()) {
@@ -348,9 +316,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
-	 */
 	@Override
 	public MutableAgricultureElement getMutableElement() {
 		MutableAgricultureElement element = new MutableAgricultureElement();
@@ -376,9 +341,6 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		return element;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
-	 */
 	@Override
 	public double getTotalOperationsExpense() {
 		return getFixedOperationsExpense() 
@@ -386,17 +348,11 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 				+ variableOperationsCostOfFoodDistribution * foodInput;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getVariableOperationsCostOfFoodDistribution()
-	 */
 	@Override
 	public double getVariableOperationsCostOfFoodDistribution() {
 		return variableOperationsCostOfFoodDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		if(isOperational()) {
@@ -406,50 +362,30 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#getWaterIntensityOfLandUsed()
-	 */
 	@Override
 	public double getWaterIntensityOfLandUsed() {
 		return waterIntensityOfLandUsed;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsNumerator()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		super.initialize(time);
-		
-		// Use mutator method to validate food input.
 		setFoodInput(initialFoodInput);
-
-		// Use mutator method to validate land area.
 		setLandArea(initialLandArea);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#setFoodInput(double)
-	 */
 	@Override
 	public void setFoodInput(double foodInput) {
-		// Validate food input.
 		if(foodInput < 0) {
 			throw new IllegalArgumentException(
 					"Food input cannot be negative.");
@@ -461,12 +397,8 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 		fireElementChangeEvent();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureElement#setLandArea(double)
-	 */
 	@Override
 	public void setLandArea(double landArea) {
-		// Validate land area parameter.
 		if(landArea > maxLandArea) {
 			throw new IllegalArgumentException(
 					"Land area cannot exceed maximum (" 
