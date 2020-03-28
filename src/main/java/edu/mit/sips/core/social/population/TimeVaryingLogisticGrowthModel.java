@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.population;
 
 import java.util.Collections;
@@ -5,9 +20,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * The Class TimeVaryingLogisticGrowthModel.
+ * A population model implementation that exhibits logistic 
+ * growth with variable rates over time.
  * 
  * See http://en.wikipedia.org/wiki/Logistic_function
+ * 
+ * @author Paul T. Grogan
  */
 public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 	private long time, nextTime;
@@ -16,7 +34,14 @@ public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 	private final long initialPopulation;
 	private final Map<Long,Double> growthRateMap;
 	private final long carryingCapacity;
-	private final boolean linearlyInterpolate;
+	private final boolean linearInterpolation;
+	
+	/**
+	 * Instantiates a new time-varying logistic growth model.
+	 */
+	protected TimeVaryingLogisticGrowthModel() {
+		this(0, 0, new TreeMap<Long,Double>(), 0, false);
+	}
 	
 	/**
 	 * Instantiates a new logistic growth model.
@@ -25,22 +50,19 @@ public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 	 * @param initialPopulation the initial population
 	 * @param growthRateMap the time growth rates
 	 * @param carryingCapacity the carrying capacity
-	 * @param linearlyInterpolate the is linear interpolation
+	 * @param linearInterpolation if linear interpolation should be used
 	 */
 	public TimeVaryingLogisticGrowthModel(long initialTime,
 			long initialPopulation, Map<Long, Double> growthRateMap, 
-			long carryingCapacity, boolean linearlyInterpolate) {
-		// No need to validate datum time.
+			long carryingCapacity, boolean linearInterpolation) {
 		this.initialTime = initialTime;
 		
-		// Validate initial population.
 		if(initialPopulation < 0) {
 			throw new IllegalArgumentException(
 					"Initial population cannot be negative.");
 		}
 		this.initialPopulation = initialPopulation;
 		
-		// Validate growth rate map.
 		for(Long key : growthRateMap.keySet()) {
 			if(key == null) {
 				throw new IllegalArgumentException(
@@ -54,62 +76,13 @@ public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 		this.growthRateMap = Collections.unmodifiableMap(
 				new TreeMap<Long,Double>(growthRateMap));
 		
-		// Validate carrying capacity.
 		if(carryingCapacity < 0) {
 			throw new IllegalArgumentException(
 					"Carrying capacity cannot be negative.");
 		}
 		this.carryingCapacity = carryingCapacity;
 		
-		// No need to validate interpolation.
-		this.linearlyInterpolate = linearlyInterpolate;
-	}
-	
-	/**
-	 * Instantiates a new time varying logistic growth model.
-	 */
-	protected TimeVaryingLogisticGrowthModel() {
-		initialTime = 0;
-		initialPopulation = 0;
-		growthRateMap = Collections.unmodifiableMap(
-				new TreeMap<Long,Double>());
-		carryingCapacity = 0;
-		linearlyInterpolate = false;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) {
-		this.time = time;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
-	@Override
-	public void tick() {
-		nextTime = time + 1;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
-	@Override
-	public void tock() {
-		time = nextTime;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.PopulationModel#getPopulation()
-	 */
-	@Override
-	public long getPopulation() {
-		return Math.round(carryingCapacity * initialPopulation 
-				* Math.exp(getGrowthRate() * (time - initialTime))
-				/ (carryingCapacity + initialPopulation 
-						* (Math.exp(getGrowthRate() * (time - initialTime)) - 1)));
+		this.linearInterpolation = linearInterpolation;
 	}
 	
 	/**
@@ -123,7 +96,7 @@ public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 			if(lastKey == null && time <= key) {
 				return growthRateMap.get(key);
 			} else if(lastKey != null && lastKey <= time && key > time) {
-				if(linearlyInterpolate) {
+				if(linearInterpolation) {
 					return growthRateMap.get(lastKey) 
 							+ (growthRateMap.get(key) - growthRateMap.get(lastKey)) 
 							* (time - lastKey) / (key - lastKey);
@@ -134,5 +107,28 @@ public class TimeVaryingLogisticGrowthModel implements PopulationModel {
 			lastKey = key;
 		}
 		return lastKey==null ? 0 : growthRateMap.get(lastKey);
+	}
+	
+	@Override
+	public long getPopulation() {
+		return Math.round(carryingCapacity * initialPopulation 
+				* Math.exp(getGrowthRate() * (time - initialTime))
+				/ (carryingCapacity + initialPopulation 
+						* (Math.exp(getGrowthRate() * (time - initialTime)) - 1)));
+	}
+	
+	@Override
+	public void initialize(long time) {
+		this.time = time;
+	}
+
+	@Override
+	public void tick() {
+		nextTime = time + 1;
+	}
+	
+	@Override
+	public void tock() {
+		time = nextTime;
 	}
 }

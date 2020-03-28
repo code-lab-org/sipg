@@ -1,9 +1,26 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.population;
 
 /**
- * The Class ExponentialGrowthModel.
+ * A population model implementation that exhibits exponential growth over time.
  * 
  * See http://en.wikipedia.org/wiki/Malthusian_Growth_Model
+ * 
+ * @author Paul T. Grogan
  */
 public class ExponentialGrowthModel implements PopulationModel {
 	private final long initialTime;
@@ -15,6 +32,13 @@ public class ExponentialGrowthModel implements PopulationModel {
 	
 	/**
 	 * Instantiates a new exponential growth model.
+	 */
+	protected ExponentialGrowthModel() {
+		this(0, 0, 0);
+	}
+	
+	/**
+	 * Instantiates a new exponential growth model.
 	 *
 	 * @param initialTime the initial time
 	 * @param initialPopulation the initial population
@@ -22,57 +46,33 @@ public class ExponentialGrowthModel implements PopulationModel {
 	 */
 	public ExponentialGrowthModel(long initialTime, long initialPopulation, 
 			double growthRate) {
-		// No need to validate datum time.
 		this.initialTime = initialTime;
 		
-		// Validate initial population.
 		if(initialPopulation < 0) {
 			throw new IllegalArgumentException(
 					"Initial population cannot be negative.");
 		}
 		this.initialPopulation = initialPopulation;
 		
-		// No need to validate growth rate.
 		this.growthRate = growthRate;
 	}
-	
-	/**
-	 * Instantiates a new exponential growth model.
-	 */
-	protected ExponentialGrowthModel() {
-		this.initialTime = 0;
-		this.initialPopulation = 0;
-		this.growthRate = 0;
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.PopulationModel#getPopulation(int)
-	 */
 	@Override
 	public long getPopulation() {
 		return Math.round(initialPopulation 
 				* Math.exp(growthRate * (time - initialTime)));
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		this.time = time;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 		nextTime = time + 1;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
 	@Override
 	public void tock() {
 		time = nextTime;

@@ -1,9 +1,26 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.population;
 
 /**
- * The Class LogisticGrowthModel.
+ * A population model implementation that exhibits logistic growth over time.
  * 
  * See http://en.wikipedia.org/wiki/Logistic_function
+ * 
+ * @author Paul T. Grogan
  */
 public class LogisticGrowthModel implements PopulationModel {
 	private long time;
@@ -25,20 +42,16 @@ public class LogisticGrowthModel implements PopulationModel {
 	public LogisticGrowthModel(long initialTime,
 			long initialPopulation, 
 			double growthRate, long carryingCapacity) {
-		// No need to validate datum time.
 		this.initialTime = initialTime;
 		
-		// Validate initial population.
 		if(initialPopulation < 0) {
 			throw new IllegalArgumentException(
 					"Initial population cannot be negative.");
 		}
 		this.initialPopulation = initialPopulation;
 		
-		// No need to validate growth rate.
 		this.growthRate = growthRate;
 		
-		// Validate carrying capacity.
 		if(carryingCapacity < 0) {
 			throw new IllegalArgumentException(
 					"Carrying capacity cannot be negative.");
@@ -46,33 +59,6 @@ public class LogisticGrowthModel implements PopulationModel {
 		this.carryingCapacity = carryingCapacity;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) {
-		this.time = time;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
-	@Override
-	public void tick() {
-		nextTime = time + 1;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
-	@Override
-	public void tock() {
-		time = nextTime;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.PopulationModel#getPopulation()
-	 */
 	@Override
 	public long getPopulation() {
 		return Math.round(carryingCapacity * initialPopulation 
@@ -80,5 +66,19 @@ public class LogisticGrowthModel implements PopulationModel {
 				/ (carryingCapacity + initialPopulation 
 						* (Math.exp(growthRate * (time - initialTime)) - 1)));
 	}
+	
+	@Override
+	public void initialize(long time) {
+		this.time = time;
+	}
+	
+	@Override
+	public void tick() {
+		nextTime = time + 1;
+	}
 
+	@Override
+	public void tock() {
+		time = nextTime;
+	}
 }

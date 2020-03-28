@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.social.population;
 
 import java.util.Collections;
@@ -6,10 +21,10 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * The Class TableLookupModel.
+ * A population model implementation that looks up values from a table.
  * 
- * @author Roi Guinto, guinto@mit.edu
- * @author Paul T. Grogan, ptgrogan@mit.edu
+ * @author Roi Guinto
+ * @author Paul T. Grogan
  */
 public class TableLookupModel implements PopulationModel {
 	private long time, nextTime;
@@ -17,21 +32,9 @@ public class TableLookupModel implements PopulationModel {
 
 	/**
 	 * Instantiates a new table lookup model.
-	 *
-	 * @param populationMap the population map
-	 */
-	public TableLookupModel(Map<Long, Long> populationMap) {
-		// make a copy of the passed map for safety
-		this.populationMap = Collections.unmodifiableMap(
-				new TreeMap<Long, Long>(populationMap));
-	}
-	
-	/**
-	 * Instantiates a new table lookup model.
 	 */
 	protected TableLookupModel() {
-		populationMap = Collections.unmodifiableMap(
-				new TreeMap<Long, Long>());
+		this(new TreeMap<Long, Long>());
 	}
 	
 	/**
@@ -48,43 +51,36 @@ public class TableLookupModel implements PopulationModel {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.PopulationModel#getPopulation(int)
+	/**
+	 * Instantiates a new table lookup model.
+	 *
+	 * @param populationMap the population map
 	 */
+	public TableLookupModel(Map<Long, Long> populationMap) {
+		this.populationMap = Collections.unmodifiableMap(
+				new TreeMap<Long, Long>(populationMap));
+	}
+	
 	@Override
 	public long getPopulation() {
-		
 		Long populationValue = populationMap.get(time);
-		
 		if(populationValue == null) {
-			
 			return 0;
-			
 		} else {
-			
 			return populationValue.longValue();
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.PopulationModel#initialize(long)
-	 */
 	@Override
 	public void initialize(long time) {
 		this.time = time;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
 	@Override
 	public void tick() {
 		nextTime = time + 1;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
 	@Override
 	public void tock() {
 		time = nextTime;
