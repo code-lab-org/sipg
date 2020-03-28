@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
@@ -62,7 +62,7 @@ public class ElectricityElementPanel extends ElementPanel
 	 * @param element the element
 	 */
 	public ElectricityElementPanel(Scenario scenario, 
-			final MutableElectricityElement element) {
+			final EditableElectricityElement element) {
 		super(scenario, element);
 		
 		final ElectricityElementPanel thisPanel = this; 

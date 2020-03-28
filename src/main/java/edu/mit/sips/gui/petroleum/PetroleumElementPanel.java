@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.petroleum.MutablePetroleumElement;
+import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
@@ -58,7 +58,7 @@ public class PetroleumElementPanel extends ElementPanel
 	 * @param element the element
 	 */
 	public PetroleumElementPanel(Scenario scenario, 
-			final MutablePetroleumElement element) {
+			final EditablePetroleumElement element) {
 		super(scenario, element);
 		
 		final PetroleumElementPanel thisPanel = this; 

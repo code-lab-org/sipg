@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.agriculture.MutableAgricultureElement;
+import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
@@ -60,7 +60,7 @@ public class AgricultureElementPanel extends ElementPanel
 	 * @param element the element
 	 */
 	public AgricultureElementPanel(Scenario scenario, 
-			final MutableAgricultureElement element) {
+			final EditableAgricultureElement element) {
 		super(scenario, element);
 		
 		final AgricultureElementPanel thisPanel = this;

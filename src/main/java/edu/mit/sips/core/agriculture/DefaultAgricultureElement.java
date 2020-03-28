@@ -317,8 +317,8 @@ public final class DefaultAgricultureElement extends DefaultInfrastructureElemen
 	}
 
 	@Override
-	public MutableAgricultureElement getMutableElement() {
-		MutableAgricultureElement element = new MutableAgricultureElement();
+	public EditableAgricultureElement getMutableElement() {
+		EditableAgricultureElement element = new EditableAgricultureElement();
 		setMutableFields(element);
 		element.setMaxLandArea(maxLandArea);
 		element.setInitialLandArea(initialLandArea);

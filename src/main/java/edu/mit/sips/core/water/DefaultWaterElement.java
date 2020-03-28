@@ -309,8 +309,8 @@ public final class DefaultWaterElement extends DefaultInfrastructureElement impl
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
 	@Override
-	public MutableWaterElement getMutableElement() {
-		MutableWaterElement element = new MutableWaterElement();
+	public EditableWaterElement getMutableElement() {
+		EditableWaterElement element = new EditableWaterElement();
 		setMutableFields(element);
 		element.setReservoirIntensityOfWaterProduction(reservoirIntensityOfWaterProduction);
 		element.setMaxWaterProduction(WaterUnits.convertFlow(

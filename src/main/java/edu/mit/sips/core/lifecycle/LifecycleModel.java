@@ -1,6 +1,18 @@
-/*
- * 
- */
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.core.SimEntity;
@@ -8,51 +20,51 @@ import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnitsOutput;
 
 /**
- * The Interface LifecycleModel.
+ * The lifecycle model interface specifies lifecycle properties for an infrastructure element.
  * 
  * @author Paul T. Grogan
  */
 public interface LifecycleModel extends SimEntity, TimeUnitsOutput, CurrencyUnitsOutput {
 	
 	/**
-	 * Checks if is operational.
-	 *
-	 * @return true, if is operational
-	 */
-	public boolean isOperational();
-	
-	/**
-	 * Checks if is exists.
-	 *
-	 * @return true, if is exists
-	 */
-	public boolean isExists();
-	
-	/**
-	 * Gets the capital expense.
+	 * Gets the current capital expense.
 	 *
 	 * @return the capital expense
 	 */
 	public double getCapitalExpense();
-	
+		
 	/**
-	 * Gets the fixed operations expense.
-	 *
-	 * @return the fixed operations expense
-	 */
-	public double getFixedOperationsExpense();
-	
-	/**
-	 * Gets the decommission expense.
+	 * Gets the current decommission expense.
 	 *
 	 * @return the decommission expense
 	 */
 	public double getDecommissionExpense();
 	
 	/**
-	 * Gets the mutable lifecycle model.
+	 * Gets the current fixed operations expense.
+	 *
+	 * @return the fixed operations expense
+	 */
+	public double getFixedOperationsExpense();
+		
+	/**
+	 * Gets the associated mutable lifecycle model.
 	 *
 	 * @return the mutable lifecycle model
 	 */
-	public MutableLifecycleModel getMutableLifecycleModel();
+	public EditableLifecycleModel getMutableLifecycleModel();
+		
+	/**
+	 * Checks if the corresponding element exists.
+	 *
+	 * @return true, if is exists
+	 */
+	public boolean isExists();
+	
+	/**
+	 * Checks if the corresponding element is operational (i.e. can process resources).
+	 *
+	 * @return true, if is operational
+	 */
+	public boolean isOperational();
 }

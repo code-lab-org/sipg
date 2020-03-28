@@ -61,6 +61,7 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 				0, 0, 0, 0, distributionEfficiency, maxElectricityInput, 
 				initialElectricityInput, variableOperationsCostOfElectricityDistribution);
 	}
+	
 	/**
 	 * Builder function to create a new production element.
 	 *
@@ -277,8 +278,8 @@ public class DefaultElectricityElement extends DefaultInfrastructureElement
 	}
 
 	@Override
-	public MutableElectricityElement getMutableElement() {
-		MutableElectricityElement element = new MutableElectricityElement();
+	public EditableElectricityElement getMutableElement() {
+		EditableElectricityElement element = new EditableElectricityElement();
 		setMutableFields(element);
 		element.setMaxElectricityProduction(maxElectricityProduction);
 		element.setInitialElectricityProduction(initialElectricityProduction);

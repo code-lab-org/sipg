@@ -25,11 +25,11 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * An implementation of the mutable infrastructure element class for the electricity sector.
+ * An implementation of the editable infrastructure element class for the electricity sector.
  * 
  * @author Paul T. Grogan
  */
-public final class MutableElectricityElement extends DefaultMutableInfrastructureElement 
+public final class EditableElectricityElement extends DefaultMutableInfrastructureElement 
 		implements WaterUnitsOutput, OilUnitsOutput, ElectricityUnitsOutput {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;

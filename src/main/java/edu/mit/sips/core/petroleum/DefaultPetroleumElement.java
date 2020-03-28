@@ -275,9 +275,9 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
 	 */
 	@Override
-	public MutablePetroleumElement getMutableElement() {
-		MutablePetroleumElement element = 
-				new MutablePetroleumElement();
+	public EditablePetroleumElement getMutableElement() {
+		EditablePetroleumElement element = 
+				new EditablePetroleumElement();
 		setMutableFields(element);
 		element.setReservoirIntensityOfPetroleumProduction(
 				reservoirIntensityOfPetroleumProduction);

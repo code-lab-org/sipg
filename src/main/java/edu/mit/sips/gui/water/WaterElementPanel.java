@@ -14,7 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.ElementPanel;
 import edu.mit.sips.scenario.Scenario;
@@ -65,7 +65,7 @@ public class WaterElementPanel extends ElementPanel
 	 * @param element the element
 	 */
 	public WaterElementPanel(Scenario scenario, 
-			final MutableWaterElement element) {
+			final EditableWaterElement element) {
 		super(scenario, element);
 		
 		final WaterElementPanel thisPanel = this;

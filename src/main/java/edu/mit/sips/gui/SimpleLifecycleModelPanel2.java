@@ -11,7 +11,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -29,9 +29,9 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits timeUnits = TimeUnits.year;
 	
-	private final JFormattedTextField timeInitializedText,
+	private final JFormattedTextField timeCommissionStartText,
 		operationsDurationText;
-	private final JLabel timeOperationalLabel, levelizedCapitalCostLabel, 
+	private final JLabel timeOperationalLabel, spreadCapitalCostLabel, 
 		timeDecommissionedLabel;
 	
 	/**
@@ -39,7 +39,7 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 	 *
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public SimpleLifecycleModelPanel2(final MutableSimpleLifecycleModel lifecycleModel) {
+	public SimpleLifecycleModelPanel2(final EditableSimpleLifecycleModel lifecycleModel) {
 		super(lifecycleModel);
 		setLayout(new GridBagLayout());
 		
@@ -56,49 +56,49 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 		final SimpleLifecycleModelPanel2 thisPanel = this;
 		
 		c.gridx = 0;
-		timeInitializedText = new JFormattedTextField(timeFormat);
-		timeInitializedText.setColumns(5);
-		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
-		timeInitializedText.setValue(lifecycleModel.getTimeInitialized());
-		timeInitializedText.setEnabled(lifecycleModel.getTimeInitialized() >= 1980);
-		timeInitializedText.getDocument().addDocumentListener(
+		timeCommissionStartText = new JFormattedTextField(timeFormat);
+		timeCommissionStartText.setColumns(5);
+		timeCommissionStartText.setHorizontalAlignment(JTextField.RIGHT);
+		timeCommissionStartText.setValue(lifecycleModel.getTimeCommissionStart());
+		timeCommissionStartText.setEnabled(lifecycleModel.getTimeCommissionStart() >= 1980);
+		timeCommissionStartText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							long timeInitialized = (Long) timeInitializedText.getValue();
+							long timeInitialized = (Long) timeCommissionStartText.getValue();
 							// TODO temporary to only allow initialization after 1980
 							if(timeInitialized < 1980) {
 								throw new NumberFormatException(
 										"Initialization time must be >= 1980.");
 							}
-							lifecycleModel.setTimeInitialized(timeInitialized);
+							lifecycleModel.setTimeCommissionStart(timeInitialized);
 							timeOperationalLabel.setText(timeFormat.format(
-									lifecycleModel.getTimeInitialized() 
-											+ lifecycleModel.getInitializationDuration()));
+									lifecycleModel.getTimeCommissionStart() 
+											+ lifecycleModel.getCommissionDuration()));
 							timeDecommissionedLabel.setText(timeFormat.format(
-									lifecycleModel.getTimeDecommissioned()));
-							timeInitializedText.setForeground(Color.black);
+									lifecycleModel.getTimeDecommissionStart()));
+							timeCommissionStartText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
-							timeInitializedText.setForeground(Color.red);
+							timeCommissionStartText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Initialized", timeInitializedText, "");
+		addInput(c, "Commissioned", timeCommissionStartText, "");
 		
 		operationsDurationText = new JFormattedTextField(timeFormat);
 		operationsDurationText.setColumns(5);
 		operationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
 		operationsDurationText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getOperationsDuration(), lifecycleModel, this));
-		operationsDurationText.setEnabled(lifecycleModel.getTimeDecommissioned() >= 1980);
+				lifecycleModel.getOperationDuration(), lifecycleModel, this));
+		operationsDurationText.setEnabled(lifecycleModel.getTimeDecommissionStart() >= 1980);
 		operationsDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
 							long operationsDuration = (Long) operationsDurationText.getValue();
 							// TODO temporary to only allow decommission after 1980
-							if(lifecycleModel.getTimeInitialized() 
-									+ lifecycleModel.getInitializationDuration() 
+							if(lifecycleModel.getTimeCommissionStart() 
+									+ lifecycleModel.getCommissionDuration() 
 									+ operationsDuration < 1980) {
 								throw new IllegalArgumentException(
 										"Decommission time must be >= 1980.");
@@ -106,9 +106,9 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 								throw new IllegalArgumentException(
 										"Decommission time cannot exceed maximum operations time.");
 							}
-							lifecycleModel.setOperationsDuration(operationsDuration);
+							lifecycleModel.setOperationDuration(operationsDuration);
 							timeDecommissionedLabel.setText(timeFormat.format(
-									lifecycleModel.getTimeDecommissioned()));
+									lifecycleModel.getTimeDecommissionStart()));
 							operationsDurationText.setForeground(Color.black);
 						} catch(IllegalArgumentException e) {
 							operationsDurationText.setForeground(Color.red);
@@ -122,29 +122,29 @@ public class SimpleLifecycleModelPanel2 extends LifecycleModelPanel implements C
 		
 		timeOperationalLabel = new JLabel();
 		timeOperationalLabel.setText(timeFormat.format(
-				lifecycleModel.getTimeInitialized() 
-						+ lifecycleModel.getInitializationDuration()));
+				lifecycleModel.getTimeCommissionStart() 
+						+ lifecycleModel.getCommissionDuration()));
 		addInput(c, "Operational in", timeOperationalLabel, "");
 		
 		timeDecommissionedLabel = new JLabel();
 		timeDecommissionedLabel.setText(timeFormat.format(
-				lifecycleModel.getTimeDecommissioned()));
+				lifecycleModel.getTimeDecommissionStart()));
 		addInput(c, "Decommissioned in", timeDecommissionedLabel, "");
 
 		c.gridx = 0;
 		
-		levelizedCapitalCostLabel = new JLabel();
-		levelizedCapitalCostLabel.setHorizontalAlignment(JLabel.RIGHT);
-		levelizedCapitalCostLabel.setText(decimalFormat.format(
+		spreadCapitalCostLabel = new JLabel();
+		spreadCapitalCostLabel.setHorizontalAlignment(JLabel.RIGHT);
+		spreadCapitalCostLabel.setText(decimalFormat.format(
 				CurrencyUnits.convertFlow(
-						lifecycleModel.getInitializationDuration() == 0?
-								lifecycleModel.getCapitalCost() : 
-									lifecycleModel.getCapitalCost() 
-									/ lifecycleModel.getInitializationDuration(), 
+						lifecycleModel.getCommissionDuration() == 0?
+								lifecycleModel.getTotalCommissionCost() : 
+									lifecycleModel.getTotalCommissionCost() 
+									/ lifecycleModel.getCommissionDuration(), 
 									lifecycleModel, thisPanel)));
-		addInput(c, "Capital Cost", levelizedCapitalCostLabel, 
+		addInput(c, "Capital Cost", spreadCapitalCostLabel, 
 				currencyUnits.getAbbreviation() + "/yr for " + 
-						Math.max(1,lifecycleModel.getInitializationDuration()) + " yr");
+						Math.max(1,lifecycleModel.getCommissionDuration()) + " yr");
 
 	}
 	

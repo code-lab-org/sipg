@@ -1,116 +1,181 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class DefaultLifecycleModel.
+ * The default implementation of the lifecycle model interface.
+ * 
+ * @author Paul T. Grogan
  */
-public class DefaultLifecycleModel implements LifecycleModel, MutableLifecycleModel {
+public class DefaultLifecycleModel implements LifecycleModel, EditableLifecycleModel {
 	private static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
 	private static final TimeUnits timeUnits = TimeUnits.year;
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableLifecycleModel#createLifecycleModel()
-	 */
 	@Override
 	public LifecycleModel createLifecycleModel() {
 		return new DefaultLifecycleModel();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getCapitalExpense()
-	 */
 	@Override
 	public double getCapitalExpense() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return timeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getDecommissionExpense()
-	 */
 	@Override
 	public double getDecommissionExpense() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getFixedOperationsExpense()
-	 */
 	@Override
 	public double getFixedOperationsExpense() {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getMutableLifecycleModel()
-	 */
 	@Override
-	public MutableLifecycleModel getMutableLifecycleModel() {
+	public EditableLifecycleModel getMutableLifecycleModel() {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
-	 */
 	@Override
 	public TimeUnits getTimeUnits() {
 		return timeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
 	@Override
-	public void initialize(long time) {
-		
-	}
+	public void initialize(long time) { }
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#isExists()
-	 */
 	@Override
 	public boolean isExists() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#isOperational()
-	 */
 	@Override
 	public boolean isOperational() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
-	 */
 	@Override
-	public void tick() {
-		
+	public void tick() { }
+
+	@Override
+	public void tock() { }
+
+	@Override
+	public double getTotalDecommissionCost() {
+		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
-	 */
 	@Override
-	public void tock() {
-		
+	public void setCommissionDuration(long commissionDuration) { }
+
+	@Override
+	public void setDecommissionDuration(long decommissionDuration) { }
+
+	@Override
+	public void setFixedOperationCost(double fixedOperationCost) { }
+
+	@Override
+	public void setMaxOperationsDuration(long maxOperationDuration) { }
+
+	@Override
+	public void setMinTimeCommissionStart(long minTimeCommissionStart) { }
+
+	@Override
+	public void setOperationDuration(long operationDuration) { }
+
+	@Override
+	public void setSpreadCosts(boolean spreadCosts) { }
+
+	@Override
+	public void setTimeCommissionStart(long timeCommissionStart) { }
+
+	@Override
+	public void setTimeDecommissionStart(long timeDecommissionStart) { }
+
+	@Override
+	public void setTotalCommissionCost(double totalCommissionCost) { }
+
+	@Override
+	public void setTotalDecommissionCost(double totalDecommissionCost) { }
+
+	@Override
+	public long getCommissionDuration() {
+		return 0;
+	}
+
+	@Override
+	public long getDecommissionDuration() {
+		return 0;
+	}
+
+	@Override
+	public double getFixedOperationsCost() {
+		return 0;
+	}
+
+	@Override
+	public long getMaxOperationsDuration() {
+		return 0;
+	}
+
+	@Override
+	public long getMaxTimeDecommissionStart() {
+		return 0;
+	}
+
+	@Override
+	public long getMinTimeCommissionStart() {
+		return 0;
+	}
+
+	@Override
+	public long getOperationDuration() {
+		return 0;
+	}
+
+	@Override
+	public long getTimeCommissionStart() {
+		return 0;
+	}
+
+	@Override
+	public long getTimeDecommissionStart() {
+		return 0;
+	}
+
+	@Override
+	public double getTotalCommissionCost() {
+		return 0;
+	}
+
+	@Override
+	public boolean isSpreadCosts() {
+		return false;
 	}
 }

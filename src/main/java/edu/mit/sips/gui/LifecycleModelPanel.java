@@ -3,8 +3,8 @@ package edu.mit.sips.gui;
 import javax.swing.JPanel;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
-import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 
 public class LifecycleModelPanel extends JPanel {
 	private static final long serialVersionUID = 7776877869870401110L;
@@ -14,7 +14,7 @@ public class LifecycleModelPanel extends JPanel {
 	 *
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public LifecycleModelPanel(MutableLifecycleModel lifecycleModel) {
+	public LifecycleModelPanel(EditableLifecycleModel lifecycleModel) {
 		
 	}
 	
@@ -34,14 +34,14 @@ public class LifecycleModelPanel extends JPanel {
 	 * @return the lifecycle model panel
 	 */
 	public static LifecycleModelPanel createLifecycleModelPanel(
-			MutableLifecycleModel lifecycleModel) {
+			EditableLifecycleModel lifecycleModel) {
 		if(lifecycleModel == null) {
 			return new LifecycleModelPanel(lifecycleModel);
 		} else if(lifecycleModel instanceof DefaultLifecycleModel) {
 			return new LifecycleModelPanel(lifecycleModel);
-		} else if(lifecycleModel instanceof MutableSimpleLifecycleModel) {
+		} else if(lifecycleModel instanceof EditableSimpleLifecycleModel) {
 			//TODO return new SimpleLifecycleModelPanel((MutableSimpleLifecycleModel)lifecycleModel);
-			return new SimpleLifecycleModelPanel2((MutableSimpleLifecycleModel)lifecycleModel);
+			return new SimpleLifecycleModelPanel2((EditableSimpleLifecycleModel)lifecycleModel);
 		} else {
 			throw new IllegalArgumentException("Lifecycle model panel not implemented.");
 		}

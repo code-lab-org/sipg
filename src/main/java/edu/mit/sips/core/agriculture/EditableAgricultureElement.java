@@ -25,11 +25,11 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * An implementation of the mutable infrastructure element class for the agriculture sector.
+ * An implementation of the editable infrastructure element class for the agriculture sector.
  * 
  * @author Paul T. Grogan
  */
-public final class MutableAgricultureElement extends DefaultMutableInfrastructureElement 
+public final class EditableAgricultureElement extends DefaultMutableInfrastructureElement 
 		implements FoodUnitsOutput, WaterUnitsOutput {
 	private static final TimeUnits foodTimeUnits = TimeUnits.year;
 	private static final FoodUnits foodUnits = FoodUnits.GJ;

@@ -22,16 +22,16 @@ import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
-import edu.mit.sips.core.agriculture.MutableAgricultureElement;
+import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.DefaultPetroleumSystem;
-import edu.mit.sips.core.petroleum.MutablePetroleumElement;
+import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
@@ -42,7 +42,7 @@ import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.PopulationModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
-import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
@@ -165,13 +165,13 @@ public final class Serialization {
 					if(!city.getName().equals(element.getOrigin())) {
 						continue;
 					}
-					MutableAgricultureElement mutable = (MutableAgricultureElement) element.getMutableElement();
-					MutableAgricultureElement template = (MutableAgricultureElement) 
+					EditableAgricultureElement mutable = (EditableAgricultureElement) element.getMutableElement();
+					EditableAgricultureElement template = (EditableAgricultureElement) 
 							scenario.getTemplate(element.getTemplateName()).createElement(
-									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeCommissionStart(), 
 									element.getOrigin(), element.getDestination()).getMutableElement();
-					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
-							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
+							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					//mutable.setInitialFoodInput(template.getInitialFoodInput());
 					//mutable.setInitialLandArea(template.getInitialLandArea());
@@ -195,13 +195,13 @@ public final class Serialization {
 					if(!city.getName().equals(element.getOrigin())) {
 						continue;
 					}
-					MutableWaterElement mutable = (MutableWaterElement) element.getMutableElement();
-					MutableWaterElement template = (MutableWaterElement) 
+					EditableWaterElement mutable = (EditableWaterElement) element.getMutableElement();
+					EditableWaterElement template = (EditableWaterElement) 
 							scenario.getTemplate(element.getTemplateName()).createElement(
-									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeCommissionStart(), 
 									element.getOrigin(), element.getDestination()).getMutableElement();
-					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
-							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
+							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					mutable.setElectricalIntensityOfWaterDistribution(template.getElectricalIntensityOfWaterDistribution());
 					mutable.setElectricalIntensityOfWaterProduction(template.getElectricalIntensityOfWaterProduction());
@@ -224,13 +224,13 @@ public final class Serialization {
 					if(!city.getName().equals(element.getOrigin())) {
 						continue;
 					}
-					MutableElectricityElement mutable = (MutableElectricityElement) element.getMutableElement();
-					MutableElectricityElement template = (MutableElectricityElement) 
+					EditableElectricityElement mutable = (EditableElectricityElement) element.getMutableElement();
+					EditableElectricityElement template = (EditableElectricityElement) 
 							scenario.getTemplate(element.getTemplateName()).createElement(
-									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeCommissionStart(), 
 									element.getOrigin(), element.getDestination()).getMutableElement();
-					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
-							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
+							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					//mutable.setInitialElectricityInput(template.getInitialElectricityInput());
 					//mutable.setInitialElectricityProduction(template.getInitialElectricityProduction());
@@ -252,13 +252,13 @@ public final class Serialization {
 					if(!city.getName().equals(element.getOrigin())) {
 						continue;
 					}
-					MutablePetroleumElement mutable = (MutablePetroleumElement) element.getMutableElement();
-					MutablePetroleumElement template = (MutablePetroleumElement) 
+					EditablePetroleumElement mutable = (EditablePetroleumElement) element.getMutableElement();
+					EditablePetroleumElement template = (EditablePetroleumElement) 
 							scenario.getTemplate(element.getTemplateName()).createElement(
-									((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeInitialized(), 
+									((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getTimeCommissionStart(), 
 									element.getOrigin(), element.getDestination()).getMutableElement();
-					((MutableSimpleLifecycleModel)template.getLifecycleModel()).setOperationsDuration(
-							((MutableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationsDuration());
+					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
+							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					mutable.setElectricalIntensityOfPetroleumDistribution(template.getElectricalIntensityOfPetroleumDistribution());
 					//mutable.setInitialPetroleumInput(template.getInitialPetroleumInput());

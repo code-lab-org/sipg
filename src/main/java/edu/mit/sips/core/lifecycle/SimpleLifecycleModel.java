@@ -1,384 +1,109 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.lifecycle;
 
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-
 /**
- * The Class SimpleLifecycleModel.
+ * The simple lifecycle model interface assumes three phases: 
+ * commissioning, operating, and decommissioning.
  * 
- * @author Paul T. Grogan, ptgrogan@mit.edu
+ * @author Paul T. Grogan
  */
-public class SimpleLifecycleModel implements LifecycleModel {
-	private static final CurrencyUnits currencyUnits = CurrencyUnits.sim;
-	private static final TimeUnits timeUnits = TimeUnits.year;
-	
-	private long time;
-	private transient long nextTime;
-	private final long timeAvailable, timeInitialized, initializationDuration;
-	private final long maxOperationsDuration, operationsDuration, decommissionDuration;
-	private final double capitalCost, fixedOperationsCost, decommissionCost;
-	private final boolean levelizeCosts;
+public interface SimpleLifecycleModel extends LifecycleModel {
+		
+	/**
+	 * Gets the duration of the commissioning phase.
+	 *
+	 * @return the commissioning duration
+	 */
+	public long getCommissionDuration();
 	
 	/**
-	 * Instantiates a new simple lifecycle model.
-	 */
-	protected SimpleLifecycleModel() {
-		timeAvailable = 0;
-		timeInitialized = 0;
-		initializationDuration = 0;
-		maxOperationsDuration = 0;
-		operationsDuration = 0;
-		decommissionDuration = 0;
-		capitalCost = 0;
-		fixedOperationsCost = 0;
-		decommissionCost = 0;
-		levelizeCosts = false;
-	}
-
-	/**
-	 * Gets the max time decommissioned.
-	 *
-	 * @return the max time decommissioned
-	 */
-	public long getMaxTimeDecommissioned() {
-		return timeInitialized + initializationDuration + maxOperationsDuration;
-	}
-	
-	/**
-	 * Instantiates a new simple lifecycle model.
-	 *
-	 * @param timeAvailable the time available
-	 * @param timeInitialized the time initialized
-	 * @param initializationDuration the initialization duration
-	 * @param timeDecommissioned the time decommissioned
-	 * @param decommissionDuration the decommission duration
-	 * @param capitalCost the capital cost
-	 * @param fixedOperationsCost the fixed operations cost
-	 * @param decommissionCost the decommission cost
-	 */
-	public SimpleLifecycleModel(long timeAvailable, long timeInitialized, 
-			long initializationDuration, long maxOperationsDuration,
-			long timeDecommissioned, long decommissionDuration,
-			double capitalCost, double fixedOperationsCost, 
-			double decommissionCost) {
-		this(timeAvailable, timeInitialized, initializationDuration, 
-				maxOperationsDuration, 
-				timeDecommissioned-timeInitialized-initializationDuration, 
-				decommissionDuration, capitalCost, 
-				fixedOperationsCost, decommissionCost, false);
-	}
-
-	/**
-	 * Instantiates a new simple lifecycle model.
-	 *
-	 * @param timeAvailable the time available
-	 * @param timeInitialized the time initialized
-	 * @param initializationDuration the initialization duration
-	 * @param maxOperationsDuration the max operations duration
-	 * @param operationsDuration the operations duration
-	 * @param decommissionDuration the decommission duration
-	 * @param capitalCost the capital cost
-	 * @param fixedOperationsCost the fixed operations cost
-	 * @param decommissionCost the decommission cost
-	 * @param levelizeCosts the levelize costs
-	 */
-	public SimpleLifecycleModel(long timeAvailable, long timeInitialized, 
-			long initializationDuration, long maxOperationsDuration,
-			long operationsDuration, long decommissionDuration, double capitalCost, 
-			double fixedOperationsCost, double decommissionCost, 
-			boolean levelizeCosts) {
-		// No validation needed for time available.
-		this.timeAvailable = timeAvailable;
-		
-		// Validate time initialized.
-		if(timeInitialized < timeAvailable) {
-			throw new IllegalArgumentException(
-					"Time initialized cannot precede time available.");
-		}
-		this.timeInitialized = timeInitialized;
-		
-		// Validate the implementation duration.
-		if(initializationDuration < 0) {
-			throw new IllegalArgumentException(
-					"Initialization duration cannot be negative.");
-		}
-		this.initializationDuration = initializationDuration;
-
-		// Validate the max operational duration
-		if(maxOperationsDuration < 0) {
-			throw new IllegalArgumentException(
-					"Max operations duration cannot be negative.");
-		}
-		this.maxOperationsDuration = maxOperationsDuration;
-		
-		// Validate the operational duration
-		if(operationsDuration > this.maxOperationsDuration) {
-			throw new IllegalArgumentException(
-					"Operations duration cannot exceed maximum.");
-		}
-		this.operationsDuration = operationsDuration;
-		
-		// Validate the decommission duration.
-		if(decommissionDuration < 0) {
-			throw new IllegalArgumentException(
-					"Decommission duration cannot be negative.");
-		}
-		this.decommissionDuration = decommissionDuration;
-		
-		// Validate the capital cost.
-		if(capitalCost < 0) {
-			throw new IllegalArgumentException(
-					"Capital cost cannot be negative.");
-		}
-		this.capitalCost = capitalCost;
-		
-		// Validate the fixed operations cost.
-		if(fixedOperationsCost < 0) {
-			throw new IllegalArgumentException(
-					"Fixed operations cost cannot be negative.");
-		}
-		this.fixedOperationsCost = fixedOperationsCost;
-
-		// Validate the decommission cost.
-		if(decommissionCost < 0) {
-			throw new IllegalArgumentException(
-					"Decommission cost cannot be negative.");
-		}
-		this.decommissionCost = decommissionCost;
-		
-		// No need to validate levelize capital.
-		this.levelizeCosts = levelizeCosts;
-	}
-
-	/**
-	 * Gets the capital cost.
-	 *
-	 * @return the capital cost
-	 */
-	public double getCapitalCost() {
-		return capitalCost;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getCapitalExpense()
-	 */
-	@Override
-	public double getCapitalExpense() {
-		if(time == timeInitialized 
-				&& (initializationDuration == 0 || !levelizeCosts)) {
-			return capitalCost;
-		} else if(levelizeCosts 
-				&& initializationDuration > 0
-				&& time >= timeInitialized 
-				&& time < timeInitialized + initializationDuration) {
-			return capitalCost / initializationDuration;
-		} else {
-			return 0;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
-	@Override
-	public TimeUnits getCurrencyTimeUnits() {
-		return timeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
-	}
-
-	/**
-	 * Gets the decommission cost.
-	 *
-	 * @return the decommission cost
-	 */
-	public double getDecommissionCost() {
-		return decommissionCost;
-	}
-
-	/**
-	 * Gets the decommission duration.
+	 * Gets the duration of the decommissioning phase.
 	 *
 	 * @return the decommission duration
 	 */
-	public long getDecommissionDuration() {
-		return decommissionDuration;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getDecommissionExpense()
-	 */
-	@Override
-	public double getDecommissionExpense() {
-		if(time == getTimeDecommissioned()
-				&& (decommissionDuration == 0 || !levelizeCosts)) {
-			return decommissionCost;
-		} else if(levelizeCosts 
-				&& decommissionDuration > 0
-				&& time >= getTimeDecommissioned() 
-				&& time < getTimeDecommissioned() + decommissionDuration) {
-			return decommissionCost / decommissionDuration;
-		} else {
-			return 0;
-		}
-	}
+	public long getDecommissionDuration();
 	
 	/**
 	 * Gets the fixed operations cost.
 	 *
 	 * @return the fixed operations cost
 	 */
-	public double getFixedOperationsCost() {
-		return fixedOperationsCost;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getFixedOperationsExpense()
-	 */
-	@Override
-	public double getFixedOperationsExpense() {
-		if(isOperational()) {
-			return fixedOperationsCost;
-		} else {
-			return 0;
-		}
-	}
+	public double getFixedOperationsCost();
 	
 	/**
-	 * Gets the initialization duration.
-	 *
-	 * @return the initialization duration
-	 */
-	public long getInitializationDuration() {
-		return initializationDuration;
-	}
-
-	/**
-	 * Gets the max operations duration.
+	 * Gets the maximum operations duration.
 	 *
 	 * @return the max operations duration
 	 */
-	public long getMaxOperationsDuration() {
-		return maxOperationsDuration;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#getMutableLifecycleModel()
-	 */
-	@Override
-	public MutableSimpleLifecycleModel getMutableLifecycleModel() {
-		MutableSimpleLifecycleModel model = new MutableSimpleLifecycleModel();
-		model.setTimeAvailable((long) TimeUnits.convert(
-				timeAvailable, this, model));
-		model.setTimeInitialized((long) TimeUnits.convert(
-				timeInitialized, this, model));
-		model.setInitializationDuration((long) TimeUnits.convert(
-				initializationDuration, this, model));
-		model.setMaxOperationsDuration((long) TimeUnits.convert(
-				maxOperationsDuration, this, model));
-		model.setOperationsDuration((long) TimeUnits.convert(
-				operationsDuration, this, model));
-		model.setDecommissionDuration((long) TimeUnits.convert(
-				decommissionDuration, this, model));
-		model.setCapitalCost(CurrencyUnits.convertStock(
-				capitalCost, this, model));
-		model.setFixedOperationsCost(CurrencyUnits.convertFlow(
-				fixedOperationsCost, this, model));
-		model.setDecommissionCost(CurrencyUnits.convertStock(
-				decommissionCost, this, model));
-		model.setLevelizeCosts(levelizeCosts);
-		return model;
-	}
+	public long getMaxOperationsDuration();
 	
 	/**
-	 * Gets the time available.
+	 * Gets the maximum time decommissioning can start.
 	 *
-	 * @return the time available
+	 * @return the max time decommissioning can start
 	 */
-	public long getTimeAvailable() {
-		return timeAvailable;
-	}
-
-	/**
-	 * Gets the time decommissioned.
-	 *
-	 * @return the time decommissioned
-	 */
-	public long getTimeDecommissioned() {
-		return timeInitialized + initializationDuration + operationsDuration;
-	}
+	public long getMaxTimeDecommissionStart();
 	
 	/**
-	 * Gets the time initialized.
+	 * Gets the minimum time commissioning can start.
 	 *
-	 * @return the time initialized
+	 * @return the min time commissioning can start
 	 */
-	public long getTimeInitialized() {
-		return timeInitialized;
-	}
+	public long getMinTimeCommissionStart();
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.TimeUnitsOutput#getTimeUnits()
-	 */
-	@Override
-	public TimeUnits getTimeUnits() {
-		return timeUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#initialize(long)
-	 */
-	@Override
-	public void initialize(long time) {
-		this.time = time;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#isExists()
-	 */
-	@Override
-	public boolean isExists() {
-		return time >= timeInitialized 
-				&& time < getTimeDecommissioned() + decommissionDuration;
-	}
-
 	/**
-	 * Checks if is levelize costs.
+	 * Gets the duration of the operations phase.
 	 *
-	 * @return true, if is levelize costs
+	 * @return the operation duration
 	 */
-	public boolean isLevelizeCosts() {
-		return levelizeCosts;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.LifecycleModel#isOperational()
+	public long getOperationDuration();
+	
+	/**
+	 * Gets the time the commissioning phase starts.
+	 *
+	 * @return the time commissioning starts
 	 */
-	@Override
-	public boolean isOperational() {
-		return time >= timeInitialized + initializationDuration 
-				&& time < getTimeDecommissioned();
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tick()
+	public long getTimeCommissionStart();
+	
+	/**
+	 * Gets the time the commissioning phase starts.
+	 *
+	 * @return the time decommissioning starts
 	 */
-	@Override
-	public void tick() {
-		nextTime = time + 1;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.SimEntity#tock()
+	public long getTimeDecommissionStart();
+	
+	/**
+	 * Gets the total commission (capital) cost.
+	 *
+	 * @return the commission cost
 	 */
-	@Override
-	public void tock() {
-		time = nextTime;
-	}
+	public double getTotalCommissionCost();
+	
+	/**
+	 * Gets the total decommission cost.
+	 *
+	 * @return the total decommission cost
+	 */
+	public double getTotalDecommissionCost();
+	
+	/**
+	 * Checks if costs are spread across commissioning and decommissioning phases.
+	 *
+	 * @return true, if spread costs
+	 */
+	public boolean isSpreadCosts();
 }

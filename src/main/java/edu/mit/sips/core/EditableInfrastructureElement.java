@@ -15,16 +15,16 @@
  *****************************************************************************/
 package edu.mit.sips.core;
 
-import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 
 /**
- * An interface for infrastructure elements that are mutable, i.e. can be modified. 
+ * An interface for infrastructure elements that are editable. 
  * This interface is used to facilitate user-modifiable templates.
  * 
  * @author Paul T. Grogan
  */
-public interface MutableInfrastructureElement extends CurrencyUnitsOutput {
+public interface EditableInfrastructureElement extends CurrencyUnitsOutput {
 	
 	/**
 	 * Creates the immutable version of this infrastructure element.
@@ -45,7 +45,7 @@ public interface MutableInfrastructureElement extends CurrencyUnitsOutput {
 	 *
 	 * @return the lifecycle model
 	 */
-	public MutableLifecycleModel getLifecycleModel();
+	public EditableLifecycleModel getLifecycleModel();
 	
 	/**
 	 * Gets the name of this infrastructure element.
@@ -80,7 +80,7 @@ public interface MutableInfrastructureElement extends CurrencyUnitsOutput {
 	 *
 	 * @param lifecycleModel the new lifecycle model
 	 */
-	public void setLifecycleModel(MutableLifecycleModel lifecycleModel);
+	public void setLifecycleModel(EditableLifecycleModel lifecycleModel);
 	
 	/**
 	 * Sets the name of this infrastructure element.

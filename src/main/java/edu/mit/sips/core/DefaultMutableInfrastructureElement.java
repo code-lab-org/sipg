@@ -16,7 +16,7 @@
 package edu.mit.sips.core;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
-import edu.mit.sips.core.lifecycle.MutableLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
@@ -25,11 +25,11 @@ import edu.mit.sips.sim.util.TimeUnits;
  * 
  * @author Paul T. Grogan
  */
-public abstract class DefaultMutableInfrastructureElement implements MutableInfrastructureElement {
+public abstract class DefaultMutableInfrastructureElement implements EditableInfrastructureElement {
 	private String templateName;
 	private String name = "";
 	private String origin = "", destination = "";
-	private MutableLifecycleModel lifecycleModel = new DefaultLifecycleModel();
+	private EditableLifecycleModel lifecycleModel = new DefaultLifecycleModel();
 	
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
@@ -47,7 +47,7 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	}
 	
 	@Override
-	public final MutableLifecycleModel getLifecycleModel() {
+	public final EditableLifecycleModel getLifecycleModel() {
 		return lifecycleModel;
 	}
 	
@@ -72,7 +72,7 @@ public abstract class DefaultMutableInfrastructureElement implements MutableInfr
 	}
 	
 	@Override
-	public final void setLifecycleModel(MutableLifecycleModel lifecycleModel) {
+	public final void setLifecycleModel(EditableLifecycleModel lifecycleModel) {
 		this.lifecycleModel = lifecycleModel;
 	}
 	

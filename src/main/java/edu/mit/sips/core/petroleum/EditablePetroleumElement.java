@@ -11,7 +11,7 @@ import edu.mit.sips.sim.util.TimeUnits;
 /**
  * The Class MutablePetroleumElement.
  */
-public final class MutablePetroleumElement extends DefaultMutableInfrastructureElement
+public final class EditablePetroleumElement extends DefaultMutableInfrastructureElement
 		implements ElectricityUnitsOutput, OilUnitsOutput {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
@@ -29,9 +29,6 @@ public final class MutablePetroleumElement extends DefaultMutableInfrastructureE
 	private double electricalIntensityOfPetroleumDistribution;
 	private double variableOperationsCostOfPetroleumDistribution;
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.MutableInfrastructureElement#createElement()
-	 */
 	@Override
 	public PetroleumElement createElement() {
 		return new DefaultPetroleumElement(getTemplateName(), getName(), 

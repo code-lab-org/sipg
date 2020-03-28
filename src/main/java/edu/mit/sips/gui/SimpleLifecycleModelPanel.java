@@ -14,7 +14,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
@@ -31,20 +31,20 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 	private final CurrencyUnits currencyUnits = CurrencyUnits.Msim;
 	private final TimeUnits timeUnits = TimeUnits.year;
 	
-	private final JFormattedTextField timeAvailableText, timeInitializedText, 
-			initializationDurationText, capitalCostText;
+	private final JFormattedTextField timeAvailableText, timeCommissionStartText, 
+			commissionDurationText, capitalCostText;
 	private final JFormattedTextField fixedOperationsCostText;
 	private final JFormattedTextField maxOperationsDurationText, 
-			operationsDurationText, timeDecommissionedText, 
+			operationsDurationText, timeDecommissionStartText, 
 			decommissionDurationText, decommissionCostText;
-	private final JCheckBox levelizeCostsCheck;
+	private final JCheckBox spreadCostsCheck;
 	
 	/**
 	 * Instantiates a new simple lifecycle model panel.
 	 *
 	 * @param lifecycleModel the lifecycle model
 	 */
-	public SimpleLifecycleModelPanel(final MutableSimpleLifecycleModel lifecycleModel) {
+	public SimpleLifecycleModelPanel(final EditableSimpleLifecycleModel lifecycleModel) {
 		super(lifecycleModel);
 		setLayout(new GridBagLayout());
 		
@@ -62,12 +62,12 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		timeAvailableText.setColumns(10);
 		timeAvailableText.setHorizontalAlignment(JTextField.RIGHT);
 		timeAvailableText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getTimeAvailable(), lifecycleModel, this));
+				lifecycleModel.getMinTimeCommissionStart(), lifecycleModel, this));
 		timeAvailableText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setTimeAvailable((long) TimeUnits.convert(
+							lifecycleModel.setMinTimeCommissionStart((long) TimeUnits.convert(
 									(Long) timeAvailableText.getValue(), 
 									thisPanel, lifecycleModel));
 							timeAvailableText.setForeground(Color.black);
@@ -77,62 +77,62 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 					}
 				});
 		addInput(c, "Year Available", timeAvailableText, "");
-		timeInitializedText = new JFormattedTextField(timeFormat);
-		timeInitializedText.setColumns(10);
-		timeInitializedText.setHorizontalAlignment(JTextField.RIGHT);
-		timeInitializedText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getTimeInitialized(), lifecycleModel, this));
+		timeCommissionStartText = new JFormattedTextField(timeFormat);
+		timeCommissionStartText.setColumns(10);
+		timeCommissionStartText.setHorizontalAlignment(JTextField.RIGHT);
+		timeCommissionStartText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getTimeCommissionStart(), lifecycleModel, this));
 		// TODO temporary to only allow initialization editing after 1980
-		timeInitializedText.setEnabled(lifecycleModel.getTimeInitialized() >= 1980);
-		timeInitializedText.getDocument().addDocumentListener(
+		timeCommissionStartText.setEnabled(lifecycleModel.getTimeCommissionStart() >= 1980);
+		timeCommissionStartText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
 							long timeInitialized = (long) TimeUnits.convert(
-									(Long) timeInitializedText.getValue(), 
+									(Long) timeCommissionStartText.getValue(), 
 									thisPanel, lifecycleModel);
 							// TODO temporary to only allow initialization after 1980
 							if(timeInitialized < 1980) {
 								throw new NumberFormatException(
-										"Initialization time must be >= 1980.");
+										"Commisstion start time must be >= 1980.");
 							}
-							lifecycleModel.setTimeInitialized(timeInitialized);
-							timeInitializedText.setForeground(Color.black);
+							lifecycleModel.setTimeCommissionStart(timeInitialized);
+							timeCommissionStartText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
-							timeInitializedText.setForeground(Color.red);
+							timeCommissionStartText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Year Initialized", timeInitializedText, "");
-		initializationDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
-		initializationDurationText.setColumns(10);
-		initializationDurationText.setHorizontalAlignment(JTextField.RIGHT);
-		initializationDurationText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getInitializationDuration(), lifecycleModel, this));
-		initializationDurationText.getDocument().addDocumentListener(
+		addInput(c, "Year Commissioned", timeCommissionStartText, "");
+		commissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
+		commissionDurationText.setColumns(10);
+		commissionDurationText.setHorizontalAlignment(JTextField.RIGHT);
+		commissionDurationText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getCommissionDuration(), lifecycleModel, this));
+		commissionDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setInitializationDuration((long) TimeUnits.convert(
-									(Long) initializationDurationText.getValue(), 
+							lifecycleModel.setCommissionDuration((long) TimeUnits.convert(
+									(Long) commissionDurationText.getValue(), 
 									thisPanel, lifecycleModel));
-							initializationDurationText.setForeground(Color.black);
+							commissionDurationText.setForeground(Color.black);
 						} catch(NumberFormatException ex) {
-							initializationDurationText.setForeground(Color.red);
+							commissionDurationText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Initialization Duration", initializationDurationText, timeUnits.toString());
+		addInput(c, "Commission Duration", commissionDurationText, timeUnits.toString());
 		capitalCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		capitalCostText.setColumns(10);
 		capitalCostText.setHorizontalAlignment(JTextField.RIGHT);
 		capitalCostText.setValue(CurrencyUnits.convertStock(
-				lifecycleModel.getCapitalCost(), lifecycleModel, thisPanel));
+				lifecycleModel.getTotalCommissionCost(), lifecycleModel, thisPanel));
 		capitalCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setCapitalCost(CurrencyUnits.convertStock(
+							lifecycleModel.setTotalCommissionCost(CurrencyUnits.convertStock(
 									((Number) capitalCostText.getValue()).doubleValue(),
 									thisPanel, lifecycleModel));
 							capitalCostText.setForeground(Color.black);
@@ -141,7 +141,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 						}
 					}
 				});
-		addInput(c, "Capital Cost", capitalCostText, currencyUnits.getAbbreviation());
+		addInput(c, "Commission Cost", capitalCostText, currencyUnits.getAbbreviation());
 		fixedOperationsCostText = new JFormattedTextField(NumberFormat.getNumberInstance());
 		fixedOperationsCostText.setColumns(10);
 		fixedOperationsCostText.setHorizontalAlignment(JTextField.RIGHT);
@@ -151,7 +151,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setFixedOperationsCost(CurrencyUnits.convertFlow(
+							lifecycleModel.setFixedOperationCost(CurrencyUnits.convertFlow(
 									((Number) fixedOperationsCostText.getValue()).doubleValue(),
 									thisPanel, lifecycleModel));
 							fixedOperationsCostText.setForeground(Color.black);
@@ -188,7 +188,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		operationsDurationText.setColumns(10);
 		operationsDurationText.setHorizontalAlignment(JTextField.RIGHT);
 		operationsDurationText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getOperationsDuration(), lifecycleModel, this));
+				lifecycleModel.getOperationDuration(), lifecycleModel, this));
 		operationsDurationText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
@@ -200,7 +200,7 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 								throw new IllegalArgumentException(
 										"Operations duration cannot exceed maximum.");
 							}
-							lifecycleModel.setOperationsDuration(operationsDuration);
+							lifecycleModel.setOperationDuration(operationsDuration);
 							operationsDurationText.setForeground(Color.black);
 						} catch(IllegalArgumentException e) {
 							operationsDurationText.setForeground(Color.red);
@@ -208,36 +208,36 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 					}
 				});
 		//TODO addInput(c, "Operations Duration", operationsDurationText, timeUnits.toString());
-		timeDecommissionedText = new JFormattedTextField(timeFormat);
-		timeDecommissionedText.setColumns(10);
-		timeDecommissionedText.setHorizontalAlignment(JTextField.RIGHT);
-		timeDecommissionedText.setValue((long) TimeUnits.convert(
-				lifecycleModel.getTimeDecommissioned(), lifecycleModel, this));
+		timeDecommissionStartText = new JFormattedTextField(timeFormat);
+		timeDecommissionStartText.setColumns(10);
+		timeDecommissionStartText.setHorizontalAlignment(JTextField.RIGHT);
+		timeDecommissionStartText.setValue((long) TimeUnits.convert(
+				lifecycleModel.getTimeDecommissionStart(), lifecycleModel, this));
 		// TODO temporary to only allow initialization editing after 1980
-		timeDecommissionedText.setEnabled(lifecycleModel.getTimeDecommissioned() >= 1980);
-		timeDecommissionedText.getDocument().addDocumentListener(
+		timeDecommissionStartText.setEnabled(lifecycleModel.getTimeDecommissionStart() >= 1980);
+		timeDecommissionStartText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
 							long timeDecommissioned = (long) TimeUnits.convert(
-									(Long) timeDecommissionedText.getValue(), 
+									(Long) timeDecommissionStartText.getValue(), 
 									thisPanel, lifecycleModel);
 							// TODO temporary to only allow decommission after 1980
 							if(timeDecommissioned < 1980) {
 								throw new IllegalArgumentException(
 										"Decommission time must be >= 1980.");
-							} else if(timeDecommissioned > lifecycleModel.getMaxTimeDecommissioned()) {
+							} else if(timeDecommissioned > lifecycleModel.getMaxTimeDecommissionStart()) {
 								throw new IllegalArgumentException(
 										"Decommission time cannot exceed maximum operations time.");
 							}
-							lifecycleModel.setTimeDecommissioned(timeDecommissioned);
-							timeDecommissionedText.setForeground(Color.black);
+							lifecycleModel.setTimeDecommissionStart(timeDecommissioned);
+							timeDecommissionStartText.setForeground(Color.black);
 						} catch(IllegalArgumentException e) {
-							timeDecommissionedText.setForeground(Color.red);
+							timeDecommissionStartText.setForeground(Color.red);
 						}
 					}
 				});
-		addInput(c, "Year Decommissioned", timeDecommissionedText, "");
+		addInput(c, "Year Decommissioned", timeDecommissionStartText, "");
 		decommissionDurationText = new JFormattedTextField(NumberFormat.getIntegerInstance());
 		decommissionDurationText.setColumns(10);
 		decommissionDurationText.setHorizontalAlignment(JTextField.RIGHT);
@@ -261,12 +261,12 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 		decommissionCostText.setColumns(10);
 		decommissionCostText.setHorizontalAlignment(JTextField.RIGHT);
 		decommissionCostText.setValue(CurrencyUnits.convertStock(
-				lifecycleModel.getDecommissionCost(), lifecycleModel, this));
+				lifecycleModel.getTotalDecommissionCost(), lifecycleModel, this));
 		decommissionCostText.getDocument().addDocumentListener(
 				new DocumentChangeListener() {
 					public void documentChanged() {
 						try {
-							lifecycleModel.setDecommissionCost(CurrencyUnits.convertStock(
+							lifecycleModel.setTotalDecommissionCost(CurrencyUnits.convertStock(
 									((Number) decommissionCostText.getValue()).doubleValue(), 
 									thisPanel, lifecycleModel));
 							decommissionCostText.setForeground(Color.black);
@@ -276,15 +276,15 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 					}
 				});
 		addInput(c, "Decommission Cost", decommissionCostText, currencyUnits.toString());
-		levelizeCostsCheck = new JCheckBox();
-		levelizeCostsCheck.setSelected(lifecycleModel.isLevelizeCosts());
-		levelizeCostsCheck.addItemListener(new ItemListener() {
+		spreadCostsCheck = new JCheckBox();
+		spreadCostsCheck.setSelected(lifecycleModel.isSpreadCosts());
+		spreadCostsCheck.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				lifecycleModel.setLevelizeCosts(levelizeCostsCheck.isSelected());
+				lifecycleModel.setSpreadCosts(spreadCostsCheck.isSelected());
 			}
 		});
-		addInput(c, "Levelize Costs", levelizeCostsCheck, "");
+		addInput(c, "Spread Costs", spreadCostsCheck, "");
 	}
 	
 	/* (non-Javadoc)
@@ -293,13 +293,13 @@ public class SimpleLifecycleModelPanel extends LifecycleModelPanel implements Cu
 	@Override
 	public void setTemplateMode(String templateName) {
 		timeAvailableText.setEnabled(templateName == null);
-		initializationDurationText.setEnabled(templateName == null);
+		commissionDurationText.setEnabled(templateName == null);
 		capitalCostText.setEnabled(templateName == null);
 		fixedOperationsCostText.setEnabled(templateName == null);
 		maxOperationsDurationText.setEnabled(templateName == null);
 		decommissionDurationText.setEnabled(templateName == null);
 		decommissionCostText.setEnabled(templateName == null);
-		levelizeCostsCheck.setEnabled(templateName == null);
+		spreadCostsCheck.setEnabled(templateName == null);
 	}
 	
 	/**

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.agriculture.DefaultAgricultureElement;
 import edu.mit.sips.core.electricity.DefaultElectricityElement;
-import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
@@ -80,112 +80,112 @@ public enum GameElementTemplate implements ElementTemplate {
 		case WHEAT_1:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + getInstanceId(WHEAT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
 							100e6, 5e6, 0, true), 
 					500, 500, 5000, 50e3, 1.5e6, 60);
 		case WHEAT_2:
 			return DefaultAgricultureElement.createProductionElement(
 					name, name + " " + getInstanceId(WHEAT_2), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
 							180e6, 9e6, 0, true), 
 					1000, 1000, 5000, 45e3, 1.5e6, 60);
 		case FOOD_TRANSPORT_1:
 			return DefaultAgricultureElement.createDistributionElement(
 					name, name + " " + getInstanceId(FOOD_TRANSPORT_1), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
 							50e6, 2.5e6, 0, true), 
 							0.92, 2e6, 0, 2);
 		case FOOD_TRANSPORT_2:
 			return DefaultAgricultureElement.createDistributionElement(
 					name, name + " " + getInstanceId(FOOD_TRANSPORT_2), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration,  0, 
 							300e6, 15e6, 0, true), 
 							0.94, 15e6, 0, 2);
 		case RO_PLANT_1:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							200e6*1.5, 1e6, 5e6, true), 
 					0.0, 50e6, 50e6, 5.5e-3, 0.014, true);
 		case RO_PLANT_2:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_2), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							500e6*1.5, 2.5e6, 12.5e6, true), 
 					0.0, 150e6, 150e6, 4.5e-3, 0.012, true);
 		case RO_PLANT_3:
 			return DefaultWaterElement.createProductionElement(
 					name, name + " " + getInstanceId(RO_PLANT_3), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							2e9*1.5, 10e6, 50e6, true), 
 					0.0, 600e6, 600e6, 4.5e-3, 0.012, true);
 		case WATER_PIPELINE_1:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_1), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
 							10e6, 400e3, 0, true), 
 					0.85, 50e6, 50e6, 2.0e-3, 0.008);
 		case WATER_PIPELINE_2:
 			return DefaultWaterElement.createDistributionElement(
 					name, name + " " + getInstanceId(WATER_PIPELINE_2), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 0, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 0, 
 							maxOperations, operationsDuration, 0, 
 							50e6, 1e6, 0, true), 
 					0.90, 150e6, 150e6, 2.0e-3, 0.008);
 		case OIL_WELL_1:
 			return DefaultPetroleumElement.createProductionElement(
 					name, name + " " + getInstanceId(OIL_WELL_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 1+1, 
 							maxOperations, operationsDuration, 0, 
 							500e6*2.0, 25e6, 25e6, true), 
 					1.0, 25e6, 25e6, 6.00);
 		case OIL_WELL_2:
 			return DefaultPetroleumElement.createProductionElement(
 					name, name + " " + getInstanceId(OIL_WELL_2), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							1750e6*1.5, 87.5e6, 87.5e6, true), 
 					1.0, 100e6, 100e6, 5.75);
 		case OIL_PIPELINE_1:
 			return DefaultPetroleumElement.createDistributionElement(
 					name, name + " " + getInstanceId(OIL_PIPELINE_1), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 1+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 1+1, 
 							maxOperations, operationsDuration, 0, 
 							100e6*2.0, 2e6, 0, true), 
 					0.98, 10e6, 10e6, 2.0e-3, 0.10);
 		case OIL_PIPELINE_2:
 			return DefaultPetroleumElement.createDistributionElement(
 					name, name + " " + getInstanceId(OIL_PIPELINE_2), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 0, 
 							450e6*2.0, 9e6, 0, true), 
 					0.99, 50e6, 50e6, 2.0e-3, 0.10);
 		case POWER_PLANT_1:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(POWER_PLANT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 1+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 1+1, 
 							maxOperations, operationsDuration, 1, 
 							25e6*2.0, 250e3, 1.25e6, true), 
 					2e6, 2e6, 0.3, 0, 0);
 		case POWER_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(POWER_PLANT_2), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							150e6*1.5, 1.5e6, 7.5e6, true), 
 					10e6, 10e6, 0.25, 0, 0);
 		case PV_PLANT_1:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							200e6*1.5, 3e6, 2e6, true), 
 							//400e6, 6e6, 4e6, true), 
@@ -193,7 +193,7 @@ public enum GameElementTemplate implements ElementTemplate {
 		case PV_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
 					name, name + " " + getInstanceId(PV_PLANT_1), location, location, 
-					new SimpleLifecycleModel(timeAvailable, year, 2+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							900e6*1.5, 13.5e6, 9e6, true), 
 							//1750e6, 26.25e6, 17.5e6, true), 
@@ -201,14 +201,14 @@ public enum GameElementTemplate implements ElementTemplate {
 		case POWER_LINE_1:
 			return DefaultElectricityElement.createDistributionElement(
 					name, name + " " + getInstanceId(POWER_LINE_1), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 1+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 1+1, 
 							maxOperations, operationsDuration, 0, 
 							50e6*2.0, 2e6, 0, true), 
 					0.94, 10e6, 10e6, 0);
 		case POWER_LINE_2:
 			return DefaultElectricityElement.createDistributionElement(
 					name, name + " " + getInstanceId(POWER_LINE_2), location, destination, 
-					new SimpleLifecycleModel(timeAvailable, year, 1+1, 
+					new DefaultSimpleLifecycleModel(timeAvailable, year, 1+1, 
 							maxOperations, operationsDuration, 0, 
 							225e6*2.0, 9e6, 0, true), 
 					0.96, 50e6, 50e6, 0);

@@ -26,13 +26,13 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.MutableInfrastructureElement;
-import edu.mit.sips.core.agriculture.MutableAgricultureElement;
-import edu.mit.sips.core.electricity.MutableElectricityElement;
+import edu.mit.sips.core.EditableInfrastructureElement;
+import edu.mit.sips.core.agriculture.EditableAgricultureElement;
+import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
-import edu.mit.sips.core.petroleum.MutablePetroleumElement;
-import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
+import edu.mit.sips.core.petroleum.EditablePetroleumElement;
+import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementPanel;
 import edu.mit.sips.gui.electricity.ElectricityElementPanel;
 import edu.mit.sips.gui.petroleum.PetroleumElementPanel;
@@ -46,7 +46,7 @@ import edu.mit.sips.scenario.Scenario;
 public class ElementPanel extends JPanel {
 	private static final long serialVersionUID = -5595402005206587525L;
 	
-	private final MutableInfrastructureElement element;
+	private final EditableInfrastructureElement element;
 	
 	private final JTextField nameText;
 	private final JComboBox originCombo, destinationCombo;
@@ -75,7 +75,7 @@ public class ElementPanel extends JPanel {
 	 * @param scenario the scenario
 	 * @param element the element
 	 */
-	public ElementPanel(final Scenario scenario, final MutableInfrastructureElement element) {
+	public ElementPanel(final Scenario scenario, final EditableInfrastructureElement element) {
 		this.element = element;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
@@ -164,8 +164,8 @@ public class ElementPanel extends JPanel {
 		// set input enabled state
 		// TODO only allow inputs to be changed if element initialized >= 1980
 		long timeInitialized = 0;
-		if(element.getLifecycleModel() instanceof MutableSimpleLifecycleModel) {
-			timeInitialized = ((MutableSimpleLifecycleModel)element.getLifecycleModel()).getTimeInitialized();
+		if(element.getLifecycleModel() instanceof EditableSimpleLifecycleModel) {
+			timeInitialized = ((EditableSimpleLifecycleModel)element.getLifecycleModel()).getTimeCommissionStart();
 		}
 		nameText.setEnabled(element.getTemplateName()  == null);
 		originCombo.setEnabled(timeInitialized >= 1980);
@@ -197,7 +197,7 @@ public class ElementPanel extends JPanel {
 			if(modelTypeCombo.getSelectedItem().equals("Default")) {
 				element.setLifecycleModel(new DefaultLifecycleModel());
 			} else if(modelTypeCombo.getSelectedItem().equals("Simple")) {
-				element.setLifecycleModel(new MutableSimpleLifecycleModel());
+				element.setLifecycleModel(new EditableSimpleLifecycleModel());
 			}
 			lifecycleModelContainer.remove(lifecycleModelPanel);
 			lifecycleModelPanel = LifecycleModelPanel.
@@ -293,15 +293,15 @@ public class ElementPanel extends JPanel {
 	 * @return the element panel
 	 */
 	public static ElementPanel createElementPanel(Scenario scenario, 
-			MutableInfrastructureElement element) {
-		if(element instanceof MutableAgricultureElement) {
-			return new AgricultureElementPanel(scenario, (MutableAgricultureElement)element);
-		} else if(element instanceof MutableWaterElement) {
-			return new WaterElementPanel(scenario, (MutableWaterElement)element);
-		} else if(element instanceof MutablePetroleumElement) {
-			return new PetroleumElementPanel(scenario, (MutablePetroleumElement)element);
-		} else if(element instanceof MutableElectricityElement) {
-			return new ElectricityElementPanel(scenario, (MutableElectricityElement)element);
+			EditableInfrastructureElement element) {
+		if(element instanceof EditableAgricultureElement) {
+			return new AgricultureElementPanel(scenario, (EditableAgricultureElement)element);
+		} else if(element instanceof EditableWaterElement) {
+			return new WaterElementPanel(scenario, (EditableWaterElement)element);
+		} else if(element instanceof EditablePetroleumElement) {
+			return new PetroleumElementPanel(scenario, (EditablePetroleumElement)element);
+		} else if(element instanceof EditableElectricityElement) {
+			return new ElectricityElementPanel(scenario, (EditableElectricityElement)element);
 		} else {
 			throw new IllegalArgumentException("Element panel not implemented.");
 		}

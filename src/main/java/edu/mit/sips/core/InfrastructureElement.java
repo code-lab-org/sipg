@@ -80,7 +80,7 @@ public interface InfrastructureElement extends SimEntity, CurrencyUnitsOutput {
 	 *
 	 * @return the mutable element
 	 */
-	public MutableInfrastructureElement getMutableElement();
+	public EditableInfrastructureElement getMutableElement();
 	
 	/**
 	 * Gets the name of this infrastructure element.

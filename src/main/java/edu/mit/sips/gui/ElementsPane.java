@@ -34,21 +34,21 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.DefaultInfrastructureElement;
 import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.MutableInfrastructureElement;
+import edu.mit.sips.core.EditableInfrastructureElement;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.core.agriculture.MutableAgricultureElement;
+import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.core.electricity.MutableElectricityElement;
-import edu.mit.sips.core.lifecycle.MutableSimpleLifecycleModel;
-import edu.mit.sips.core.lifecycle.SimpleLifecycleModel;
-import edu.mit.sips.core.petroleum.MutablePetroleumElement;
+import edu.mit.sips.core.electricity.EditableElectricityElement;
+import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
+import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
+import edu.mit.sips.core.petroleum.EditablePetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.core.water.MutableWaterElement;
+import edu.mit.sips.core.water.EditableWaterElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.comp.ElementTreeNode;
@@ -121,12 +121,12 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				ElementTreeNode node = (ElementTreeNode) value;
 				if(node.getUserObject() instanceof DefaultInfrastructureElement) {
 					DefaultInfrastructureElement element = (DefaultInfrastructureElement) node.getUserObject();
-					if(element.getLifecycleModel() instanceof SimpleLifecycleModel) {
-						SimpleLifecycleModel model = (SimpleLifecycleModel) element.getLifecycleModel();
+					if(element.getLifecycleModel() instanceof DefaultSimpleLifecycleModel) {
+						DefaultSimpleLifecycleModel model = (DefaultSimpleLifecycleModel) element.getLifecycleModel();
 						setText(element.getName() + " (" 
-								+ (model.getTimeInitialized() 
-										+ model.getInitializationDuration()) + "-" 
-								+ model.getTimeDecommissioned() + ")");
+								+ (model.getTimeCommissionStart() 
+										+ model.getCommissionDuration()) + "-" 
+								+ model.getTimeDecommissionStart() + ")");
 					} else {
 						setText(element.getName());
 					}
@@ -368,12 +368,12 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				if(selectedCity == null) {
 					selectedCity = simulator.getScenario().getCountry().getCities().get(0);
 				}
-				MutableInfrastructureElement element = template.createElement(
+				EditableInfrastructureElement element = template.createElement(
 						template.getTimeAvailable(), selectedCity.getName(), 
 						selectedCity.getName()).getMutableElement();
 				// TODO set time initialized to 1980
-				if(element.getLifecycleModel() instanceof MutableSimpleLifecycleModel) {
-					((MutableSimpleLifecycleModel)element.getLifecycleModel()).setTimeInitialized(1980);
+				if(element.getLifecycleModel() instanceof EditableSimpleLifecycleModel) {
+					((EditableSimpleLifecycleModel)element.getLifecycleModel()).setTimeCommissionStart(1980);
 				}
 				openElementDialog(element.createElement());
 			}
@@ -388,15 +388,15 @@ public class ElementsPane extends JPanel implements UpdateListener {
 				"Agriculture", "Water", "Petroleum", "Electricity"});
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(this, elementTypeCombo, 
 				"Select Element Type", JOptionPane.OK_CANCEL_OPTION)) {
-			MutableInfrastructureElement element;
+			EditableInfrastructureElement element;
 			if(elementTypeCombo.getSelectedItem().equals("Agriculture")) {
-				element = new MutableAgricultureElement();
+				element = new EditableAgricultureElement();
 			} else if(elementTypeCombo.getSelectedItem().equals("Water")) {
-				element = new MutableWaterElement();
+				element = new EditableWaterElement();
 			} else if(elementTypeCombo.getSelectedItem().equals("Petroleum")) {
-				element = new MutablePetroleumElement();
+				element = new EditablePetroleumElement();
 			} else if(elementTypeCombo.getSelectedItem().equals("Electricity")) {
-				element = new MutableElectricityElement();
+				element = new EditableElectricityElement();
 			} else {
 				throw new IllegalStateException(
 						"Selection was not a known element type.");
@@ -428,7 +428,7 @@ public class ElementsPane extends JPanel implements UpdateListener {
 	 * @param mutableElement the mutable element
 	 * @return the infrastructure element
 	 */
-	private InfrastructureElement editElementDialog(MutableInfrastructureElement mutableElement) {		
+	private InfrastructureElement editElementDialog(EditableInfrastructureElement mutableElement) {		
 		if(JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(getTopLevelAncestor(), 
 				ElementPanel.createElementPanel(simulator.getScenario(), mutableElement), 
 				"Edit Element", JOptionPane.OK_CANCEL_OPTION)) {
@@ -558,10 +558,10 @@ public class ElementsPane extends JPanel implements UpdateListener {
 		// TODO temporary to disallow removing pre-1980 elements
 		if(element instanceof DefaultInfrastructureElement 
 				&& ((DefaultInfrastructureElement)element).getLifecycleModel() 
-				instanceof SimpleLifecycleModel) {
-			SimpleLifecycleModel model = (SimpleLifecycleModel) 
+				instanceof DefaultSimpleLifecycleModel) {
+			DefaultSimpleLifecycleModel model = (DefaultSimpleLifecycleModel) 
 					((DefaultInfrastructureElement) element).getLifecycleModel();
-			canRemove = canRemove && model.getTimeInitialized() >= 1980;
+			canRemove = canRemove && model.getTimeCommissionStart() >= 1980;
 		}
 		removeElement.setEnabled(canRemove);
 	}

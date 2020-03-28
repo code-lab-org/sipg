@@ -12,7 +12,7 @@ import edu.mit.sips.sim.util.WaterUnitsOutput;
 /**
  * The Class MutableWaterElement.
  */
-public final class MutableWaterElement extends DefaultMutableInfrastructureElement 
+public final class EditableWaterElement extends DefaultMutableInfrastructureElement 
 		implements WaterUnitsOutput, ElectricityUnitsOutput, CurrencyUnitsOutput {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
