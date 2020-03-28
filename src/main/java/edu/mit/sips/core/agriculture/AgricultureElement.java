@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
-import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 

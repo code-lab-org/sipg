@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.LocalInfrastructureSystem;
+import edu.mit.sips.core.base.LocalInfrastructureSystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.sim.util.DefaultUnits;

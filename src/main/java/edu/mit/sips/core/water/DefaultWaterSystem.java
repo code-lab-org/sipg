@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.water;
 
-import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.base.DefaultInfrastructureSystem;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;

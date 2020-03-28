@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
-import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.core.base.DefaultMutableInfrastructureElement;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.FoodUnits;

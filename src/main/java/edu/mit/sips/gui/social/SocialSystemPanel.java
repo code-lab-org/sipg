@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.social.SocialSoS;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.gui.InfrastructureSystemPanel;

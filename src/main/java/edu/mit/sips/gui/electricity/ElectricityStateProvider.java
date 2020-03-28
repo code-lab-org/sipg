@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.gui.SpatialStateProvider;

@@ -9,8 +9,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.gui.agriculture.AgricultureElementOperationsPanel;
 
 /**

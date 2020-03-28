@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.water;
 
-import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.core.base.DefaultMutableInfrastructureElement;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;

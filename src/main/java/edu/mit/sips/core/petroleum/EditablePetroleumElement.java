@@ -16,7 +16,7 @@
 
 package edu.mit.sips.core.petroleum;
 
-import edu.mit.sips.core.DefaultMutableInfrastructureElement;
+import edu.mit.sips.core.base.DefaultMutableInfrastructureElement;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnits;

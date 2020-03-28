@@ -16,8 +16,8 @@ import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSoS;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.gui.LinearIndicatorPanel;

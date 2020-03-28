@@ -21,6 +21,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import edu.mit.sips.core.base.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.scenario.Sector;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;

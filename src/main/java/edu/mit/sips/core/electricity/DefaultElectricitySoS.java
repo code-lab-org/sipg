@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.DefaultInfrastructureSoS;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.DefaultInfrastructureSoS;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;

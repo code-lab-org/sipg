@@ -16,13 +16,13 @@ import com.google.gson.JsonSerializer;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSystem;
 import edu.mit.sips.core.agriculture.EditableAgricultureElement;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.electricity.DefaultElectricitySystem;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySoS;

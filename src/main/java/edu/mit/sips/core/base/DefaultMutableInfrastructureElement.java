@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.core;
+package edu.mit.sips.core.base;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
 import edu.mit.sips.core.lifecycle.EditableLifecycleModel;

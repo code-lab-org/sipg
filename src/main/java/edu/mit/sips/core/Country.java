@@ -22,6 +22,7 @@ import java.util.List;
 import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.agriculture.DefaultAgricultureSoS;
 import edu.mit.sips.core.agriculture.LocalAgricultureSoS;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.DefaultElectricitySoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.electricity.LocalElectricitySoS;

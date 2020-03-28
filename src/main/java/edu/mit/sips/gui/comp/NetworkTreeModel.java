@@ -7,8 +7,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
-import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureElement;
 
 /**
  * The Class ElementsTreeModel.

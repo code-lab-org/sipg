@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.petroleum;
 
-import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.base.InfrastructureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 
 /**

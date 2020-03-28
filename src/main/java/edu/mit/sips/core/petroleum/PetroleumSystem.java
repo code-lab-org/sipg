@@ -17,7 +17,7 @@ package edu.mit.sips.core.petroleum;
 
 import java.util.List;
 
-import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnitsOutput;
 

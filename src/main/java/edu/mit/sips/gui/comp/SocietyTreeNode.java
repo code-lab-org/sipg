@@ -6,8 +6,8 @@ import java.util.Comparator;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
-import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
 
 /**

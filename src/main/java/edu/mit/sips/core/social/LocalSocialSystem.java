@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.LocalInfrastructureSystem;
+import edu.mit.sips.core.base.InfrastructureElement;
+import edu.mit.sips.core.base.LocalInfrastructureSystem;
 import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.DefaultPopulationModel;

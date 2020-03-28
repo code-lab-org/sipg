@@ -16,7 +16,7 @@
 
 package edu.mit.sips.core.electricity;
 
-import edu.mit.sips.core.DefaultInfrastructureSystem;
+import edu.mit.sips.core.base.DefaultInfrastructureSystem;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;

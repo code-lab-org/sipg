@@ -3,8 +3,8 @@ package edu.mit.sips.sim.hla;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.sim.util.FoodUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;

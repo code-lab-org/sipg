@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.water;
 
-import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.base.InfrastructureSoS;
 
 /**
  * An interface to water sector infrastructure system-of-systems.

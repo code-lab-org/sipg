@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.agriculture;
 
-import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.base.InfrastructureSoS;
 
 /**
  * An interface to agriculture sector infrastructure system-of-systems.

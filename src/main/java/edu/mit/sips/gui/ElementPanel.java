@@ -26,8 +26,8 @@ import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.EditableInfrastructureElement;
 import edu.mit.sips.core.agriculture.EditableAgricultureElement;
+import edu.mit.sips.core.base.EditableInfrastructureElement;
 import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;

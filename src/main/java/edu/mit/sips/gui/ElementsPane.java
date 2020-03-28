@@ -32,14 +32,14 @@ import javax.swing.tree.TreeSelectionModel;
 
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Country;
-import edu.mit.sips.core.DefaultInfrastructureElement;
-import edu.mit.sips.core.InfrastructureElement;
-import edu.mit.sips.core.EditableInfrastructureElement;
 import edu.mit.sips.core.Region;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.agriculture.EditableAgricultureElement;
+import edu.mit.sips.core.base.DefaultInfrastructureElement;
+import edu.mit.sips.core.base.EditableInfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.electricity.EditableElectricityElement;

@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.social;
 
-import edu.mit.sips.core.InfrastructureSoS;
+import edu.mit.sips.core.base.InfrastructureSoS;
 
 /**
  * An interface to social infrastructure system-of-systems.

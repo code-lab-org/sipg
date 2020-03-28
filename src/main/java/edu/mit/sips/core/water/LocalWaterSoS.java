@@ -33,8 +33,8 @@ import org.apache.commons.math3.optim.linear.SimplexSolver;
 import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 
 import edu.mit.sips.core.City;
-import edu.mit.sips.core.LocalInfrastructureSoS;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.LocalInfrastructureSoS;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.DefaultUnits;
 import edu.mit.sips.sim.util.ElectricityUnits;

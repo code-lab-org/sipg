@@ -11,7 +11,7 @@ import hla.rti1516e.exceptions.RTIexception;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;

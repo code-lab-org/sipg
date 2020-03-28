@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 
 /**
  * The Class ElementTreeNode.

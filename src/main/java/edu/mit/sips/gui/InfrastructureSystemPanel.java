@@ -45,8 +45,8 @@ import org.jfree.data.xy.TableXYDataset;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 
-import edu.mit.sips.core.InfrastructureSystem;
 import edu.mit.sips.core.Society;
+import edu.mit.sips.core.base.InfrastructureSystem;
 
 /**
  * The Class InfrastructureSystemPanel.

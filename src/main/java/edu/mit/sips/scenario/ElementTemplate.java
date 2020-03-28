@@ -1,6 +1,6 @@
 package edu.mit.sips.scenario;
 
-import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 
 /**
  * The Interface ElementTemplate.

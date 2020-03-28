@@ -19,6 +19,8 @@ import java.util.Collection;
 import java.util.List;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
+import edu.mit.sips.core.base.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;

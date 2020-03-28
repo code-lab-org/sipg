@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
-import edu.mit.sips.core.DefaultInfrastructureElement;
+import edu.mit.sips.core.base.DefaultInfrastructureElement;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
 import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;

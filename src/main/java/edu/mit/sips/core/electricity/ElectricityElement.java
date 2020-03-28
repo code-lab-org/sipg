@@ -15,7 +15,7 @@
  *****************************************************************************/
 package edu.mit.sips.core.electricity;
 
-import edu.mit.sips.core.InfrastructureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.sim.util.ElectricityUnitsOutput;
 import edu.mit.sips.sim.util.OilUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;

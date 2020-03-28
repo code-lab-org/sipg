@@ -17,7 +17,7 @@ package edu.mit.sips.core.agriculture;
 
 import java.util.List;
 
-import edu.mit.sips.core.InfrastructureSystem;
+import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.sim.util.FoodUnitsOutput;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 

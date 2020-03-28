@@ -4,8 +4,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPopupMenu;
 
-import edu.mit.sips.core.InfrastructureElement;
 import edu.mit.sips.core.agriculture.AgricultureElement;
+import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.water.WaterElement;
