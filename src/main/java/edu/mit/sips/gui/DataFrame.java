@@ -47,7 +47,7 @@ import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.electricity.RecordedElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
+import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.PlaceholderWaterSystem;
 import edu.mit.sips.core.water.WaterSystem;
@@ -357,8 +357,8 @@ public class DataFrame extends JFrame implements UpdateListener {
 	}
 	private void clearEnergyData() {
 		for(City city : simulator.getScenario().getCountry().getCities()) {
-			if(city.getPetroleumSystem() instanceof PlaceholderPetroleumSystem) {
-				city.setPetroleumSystem(new PlaceholderPetroleumSystem());
+			if(city.getPetroleumSystem() instanceof RecordedPetroleumSystem) {
+				city.setPetroleumSystem(new RecordedPetroleumSystem());
 			}
 			if(city.getElectricitySystem() instanceof RecordedElectricitySystem) {
 				city.setElectricitySystem(new RecordedElectricitySystem());
@@ -478,15 +478,15 @@ public class DataFrame extends JFrame implements UpdateListener {
 			data.put(city.getName(), new Object[2]);
 			if(city.getPetroleumSystem() instanceof LocalPetroleumSystem) {
 				LocalPetroleumSystem system = (LocalPetroleumSystem) city.getPetroleumSystem();
-				PlaceholderPetroleumSystem placeholder = new PlaceholderPetroleumSystem();
-				placeholder.setElectricityConsumptionMap(system.getElectricityConsumptionMap());
-				placeholder.setCapitalExpenseMap(system.getCapitalExpenseLog());
-				placeholder.setCashFlowMap(system.getCashFlowLog());
-				placeholder.setPetroleumReservoirVolumeMap(system.getPetroleumReservoirVolumeMap());
-				placeholder.setPetroleumWithdrawalsMap(system.getPetroleumWithdrawalsMap());
-				placeholder.setPetroleumDomesticPriceMap(system.getPetroleumDomesticPriceMap());
-				placeholder.setPetroleumImportPriceMap(system.getPetroleumImportPriceMap());
-				placeholder.setPetroleumExportPriceMap(system.getPetroleumExportPriceMap());
+				RecordedPetroleumSystem placeholder = new RecordedPetroleumSystem();
+				placeholder.setRecordedElectricityConsumption(system.getElectricityConsumptionMap());
+				placeholder.setRecordedCapitalExpense(system.getCapitalExpenseLog());
+				placeholder.setRecordedCashFlow(system.getCashFlowLog());
+				placeholder.setRecordedPetroleumReservoirVolume(system.getPetroleumReservoirVolumeMap());
+				placeholder.setRecordedPetroleumWithdrawals(system.getPetroleumWithdrawalsMap());
+				placeholder.setRecordedPetroleumDomesticPrice(system.getPetroleumDomesticPriceMap());
+				placeholder.setRecordedPetroleumImportPrice(system.getPetroleumImportPriceMap());
+				placeholder.setRecordedPetroleumExportPrice(system.getPetroleumExportPriceMap());
 				data.get(city.getName())[0] = placeholder;
 			}
 			if(city.getElectricitySystem() instanceof LocalElectricitySystem) {
@@ -591,10 +591,10 @@ public class DataFrame extends JFrame implements UpdateListener {
 						&& map.get(city.getName()) instanceof Object[]
 								&& ((Object[])map.get(city.getName())).length == 2) {
 					Object[] objects = (Object[])map.get(city.getName());
-					if(city.getPetroleumSystem() instanceof PlaceholderPetroleumSystem
-							&& objects[0] instanceof PlaceholderPetroleumSystem) {
+					if(city.getPetroleumSystem() instanceof RecordedPetroleumSystem
+							&& objects[0] instanceof RecordedPetroleumSystem) {
 						city.setPetroleumSystem(
-								(PlaceholderPetroleumSystem) objects[0]);
+								(RecordedPetroleumSystem) objects[0]);
 					} else {
 						JOptionPane.showMessageDialog(this, 
 								"File is not petroleum data.", null, 

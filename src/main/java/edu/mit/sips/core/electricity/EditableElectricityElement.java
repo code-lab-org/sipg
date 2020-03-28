@@ -49,18 +49,29 @@ public final class EditableElectricityElement extends DefaultMutableInfrastructu
 	private double distributionEfficiency;
 	private double variableOperationsCostOfElectricityDistribution;
 
+	/**
+	 * Creates a new electricity element from this editable element.
+	 *
+	 * @return the electricity element
+	 */
 	@Override
 	public ElectricityElement createElement() {
-		return new DefaultElectricityElement(getTemplateName(), getName(), 
-				getOrigin(), getDestination(),
-				getLifecycleModel().createLifecycleModel(), getMaxElectricityProduction(), 
+		return new DefaultElectricityElement(
+				getTemplateName(), 
+				getName(), 
+				getOrigin(),
+				getDestination(),
+				getLifecycleModel().createLifecycleModel(), 
+				getMaxElectricityProduction(), 
 				getInitialElectricityProduction(), 
 				getPetroleumIntensityOfElectricityProduction(),
 				getWaterIntensityOfElectricityProduction(), 
 				getVariableOperationsCostOfElectricityProduction(),
-				getDistributionEfficiency(), getMaxElectricityInput(), 
+				getDistributionEfficiency(), 
+				getMaxElectricityInput(), 
 				getInitialElectricityInput(),
-				getVariableOperationsCostOfElectricityDistribution());
+				getVariableOperationsCostOfElectricityDistribution()
+			);
 	}
 
 	/**

@@ -49,7 +49,7 @@ public final class EditableAgricultureElement extends DefaultMutableInfrastructu
 	private double variableOperationsCostOfFoodDistribution;
 	
 	/**
-	 * Creates the element.
+	 * Creates a new agriculture element from this editable element.
 	 *
 	 * @return the agriculture element
 	 */

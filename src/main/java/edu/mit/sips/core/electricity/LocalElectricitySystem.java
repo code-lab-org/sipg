@@ -33,7 +33,7 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The locally-controlled implementation of the electricity system-of-systems interface.
+ * The locally-controlled implementation of the electricity system interface.
  * 
  * @author Paul T. Grogan
  */

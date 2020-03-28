@@ -32,7 +32,7 @@ import edu.mit.sips.sim.util.TimeUnits;
 import edu.mit.sips.sim.util.WaterUnits;
 
 /**
- * The locally-controlled implementation of the agriculture system-of-systems interface.
+ * The locally-controlled implementation of the agriculture system interface.
  * 
  * @author Paul T. Grogan
  */

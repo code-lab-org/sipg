@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.petroleum;
 
 import java.util.ArrayList;
@@ -26,6 +41,11 @@ import edu.mit.sips.sim.util.ElectricityUnits;
 import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
+/**
+ * The locally-controlled implementation of the petroleum system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
+ */
 public class LocalPetroleumSoS extends LocalInfrastructureSoS implements PetroleumSoS.Local {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
 	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
@@ -33,21 +53,13 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	private List<Double> reservoirSecurityHistory = new ArrayList<Double>();
 
-	public double getReservoirLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getReservoirVolume() / getReservoirWithdrawals());
-	}
-
 	/**
-	 * Instantiates a new default petroleum so s.
+	 * Instantiates a new local petroleum system-of-systems.
 	 */
 	public LocalPetroleumSoS() {
 		super("Petroleum");
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#addElement(edu.mit.sips.core.petroleum.PetroleumElement)
-	 */
 	@Override
 	public boolean addElement(PetroleumElement element) {
 		for(PetroleumSystem.Local system : getNestedSystems()) {
@@ -58,9 +70,28 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getElectricityConsumption()
+	/**
+	 * Compute reservoir security score.
+	 *
+	 * @return the double
 	 */
+	private double computeReservoirSecurityScore() {
+		double minLifetime = 0;
+		double maxLifetime = 200;
+		if(getReservoirLifetime() < minLifetime) {
+			return 0;
+		} else if(getReservoirLifetime() > maxLifetime) {
+			return 1000;
+		} else {
+			return 1000*(getReservoirLifetime() - minLifetime)/(maxLifetime - minLifetime);
+		}
+	}
+
+	@Override
+	public double getAggregateScore(long year, ElectricitySoS.Local electricitySystem) {
+		return (getReservoirSecurityScore() + getFinancialSecurityScore(year, electricitySystem) + getPoliticalPowerScore(year, electricitySystem))/3d;
+	}
+
 	@Override
 	public double getElectricityConsumption() {
 		double value = 0;
@@ -70,25 +101,16 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getElements()
-	 */
 	@Override
 	public List<? extends PetroleumElement> getElements() {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
@@ -97,9 +119,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getExternalElements()
-	 */
 	@Override
 	public List<? extends PetroleumElement> getExternalElements() {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
@@ -112,9 +131,27 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem.Local#getInternalElements()
-	 */
+	@Override
+	public double getFinancialSecurityScore(long year, ElectricitySoS.Local electricitySystem) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 500e9;
+		double growthRate = 0.04;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		double cumulativeCashFlow = getCumulativeCashFlow() + electricitySystem.getCumulativeCashFlow();
+		if(cumulativeCashFlow < minValue) {
+			return 0;
+		} else if(cumulativeCashFlow > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(cumulativeCashFlow - minValue)/(maxValue - minValue);
+		}
+	}
+
 	@Override
 	public List<? extends PetroleumElement> getInternalElements() {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
@@ -124,9 +161,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return Collections.unmodifiableList(elements);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#getLocalPetroleumFraction()
-	 */
 	@Override
 	public double getLocalPetroleumFraction() {
 		if(getSociety().getTotalPetroleumDemand() > 0) {
@@ -136,9 +170,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getMaxPetroleumReservoirVolume()
-	 */
 	@Override
 	public double getMaxPetroleumReservoirVolume() {
 		double value = 0;
@@ -148,9 +179,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.DefaultInfrastructureSoS.Local#getNestedSystems()
-	 */
 	@Override
 	public List<PetroleumSystem.Local> getNestedSystems() {
 		List<PetroleumSystem.Local> systems = new ArrayList<PetroleumSystem.Local>();
@@ -162,25 +190,16 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return Collections.unmodifiableList(systems);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
-	 */
 	@Override
 	public double getPetroleumDomesticPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -195,9 +214,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumExport()
-	 */
 	@Override
 	public double getPetroleumExport() {
 		double value = 0;
@@ -207,9 +223,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
-	 */
 	@Override
 	public double getPetroleumExportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -224,9 +237,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumImport()
-	 */
 	@Override
 	public double getPetroleumImport() {
 		double value = 0;
@@ -236,9 +246,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
-	 */
 	@Override
 	public double getPetroleumImportPrice() {
 		if(!getNestedSystems().isEmpty()) {
@@ -253,9 +260,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumInDistribution()
-	 */
 	@Override
 	public double getPetroleumInDistribution() {
 		double value = 0;
@@ -265,9 +269,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistribution()
-	 */
 	@Override
 	public double getPetroleumOutDistribution() {
 		double value = 0;
@@ -280,9 +281,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumOutDistributionLosses()
-	 */
 	@Override
 	public double getPetroleumOutDistributionLosses() {
 		double value = 0;
@@ -292,9 +290,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumProduction()
-	 */
 	@Override
 	public double getPetroleumProduction() {
 		double value = 0;
@@ -304,9 +299,46 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumReservoirVolume()
+	@Override
+	public double getPoliticalPowerScore(long year, ElectricitySoS.Local electricitySystem) {
+		double dystopiaTotal = 0;
+		double utopiaTotal = 50e9;
+		double growthRate = 0.03;
+		
+		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
+				/ (Math.pow(1+growthRate, 2010-1940) - 1);
+		
+		double cumulativeCapitalExpense = getCumulativeCapitalExpense() + electricitySystem.getCumulativeCapitalExpense();
+		if(cumulativeCapitalExpense < minValue) {
+			return 0;
+		} else if(cumulativeCapitalExpense > maxValue) {
+			return 1000;
+		} else {
+			return 1000*(cumulativeCapitalExpense - minValue)/(maxValue - minValue);
+		}
+	}
+
+	/**
+	 * Gets the reservoir lifetime.
+	 *
+	 * @return the reservoir lifetime
 	 */
+	public double getReservoirLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
+	}
+
+	@Override
+	public double getReservoirSecurityScore() {
+		double value = 0;
+		for(double item : reservoirSecurityHistory) {
+			value += item;
+		}
+		return value / reservoirSecurityHistory.size();
+	}
+
 	@Override
 	public double getReservoirVolume() {
 		double value = 0;
@@ -316,9 +348,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getPetroleumWithdrawals()
-	 */
 	@Override
 	public double getReservoirWithdrawals() {
 		double value = 0;
@@ -328,9 +357,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getTotalPetroleumSupply()
-	 */
 	@Override
 	public double getTotalPetroleumSupply() {
 		double value = 0;
@@ -340,9 +366,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		return value;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getUnitProductionCost()
-	 */
 	@Override
 	public double getUnitProductionCost() {
 		if(getPetroleumProduction() > 0) {
@@ -351,10 +374,7 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		}
 		return 0;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getUnitSupplyProfit()
-	 */
+	
 	@Override
 	public double getUnitSupplyProfit() {
 		if(getTotalPetroleumSupply() > 0) {
@@ -362,10 +382,13 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		}
 		return 0;
 	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumDistribution()
-	 */
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		reservoirSecurityHistory.clear();
+	}
+	
 	@Override
 	public void optimizePetroleumDistribution() {
 		// Make a list of cities and infrastructure elements. The vector
@@ -473,9 +496,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSoS#optimizePetroleumProductionAndDistribution(double)
-	 */
 	@Override
 	public void optimizePetroleumProductionAndDistribution() {
 		List<City> cities = getSociety().getCities();
@@ -608,9 +628,6 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem.Local#removeElement(edu.mit.sips.core.petroleum.PetroleumElement)
-	 */
 	@Override
 	public boolean removeElement(PetroleumElement element) {
 		for(PetroleumSystem.Local system : getNestedSystems()) {
@@ -622,87 +639,8 @@ public class LocalPetroleumSoS extends LocalInfrastructureSoS implements Petrole
 	}
 
 	@Override
-	public void initialize(long time) {
-		super.initialize(time);
-		reservoirSecurityHistory.clear();
-	}
-	
-	@Override
 	public void tick() {
 		super.tick();
 		this.reservoirSecurityHistory.add(computeReservoirSecurityScore());
-	}
-	
-	/**
-	 * Compute reservoir security score.
-	 *
-	 * @return the double
-	 */
-	private double computeReservoirSecurityScore() {
-		double minLifetime = 0;
-		double maxLifetime = 200;
-		if(getReservoirLifetime() < minLifetime) {
-			return 0;
-		} else if(getReservoirLifetime() > maxLifetime) {
-			return 1000;
-		} else {
-			return 1000*(getReservoirLifetime() - minLifetime)/(maxLifetime - minLifetime);
-		}
-	}
-	
-	@Override
-	public double getReservoirSecurityScore() {
-		double value = 0;
-		for(double item : reservoirSecurityHistory) {
-			value += item;
-		}
-		return value / reservoirSecurityHistory.size();
-	}
-
-	@Override
-	public double getFinancialSecurityScore(long year, ElectricitySoS.Local electricitySystem) {
-		double dystopiaTotal = 0;
-		double utopiaTotal = 500e9;
-		double growthRate = 0.04;
-		
-		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		
-		double cumulativeCashFlow = getCumulativeCashFlow() + electricitySystem.getCumulativeCashFlow();
-		if(cumulativeCashFlow < minValue) {
-			return 0;
-		} else if(cumulativeCashFlow > maxValue) {
-			return 1000;
-		} else {
-			return 1000*(cumulativeCashFlow - minValue)/(maxValue - minValue);
-		}
-	}
-
-	@Override
-	public double getPoliticalPowerScore(long year, ElectricitySoS.Local electricitySystem) {
-		double dystopiaTotal = 0;
-		double utopiaTotal = 50e9;
-		double growthRate = 0.03;
-		
-		double minValue = dystopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		double maxValue = utopiaTotal * (Math.pow(1+growthRate, year-1940) - 1)
-				/ (Math.pow(1+growthRate, 2010-1940) - 1);
-		
-		double cumulativeCapitalExpense = getCumulativeCapitalExpense() + electricitySystem.getCumulativeCapitalExpense();
-		if(cumulativeCapitalExpense < minValue) {
-			return 0;
-		} else if(cumulativeCapitalExpense > maxValue) {
-			return 1000;
-		} else {
-			return 1000*(cumulativeCapitalExpense - minValue)/(maxValue - minValue);
-		}
-	}
-
-	@Override
-	public double getAggregateScore(long year, ElectricitySoS.Local electricitySystem) {
-		return (getReservoirSecurityScore() + getFinancialSecurityScore(year, electricitySystem) + getPoliticalPowerScore(year, electricitySystem))/3d;
 	}
 }

@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 
 package edu.mit.sips.core.petroleum;
 
@@ -9,7 +24,9 @@ import edu.mit.sips.sim.util.OilUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class MutablePetroleumElement.
+ * An implementation of the editable infrastructure element class for the petroleum sector.
+ * 
+ * @author Paul T. Grogan
  */
 public final class EditablePetroleumElement extends DefaultMutableInfrastructureElement
 		implements ElectricityUnitsOutput, OilUnitsOutput {
@@ -29,17 +46,29 @@ public final class EditablePetroleumElement extends DefaultMutableInfrastructure
 	private double electricalIntensityOfPetroleumDistribution;
 	private double variableOperationsCostOfPetroleumDistribution;
 
+	/**
+	 * Creates a new petroleum element from this editable element.
+	 *
+	 * @return the petroleum element
+	 */
 	@Override
 	public PetroleumElement createElement() {
-		return new DefaultPetroleumElement(getTemplateName(), getName(), 
-				getOrigin(), getDestination(),
-				getLifecycleModel().createLifecycleModel(), getReservoirIntensityOfPetroleumProduction(),
-				getMaxPetroleumProduction(), getInitialPetroleumProduction(), 
+		return new DefaultPetroleumElement(
+				getTemplateName(),
+				getName(), 
+				getOrigin(),
+				getDestination(),
+				getLifecycleModel().createLifecycleModel(), 
+				getReservoirIntensityOfPetroleumProduction(),
+				getMaxPetroleumProduction(),
+				getInitialPetroleumProduction(), 
 				getVariableOperationsCostOfPetroleumProduction(),
-				getDistributionEfficiency(), getMaxPetroleumInput(), 
+				getDistributionEfficiency(), 
+				getMaxPetroleumInput(), 
 				getInitialPetroleumInput(), 
 				getElectricalIntensityOfPetroleumDistribution(),
-				getVariableOperationsCostOfPetroleumDistribution());
+				getVariableOperationsCostOfPetroleumDistribution()
+			);
 	}
 
 	/**
@@ -60,17 +89,11 @@ public final class EditablePetroleumElement extends DefaultMutableInfrastructure
 		return electricalIntensityOfPetroleumDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
@@ -112,17 +135,11 @@ public final class EditablePetroleumElement extends DefaultMutableInfrastructure
 		return maxPetroleumProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;

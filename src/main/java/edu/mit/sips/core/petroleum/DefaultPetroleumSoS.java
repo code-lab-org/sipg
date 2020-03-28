@@ -1,6 +1,19 @@
-/*
- * 
- */
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+
 package edu.mit.sips.core.petroleum;
 
 import java.util.ArrayList;
@@ -15,7 +28,9 @@ import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class DefaultPetroleumSoS.
+ * The default implementation of the petroleum system-of-systems interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements PetroleumSoS {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -25,164 +40,12 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 	private List<Double> reservoirSecurityHistory = new ArrayList<Double>();
 
 	/**
-	 * Instantiates a new default petroleum so s.
+	 * Instantiates a new default petroleum system-of-systems.
 	 */
 	public DefaultPetroleumSoS() {
 		super("Petroleum");
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumSystem#getElectricityConsumption()
-	 */
-	@Override
-	public double getElectricityConsumption() {
-		double value = 0;
-		for(PetroleumSystem system : getNestedSystems()) {
-			value += system.getElectricityConsumption();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
-	@Override
-	public TimeUnits getElectricityTimeUnits() {
-		return electricityTimeUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
-	@Override
-	public ElectricityUnits getElectricityUnits() {
-		return electricityUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSoS#getNestedSystems()
-	 */
-	@Override
-	public List<PetroleumSystem> getNestedSystems() {
-		List<PetroleumSystem> systems = new ArrayList<PetroleumSystem>();
-		for(Society society : getSociety().getNestedSocieties()) {
-			systems.add(society.getPetroleumSystem());
-		}
-		return Collections.unmodifiableList(systems);
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
-	@Override
-	public TimeUnits getOilTimeUnits() {
-		return oilTimeUnits;
-	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
-	@Override
-	public OilUnits getOilUnits() {
-		return oilUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
-	 */
-	@Override
-	public double getPetroleumDomesticPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(PetroleumSystem system : getNestedSystems()) {
-				value += DefaultUnits.convert(system.getPetroleumDomesticPrice(), 
-						system.getCurrencyUnits(), system.getOilUnits(),
-						getCurrencyUnits(), getOilUnits());
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
-	 */
-	@Override
-	public double getPetroleumExportPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(PetroleumSystem system : getNestedSystems()) {
-				value += DefaultUnits.convert(system.getPetroleumExportPrice(), 
-						system.getCurrencyUnits(), system.getOilUnits(),
-						getCurrencyUnits(), getOilUnits());
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
-	 */
-	@Override
-	public double getPetroleumImportPrice() {
-		if(!getNestedSystems().isEmpty()) {
-			double value = 0;
-			for(PetroleumSystem system : getNestedSystems()) {
-				value += DefaultUnits.convert(system.getPetroleumImportPrice(), 
-						system.getCurrencyUnits(), system.getOilUnits(),
-						getCurrencyUnits(), getOilUnits());
-			}
-			return value / getNestedSystems().size();
-		}
-		return 0;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumReservoirVolume()
-	 */
-	@Override
-	public double getReservoirVolume() {
-		double value = 0;
-		for(PetroleumSystem system : getNestedSystems()) {
-			value += system.getReservoirVolume();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumWithdrawals()
-	 */
-	@Override
-	public double getReservoirWithdrawals() {
-		double value = 0;
-		for(PetroleumSystem system : getNestedSystems()) {
-			value += system.getReservoirWithdrawals();
-		}
-		return value;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getReservoirLifetime()
-	 */
-	@Override
-	public double getReservoirLifetime() {
-		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
-				: (getReservoirVolume() / getReservoirWithdrawals());
-	}
-
-	@Override
-	public void initialize(long time) {
-		super.initialize(time);
-		reservoirSecurityHistory.clear();
-	}
-	
-	@Override
-	public void tick() {
-		super.tick();
-		this.reservoirSecurityHistory.add(computeReservoirSecurityScore());
-	}
-	
 	/**
 	 * Compute reservoir security score.
 	 *
@@ -199,7 +62,93 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			return 1000*(getReservoirLifetime() - minLifetime)/(maxLifetime - minLifetime);
 		}
 	}
+
+	@Override
+	public double getElectricityConsumption() {
+		double value = 0;
+		for(PetroleumSystem system : getNestedSystems()) {
+			value += system.getElectricityConsumption();
+		}
+		return value;
+	}
 	
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+	
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
+	@Override
+	public List<PetroleumSystem> getNestedSystems() {
+		List<PetroleumSystem> systems = new ArrayList<PetroleumSystem>();
+		for(Society society : getSociety().getNestedSocieties()) {
+			systems.add(society.getPetroleumSystem());
+		}
+		return Collections.unmodifiableList(systems);
+	}
+	
+	@Override
+	public TimeUnits getOilTimeUnits() {
+		return oilTimeUnits;
+	}
+
+	@Override
+	public OilUnits getOilUnits() {
+		return oilUnits;
+	}
+
+	@Override
+	public double getPetroleumDomesticPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += DefaultUnits.convert(system.getPetroleumDomesticPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getPetroleumExportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += DefaultUnits.convert(system.getPetroleumExportPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getPetroleumImportPrice() {
+		if(!getNestedSystems().isEmpty()) {
+			double value = 0;
+			for(PetroleumSystem system : getNestedSystems()) {
+				value += DefaultUnits.convert(system.getPetroleumImportPrice(), 
+						system.getCurrencyUnits(), system.getOilUnits(),
+						getCurrencyUnits(), getOilUnits());
+			}
+			return value / getNestedSystems().size();
+		}
+		return 0;
+	}
+
+	@Override
+	public double getReservoirLifetime() {
+		return getReservoirWithdrawals() == 0 ? Double.MAX_VALUE 
+				: (getReservoirVolume() / getReservoirWithdrawals());
+	}
+
 	@Override
 	public double getReservoirSecurityScore() {
 		double value = 0;
@@ -207,5 +156,35 @@ public class DefaultPetroleumSoS extends DefaultInfrastructureSoS implements Pet
 			value += item;
 		}
 		return value / reservoirSecurityHistory.size();
+	}
+
+	@Override
+	public double getReservoirVolume() {
+		double value = 0;
+		for(PetroleumSystem system : getNestedSystems()) {
+			value += system.getReservoirVolume();
+		}
+		return value;
+	}
+	
+	@Override
+	public double getReservoirWithdrawals() {
+		double value = 0;
+		for(PetroleumSystem system : getNestedSystems()) {
+			value += system.getReservoirWithdrawals();
+		}
+		return value;
+	}
+	
+	@Override
+	public void initialize(long time) {
+		super.initialize(time);
+		reservoirSecurityHistory.clear();
+	}
+	
+	@Override
+	public void tick() {
+		super.tick();
+		this.reservoirSecurityHistory.add(computeReservoirSecurityScore());
 	}
 }

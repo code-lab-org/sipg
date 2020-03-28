@@ -15,7 +15,7 @@ import edu.mit.sips.core.electricity.LocalElectricitySystem;
 import edu.mit.sips.core.electricity.RecordedElectricitySystem;
 import edu.mit.sips.core.petroleum.LocalPetroleumSystem;
 import edu.mit.sips.core.petroleum.PetroleumElement;
-import edu.mit.sips.core.petroleum.PlaceholderPetroleumSystem;
+import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.price.ConstantPriceModel;
 import edu.mit.sips.core.price.PriceModel;
 import edu.mit.sips.core.social.DefaultSocialSystem;
@@ -137,7 +137,7 @@ public final class GameScenario extends DefaultScenario {
 										,(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(2008, INDUSTRIAL, RURAL)*/
 										),
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new PlaceholderPetroleumSystem(),
+							new RecordedPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
@@ -213,7 +213,7 @@ public final class GameScenario extends DefaultScenario {
 				sectors.contains(Sector.PETROLEUM)?
 						new LocalPetroleumSystem(0, 0, new ArrayList<PetroleumElement>(),
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new PlaceholderPetroleumSystem(),
+							new RecordedPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
@@ -269,7 +269,7 @@ public final class GameScenario extends DefaultScenario {
 						new LocalPetroleumSystem(0, 0, 
 								new ArrayList<PetroleumElement>(),
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
-							new PlaceholderPetroleumSystem(),
+							new RecordedPetroleumSystem(),
 				sectors.contains(Sector.ELECTRICITY)?
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(

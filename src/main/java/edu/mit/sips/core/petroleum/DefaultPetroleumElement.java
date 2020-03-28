@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.DefaultInfrastructureElement;
@@ -7,7 +22,9 @@ import edu.mit.sips.sim.util.OilUnits;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class DefaultPetroleumElement.
+ * The default implementation of the petroleum element interface.
+ * 
+ * @author Paul T. Grogan
  */
 public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		implements PetroleumElement {
@@ -17,7 +34,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	private static final TimeUnits oilTimeUnits = TimeUnits.year;
 	
 	/**
-	 * Creates the distribution element.
+	 * Builder function to create a new distribution element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -38,7 +55,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			double maxPetroleumInput, double initialPetroleumInput, 
 			double electricalIntensityOfPetroleumDistribution,
 			double variableOperationsCostOfPetroleumDistribution) {
-		// TODO distance-based operational expense?
 		return new DefaultPetroleumElement(templateName, name, origin, 
 				destination, lifecycleModel, 0, 0, 0, 0, 
 				distributionEfficiency, maxPetroleumInput, initialPetroleumInput,
@@ -47,7 +63,7 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 	}
 	
 	/**
-	 * Creates the production element.
+	 * Builder function to create a new production element.
 	 *
 	 * @param templateName the template name
 	 * @param name the name
@@ -129,21 +145,18 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 			double variableOperationsCostOfPetroleumDistribution) {
 		super(templateName, name, origin, destination, lifecycleModel);
 		
-		// Validate reservoir efficiency.
 		if(reservoirIntensityOfPetroleumProduction < 0) {
 			throw new IllegalArgumentException(
 					"Reservoir intensity cannot be negative.");
 		}
 		this.reservoirIntensityOfPetroleumProduction = reservoirIntensityOfPetroleumProduction;
 		
-		// Validate maximum petroleum production.
 		if(maxPetroleumProduction < 0) {
 			throw new IllegalArgumentException(
 					"Maximum petroleum production cannot be negative.");
 		}
 		this.maxPetroleumProduction = maxPetroleumProduction;
 		
-		// Validate initial petroleum production parameter.
 		if(initialPetroleumProduction > maxPetroleumProduction) {
 			throw new IllegalArgumentException(
 					"Initial petroleum production cannot exceed maximum.");
@@ -153,28 +166,24 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 		this.initialPetroleumProduction = initialPetroleumProduction;
 
-		// Validate production cost.
 		if(variableOperationsCostOfPetroleumProduction < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of production cannot be negative.");
 		}
 		this.variableOperationsCostOfPetroleumProduction = variableOperationsCostOfPetroleumProduction;
 		
-		// Validate distribution efficiency.
 		if(distributionEfficiency < 0 || distributionEfficiency > 1) {
 			throw new IllegalArgumentException(
 					"Distribution efficiency must be between 0 and 1.");
 		}
 		this.distributionEfficiency = distributionEfficiency;
 		
-		// Validate maximum petroleum input.
 		if(maxPetroleumInput < 0) {
 			throw new IllegalArgumentException(
 					"Maximum petroleum input cannot be negative.");
 		}
 		this.maxPetroleumInput = maxPetroleumInput;
 		
-		// Validate initial petroleum input.
 		if(initialPetroleumInput > maxPetroleumInput) {
 			throw new IllegalArgumentException(
 					"Initial petroleum input cannot exceed maximum.");
@@ -184,14 +193,12 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 		this.initialPetroleumInput = initialPetroleumInput;
 
-		// Validate energy intensity.
 		if(electricalIntensityOfPetroleumDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Electrical intensity cannot be negative.");
 		}
 		this.electricalIntensityOfPetroleumDistribution = electricalIntensityOfPetroleumDistribution;
 		
-		// Validate distribution cost.
 		if(variableOperationsCostOfPetroleumDistribution < 0) {
 			throw new IllegalArgumentException(
 					"Variable cost of distribution cannot be negative.");
@@ -199,9 +206,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		this.variableOperationsCostOfPetroleumDistribution = variableOperationsCostOfPetroleumDistribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getDistributionEfficiency()
-	 */
 	@Override
 	public double getDistributionEfficiency() {
 		if(isOperational()) {
@@ -211,17 +215,11 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getElectricalIntensityOfPetroleumDistribution()
-	 */
 	@Override
 	public double getElectricalIntensityOfPetroleumDistribution() {
 		return electricalIntensityOfPetroleumDistribution;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getElectricityConsumption()
-	 */
 	@Override
 	public double getElectricityConsumption() {
 		if(isOperational()) {
@@ -231,25 +229,16 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getMaxPetroleumInput()
-	 */
 	@Override
 	public double getMaxPetroleumInput() {
 		if(isOperational()) {
@@ -259,9 +248,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getMaxPetroleumProduction()
-	 */
 	@Override
 	public double getMaxPetroleumProduction() {
 		if(isOperational()) {
@@ -271,9 +257,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getMutableElement()
-	 */
 	@Override
 	public EditablePetroleumElement getMutableElement() {
 		EditablePetroleumElement element = 
@@ -296,25 +279,16 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		return element;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumInput()
-	 */
 	@Override
 	public double getPetroleumInput() {
 		if(isOperational()) {
@@ -324,9 +298,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumOutput()
-	 */
 	@Override
 	public double getPetroleumOutput() {
 		if(isOperational()) {
@@ -336,9 +307,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumProduction()
-	 */
 	@Override
 	public double getPetroleumProduction() {
 		if(isOperational()) {
@@ -348,21 +316,6 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getPetroleumWithdrawals()
-	 */
-	@Override
-	public double getReservoirWithdrawals() {
-		if(isOperational()) {
-			return getPetroleumProduction() * reservoirIntensityOfPetroleumProduction;
-		} else {
-			return 0;
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getReservoirIntensityOfPetroleumProduction()
-	 */
 	@Override
 	public double getReservoirIntensityOfPetroleumProduction() {
 		if(isOperational()) {
@@ -372,9 +325,15 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#getTotalOperationsExpense()
-	 */
+	@Override
+	public double getReservoirWithdrawals() {
+		if(isOperational()) {
+			return getPetroleumProduction() * reservoirIntensityOfPetroleumProduction;
+		} else {
+			return 0;
+		}
+	}
+
 	@Override
 	public double getTotalOperationsExpense() {
 		return getFixedOperationsExpense() 
@@ -382,42 +341,25 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 				+ variableOperationsCostOfPetroleumDistribution * petroleumInput;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getVariableOperationsCostOfPetroleumDistribution()
-	 */
 	@Override
 	public double getVariableOperationsCostOfPetroleumDistribution() {
 		return variableOperationsCostOfPetroleumDistribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#getVariableOperationsCostOfPetroleumProduction()
-	 */
 	@Override
 	public double getVariableOperationsCostOfPetroleumProduction() {
 		return variableOperationsCostOfPetroleumProduction;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.InfrastructureElement#initialize(long)
-	 */
 	@Override 
 	public void initialize(long time) {
 		super.initialize(time);
-
-		// Use mutator method to validate petroleum production.
 		setPetroleumProduction(initialPetroleumProduction);
-		
-		// Use mutator method to validate petroleum input.
 		setPetroleumInput(initialPetroleumInput);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#setPetroleumInput(double)
-	 */
 	@Override
 	public void setPetroleumInput(double petroleumInput) {
-		// Validate water input.
 		if(petroleumInput < 0) {
 			throw new IllegalArgumentException(
 					"Petroleum input cannot be negative.");
@@ -429,12 +371,8 @@ public class DefaultPetroleumElement extends DefaultInfrastructureElement
 		fireElementChangeEvent();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.energy.PetroleumElement#setPetroleumProduction(double)
-	 */
 	@Override
 	public void setPetroleumProduction(double petroleumProduction) {
-		// Validate petroleum production parameter.
 		if(petroleumProduction > maxPetroleumProduction) {
 			throw new IllegalArgumentException(
 					"Petroleum production cannot exceed maximum.");
