@@ -73,13 +73,13 @@ public class ElementPanel extends JPanel {
 	public static ElementPanel createElementPanel(Scenario scenario, 
 			EditableInfrastructureElement element) {
 		if(element instanceof EditableAgricultureElement) {
-			return new AgricultureElementPanel(scenario, (EditableAgricultureElement)element);
+			return new AgricultureElementPanel(scenario, (EditableAgricultureElement)element, false);
 		} else if(element instanceof EditableWaterElement) {
-			return new WaterElementPanel(scenario, (EditableWaterElement)element);
+			return new WaterElementPanel(scenario, (EditableWaterElement)element, false);
 		} else if(element instanceof EditablePetroleumElement) {
-			return new PetroleumElementPanel(scenario, (EditablePetroleumElement)element);
+			return new PetroleumElementPanel(scenario, (EditablePetroleumElement)element, false);
 		} else if(element instanceof EditableElectricityElement) {
-			return new ElectricityElementPanel(scenario, (EditableElectricityElement)element);
+			return new ElectricityElementPanel(scenario, (EditableElectricityElement)element, false);
 		} else {
 			throw new IllegalArgumentException("Element panel not implemented.");
 		}
@@ -87,6 +87,7 @@ public class ElementPanel extends JPanel {
 	
 	private final Scenario scenario;
 	private final EditableInfrastructureElement element;
+	protected final boolean detailed;
 	private final JTextField nameText;
 	private final JComboBox<City> originCombo;
 	private final JComboBox<City> destinationCombo;
@@ -122,10 +123,14 @@ public class ElementPanel extends JPanel {
 	 *
 	 * @param scenario the scenario
 	 * @param element the element
+	 * @param detailed the detailed
 	 */
-	public ElementPanel(final Scenario scenario, final EditableInfrastructureElement element) {
+	public ElementPanel(final Scenario scenario, 
+			final EditableInfrastructureElement element,
+			final boolean detailed) {
 		this.scenario = scenario;
 		this.element = element;
+		this.detailed = detailed;
 		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		
 		JPanel defaultElementPanel = new JPanel();

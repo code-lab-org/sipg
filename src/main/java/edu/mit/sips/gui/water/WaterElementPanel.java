@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.water;
 
 import java.awt.Color;
@@ -28,7 +43,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class WaterElementPanel.
+ * An implementation of the element panel class for the water sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class WaterElementPanel extends ElementPanel 
 		implements WaterUnitsOutput, CurrencyUnitsOutput, ElectricityUnitsOutput {
@@ -63,10 +80,12 @@ public class WaterElementPanel extends ElementPanel
 	 *
 	 * @param scenario the scenario
 	 * @param element the element
+	 * @param detailed the detailed
 	 */
 	public WaterElementPanel(Scenario scenario, 
-			final EditableWaterElement element) {
-		super(scenario, element);
+			final EditableWaterElement element, 
+			boolean detailed) {
+		super(scenario, element, detailed);
 		
 		final WaterElementPanel thisPanel = this;
 		
@@ -359,35 +378,35 @@ public class WaterElementPanel extends ElementPanel
 							WaterUnits.convertFlow(element.getMaxWaterProduction(), 
 									element, this)), JLabel.RIGHT), 
 									waterUnits + "/" + waterTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Maximum Water Production", 
-					maxWaterProductionText, 
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Initial Water Production", 
-					initialWaterProductionText, 
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Specific Aquifer Consumption",
-					reservoirIntensityOfWaterProductionText, 
-					waterUnits + "/" + waterUnits,
-					"  max: ", maxReservoirUseLabel,
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Specific Electricity Consumption",
-					electricalIntensityOfWaterProductionText, 
-					electricityUnits + "/" + waterUnits,
-					"  max: ", maxElectricityUseLabel,
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Variable Operations Cost",
-					variableOperationsCostOfWaterProductionText, 
-					currencyUnits + "/" + waterUnits,
-					"  max: ", maxVariableCostLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			c.gridwidth = 3;
-			c.anchor = GridBagConstraints.LINE_END;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			elementPanel.add(coastalAccessRequiredCheck, c);
-			c.gridwidth = 1;
-			c.gridy++;
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Maximum Water Production", 
+						maxWaterProductionText, 
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Initial Water Production", 
+						initialWaterProductionText, 
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Specific Aquifer Consumption",
+						reservoirIntensityOfWaterProductionText, 
+						waterUnits + "/" + waterUnits,
+						"  max: ", maxReservoirUseLabel,
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Specific Electricity Consumption",
+						electricalIntensityOfWaterProductionText, 
+						electricityUnits + "/" + waterUnits,
+						"  max: ", maxElectricityUseLabel,
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Variable Operations Cost",
+						variableOperationsCostOfWaterProductionText, 
+						currencyUnits + "/" + waterUnits,
+						"  max: ", maxVariableCostLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+				c.gridwidth = 3;
+				c.anchor = GridBagConstraints.LINE_END;
+				c.fill = GridBagConstraints.HORIZONTAL;
+				elementPanel.add(coastalAccessRequiredCheck, c);
+				c.gridwidth = 1;
+				c.gridy++;
+			}
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -399,32 +418,31 @@ public class WaterElementPanel extends ElementPanel
 							WaterUnits.convertFlow(element.getMaxWaterInput(), 
 									element, this)), JLabel.RIGHT), 
 									waterUnits + "/" + waterTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Maximum Water Input", 
-					maxWaterInputText, 
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Initial Water Input", 
-					initialWaterInputText, 
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, 
-					waterUnits + "/" + waterUnits,
-					"  max: ", maxOutputLabel,
-					waterUnits + "/" + waterTimeUnits);
-			addInput(elementPanel, c, "Specific Electricity Consumption",
-					electricalIntensityOfWaterDistributionText, 
-					electricityUnits + "/" + waterUnits,
-					"  max: ", maxElectricityUseDistLabel,
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Variable Operations Cost",
-					variableOperationsCostOfWaterDistributionText, 
-					currencyUnits + "/" + waterUnits,
-					"  max: ", maxVariableCostDistLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Maximum Water Input", 
+						maxWaterInputText, 
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Initial Water Input", 
+						initialWaterInputText, 
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Distribution Efficiency",
+						distributionEfficiencyText, 
+						waterUnits + "/" + waterUnits,
+						"  max: ", maxOutputLabel,
+						waterUnits + "/" + waterTimeUnits);
+				addInput(elementPanel, c, "Specific Electricity Consumption",
+						electricalIntensityOfWaterDistributionText, 
+						electricityUnits + "/" + waterUnits,
+						"  max: ", maxElectricityUseDistLabel,
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Variable Operations Cost",
+						variableOperationsCostOfWaterDistributionText, 
+						currencyUnits + "/" + waterUnits,
+						"  max: ", maxVariableCostDistLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+			}
 		}
 		
-		// set input enabled state
 		maxWaterProductionText.setEnabled(element.getTemplateName() == null);
 		reservoirIntensityOfWaterProductionText.setEnabled(element.getTemplateName() == null);
 		electricalIntensityOfWaterProductionText.setEnabled(element.getTemplateName() == null);
@@ -436,52 +454,33 @@ public class WaterElementPanel extends ElementPanel
 		coastalAccessRequiredCheck.setEnabled(element.getTemplateName() == null);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
-	@Override
-	public ElectricityUnits getElectricityUnits() {
-		return electricityUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
-	@Override
-	public TimeUnits getElectricityTimeUnits() {
-		return electricityTimeUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
-	@Override
-	public CurrencyUnits getCurrencyUnits() {
-		return currencyUnits;
-	}
-
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
-	public WaterUnits getWaterUnits() {
-		return waterUnits;
+	public CurrencyUnits getCurrencyUnits() {
+		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
+	@Override
+	public TimeUnits getElectricityTimeUnits() {
+		return electricityTimeUnits;
+	}
+
+	@Override
+	public ElectricityUnits getElectricityUnits() {
+		return electricityUnits;
+	}
+
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
-	
+
+	@Override
+	public WaterUnits getWaterUnits() {
+		return waterUnits;
+	}
 }

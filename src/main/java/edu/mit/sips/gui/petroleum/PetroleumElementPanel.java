@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.petroleum;
 
 import java.awt.Color;
@@ -25,7 +40,9 @@ import edu.mit.sips.sim.util.OilUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class PetroleumElementPanel.
+ * An implementation of the element panel class for the petroleum sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class PetroleumElementPanel extends ElementPanel 
 		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput {
@@ -56,10 +73,12 @@ public class PetroleumElementPanel extends ElementPanel
 	 *
 	 * @param scenario the scenario
 	 * @param element the element
+	 * @param detailed the detailed
 	 */
 	public PetroleumElementPanel(Scenario scenario, 
-			final EditablePetroleumElement element) {
-		super(scenario, element);
+			final EditablePetroleumElement element, 
+			boolean detailed) {
+		super(scenario, element, detailed);
 		
 		final PetroleumElementPanel thisPanel = this; 
 		
@@ -311,24 +330,24 @@ public class PetroleumElementPanel extends ElementPanel
 							OilUnits.convertFlow(element.getMaxPetroleumProduction(), 
 									element, this)), JLabel.RIGHT), 
 									oilUnits + "/" + oilTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Max Petroleum Production", 
-					maxPetroleumProductionText,
-					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Initial Petroleum Production", 
-					initialPetroleumProductionText, 
-					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Specific Reservoir Consumption",
-					reservoirIntensityOfPetroleumProductionText, 
-					oilUnits + "/" + oilUnits,
-					"  max: ", maxReservoirUseLabel,
-					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Variable Cost of Production",
-					variableOperationsCostOfPetroleumProductionText,
-					currencyUnits + "/" + oilUnits,
-					"  max: ", maxVariableCostLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Max Petroleum Production", 
+						maxPetroleumProductionText,
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Initial Petroleum Production", 
+						initialPetroleumProductionText, 
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Specific Reservoir Consumption",
+						reservoirIntensityOfPetroleumProductionText, 
+						oilUnits + "/" + oilUnits,
+						"  max: ", maxReservoirUseLabel,
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Variable Cost of Production",
+						variableOperationsCostOfPetroleumProductionText,
+						currencyUnits + "/" + oilUnits,
+						"  max: ", maxVariableCostLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+			}
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -340,31 +359,30 @@ public class PetroleumElementPanel extends ElementPanel
 							OilUnits.convertFlow(element.getMaxPetroleumInput(), 
 									element, this)), JLabel.RIGHT), 
 									oilUnits + "/" + oilTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Max Petroleum Input", 
-					maxPetroleumInputText,
-					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Initial Petroleum Input", 
-					initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, 
-					oilUnits + "/" + oilUnits,
-					"  max: ", maxOutputLabel,
-					oilUnits + "/" + oilTimeUnits);
-			addInput(elementPanel, c, "Electrical Intensity of Distribution",
-					electricalIntensityOfPetroleumDistributionText,
-					electricityUnits + "/" + oilUnits,
-					"  max: ", maxElectricityUseDistLabel,
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfPetroleumDistributionText,
-					currencyUnits + "/" + oilUnits,
-					"  max: ", maxVariableCostDistLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Max Petroleum Input", 
+						maxPetroleumInputText,
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Initial Petroleum Input", 
+						initialPetroleumInputText, oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Distribution Efficiency",
+						distributionEfficiencyText, 
+						oilUnits + "/" + oilUnits,
+						"  max: ", maxOutputLabel,
+						oilUnits + "/" + oilTimeUnits);
+				addInput(elementPanel, c, "Electrical Intensity of Distribution",
+						electricalIntensityOfPetroleumDistributionText,
+						electricityUnits + "/" + oilUnits,
+						"  max: ", maxElectricityUseDistLabel,
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Variable Cost of Distribution",
+						variableOperationsCostOfPetroleumDistributionText,
+						currencyUnits + "/" + oilUnits,
+						"  max: ", maxVariableCostDistLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+			}
 		}
 		
-		// set input enabled state
 		maxPetroleumProductionText.setEnabled(element.getTemplateName() == null);
 		reservoirIntensityOfPetroleumProductionText.setEnabled(element.getTemplateName() == null);
 		variableOperationsCostOfPetroleumProductionText.setEnabled(element.getTemplateName() == null);
@@ -374,52 +392,33 @@ public class PetroleumElementPanel extends ElementPanel
 		variableOperationsCostOfPetroleumDistributionText.setEnabled(element.getTemplateName() == null);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
-	
 }

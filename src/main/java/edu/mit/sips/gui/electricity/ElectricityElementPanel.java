@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.electricity;
 
 import java.awt.Color;
@@ -27,7 +42,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class ElectricityElementPanel.
+ * An implementation of the element panel class for the electricity sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class ElectricityElementPanel extends ElementPanel 
 		implements CurrencyUnitsOutput, ElectricityUnitsOutput, OilUnitsOutput, WaterUnitsOutput {
@@ -60,10 +77,12 @@ public class ElectricityElementPanel extends ElementPanel
 	 *
 	 * @param scenario the scenario
 	 * @param element the element
+	 * @param detailed the detailed
 	 */
 	public ElectricityElementPanel(Scenario scenario, 
-			final EditableElectricityElement element) {
-		super(scenario, element);
+			final EditableElectricityElement element, 
+			boolean detailed) {
+		super(scenario, element, detailed);
 		
 		final ElectricityElementPanel thisPanel = this; 
 		
@@ -319,7 +338,7 @@ public class ElectricityElementPanel extends ElementPanel
 							ElectricityUnits.convertFlow(element.getMaxElectricityProduction(), 
 									element, this)), JLabel.RIGHT), 
 									electricityUnits + "/" + electricityTimeUnits);
-			/* TODO removed temporarily
+			if(detailed) {
 				addInput(elementPanel, c, "Maximum Electricity Production", 
 						maxElectricityProductionText, 
 						electricityUnits + "/" + electricityTimeUnits);
@@ -341,7 +360,7 @@ public class ElectricityElementPanel extends ElementPanel
 						currencyUnits + "/" + electricityUnits,
 						"  max: ", maxVariableCostLabel,
 						currencyUnits + "/" + currencyTimeUnits);
-				*/
+			}
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -353,27 +372,26 @@ public class ElectricityElementPanel extends ElementPanel
 							ElectricityUnits.convertFlow(element.getMaxElectricityInput(), 
 									element, this)), JLabel.RIGHT), 
 									electricityUnits + "/" + electricityTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Max Electricity Input", 
-					maxElectricityInputText,
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Initial Electricity Input", 
-					initialElectricityInputText, 
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Distribution Efficiency",
-					distributionEfficiencyText, 
-					electricityUnits + "/" + electricityUnits,
-					"  max: ", maxOutputLabel,
-					electricityUnits + "/" + electricityTimeUnits);
-			addInput(elementPanel, c, "Variable Cost of Distribution",
-					variableOperationsCostOfElectricityDistributionText,
-					currencyUnits + "/" + electricityUnits,
-					"  max: ", maxVariableCostDistLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Max Electricity Input", 
+						maxElectricityInputText,
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Initial Electricity Input", 
+						initialElectricityInputText, 
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Distribution Efficiency",
+						distributionEfficiencyText, 
+						electricityUnits + "/" + electricityUnits,
+						"  max: ", maxOutputLabel,
+						electricityUnits + "/" + electricityTimeUnits);
+				addInput(elementPanel, c, "Variable Cost of Distribution",
+						variableOperationsCostOfElectricityDistributionText,
+						currencyUnits + "/" + electricityUnits,
+						"  max: ", maxVariableCostDistLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+			}
 		}
 
-		// set input enabled state
 		maxElectricityProductionText.setEnabled(element.getTemplateName() == null);
 		petroleumIntensityOfElectricityProductionText.setEnabled(element.getTemplateName() == null);
 		waterIntensityOfElectricityProductionText.setEnabled(element.getTemplateName() == null);
@@ -383,65 +401,41 @@ public class ElectricityElementPanel extends ElementPanel
 		variableOperationsCostOfElectricityDistributionText.setEnabled(element.getTemplateName() == null);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;

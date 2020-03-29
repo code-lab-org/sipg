@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.agriculture;
 
 import java.awt.Color;
@@ -25,7 +40,9 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class AgricultureElementPanel.
+ * An implementation of the element panel class for the agriculture sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class AgricultureElementPanel extends ElementPanel 
 		implements WaterUnitsOutput, CurrencyUnitsOutput, FoodUnitsOutput {
@@ -58,10 +75,12 @@ public class AgricultureElementPanel extends ElementPanel
 	 *
 	 * @param scenario the scenario
 	 * @param element the element
+	 * @param detailed the detailed
 	 */
 	public AgricultureElementPanel(Scenario scenario, 
-			final EditableAgricultureElement element) {
-		super(scenario, element);
+			final EditableAgricultureElement element, 
+			boolean detailed) {
+		super(scenario, element, detailed);
 		
 		final AgricultureElementPanel thisPanel = this;
 		
@@ -336,25 +355,25 @@ public class AgricultureElementPanel extends ElementPanel
 					new JLabel(NumberFormat.getNumberInstance().format(
 							element.getMaxLandArea() *
 							element.getLaborIntensityOfLandUsed()), JLabel.RIGHT), "people");
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Maximum Land Area", 
-					maxLandAreaText, "km^2");
-			addInput(elementPanel, c, "Initial Land Area", 
-					initialLandAreaText, "km^2");
-			addInput(elementPanel, c, "Specific Food Yield", 
-					foodIntensityText, 	
-					foodUnits + "/" + foodTimeUnits + "/km^2",
-					"  max: ", 
-					maxYieldLabel, foodUnits + "/" + foodTimeUnits);
-			addInput(elementPanel, c, "Variable Operations Cost", 
-					costIntensityText, currencyUnits + "/km^2",
-					"  max: ", 
-					maxVariableCostLabel, currencyUnits + "/" + currencyTimeUnits);
-			addInput(elementPanel, c, "Specific Water Consumption", 
-					waterIntensityText, waterUnits + "/km^2",
-					"  max: ", 
-					maxWaterUseLabel, waterUnits + "/" + waterTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Maximum Land Area", 
+						maxLandAreaText, "km^2");
+				addInput(elementPanel, c, "Initial Land Area", 
+						initialLandAreaText, "km^2");
+				addInput(elementPanel, c, "Specific Food Yield", 
+						foodIntensityText, 	
+						foodUnits + "/" + foodTimeUnits + "/km^2",
+						"  max: ", 
+						maxYieldLabel, foodUnits + "/" + foodTimeUnits);
+				addInput(elementPanel, c, "Variable Operations Cost", 
+						costIntensityText, currencyUnits + "/km^2",
+						"  max: ", 
+						maxVariableCostLabel, currencyUnits + "/" + currencyTimeUnits);
+				addInput(elementPanel, c, "Specific Water Consumption", 
+						waterIntensityText, waterUnits + "/km^2",
+						"  max: ", 
+						maxWaterUseLabel, waterUnits + "/" + waterTimeUnits);
+			}
 		}
 		if(element.getTemplateName() == null 
 				|| scenario.getTemplate(element.getTemplateName()) == null
@@ -366,24 +385,23 @@ public class AgricultureElementPanel extends ElementPanel
 							FoodUnits.convertFlow(element.getMaxFoodInput(), 
 									element, this)), JLabel.RIGHT), 
 									foodUnits + "/" + foodTimeUnits);
-			/* TODO removed temporarily
-			addInput(elementPanel, c, "Maximum Food Input", 
-					maxFoodInput, foodUnits + "/" + foodTimeUnits);
-			addInput(elementPanel, c, "Initial Food Input", 
-			  		initialFoodInput, foodUnits + "/" + foodTimeUnits);
-			addInput(elementPanel, c, "Distribution Efficiency", 
-					distributionEfficiency, foodUnits + "/" + foodUnits,
-					"  max: ", maxOutputLabel, 
-					foodUnits + "/" + foodTimeUnits);
-			addInput(elementPanel, c, "Variable Operations Cost", 
-					variableOperationsCostOfFoodDistribution, 
-					currencyUnits + "/" + foodUnits,
-					"  max: ", maxVariableCostDistLabel,
-					currencyUnits + "/" + currencyTimeUnits);
-			*/
+			if(detailed) {
+				addInput(elementPanel, c, "Maximum Food Input", 
+						maxFoodInput, foodUnits + "/" + foodTimeUnits);
+				addInput(elementPanel, c, "Initial Food Input", 
+				  		initialFoodInput, foodUnits + "/" + foodTimeUnits);
+				addInput(elementPanel, c, "Distribution Efficiency", 
+						distributionEfficiency, foodUnits + "/" + foodUnits,
+						"  max: ", maxOutputLabel, 
+						foodUnits + "/" + foodTimeUnits);
+				addInput(elementPanel, c, "Variable Operations Cost", 
+						variableOperationsCostOfFoodDistribution, 
+						currencyUnits + "/" + foodUnits,
+						"  max: ", maxVariableCostDistLabel,
+						currencyUnits + "/" + currencyTimeUnits);
+			}
 		}
 
-		// set input enabled state
 		maxLandAreaText.setEnabled(element.getTemplateName() == null);
 		maxFoodInput.setEnabled(element.getTemplateName() == null);
 		costIntensityText.setEnabled(element.getTemplateName() == null);
@@ -394,49 +412,31 @@ public class AgricultureElementPanel extends ElementPanel
 		variableOperationsCostOfFoodDistribution.setEnabled(element.getTemplateName() == null);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
