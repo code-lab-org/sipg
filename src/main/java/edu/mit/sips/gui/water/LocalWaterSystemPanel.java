@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.water;
 
 import java.awt.Color;
@@ -5,24 +20,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.BoxLayout;
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.jfree.data.time.TimeSeriesCollection;
 import org.jfree.data.xy.DefaultTableXYDataset;
 import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Country;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.UpdateEvent;
-import edu.mit.sips.gui.base.LinearIndicatorPanel;
 import edu.mit.sips.gui.base.SpatialStatePanel;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.util.CurrencyUnits;
@@ -34,17 +44,23 @@ import edu.mit.sips.sim.util.WaterUnits;
 import edu.mit.sips.sim.util.WaterUnitsOutput;
 
 /**
- * The Class LocalWaterSystemPanel.
+ * A water system panel suitable for locally-controlled systems.
+ * 
+ * @author Paul T. Grogan
  */
 public class LocalWaterSystemPanel extends WaterSystemPanel
 implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {	
 	private static final long serialVersionUID = -3665986046863585665L;
-	
-	private final LinearIndicatorPanel localWaterIndicatorPanel, 
-	waterAquiferIndicatorPanel, renewableWaterIndicatorPanel;
+	private static final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
+	private static final TimeUnits currencyTimeUnits = TimeUnits.year;
+	private static final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
+	private static final TimeUnits electricityTimeUnits = TimeUnits.year;
+	private static final WaterUnits waterUnits = WaterUnits.km3;
+	private static final TimeUnits waterTimeUnits = TimeUnits.year;
+
+	private final WaterSystem.Local waterSystem;
 	private final List<LocalWaterSystemPanel> nestedPanels = 
 			new ArrayList<LocalWaterSystemPanel>();
-	
 	private final SpatialStatePanel waterStatePanel;
 
 	DefaultTableXYDataset waterSourceAggregatedData = new DefaultTableXYDataset();
@@ -60,23 +76,6 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	DefaultTableXYDataset netCashFlow = new DefaultTableXYDataset();
 	DefaultTableXYDataset cumulativeBalance = new DefaultTableXYDataset();
 	
-	DefaultTableXYDataset capitalExpense = new DefaultTableXYDataset();
-	DefaultTableXYDataset capitalExpenseTotal = new DefaultTableXYDataset();
-	DefaultTableXYDataset cumulativeCapitalExpense = new DefaultTableXYDataset();
-	
-	TimeSeriesCollection localWaterData = new TimeSeriesCollection();
-	TimeSeriesCollection waterProductCostData = new TimeSeriesCollection();
-	TimeSeriesCollection waterSupplyProfitData = new TimeSeriesCollection();
-	TimeSeriesCollection renewableWaterData = new TimeSeriesCollection();
-	TimeSeriesCollection waterConsumptionPerCapita = new TimeSeriesCollection();
-	
-	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
-	private final TimeUnits currencyTimeUnits = TimeUnits.year;
-	private final ElectricityUnits electricityUnits = ElectricityUnits.TWh;
-	private final TimeUnits electricityTimeUnits = TimeUnits.year;
-	private final WaterUnits waterUnits = WaterUnits.km3;
-	private final TimeUnits waterTimeUnits = TimeUnits.year;
-
 	/**
 	 * Instantiates a new local water system panel.
 	 *
@@ -84,33 +83,17 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 	 */
 	public LocalWaterSystemPanel(WaterSystem.Local waterSystem) {
 		super(waterSystem);
-		
-		JPanel indicatorsPanel = new JPanel();
-		indicatorsPanel.setLayout(
-				new BoxLayout(indicatorsPanel, BoxLayout.LINE_AXIS));
-		localWaterIndicatorPanel = new LinearIndicatorPanel(
-				"Water Independence", 0, 1);
-		indicatorsPanel.add(localWaterIndicatorPanel);
-		waterAquiferIndicatorPanel = new LinearIndicatorPanel(
-				"Water Aquifer", 0, WaterUnits.convertStock(
-						waterSystem.getMaxAquiferVolume(), 
-						waterSystem, this));
-		indicatorsPanel.add(waterAquiferIndicatorPanel);
-		renewableWaterIndicatorPanel = new LinearIndicatorPanel(
-				"Renewable Water", 0, 1);
-		indicatorsPanel.add(renewableWaterIndicatorPanel);
-		// addTab("Indicators", Icons.INDICATORS, indicatorsPanel);
-		
+		this.waterSystem = waterSystem;
+				
 		List<String> revenueNames;
 		if(!(getSociety() instanceof Country)) {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
-					"Decommission Expense", /*"Input Expense", */"Distribution Expense", 
-					"Import Expense", "Distribution Revenue", /*"Export Revenue", */
+					"Decommission Expense", "Distribution Expense", 
+					"Import Expense", "Distribution Revenue", 
 					"Domestic Revenue");
 		} else {
 			revenueNames = Arrays.asList("Capital Expense", "Operations Expense", 
-					"Decommission Expense", /*"Input Expense", */"Import Expense", 
-					/*"Export Revenue",*/ "Domestic Revenue");
+					"Decommission Expense", "Import Expense", "Domestic Revenue");
 		}
 		for(String name : revenueNames) {
 			cashFlow.addSeries(new XYSeries(name, true, false));
@@ -124,24 +107,16 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			nationalPane = this;
 		}
 		
-		if(getWaterSystem() instanceof LocalWaterSoS) {
+		if(waterSystem instanceof LocalWaterSoS) {
 			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
-					getWaterSystem().getName() + " Net Revenue",
+					waterSystem.getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow,
 							"Cumulative Net Revenue (" + getCurrencyUnits() + ")",
 							cumulativeBalance));
-			/* temporarily removed
-			addTab("Investment", Icons.INVESTMENT, createStackedAreaChart(
-					"Annual Investment (" + getCurrencyUnits() + ")", capitalExpense, 
-					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()), 
-					capitalExpenseTotal,
-					"Cumulative Investment (" + getCurrencyUnits() + ")", 
-					cumulativeCapitalExpense));
-			*/
 		} else {
 			nationalPane.addTab("Net Revenue", Icons.REVENUE, createStackedAreaChart(
-					getWaterSystem().getName() + " Net Revenue",
+					waterSystem.getName() + " Net Revenue",
 					"Annual Net Revenue (" + currencyUnits + "/" + currencyTimeUnits + ")", cashFlow, 
 							PlottingUtils.getCashFlowColors(revenueNames), netCashFlow));
 		}
@@ -166,15 +141,15 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		for(String name : waterSourceDisaggregatedNames) {
 			waterSourceDisaggregatedData.addSeries(new XYSeries(name, true, false));
 		}
-		if(getWaterSystem() instanceof LocalWaterSoS) {
+		if(waterSystem instanceof LocalWaterSoS) {
 			nationalPane.addTab("Source", Icons.WATER_SOURCE, createToggleableStackedAreaChart(
-					getWaterSystem().getName() + " Source",
+					waterSystem.getName() + " Source",
 					"Water Source (" + waterUnits + "/" + waterTimeUnits + ")", 
 					waterSourceAggregatedData, PlottingUtils.getResourceColors(waterSourceAggregatedNames),
 					waterSourceDisaggregatedData, PlottingUtils.getResourceColors(waterSourceDisaggregatedNames)));
 		} else {
 			nationalPane.addTab("Source", Icons.WATER_SOURCE, createStackedAreaChart(
-					getWaterSystem().getName() + " Source",
+					waterSystem.getName() + " Source",
 					"Water Source (" + waterUnits + "/" + waterTimeUnits + ")", 
 					waterSourceAggregatedData, PlottingUtils.getResourceColors(waterSourceAggregatedNames)));
 		}
@@ -185,29 +160,27 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			for(Society society : getSociety().getNestedSocieties()) {
 				waterUseDisaggregatedNames.add(society.getName());
 			}
-			// waterUseNames.add("Losses");
 		}
 		waterUseAggregatedNames.add(getSociety().getName() + " Society");
 		waterUseAggregatedNames.add("Agriculture Operations");
-		if(!(getWaterSystem() instanceof LocalWaterSoS)) {
+		if(!(waterSystem instanceof LocalWaterSoS)) {
 			waterUseAggregatedNames.add("Out-Distribution");
 		}
-		//waterUseNames.add("Electricity Operations");
 		for(String name : waterUseAggregatedNames) {
 			waterUseAggregatedData.addSeries(new XYSeries(name, true, false));
 		}
 		for(String name : waterUseDisaggregatedNames) {
 			waterUseDisaggregatedData.addSeries(new XYSeries(name, true, false));
 		}
-		if(getWaterSystem() instanceof LocalWaterSoS) {
+		if(waterSystem instanceof LocalWaterSoS) {
 			nationalPane.addTab("Use", Icons.WATER_USE, createToggleableStackedAreaChart(
-					getWaterSystem().getName() + " Use",
+					waterSystem.getName() + " Use",
 					"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", 
 					waterUseAggregatedData, PlottingUtils.getResourceColors(waterUseAggregatedNames), 
 					waterUseDisaggregatedData, PlottingUtils.getResourceColors(waterUseDisaggregatedNames)));
 		} else {
 			nationalPane.addTab("Use", Icons.WATER_USE, createStackedAreaChart(
-					getWaterSystem().getName() + " Use",
+					waterSystem.getName() + " Use",
 					"Water Use (" + waterUnits + "/" + waterTimeUnits + ")", 
 					waterUseAggregatedData, PlottingUtils.getResourceColors(waterUseAggregatedNames)));
 		}
@@ -221,30 +194,19 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		}
 		electricityUseAggregatedNames.add(getSociety().getName() + " Operations");
 		electricityUseAggregatedNames.add("Private Operations");
-		if(getWaterSystem() instanceof LocalWaterSoS) {
+		if(waterSystem instanceof LocalWaterSoS) {
 			nationalPane.addTab("Use", Icons.ELECTRICITY_USE, createToggleableStackedAreaChart(
-					getWaterSystem().getName() + " Electricity Use",
+					waterSystem.getName() + " Electricity Use",
 					"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 					electricityUseAggregatedData, PlottingUtils.getResourceColors(electricityUseAggregatedNames),
 					electricityUseDisaggregatedData, PlottingUtils.getResourceColors(electricityUseDisaggregatedNames)));
 		} else {
 			nationalPane.addTab("Use", Icons.ELECTRICITY_USE, createStackedAreaChart(
-					getWaterSystem().getName() + " Electricity Use",
+					waterSystem.getName() + " Electricity Use",
 					"Electricity Use (" + electricityUnits + "/" + electricityTimeUnits + ")",
 					electricityUseAggregatedData, PlottingUtils.getResourceColors(electricityUseAggregatedNames)));
 		}
 
-		/* temporarily removed
-		addTab("Local", Icons.LOCAL, createTimeSeriesChart(
-				"Local Water Use Fraction (-)", localWaterData)); */
-		/* temporarily removed
-		addTab("Renewable", Icons.RENEWABLE, createTimeSeriesChart(
-				"Renewable Water Fraction (-)", 
-				renewableWaterData));
-		addTab("Consumption", Icons.CONSUMPTION, createTimeSeriesChart(
-				"Water Consumption per Capita (" + WaterUnits.L 
-				+ "/" + TimeUnits.day + ")", 
-				waterConsumptionPerCapita));*/
 		List<Color> societyColors = new ArrayList<Color>();
 		if(getSociety() instanceof Country) {
 			for(Society society : getSociety().getNestedSocieties()) {
@@ -254,17 +216,9 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 			societyColors.add(PlottingUtils.getSocietyColor(getSociety()));
 		}
 		nationalPane.addTab("Aquifer", Icons.WATER_RESERVOIR, createStackedAreaChart(
-				getWaterSystem().getName() + " Aquifer",
+				waterSystem.getName() + " Aquifer",
 				"Water Aquifer Volume (" + waterUnits + ")", 
 				waterAquiferDataset, societyColors.toArray(new Color[0])));
-		/* TODO
-		addTab("Production Cost", Icons.COST_PRODUCTION, createTimeSeriesChart(
-				"Unit Production Cost (SAR/m^3)", 
-				waterProductCostData));
-		addTab("Supply Profit", Icons.COST_SUPPLY, createTimeSeriesChart(
-				"Unit Supply Profit (SAR/m^3)", 
-				waterSupplyProfitData));
-		*/
 		
 		waterStatePanel = new SpatialStatePanel(
 				waterSystem.getSociety(), new WaterStateProvider());
@@ -298,37 +252,24 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 				regionalData.addTab(nestedSystem.getSociety().getName(), 
 						Icons.CITY, nestedPanel);
 			}
-			// addTab("Regions", Icons.INFRASTRUCTURE, regionalData);
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
@@ -348,38 +289,21 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		}
 		return systems;
 	}
-	
-	/**
-	 * Gets the water system.
-	 *
-	 * @return the water system
-	 */
-	public WaterSystem.Local getWaterSystem() {
-		return (WaterSystem.Local) getInfrastructureSystem();
-	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
+	/**
+	 * Initialize.
+	 */
 	private void initialize() {
-		localWaterData.removeAllSeries();
-		renewableWaterData.removeAllSeries();
-		waterProductCostData.removeAllSeries();
-		waterSupplyProfitData.removeAllSeries();
-		waterConsumptionPerCapita.removeAllSeries();
 		waterAquiferDataset.removeAllSeries();
 		waterUseAggregatedData.removeAllSeries();
 		waterUseDisaggregatedData.removeAllSeries();
@@ -390,25 +314,15 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		cashFlow.removeAllSeries();
 		netCashFlow.removeAllSeries();
 		cumulativeBalance.removeAllSeries();
-		capitalExpense.removeAllSeries();
-		capitalExpenseTotal.removeAllSeries();
-		cumulativeCapitalExpense.removeAllSeries();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationCompleted(UpdateEvent event) {
-		// nothing to do here
 		for(LocalWaterSystemPanel nestedPanel : nestedPanels) {
 			nestedPanel.simulationCompleted(event);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		initialize();
@@ -418,9 +332,6 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		waterStatePanel.repaint();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
@@ -430,140 +341,87 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 		waterStatePanel.repaint();
 	}
 
+	/**
+	 * Update.
+	 *
+	 * @param year the year
+	 */
 	private void update(int year) {
-		/* temporarily removed
-		updateSeriesCollection(localWaterData, getWaterSystem().getSociety().getName(),
-				year, getWaterSystem().getLocalWaterFraction());
-		localWaterIndicatorPanel.setValue(getWaterSystem().getLocalWaterFraction());
-		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-			updateSeriesCollection(localWaterData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getLocalWaterFraction());
-		}
-
-		updateSeriesCollection(renewableWaterData, getSociety().getName(), 
-				year, getWaterSystem().getRenewableWaterFraction());
-		renewableWaterIndicatorPanel.setValue(getWaterSystem().getRenewableWaterFraction());
-		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-				updateSeriesCollection(renewableWaterData, nestedSystem.getSociety().getName(), 
-						year, nestedSystem.getRenewableWaterFraction());
-		}
-
-		updateSeriesCollection(waterProductCostData, getSociety().getName(), 
-				year, getWaterSystem().getUnitProductionCost());
-		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-			updateSeriesCollection(waterProductCostData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getUnitProductionCost());
-		}
-		
-		updateSeriesCollection(waterSupplyProfitData, getSociety().getName(), 
-				year, getWaterSystem().getUnitSupplyProfit());
-		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
-			updateSeriesCollection(waterSupplyProfitData, nestedSystem.getSociety().getName(), 
-					year, nestedSystem.getUnitSupplyProfit());
-		}
-
-		if(getSociety().getSocialSystem().getPopulation() > 0) {
-			updateSeriesCollection(waterConsumptionPerCapita, getSociety().getName(), year, 
-					DefaultUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
-							getSociety().getSocialSystem().getWaterUnits(),
-							getSociety().getSocialSystem().getWaterTimeUnits(),
-							WaterUnits.L, TimeUnits.day)
-							/ getSociety().getSocialSystem().getPopulation());
-			for(Society nestedSociety : getSociety().getNestedSocieties()) {
-				if(nestedSociety.getSocialSystem().getPopulation() > 0) {
-					updateSeriesCollection(waterConsumptionPerCapita, nestedSociety.getName(), year, 
-							DefaultUnits.convertFlow(nestedSociety.getSocialSystem().getWaterConsumption(),
-									nestedSociety.getSocialSystem().getWaterUnits(),
-									nestedSociety.getSocialSystem().getWaterTimeUnits(),
-									WaterUnits.L, TimeUnits.day)
-									/ nestedSociety.getSocialSystem().getPopulation());
-				}
-			}
-		}
-
-		waterAquiferIndicatorPanel.setValue(WaterUnits.convertStock(
-				getWaterSystem().getWaterReservoirVolume(), getWaterSystem(), this));
-		*/
-		
 		updateSeries(cashFlow, "Capital Expense", year, 
 				CurrencyUnits.convertFlow(
-						-getWaterSystem().getCapitalExpense(), 
-						getWaterSystem(), this));
+						-waterSystem.getCapitalExpense(), 
+						waterSystem, this));
 		updateSeries(cashFlow, "Operations Expense", year, 
 				CurrencyUnits.convertFlow(
-						-getWaterSystem().getOperationsExpense()
-						-getWaterSystem().getConsumptionExpense(), 
-						getWaterSystem(), this));
+						-waterSystem.getOperationsExpense()
+						-waterSystem.getConsumptionExpense(), 
+						waterSystem, this));
 		updateSeries(cashFlow, "Decommission Expense", year, 
 				CurrencyUnits.convertFlow(
-						-getWaterSystem().getDecommissionExpense(), 
-						getWaterSystem(), this));
-		/*updateSeries(waterRevenue, "Consumption", year, 
-				WaterUnits.convertFlow(
-						-getWaterSystem().getConsumptionExpense(), 
-						getWaterSystem(), this));*/
-		if(!(getWaterSystem().getSociety() instanceof Country)) {
+						-waterSystem.getDecommissionExpense(), 
+						waterSystem, this));
+		if(!(waterSystem.getSociety() instanceof Country)) {
 			updateSeries(cashFlow, "Distribution Expense", year, 
 					CurrencyUnits.convertFlow(
-							-getWaterSystem().getDistributionExpense(), 
-							getWaterSystem(), this));
+							-waterSystem.getDistributionExpense(), 
+							waterSystem, this));
 		}
 		updateSeries(cashFlow, "Import Expense", year, 
 				CurrencyUnits.convertFlow(
-						-getWaterSystem().getImportExpense(), 
-						getWaterSystem(), this));
-		if(!(getWaterSystem().getSociety() instanceof Country)) {
+						-waterSystem.getImportExpense(), 
+						waterSystem, this));
+		if(!(waterSystem.getSociety() instanceof Country)) {
 			updateSeries(cashFlow, "Distribution Revenue", year, 
 					CurrencyUnits.convertFlow(
-							-getWaterSystem().getDistributionExpense(), 
-							getWaterSystem(), this));
+							-waterSystem.getDistributionExpense(), 
+							waterSystem, this));
 		}
 		updateSeries(cashFlow, "Domestic Revenue", year, 
 				CurrencyUnits.convertFlow(
-						getWaterSystem().getSalesRevenue(), 
-						getWaterSystem(), this));
+						waterSystem.getSalesRevenue(), 
+						waterSystem, this));
 		updateSeries(netCashFlow, "Net Revenue", year, 
-				CurrencyUnits.convertFlow(getWaterSystem().getCashFlow(),
-						getWaterSystem(), this));
+				CurrencyUnits.convertFlow(waterSystem.getCashFlow(),
+						waterSystem, this));
 		updateSeries(cumulativeBalance, "Cumulative Net Revenue", year, 
-				CurrencyUnits.convertFlow(getWaterSystem().getCumulativeCashFlow(),
-						getWaterSystem(), this));
+				CurrencyUnits.convertFlow(waterSystem.getCumulativeCashFlow(),
+						waterSystem, this));
 		
 		updateSeries(waterSourceAggregatedData, "Production", year, 
-				WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
-						getWaterSystem(), this));
+				WaterUnits.convertFlow(waterSystem.getWaterProduction(), 
+						waterSystem, this));
 		updateSeries(waterSourceAggregatedData, "Private Operations", year, 
-				WaterUnits.convertFlow(getWaterSystem().getWaterFromPrivateProduction(), 
-						getWaterSystem(), this));
+				WaterUnits.convertFlow(waterSystem.getWaterFromPrivateProduction(), 
+						waterSystem, this));
 		updateSeries(waterUseAggregatedData, "Society", year, 
 				WaterUnits.convertFlow(getSociety().getSocialSystem().getWaterConsumption(),
 						getSociety().getSocialSystem(), this));
 		updateSeries(waterUseAggregatedData, "Agriculture Operations", year, 
 				WaterUnits.convertFlow(getSociety().getAgricultureSystem().getWaterConsumption(), 
 						getSociety().getAgricultureSystem(), this));
-		if(getWaterSystem() instanceof LocalWaterSoS) {
+		if(waterSystem instanceof LocalWaterSoS) {
 			for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterAquiferDataset, nestedSystem.getSociety().getName(), year, 
 						WaterUnits.convertFlow(nestedSystem.getWaterReservoirVolume(), 
-								getWaterSystem(), this));
+								waterSystem, this));
 			}
 		} else {
 			updateSeries(waterSourceAggregatedData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(), 
-							getWaterSystem(), this));
+					WaterUnits.convertFlow(waterSystem.getWaterInDistribution(), 
+							waterSystem, this));
 			updateSeries(waterUseAggregatedData, "Distribution", year,
-					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
-							getWaterSystem(), this));
+					WaterUnits.convertFlow(waterSystem.getWaterOutDistribution(), 
+							waterSystem, this));
 			updateSeries(waterAquiferDataset, "Aquifer", year, 
-					WaterUnits.convertStock(getWaterSystem().getWaterReservoirVolume(), 
-							getWaterSystem(), this));
+					WaterUnits.convertStock(waterSystem.getWaterReservoirVolume(), 
+							waterSystem, this));
 		}
 		updateSeries(electricityUseAggregatedData, "Operations", year, 
-				ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPublicProduction(),
-						getWaterSystem(), this));
+				ElectricityUnits.convertFlow(waterSystem.getElectricityConsumptionFromPublicProduction(),
+						waterSystem, this));
 		updateSeries(electricityUseAggregatedData, "Private Operations", year, 
-				ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
-						getWaterSystem(), this));
+				ElectricityUnits.convertFlow(waterSystem.getElectricityConsumptionFromPrivateProduction(),
+						waterSystem, this));
 		for(WaterSystem.Local nestedSystem : getNestedWaterSystems()) {
 				updateSeries(waterSourceDisaggregatedData, nestedSystem.getSociety().getName(), year,
 						WaterUnits.convertFlow(nestedSystem.getTotalWaterSupply()
@@ -578,46 +436,11 @@ implements CurrencyUnitsOutput, WaterUnitsOutput, ElectricityUnitsOutput {
 						ElectricityUnits.convertFlow(nestedSystem.getElectricityConsumption(),
 								nestedSystem, this));
 		}
-		/*updateSeries(waterSourceData, "Production", year, 
-				WaterUnits.convertFlow(getWaterSystem().getWaterProduction(), 
-						getWaterSystem(), this));*/
-
-		/*if(!getWaterSystem().getExternalElements().isEmpty()) {
-			updateSeries(waterUseData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterOutDistribution(), 
-							getWaterSystem(), this));
-			updateSeries(waterSourceData, "Distribution", year, 
-					WaterUnits.convertFlow(getWaterSystem().getWaterInDistribution(),
-							getWaterSystem(), this));
-		}*/
 		updateSeries(waterSourceAggregatedData, "Import", year, 
-				WaterUnits.convertFlow(getWaterSystem().getWaterImport(), 
-						getWaterSystem(), this));
+				WaterUnits.convertFlow(waterSystem.getWaterImport(), 
+						waterSystem, this));
 		updateSeries(waterSourceDisaggregatedData, "Import", year, 
-				WaterUnits.convertFlow(getWaterSystem().getWaterImport(), 
-						getWaterSystem(), this));
-
-		/*updateSeries(electricityUseData, "Private Operations", year, 
-				ElectricityUnits.convertFlow(getWaterSystem().getElectricityConsumptionFromPrivateProduction(),
-						getWaterSystem(), this));
-		updateSeries(waterUseData, "Electricity Operations", year, 
-				WaterUnits.convertFlow(getSociety().getElectricitySystem().getWaterConsumption(), 
-						getSociety().getElectricitySystem(), this));*/
-		
-		if(getWaterSystem() instanceof LocalWaterSoS) {
-			for(InfrastructureSystem nestedSystem : getNestedWaterSystems()) {
-				updateSeries(capitalExpense, nestedSystem.getName(), year, 
-						CurrencyUnits.convertFlow(nestedSystem.getCapitalExpense(), 
-								nestedSystem, this));
-			}
-			updateSeries(capitalExpenseTotal, "Total Investment", year, 
-					CurrencyUnits.convertFlow(
-							((LocalWaterSoS)getWaterSystem())
-							.getCapitalExpense(), getSociety(), this));
-			updateSeries(cumulativeCapitalExpense, "Cumulative Investment", year, 
-					CurrencyUnits.convertFlow(
-							((LocalWaterSoS)getWaterSystem())
-							.getCumulativeCapitalExpense(), getSociety(), this));
-		}
+				WaterUnits.convertFlow(waterSystem.getWaterImport(), 
+						waterSystem, this));
 	}
 }

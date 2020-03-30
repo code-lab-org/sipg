@@ -22,7 +22,7 @@ import edu.mit.sips.gui.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**
- * A basic implementation of the agriculture system panel interface.
+ * A basic agriculture system panel suitable for externally-controlled systems.
  * 
  * @author Paul T. Grogan
  */
@@ -65,18 +65,6 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 		waterConsumption.removeAllSeries();
 	}
 
-	/**
-	 * Update.
-	 *
-	 * @param year the year
-	 */
-	private void update(int year) {
-		updateSeries(agricultureRevenue, "Revenue", year, 
-				getAgricultureSystem().getCashFlow());
-		updateSeries(waterConsumption, "Consumption", year, 
-				getAgricultureSystem().getWaterConsumption());
-	}
-
 	@Override
 	public void simulationCompleted(UpdateEvent event) { }
 
@@ -88,5 +76,17 @@ public class BasicAgricultureSystemPanel extends AgricultureSystemPanel {
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		update((int)event.getTime());
+	}
+
+	/**
+	 * Update.
+	 *
+	 * @param year the year
+	 */
+	private void update(int year) {
+		updateSeries(agricultureRevenue, "Revenue", year, 
+				getAgricultureSystem().getCashFlow());
+		updateSeries(waterConsumption, "Consumption", year, 
+				getAgricultureSystem().getWaterConsumption());
 	}
 }

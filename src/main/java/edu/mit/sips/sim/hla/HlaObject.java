@@ -233,9 +233,6 @@ public abstract class HlaObject {
 				getObjectClassHandle(), getAttributeHandleSet());
 	}
 	
-	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return getInstanceName() + " (" + getObjectInstanceHandle() + ")";

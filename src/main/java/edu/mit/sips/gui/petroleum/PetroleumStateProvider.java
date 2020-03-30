@@ -14,24 +14,20 @@ import edu.mit.sips.sim.util.OilUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class PetroleumStateProvider.
+ * An implementation of the spatial state provider for the petroleum sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOutput {
 	private final OilUnits oilUnits = OilUnits.Mtoe;
 	private final TimeUnits oilTimeUnits = TimeUnits.year;
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getConsumption(Society society) {
 		return OilUnits.convertFlow(
 				society.getTotalPetroleumDemand(), society, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getDistributionIn(edu.mit.sips.Society, edu.mit.sips.Society)
-	 */
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
@@ -49,9 +45,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getDistributionOut(edu.mit.sips.Society, edu.mit.sips.Society)
-	 */
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
@@ -75,9 +68,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getElements(edu.mit.sips.Society)
-	 */
 	@Override
 	public List<PetroleumElement> getElements(Society society) {
 		List<PetroleumElement> elements = new ArrayList<PetroleumElement>();
@@ -91,9 +81,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return elements;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getExport(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getExport(Society society) {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
@@ -105,9 +92,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getImport(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getImport(Society society) {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
@@ -119,9 +103,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getInput(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getInput(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
@@ -133,9 +114,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getNetFlow(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getNetFlow(Society society) {
 		if(society.getPetroleumSystem() instanceof PetroleumSystem.Local) {
@@ -150,9 +128,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherDistributionIn(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
@@ -170,9 +145,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherDistributionOut(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
@@ -190,25 +162,16 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherProduction(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherProduction(Society society) {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherProductionLabel()
-	 */
 	@Override
 	public String getOtherProductionLabel() {
 		return "";
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getOutput(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getOutput(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
@@ -220,9 +183,6 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getProduction(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getProduction(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
@@ -234,17 +194,11 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getUnits()
-	 */
 	@Override
 	public String getUnits() {
 		return oilUnits.getAbbreviation();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isDistribution(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public boolean isDistribution(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
@@ -254,33 +208,21 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#isExportAllowed()
-	 */
 	@Override
 	public boolean isExportAllowed() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#isImportAllowed()
-	 */
 	@Override
 	public boolean isImportAllowed() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isOtherProductionAllowed()
-	 */
 	@Override
 	public boolean isOtherProductionAllowed() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isProduction(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public boolean isProduction(InfrastructureElement element) {
 		if(element instanceof PetroleumElement) {
@@ -290,17 +232,11 @@ public class PetroleumStateProvider implements SpatialStateProvider, OilUnitsOut
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;

@@ -153,97 +153,61 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 				petroleumExportPrice);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
-	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
-	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getElectricityConsumption()
-	 */
 	@Override
 	public double getElectricityConsumption() {
 		return electricityConsumption.getValue();
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
-	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumDomesticPrice()
-	 */
 	@Override
 	public double getPetroleumDomesticPrice() {
 		return petroleumDomesticPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumExportPrice()
-	 */
 	@Override
 	public double getPetroleumExportPrice() {
 		return petroleumExportPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.petroleum.PetroleumSystem#getPetroleumImportPrice()
-	 */
 	@Override
 	public double getPetroleumImportPrice() {
 		return petroleumImportPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
-	 */
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);

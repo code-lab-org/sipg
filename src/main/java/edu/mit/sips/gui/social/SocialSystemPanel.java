@@ -73,28 +73,6 @@ public class SocialSystemPanel extends InfrastructureSystemPanel implements Curr
 				"Annual Capital Expenses (" + getCurrencyUnits() + ")", capitalExpense, 
 				PlottingUtils.getSystemColors(getSociety().getInfrastructureSystems()),
 				capitalExpenseTotal));
-
-		/* temporarily removed
-		if(getSociety() instanceof Country) {
-			addTab("Population", Icons.POPULATION, createStackedAreaChart(
-					"Population", populationDataset, 
-					PlottingUtils.getSocietyColors(getSociety().getNestedSocieties()),
-					populationTotalDataset));
-		} else {
-			addTab("Population", Icons.POPULATION, createSingleLineChart(
-					"Population", populationTotalDataset));
-		}
-		addTab("System Cash Flow", Icons.REVENUE, createStackedAreaChart(
-				"Cash Flow (" + getCurrencyUnits() 
-				+ "/" + getCurrencyTimeUnits() + ")", 
-				infrastructureSystemRevenue, null, infrastructureSystemNetRevenue));
-		if(getSocialSystem() instanceof SocialSoS) {
-			addTab("Regional Cash Flow", Icons.REVENUE, createStackedAreaChart(
-					"Cash Flow (" + getCurrencyUnits() 
-					+ "/" + getCurrencyTimeUnits() + ")", 
-					societyRevenue, null, societyNetRevenue));
-		}
-		*/
 	}
 
 	@Override

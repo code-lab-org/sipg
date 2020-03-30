@@ -170,137 +170,86 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 				population);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
-	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
-	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getElectricityConsumption()
-	 */
 	@Override
 	public double getElectricityConsumption() {
 		return electricityConsumption.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityTimeUnits()
-	 */
 	@Override
 	public TimeUnits getElectricityTimeUnits() {
 		return electricityTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.ElectricityUnitsOutput#getElectricityUnits()
-	 */
 	@Override
 	public ElectricityUnits getElectricityUnits() {
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getFoodConsumption()
-	 */
 	@Override
 	public double getFoodConsumption() {
 		return foodConsumption.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
-	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilTimeUnits()
-	 */
 	@Override
 	public TimeUnits getOilTimeUnits() {
 		return oilTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.OilUnitsOutput#getOilUnits()
-	 */
 	@Override
 	public OilUnits getOilUnits() {
 		return oilUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getPetroleumConsumption()
-	 */
 	@Override
 	public double getPetroleumConsumption() {
 		return petroleumConsumption.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getPopulation()
-	 */
 	@Override
 	public long getPopulation() {
 		return population.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.social.SocialSystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		return waterConsumption.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
-	 */
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);

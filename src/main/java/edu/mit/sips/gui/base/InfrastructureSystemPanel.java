@@ -76,7 +76,7 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	
 	private final InfrastructureSystem infrastructureSystem;
 	private final JFileChooser fileChooser = new JFileChooser();
-
+	
 	/**
 	 * Instantiates a new infrastructure system panel.
 	 *
@@ -197,11 +197,12 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	 * @param title the title
 	 * @param valueAxis the value axis
 	 * @param lineDataset the line dataset
+	 * @param colors the colors
 	 * @return the j panel
 	 */
 	protected JPanel createSingleLineChart(String title, String valueAxis,
-			TableXYDataset lineDataset) {
-		return createStackedAreaChart(title, valueAxis, null, null, lineDataset, null, null);
+			TableXYDataset lineDataset, Color[] colors) {
+		return createStackedAreaChart(title, valueAxis, null, colors, lineDataset, null, null);
 	}
 	
 	/**
@@ -346,42 +347,6 @@ public abstract class InfrastructureSystemPanel extends JTabbedPane implements U
 	protected JPanel createStackedAreaChart(final String title, final String valueAxis,
 			final TableXYDataset areaDataset, final TableXYDataset lineDataset) {
 		return createStackedAreaChart(title, valueAxis, areaDataset, null, lineDataset, null, null);
-	}
-	
-	/**
-	 * Creates the chart.
-	 *
-	 * @param title the title
-	 * @param valueAxis the value axis
-	 * @param seriesCollection the series collection
-	 * @return the j free chart
-	 */
-	protected JPanel createTimeSeriesChart(final String title, final String valueAxis, 
-			final TimeSeriesCollection seriesCollection) {
-		JFreeChart chart = ChartFactory.createTimeSeriesChart(
-				title, "Year", valueAxis, seriesCollection, 
-				true, false, false);
-		if(chart.getPlot() instanceof XYPlot) {
-			XYPlot xyPlot = (XYPlot) chart.getPlot();
-			xyPlot.setRenderer(new XYLineAndShapeRenderer());
-			xyPlot.setBackgroundPaint(Color.WHITE);
-			xyPlot.setDomainGridlinePaint(Color.GRAY);
-			xyPlot.setRangeGridlinePaint(Color.GRAY);
-		}
-		chart.setBackgroundPaint(new JPanel().getBackground());
-		ChartPanel chartPanel = new ChartPanel(chart);
-		
-		JPanel panel = new JPanel(new BorderLayout());
-		panel.add(chartPanel, BorderLayout.CENTER);
-		JButton exportAreaButton = new JButton(new AbstractAction("Export Data") {
-			private static final long serialVersionUID = -7171676288524836282L;
-
-			public void actionPerformed(ActionEvent e) {
-				exportDataset(valueAxis, seriesCollection);
-			}
-		});
-		panel.add(exportAreaButton, BorderLayout.SOUTH);
-		return panel;
 	}
 
 	/**

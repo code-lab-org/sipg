@@ -153,97 +153,61 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 				foodExportPrice);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
-	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
-	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodDomesticPrice()
-	 */
 	@Override
 	public double getFoodDomesticPrice() {
 		return foodDomesticPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodExportPrice()
-	 */
 	@Override
 	public double getFoodExportPrice() {
 		return foodExportPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getFoodImportPrice()
-	 */
 	@Override
 	public double getFoodImportPrice() {
 		return foodImportPrice.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
-	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.agriculture.AgricultureSystem#getWaterConsumption()
-	 */
 	@Override
 	public double getWaterConsumption() {
 		return waterConsumption.getValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterTimeUnits()
-	 */
 	@Override
 	public TimeUnits getWaterTimeUnits() {
 		return waterTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.WaterUnitsOutput#getWaterUnits()
-	 */
 	@Override
 	public WaterUnits getWaterUnits() {
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
-	 */
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);

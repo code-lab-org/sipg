@@ -196,25 +196,14 @@ public abstract class HlaInfrastructureSystem extends HlaObject implements Infra
 		capitalExpense.setValue(infrastructureSystem.getCapitalExpense()); // TODO using existing variable for capex
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.InfrastructureSystem#setSociety(edu.mit.sips.core.Society)
-	 */
 	@Override
 	public void setSociety(Society society) {
 		this.society = society;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tick()
-	 */
 	@Override
-	public void tick() {
-	}
+	public void tick() { }
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.core.SimEntity#tock()
-	 */
 	@Override
-	public void tock() {
-	}
+	public void tock() { }
 }

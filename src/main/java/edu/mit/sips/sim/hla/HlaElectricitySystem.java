@@ -149,17 +149,11 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 				electricityDomesticPrice);
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeNames()
-	 */
 	@Override
 	public String[] getAttributeNames() {
 		return ATTRIBUTES;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getAttributeValues()
-	 */
 	@Override
 	public Map<AttributeHandle, DataElement> getAttributeValues() {
 		return new HashMap<AttributeHandle,DataElement>(attributeValues);
@@ -180,9 +174,6 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 		return electricityUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAobject#getObjectClassName()
-	 */
 	@Override
 	public String getObjectClassName() {
 		return CLASS_NAME;
@@ -218,9 +209,6 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 		return waterUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.hla.HLAinfrastructureSystem#setAttributes(edu.mit.sips.core.InfrastructureSystem)
-	 */
 	@Override
 	public void setAttributes(InfrastructureSystem system) {
 		super.setAttributes(system);

@@ -176,9 +176,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#announceSynchronizationPoint(java.lang.String, byte[])
-	 */
 	@Override
 	public void announceSynchronizationPoint(String synchronizationPointLabel, byte[] userSuppliedTag)
 			throws FederateInternalError {
@@ -209,9 +206,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		initialized.set(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#connectionLost(java.lang.String)
-	 */
 	@Override
 	public void connectionLost(String faultDescription) throws FederateInternalError  {
 		logger.warn("RTI connection has been lost (fault = " 
@@ -235,18 +229,12 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		simulator.getConnection().setConnected(false);
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#discoverObjectInstance(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.ObjectClassHandle, java.lang.String)
-	 */
 	public void discoverObjectInstance(ObjectInstanceHandle theObject,
 			ObjectClassHandle theObjectClass, String objectName) {
 		logger.trace("Redirecting to common callback method.");
 		discoverObjectInstance(theObject, theObjectClass, objectName, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#discoverObjectInstance(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.ObjectClassHandle, java.lang.String)
-	 */
 	public void discoverObjectInstance(ObjectInstanceHandle theObject,
 			ObjectClassHandle theObjectClass, String objectName,
 			FederateHandle producingFederate) {
@@ -297,9 +285,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		}
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#federationNotSaved(hla.rti1516e.SaveFailureReason)
-	 */
 	@Override
 	public void federationNotSaved(SaveFailureReason reason)
 			throws FederateInternalError {
@@ -308,36 +293,24 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		saveCompleted.set(false);
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#federationRestoreBegun()
-	 */
 	@Override
 	public void federationRestoreBegun() throws FederateInternalError {
 		logger.info("Federation restore has begun.");
 		restorationBegun.set(true);
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#federationRestored()
-	 */
 	@Override
 	public void federationRestored() throws FederateInternalError {
 		logger.info("Federation has been restored.");
 		restorationCompleted.set(true);
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#federationSaved()
-	 */
 	@Override
 	public void federationSaved() throws FederateInternalError {
 		logger.info("Federation has been saved.");
 		saveCompleted.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#federationSynchronized(java.lang.String, hla.rti1516e.FederateHandleSet)
-	 */
 	@Override
 	public void federationSynchronized(String synchronizationPointLabel, 
 			FederateHandleSet failedToSyncSet)
@@ -597,9 +570,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		initialized.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateRestore(java.lang.String, java.lang.String, hla.rti1516e.FederateHandle)
-	 */
 	@Override
 	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
 			throws FederateInternalError {
@@ -608,9 +578,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		restorationInitiated.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateSave(java.lang.String)
-	 */
 	@Override
 	public void initiateFederateSave(String label)
 			throws FederateInternalError {
@@ -618,9 +585,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		initiateFederateSave(label, null);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#initiateFederateSave(java.lang.String, hla.rti1516e.LogicalTime)
-	 */
 	@Override
 	public void initiateFederateSave(String label, LogicalTime time)
 			throws FederateInternalError  {
@@ -659,9 +623,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		} catch(FederateAlreadyExecutionMember ignored) { }
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#provideAttributeValueUpdate(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleSet, byte[])
-	 */
 	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject,
 			AttributeHandleSet theAttributes, byte[] userSuppliedTag) {
 		
@@ -674,9 +635,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.LogicalTime, hla.rti1516e.OrderType, hla.rti1516e.MessageRetractionHandle, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
-	 */
 	public void reflectAttributeValues(ObjectInstanceHandle theObject,
 			AttributeHandleValueMap theAttributes,
 			byte[] userSuppliedTag,
@@ -730,9 +688,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.LogicalTime, hla.rti1516e.OrderType, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
-	 */
 	public void reflectAttributeValues(ObjectInstanceHandle theObject,
 			AttributeHandleValueMap theAttributes,
 			byte[] userSuppliedTag,
@@ -747,9 +702,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 				null, reflectInfo);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#reflectAttributeValues(hla.rti1516e.ObjectInstanceHandle, hla.rti1516e.AttributeHandleValueMap, byte[], hla.rti1516e.OrderType, hla.rti1516e.TransportationTypeHandle, hla.rti1516e.FederateAmbassador.SupplementalReflectInfo)
-	 */
 	public void reflectAttributeValues(ObjectInstanceHandle theObject,
 			AttributeHandleValueMap theAttributes,
 			byte[] userSuppliedTag,
@@ -761,9 +713,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 				sentOrdering, theTransport, null, null, reflectInfo);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#requestFederationRestoreFailed(java.lang.String)
-	 */
 	@Override
 	public void requestFederationRestoreFailed(String label)
 			throws FederateInternalError {
@@ -772,9 +721,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		restorationConfirmed.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#requestFederationRestoreSucceeded(java.lang.String)
-	 */
 	@Override
 	public void requestFederationRestoreSucceeded(String label)
 			throws FederateInternalError {
@@ -892,9 +838,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		advance(); // advance to start time
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#synchronizationPointRegistrationFailed(java.lang.String, hla.rti1516e.SynchronizationPointFailureReason)
-	 */
 	@Override
 	public void synchronizationPointRegistrationFailed(String synchronizationPointLabel,
 			SynchronizationPointFailureReason reason)
@@ -906,9 +849,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		syncRegisterSuccess.set(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#synchronizationPointRegistrationSucceeded(java.lang.String)
-	 */
 	@Override
 	public void synchronizationPointRegistrationSucceeded(String synchronizationPointLabel)
 			throws FederateInternalError {
@@ -919,9 +859,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		syncRegisterSuccess.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#timeAdvanceGrant(hla.rti1516e.LogicalTime)
-	 */
 	@Override
 	public void timeAdvanceGrant(LogicalTime theTime)
 			throws FederateInternalError {
@@ -936,9 +873,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		timeAdvanceGranted.set(true);
 	}
 
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#timeConstrainedEnabled(hla.rti1516e.LogicalTime)
-	 */
 	@Override
 	public void timeConstrainedEnabled(LogicalTime time)
 			throws FederateInternalError {
@@ -954,9 +888,6 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 		timeConstrained.set(true);
 	}
 	
-	/* (non-Javadoc)
-	 * @see hla.rti1516e.NullFederateAmbassador#timeRegulationEnabled(hla.rti1516e.LogicalTime)
-	 */
 	@Override
 	public void timeRegulationEnabled(LogicalTime time)
 			throws FederateInternalError {

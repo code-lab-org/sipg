@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.gui.agriculture;
 
 import java.util.ArrayList;
@@ -14,23 +29,19 @@ import edu.mit.sips.sim.util.FoodUnitsOutput;
 import edu.mit.sips.sim.util.TimeUnits;
 
 /**
- * The Class AgricultureStateProvider.
+ * An implementation of the spatial state provider for the agriculture sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class AgricultureStateProvider implements SpatialStateProvider, FoodUnitsOutput {
 	private final FoodUnits foodUnits = FoodUnits.EJ;
 	private final TimeUnits foodTimeUnits = TimeUnits.year;
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getConsumption(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getConsumption(Society society) {
 		return FoodUnits.convertFlow(society.getTotalFoodDemand(), society, this);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getDistributionIn(edu.mit.sips.Society, edu.mit.sips.Society)
-	 */
 	@Override
 	public double getDistributionIn(Society society, Society origin) {
 		double distribution = 0;
@@ -47,9 +58,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getDistributionOut(edu.mit.sips.Society, edu.mit.sips.Society)
-	 */
 	@Override
 	public double getDistributionOut(Society society, Society destination) {
 		double distribution = 0;
@@ -71,9 +79,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getElements(edu.mit.sips.Society)
-	 */
 	@Override
 	public List<AgricultureElement> getElements(Society society) {
 		List<AgricultureElement> elements = new ArrayList<AgricultureElement>();
@@ -87,9 +92,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return elements;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getExport(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getExport(Society society) {
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -101,25 +103,16 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsDenominator()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnitsNumerator()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getImport(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getImport(Society society) {
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -130,9 +123,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return 0;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getInput(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getInput(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
@@ -143,9 +133,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getNetFlow(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getNetFlow(Society society) {
 		if(society.getAgricultureSystem() instanceof AgricultureSystem.Local) {
@@ -159,9 +146,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherDistributionIn(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherDistributionIn(Society society) {
 		double distribution = 0;
@@ -178,9 +162,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherDistributionOut(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherDistributionOut(Society society) {
 		double distribution = 0;
@@ -197,25 +178,16 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		return distribution;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherProduction(edu.mit.sips.Society)
-	 */
 	@Override
 	public double getOtherProduction(Society society) {
 		return 0;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#getOtherProductionLabel()
-	 */
 	@Override
 	public String getOtherProductionLabel() {
 		return "";
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getOutput(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getOutput(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
@@ -226,9 +198,6 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getProduction(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public double getProduction(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
@@ -239,18 +208,12 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#getUnits()
-	 */
 	@Override
 	public String getUnits() {
 		return foodUnits.getAbbreviation() + "/"
 				+ foodTimeUnits.getAbbreviation();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isDistribution(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public boolean isDistribution(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
@@ -260,33 +223,21 @@ public class AgricultureStateProvider implements SpatialStateProvider, FoodUnits
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#isExportAllowed()
-	 */
 	@Override
 	public boolean isExportAllowed() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStatePanel#isImportAllowed()
-	 */
 	@Override
 	public boolean isImportAllowed() {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isOtherProductionAllowed()
-	 */
 	@Override
 	public boolean isOtherProductionAllowed() {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.SpatialStateProvider#isProduction(edu.mit.sips.InfrastructureElement)
-	 */
 	@Override
 	public boolean isProduction(InfrastructureElement element) {
 		if(element instanceof AgricultureElement) {
