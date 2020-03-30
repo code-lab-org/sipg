@@ -18,7 +18,7 @@ package edu.mit.sips.gui.agriculture;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
-import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**

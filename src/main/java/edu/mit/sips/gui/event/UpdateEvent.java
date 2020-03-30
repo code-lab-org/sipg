@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.event;
 
 import java.util.EventObject;
 

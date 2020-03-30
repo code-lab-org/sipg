@@ -63,7 +63,7 @@ import org.jfree.data.xy.XYSeries;
 
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.gui.event.UpdateListener;
 
 /**
  * A generic panel to investigate infrastructure system outputs.

@@ -27,7 +27,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.lifecycle.EditableSimpleLifecycleModel;
-import edu.mit.sips.gui.DocumentChangeListener;
+import edu.mit.sips.gui.event.DocumentChangeListener;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;

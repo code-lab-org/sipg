@@ -18,7 +18,7 @@ package edu.mit.sips.gui.electricity;
 import org.jfree.data.xy.DefaultTableXYDataset;
 
 import edu.mit.sips.core.electricity.ElectricitySystem;
-import edu.mit.sips.gui.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
 
 /**

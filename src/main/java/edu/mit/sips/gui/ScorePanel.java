@@ -43,6 +43,7 @@ import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
 import edu.mit.sips.gui.base.InfrastructureSystemPanel;
+import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.scenario.Scenario;
 

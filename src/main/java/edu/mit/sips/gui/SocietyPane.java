@@ -34,6 +34,8 @@ import edu.mit.sips.gui.agriculture.LocalAgricultureSystemPanel;
 import edu.mit.sips.gui.electricity.BasicElectricitySystemPanel;
 import edu.mit.sips.gui.electricity.ElectricitySystemPanel;
 import edu.mit.sips.gui.electricity.LocalElectricitySystemPanel;
+import edu.mit.sips.gui.event.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateListener;
 import edu.mit.sips.gui.petroleum.BasicPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.LocalPetroleumSystemPanel;
 import edu.mit.sips.gui.petroleum.PetroleumSystemPanel;

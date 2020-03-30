@@ -26,8 +26,8 @@ import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
-import edu.mit.sips.gui.UpdateEvent;
-import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.gui.event.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateListener;
 
 /**
  * Logs the scores for all local infrastructure systems at the end of 

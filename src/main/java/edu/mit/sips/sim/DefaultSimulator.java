@@ -25,12 +25,12 @@ import edu.mit.sips.core.agriculture.AgricultureSoS;
 import edu.mit.sips.core.electricity.ElectricitySoS;
 import edu.mit.sips.core.petroleum.PetroleumSoS;
 import edu.mit.sips.core.water.WaterSoS;
-import edu.mit.sips.gui.SimulationControlEvent;
-import edu.mit.sips.gui.SimulationControlEvent.AdvanceToEnd;
-import edu.mit.sips.gui.SimulationControlEvent.Execute;
-import edu.mit.sips.gui.SimulationControlEvent.Reset;
-import edu.mit.sips.gui.UpdateEvent;
-import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.gui.event.SimulationControlEvent;
+import edu.mit.sips.gui.event.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateListener;
+import edu.mit.sips.gui.event.SimulationControlEvent.AdvanceToEnd;
+import edu.mit.sips.gui.event.SimulationControlEvent.Execute;
+import edu.mit.sips.gui.event.SimulationControlEvent.Reset;
 import edu.mit.sips.scenario.Scenario;
 
 /**

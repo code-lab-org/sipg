@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.event;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -27,6 +27,7 @@ import javax.swing.event.DocumentListener;
  * the documentChange event occurs, that object's appropriate
  * method is invoked.
  *
+ * @author Paul T. Grogan
  * @see DocumentChangeEvent
  */
 public abstract class DocumentChangeListener implements DocumentListener {

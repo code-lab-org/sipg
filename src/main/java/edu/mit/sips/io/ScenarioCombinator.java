@@ -19,7 +19,7 @@ import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.water.LocalWaterSoS;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.gui.ApplicationFrame;
-import edu.mit.sips.gui.SimulationControlEvent;
+import edu.mit.sips.gui.event.SimulationControlEvent;
 import edu.mit.sips.scenario.GameScenario;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.scenario.Sector;

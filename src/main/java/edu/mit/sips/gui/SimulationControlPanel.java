@@ -29,6 +29,9 @@ import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.SwingWorker;
 
+import edu.mit.sips.gui.event.SimulationControlEvent;
+import edu.mit.sips.gui.event.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateListener;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.sim.Simulator;
 

@@ -63,6 +63,8 @@ import edu.mit.sips.core.petroleum.RecordedPetroleumSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.RecordedWaterSystem;
 import edu.mit.sips.gui.base.InfrastructurePanel;
+import edu.mit.sips.gui.event.UpdateEvent;
+import edu.mit.sips.gui.event.UpdateListener;
 import edu.mit.sips.io.Icons;
 import edu.mit.sips.io.Serialization;
 import edu.mit.sips.log.ScoreFileLogger;

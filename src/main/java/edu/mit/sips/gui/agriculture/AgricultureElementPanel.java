@@ -27,8 +27,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import edu.mit.sips.core.agriculture.EditableAgricultureElement;
-import edu.mit.sips.gui.DocumentChangeListener;
 import edu.mit.sips.gui.base.ElementPanel;
+import edu.mit.sips.gui.event.DocumentChangeListener;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.util.CurrencyUnits;
 import edu.mit.sips.sim.util.CurrencyUnitsOutput;

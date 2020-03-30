@@ -14,7 +14,7 @@ import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.gui.SimulationControlEvent;
+import edu.mit.sips.gui.event.SimulationControlEvent;
 import edu.mit.sips.scenario.GameElementTemplate;
 import edu.mit.sips.scenario.Scenario;
 import edu.mit.sips.sim.hla.HlaSimulator;

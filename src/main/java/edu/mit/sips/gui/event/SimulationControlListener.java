@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.gui;
+package edu.mit.sips.gui.event;
 
 import java.util.EventListener;
 
@@ -26,6 +26,7 @@ import java.util.EventListener;
  * the simulationControl event occurs, that object's appropriate
  * method is invoked.
  *
+ * @author Paul T. Grogan
  * @see SimulationControlEvent
  */
 public interface SimulationControlListener extends EventListener {

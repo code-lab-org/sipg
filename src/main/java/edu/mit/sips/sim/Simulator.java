@@ -15,8 +15,8 @@
  *****************************************************************************/
 package edu.mit.sips.sim;
 
-import edu.mit.sips.gui.SimulationControlListener;
-import edu.mit.sips.gui.UpdateListener;
+import edu.mit.sips.gui.event.SimulationControlListener;
+import edu.mit.sips.gui.event.UpdateListener;
 import edu.mit.sips.scenario.Scenario;
 
 /**
