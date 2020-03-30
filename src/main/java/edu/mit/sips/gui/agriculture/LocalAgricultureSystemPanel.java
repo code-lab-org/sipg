@@ -35,13 +35,13 @@ import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.base.SpatialStatePanel;
 import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An agriculture system panel suitable for locally-controlled systems.

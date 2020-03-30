@@ -16,9 +16,9 @@
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.base.InfrastructureElement;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to electricity sector infrastructure elements.

@@ -16,8 +16,8 @@
 package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.base.InfrastructureElement;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
 
 /**
  * An interface to petroleum sector infrastructure elements.

@@ -16,9 +16,9 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.base.DefaultInfrastructureSystem;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The default implementation of the agriculture system interface.

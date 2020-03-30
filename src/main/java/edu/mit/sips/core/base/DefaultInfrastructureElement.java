@@ -19,8 +19,8 @@ import javax.swing.event.EventListenerList;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The default implementation of the infrastructure element interface.

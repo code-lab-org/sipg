@@ -24,9 +24,9 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.water.WaterElement;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.gui.base.SpatialStateProvider;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An implementation of the spatial state provider for the water sector.

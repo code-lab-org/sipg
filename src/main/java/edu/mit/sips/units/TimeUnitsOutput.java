@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.core.lifecycle;
-
-import edu.mit.sips.units.CurrencyUnitsOutput;
-import edu.mit.sips.units.TimeUnitsOutput;
+package edu.mit.sips.units;
 
 /**
- * An interface to a mutable (editable) lifecycle model.
+ * Interface specifying the units used for time resources.
  * 
  * @author Paul T. Grogan
  */
-public interface EditableLifecycleModel extends TimeUnitsOutput, CurrencyUnitsOutput {
+public interface TimeUnitsOutput {
 	
 	/**
-	 * Creates the associated lifecycle model.
+	 * Gets the time units.
 	 *
-	 * @return the lifecycle model
+	 * @return the time units
 	 */
-	public LifecycleModel createLifecycleModel();
+	public TimeUnits getTimeUnits();
 }

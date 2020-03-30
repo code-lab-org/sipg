@@ -16,8 +16,8 @@
 package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.base.InfrastructureElement;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to water sector infrastructure elements.

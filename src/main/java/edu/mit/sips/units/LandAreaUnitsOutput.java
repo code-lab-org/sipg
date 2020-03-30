@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.core.lifecycle;
-
-import edu.mit.sips.units.CurrencyUnitsOutput;
-import edu.mit.sips.units.TimeUnitsOutput;
+package edu.mit.sips.units;
 
 /**
- * An interface to a mutable (editable) lifecycle model.
+ * Interface specifying the units used for land area resources.
  * 
  * @author Paul T. Grogan
  */
-public interface EditableLifecycleModel extends TimeUnitsOutput, CurrencyUnitsOutput {
+public interface LandAreaUnitsOutput {
 	
 	/**
-	 * Creates the associated lifecycle model.
+	 * Gets the land area units.
 	 *
-	 * @return the lifecycle model
+	 * @return the land area units
 	 */
-	public LifecycleModel createLifecycleModel();
+	public LandAreaUnits getLandAreaUnits();
+	
+	/**
+	 * Gets the land area time units.
+	 *
+	 * @return the land area time units
+	 */
+	public TimeUnits getLandAreaTimeUnits();
 }

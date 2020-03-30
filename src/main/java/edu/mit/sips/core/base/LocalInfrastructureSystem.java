@@ -18,7 +18,7 @@ package edu.mit.sips.core.base;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.mit.sips.sim.util.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnits;
 
 /**
  * A locally-controlled implementation of the infrastructure system interface.

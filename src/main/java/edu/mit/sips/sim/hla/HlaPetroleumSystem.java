@@ -13,9 +13,9 @@ import java.util.Map;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The Class HLA petroleum system.

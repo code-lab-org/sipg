@@ -16,11 +16,11 @@
 package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.base.DefaultMutableInfrastructureElement;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * An implementation of the editable infrastructure element class for the petroleum sector.

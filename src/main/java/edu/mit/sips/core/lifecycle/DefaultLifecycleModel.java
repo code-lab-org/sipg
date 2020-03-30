@@ -15,8 +15,8 @@
  *****************************************************************************/
 package edu.mit.sips.core.lifecycle;
 
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The default implementation of the lifecycle model interface.

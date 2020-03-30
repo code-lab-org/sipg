@@ -35,13 +35,13 @@ import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.base.SpatialStatePanel;
 import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * A petroleum system panel suitable for locally-controlled systems.

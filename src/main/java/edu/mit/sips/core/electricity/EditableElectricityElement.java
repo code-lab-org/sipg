@@ -16,13 +16,13 @@
 package edu.mit.sips.core.electricity;
 
 import edu.mit.sips.core.base.DefaultMutableInfrastructureElement;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An implementation of the editable infrastructure element class for the electricity sector.

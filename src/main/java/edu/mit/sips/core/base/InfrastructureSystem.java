@@ -19,7 +19,7 @@ import java.util.List;
 
 import edu.mit.sips.core.SimEntity;
 import edu.mit.sips.core.Society;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.units.CurrencyUnitsOutput;
 
 /**
  * An infrastructure system composes infrastructure elements within a set sector.

@@ -16,10 +16,10 @@
 package edu.mit.sips.core.social;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to social infrastructure systems.

@@ -36,10 +36,10 @@ import org.apache.commons.math3.optim.nonlinear.scalar.GoalType;
 import edu.mit.sips.core.City;
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.LocalInfrastructureSoS;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The locally-controlled implementation of the agriculture system-of-systems interface.

@@ -26,11 +26,11 @@ import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.core.social.SocialSystem;
 import edu.mit.sips.core.water.WaterSystem;
 import edu.mit.sips.scenario.Sector;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * A society defines a unit of analysis with dedicated infrastructure systems.

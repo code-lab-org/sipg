@@ -24,9 +24,9 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.electricity.ElectricityElement;
 import edu.mit.sips.core.electricity.ElectricitySystem;
 import edu.mit.sips.gui.base.SpatialStateProvider;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * An implementation of the spatial state provider for the electricity sector.

@@ -18,8 +18,8 @@ package edu.mit.sips.core.agriculture;
 import java.util.List;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to agriculture sector infrastructure systems.

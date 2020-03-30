@@ -26,10 +26,10 @@ import edu.mit.sips.core.City;
 import edu.mit.sips.core.base.LocalInfrastructureSystem;
 import edu.mit.sips.core.price.DefaultPriceModel;
 import edu.mit.sips.core.price.PriceModel;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The locally-controlled implementation of the petroleum system interface.

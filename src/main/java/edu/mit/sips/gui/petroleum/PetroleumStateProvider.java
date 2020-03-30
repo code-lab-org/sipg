@@ -24,9 +24,9 @@ import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.core.petroleum.PetroleumElement;
 import edu.mit.sips.core.petroleum.PetroleumSystem;
 import edu.mit.sips.gui.base.SpatialStateProvider;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * An implementation of the spatial state provider for the petroleum sector.

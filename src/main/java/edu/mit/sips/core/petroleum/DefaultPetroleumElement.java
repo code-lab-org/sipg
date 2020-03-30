@@ -17,9 +17,9 @@ package edu.mit.sips.core.petroleum;
 
 import edu.mit.sips.core.base.DefaultInfrastructureElement;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The default implementation of the petroleum element interface.

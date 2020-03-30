@@ -30,16 +30,16 @@ import edu.mit.sips.core.electricity.EditableElectricityElement;
 import edu.mit.sips.gui.base.ElementPanel;
 import edu.mit.sips.gui.event.DocumentChangeListener;
 import edu.mit.sips.scenario.Scenario;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An implementation of the element panel class for the electricity sector.

@@ -5,9 +5,9 @@ import java.util.Map;
 
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
 import hla.rti1516e.RTIambassador;

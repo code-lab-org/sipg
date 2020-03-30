@@ -18,8 +18,8 @@ package edu.mit.sips.core.petroleum;
 import java.util.List;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
 
 /**
  * An interface to petroleum sector infrastructure systems.

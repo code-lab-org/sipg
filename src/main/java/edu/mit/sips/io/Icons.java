@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.io;
 
 import java.awt.Image;
@@ -5,6 +20,11 @@ import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+/**
+ * Central location to load and make icons available to the application.
+ * 
+ * @author Paul T. Grogan
+ */
 public abstract class Icons {
 	
 	public static final Icon COUNTRY = loadIcon("resources/silk/world.png");
@@ -17,7 +37,6 @@ public abstract class Icons {
 	public static final Icon DELETE = loadIcon("resources/silk/delete.png");
 
 	public static final Icon INFRASTRUCTURE = loadIcon("resources/silk/chart_organisation.png");
-			//loadIcon("resources/fugue/node.png");
 	public static final Icon AGRICULTURE = loadIcon("resources/fugue/leaf.png");
 	public static final Icon AGRICULTURE_PLANNED = loadIcon("resources/fugue/leaf--faded.png");
 	public static final Icon WATER = loadIcon("resources/fugue/water.png");
@@ -28,7 +47,6 @@ public abstract class Icons {
 	public static final Icon ELECTRICITY = loadIcon("resources/fugue/light-bulb.png");
 	public static final Icon ELECTRICITY_PLANNED  = loadIcon("resources/fugue/light-bulb--faded.png");
 	
-
 	public static final Icon WATER_ELECTRICITY = loadIcon("resources/fugue/water-electricity.png");
 	
 	public static final Icon PRODUCT = loadIcon("resources/silk/cog.png");
@@ -76,11 +94,16 @@ public abstract class Icons {
 	
 	public static final Icon LOADING = loadIcon("resources/loading.gif");
 	public static final Icon LOADING_COMPLETE = loadIcon("resources/loading_complete.png");
-
 	
 	public static final Image SYSTEM_MONITOR = loadIcon(
 			"resources/fugue/system-monitor.png").getImage();
 	
+	/**
+	 * Load icon.
+	 *
+	 * @param path the path
+	 * @return the image icon
+	 */
 	private static final ImageIcon loadIcon(String path) {
 		return new ImageIcon(Icons.class.getClassLoader().getResource(path));
 	}

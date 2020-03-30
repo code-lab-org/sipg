@@ -16,8 +16,8 @@
 package edu.mit.sips.core.agriculture;
 
 import edu.mit.sips.core.base.InfrastructureElement;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to agriculture sector infrastructure elements.

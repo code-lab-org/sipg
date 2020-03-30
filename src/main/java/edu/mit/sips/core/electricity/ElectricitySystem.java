@@ -18,9 +18,9 @@ package edu.mit.sips.core.electricity;
 import java.util.List;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.ElectricityUnitsOutput;
-import edu.mit.sips.sim.util.OilUnitsOutput;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.ElectricityUnitsOutput;
+import edu.mit.sips.units.OilUnitsOutput;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An interface to electricity sector infrastructure systems.

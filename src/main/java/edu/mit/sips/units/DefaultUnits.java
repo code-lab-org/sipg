@@ -1,11 +1,31 @@
-package edu.mit.sips.sim.util;
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
+package edu.mit.sips.units;
 
 /**
- * The Class DefaultUnits.
+ * A default implementation of the units interface with sub-classes 
+ * for numerator and denominator units.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class DefaultUnits implements Units {
 	/**
-	 * The Class DenominatorUnits.
+	 * Subclass that specifies units used in the denominator of fractions.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static abstract class DenominatorUnits extends DefaultUnits {
 		/**
@@ -21,7 +41,9 @@ public abstract class DefaultUnits implements Units {
 	}
 	
 	/**
-	 * The Class NumeratorUnits.
+	 * Subclass that specifies units used in the numerator of fractions.
+	 * 
+	 * @author Paul T. Grogan
 	 */
 	public static abstract class NumeratorUnits extends DefaultUnits {
 		
@@ -35,6 +57,27 @@ public abstract class DefaultUnits implements Units {
 		protected NumeratorUnits(String name, String abbreviation, double scale) {
 			super(name, abbreviation, scale);
 		}
+	}
+	
+	/**
+	 * Convert.
+	 *
+	 * @param value the value
+	 * @param sourceNumeratorUnits the source numerator units
+	 * @param sourceDenominatorUnits the source denominator units
+	 * @param targetNumeratorUnits the target numerator units
+	 * @param targetDenominatorUnits the target denominator units
+	 * @return the double
+	 */
+	public static double convert(double value, 
+			DefaultUnits sourceNumeratorUnits, 
+			DefaultUnits sourceDenominatorUnits, 
+			DefaultUnits targetNumeratorUnits, 
+			DefaultUnits targetDenominatorUnits) {
+		return value / sourceNumeratorUnits.getScale() 
+				* sourceDenominatorUnits.getScale() 
+				* targetNumeratorUnits.getScale()
+				/ targetDenominatorUnits.getScale();
 	}
 	
 	/**
@@ -71,27 +114,6 @@ public abstract class DefaultUnits implements Units {
 				* targetUnits.getScale();
 	}
 	
-	/**
-	 * Convert.
-	 *
-	 * @param value the value
-	 * @param sourceNumeratorUnits the source numerator units
-	 * @param sourceDenominatorUnits the source denominator units
-	 * @param targetNumeratorUnits the target numerator units
-	 * @param targetDenominatorUnits the target denominator units
-	 * @return the double
-	 */
-	public static double convert(double value, 
-			DefaultUnits sourceNumeratorUnits, 
-			DefaultUnits sourceDenominatorUnits, 
-			DefaultUnits targetNumeratorUnits, 
-			DefaultUnits targetDenominatorUnits) {
-		return value / sourceNumeratorUnits.getScale() 
-				* sourceDenominatorUnits.getScale() 
-				* targetNumeratorUnits.getScale()
-				/ targetDenominatorUnits.getScale();
-	}
-	
 	private final String name;
 	private final String abbreviation;
 	private final double scale;
@@ -109,30 +131,22 @@ public abstract class DefaultUnits implements Units {
 		this.scale = scale;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.Units#getAbbreviation()
-	 */
+	@Override
 	public String getAbbreviation() { 
 		return abbreviation; 
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.Units#getName()
-	 */
+
+	@Override
 	public String getName() { 
 		return name; 
 	}
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.Units#getScale()
-	 */
+
+	@Override
 	public double getScale() { 
 		return scale; 
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
+
+	@Override
 	public String toString() { 
 		return abbreviation; 
 	}

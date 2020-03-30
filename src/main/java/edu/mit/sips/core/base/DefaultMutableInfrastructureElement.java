@@ -17,8 +17,8 @@ package edu.mit.sips.core.base;
 
 import edu.mit.sips.core.lifecycle.DefaultLifecycleModel;
 import edu.mit.sips.core.lifecycle.EditableLifecycleModel;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * A default implementation of the mutable infrastructure element interface.

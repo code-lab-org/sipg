@@ -14,8 +14,8 @@ import java.util.Map;
 
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.InfrastructureSystem;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * The Class HLA infrastructure system.

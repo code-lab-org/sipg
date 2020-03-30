@@ -25,11 +25,11 @@ import edu.mit.sips.core.social.demand.DefaultDemandModel;
 import edu.mit.sips.core.social.demand.DemandModel;
 import edu.mit.sips.core.social.population.DefaultPopulationModel;
 import edu.mit.sips.core.social.population.PopulationModel;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.OilUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.OilUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The locally-controlled implementation of the social system interface.

@@ -13,22 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sips.core.lifecycle;
-
-import edu.mit.sips.units.CurrencyUnitsOutput;
-import edu.mit.sips.units.TimeUnitsOutput;
+package edu.mit.sips.units;
 
 /**
- * An interface to a mutable (editable) lifecycle model.
+ * Interface to specify units of measure for resources.
  * 
  * @author Paul T. Grogan
  */
-public interface EditableLifecycleModel extends TimeUnitsOutput, CurrencyUnitsOutput {
+public interface Units {
 	
 	/**
-	 * Creates the associated lifecycle model.
+	 * Gets the name.
 	 *
-	 * @return the lifecycle model
+	 * @return the name
 	 */
-	public LifecycleModel createLifecycleModel();
+	public String getName();
+	
+	/**
+	 * Gets the abbreviation.
+	 *
+	 * @return the abbreviation
+	 */
+	public String getAbbreviation();
+	
+	/**
+	 * Gets the scale.
+	 *
+	 * @return the scale
+	 */
+	public double getScale();
 }

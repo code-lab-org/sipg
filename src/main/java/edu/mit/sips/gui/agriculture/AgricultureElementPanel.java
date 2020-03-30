@@ -30,14 +30,14 @@ import edu.mit.sips.core.agriculture.EditableAgricultureElement;
 import edu.mit.sips.gui.base.ElementPanel;
 import edu.mit.sips.gui.event.DocumentChangeListener;
 import edu.mit.sips.scenario.Scenario;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
-import edu.mit.sips.sim.util.WaterUnitsOutput;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
+import edu.mit.sips.units.WaterUnitsOutput;
 
 /**
  * An implementation of the element panel class for the agriculture sector.

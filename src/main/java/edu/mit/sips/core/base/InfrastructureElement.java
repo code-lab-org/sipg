@@ -17,7 +17,7 @@ package edu.mit.sips.core.base;
 
 import edu.mit.sips.core.SimEntity;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.units.CurrencyUnitsOutput;
 
 /**
  * An infrastructure element provides a generic interface for any infrastructure

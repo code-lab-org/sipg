@@ -24,9 +24,9 @@ import edu.mit.sips.core.agriculture.AgricultureElement;
 import edu.mit.sips.core.agriculture.AgricultureSystem;
 import edu.mit.sips.core.base.InfrastructureElement;
 import edu.mit.sips.gui.base.SpatialStateProvider;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.FoodUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.FoodUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * An implementation of the spatial state provider for the agriculture sector.

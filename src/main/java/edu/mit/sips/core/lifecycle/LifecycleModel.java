@@ -16,8 +16,8 @@
 package edu.mit.sips.core.lifecycle;
 
 import edu.mit.sips.core.SimEntity;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnitsOutput;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.TimeUnitsOutput;
 
 /**
  * The lifecycle model interface specifies lifecycle properties for an infrastructure element.

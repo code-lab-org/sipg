@@ -13,9 +13,9 @@ import java.util.Map;
 
 import edu.mit.sips.core.base.InfrastructureSystem;
 import edu.mit.sips.core.water.WaterSystem;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The Class HLA water system.

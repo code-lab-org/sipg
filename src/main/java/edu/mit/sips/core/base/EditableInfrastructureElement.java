@@ -16,7 +16,7 @@
 package edu.mit.sips.core.base;
 
 import edu.mit.sips.core.lifecycle.EditableLifecycleModel;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
+import edu.mit.sips.units.CurrencyUnitsOutput;
 
 /**
  * An interface for infrastructure elements that are editable. 

@@ -26,9 +26,9 @@ import edu.mit.sips.gui.PlottingUtils;
 import edu.mit.sips.gui.base.InfrastructureSystemPanel;
 import edu.mit.sips.gui.event.UpdateEvent;
 import edu.mit.sips.io.Icons;
-import edu.mit.sips.sim.util.CurrencyUnits;
-import edu.mit.sips.sim.util.CurrencyUnitsOutput;
-import edu.mit.sips.sim.util.TimeUnits;
+import edu.mit.sips.units.CurrencyUnits;
+import edu.mit.sips.units.CurrencyUnitsOutput;
+import edu.mit.sips.units.TimeUnits;
 
 /**
  * An implementation of the infrastructure system panel for the social sector.

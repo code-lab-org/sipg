@@ -17,10 +17,10 @@ package edu.mit.sips.core.water;
 
 import edu.mit.sips.core.base.DefaultInfrastructureElement;
 import edu.mit.sips.core.lifecycle.LifecycleModel;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The default implementation of the water element interface.

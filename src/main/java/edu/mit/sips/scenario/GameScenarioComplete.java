@@ -25,10 +25,10 @@ import edu.mit.sips.core.social.population.LogisticGrowthModel;
 import edu.mit.sips.core.water.DefaultWaterSystem;
 import edu.mit.sips.core.water.LocalWaterSystem;
 import edu.mit.sips.core.water.WaterElement;
-import edu.mit.sips.sim.util.ElectricityUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.ElectricityUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The Class SaudiScenario2.

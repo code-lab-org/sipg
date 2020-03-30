@@ -21,10 +21,10 @@ import java.util.List;
 
 import edu.mit.sips.core.Society;
 import edu.mit.sips.core.base.DefaultInfrastructureSoS;
-import edu.mit.sips.sim.util.DefaultUnits;
-import edu.mit.sips.sim.util.FoodUnits;
-import edu.mit.sips.sim.util.TimeUnits;
-import edu.mit.sips.sim.util.WaterUnits;
+import edu.mit.sips.units.DefaultUnits;
+import edu.mit.sips.units.FoodUnits;
+import edu.mit.sips.units.TimeUnits;
+import edu.mit.sips.units.WaterUnits;
 
 /**
  * The default implementation of the agriculture system-of-systems interface.
