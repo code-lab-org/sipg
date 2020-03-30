@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.scenario;
 
 import java.util.Arrays;
@@ -9,6 +24,11 @@ import edu.mit.sips.core.lifecycle.DefaultSimpleLifecycleModel;
 import edu.mit.sips.core.petroleum.DefaultPetroleumElement;
 import edu.mit.sips.core.water.DefaultWaterElement;
 
+/**
+ * Enumeration of element templates used for the sustainable infrastructure planning game.
+ * 
+ * @author Paul T. Grogan
+ */
 public enum GameElementTemplate implements ElementTemplate {
 	WHEAT_1			(Sector.AGRICULTURE,	false, 	"Small Wheat Field", 			1900,	100),
 	WHEAT_2			(Sector.AGRICULTURE,	false, 	"Large Wheat Field", 			1950,	100),
@@ -30,11 +50,6 @@ public enum GameElementTemplate implements ElementTemplate {
 	POWER_LINE_1	(Sector.ELECTRICITY,	true, 	"Low-capacity Power Line",		1950,	50),
 	POWER_LINE_2	(Sector.ELECTRICITY,	true, 	"High-capacity Power Line", 	1980,	50);
 	
-	private final Sector sector;
-	private final boolean transport;
-	private final String name;
-	private final long timeAvailable;
-	private final long maxOperations;
 	private static int[] instanceId = new int[GameElementTemplate.values().length];
 	
 	/**
@@ -46,6 +61,12 @@ public enum GameElementTemplate implements ElementTemplate {
 	private static int getInstanceId(GameElementTemplate template) {
 		return ++instanceId[Arrays.asList(GameElementTemplate.values()).indexOf(template)];
 	}
+	
+	private final Sector sector;
+	private final boolean transport;
+	private final String name;
+	private final long timeAvailable;
+	private final long maxOperations;
 
 	/**
 	 * Instantiates a new element template.
@@ -188,7 +209,6 @@ public enum GameElementTemplate implements ElementTemplate {
 					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							200e6*1.5, 3e6, 2e6, true), 
-							//400e6, 6e6, 4e6, true), 
 					2e6, 2e6, 0, 0, 0);
 		case PV_PLANT_2:
 			return DefaultElectricityElement.createProductionElement(
@@ -196,7 +216,6 @@ public enum GameElementTemplate implements ElementTemplate {
 					new DefaultSimpleLifecycleModel(timeAvailable, year, 2+1, 
 							maxOperations, operationsDuration, 1, 
 							900e6*1.5, 13.5e6, 9e6, true), 
-							//1750e6, 26.25e6, 17.5e6, true), 
 					10e6, 10e6, 0, 0, 0);
 		case POWER_LINE_1:
 			return DefaultElectricityElement.createDistributionElement(
@@ -218,58 +237,37 @@ public enum GameElementTemplate implements ElementTemplate {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElementTemplate#createElement(long, java.lang.String, java.lang.String)
-	 */
 	@Override
 	public InfrastructureElement createElement(long year, 
 			String location, String destination) {
 		return createElement(year, maxOperations, location, destination);
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElementTemplate#getMaxOperations()
-	 */
 	@Override
 	public long getMaxOperations() {
 		return maxOperations;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElementTemplate#getName()
-	 */
 	@Override
 	public String getName() {
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElementTemplate#getSector()
-	 */
 	@Override
 	public Sector getSector() {
 		return sector;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.ElementTemplate#getTimeAvailable()
-	 */
 	@Override
 	public long getTimeAvailable() {
 		return timeAvailable;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.scenario.ElementTemplate#isTransport()
-	 */
 	@Override
 	public boolean isTransport() {
 		return transport;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Enum#toString()
-	 */
 	@Override
 	public String toString() {
 		return name;

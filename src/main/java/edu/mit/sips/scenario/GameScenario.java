@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.scenario;
 
 import java.util.ArrayList;
@@ -32,7 +47,9 @@ import edu.mit.sips.units.TimeUnits;
 import edu.mit.sips.units.WaterUnits;
 
 /**
- * The Class SaudiScenario2.
+ * A scenario implementation for the sustainable infrastructure planning game.
+ * 
+ * @author Paul T. Grogan
  */
 public final class GameScenario extends DefaultScenario {
 	public static final String INDUSTRIAL = "Industrial", URBAN = "Urban", RURAL = "Rural";
@@ -61,22 +78,6 @@ public final class GameScenario extends DefaultScenario {
 			petroleumExportPriceModel = new ConstantPriceModel(30);
 
 	/**
-	 * Instantiates a new game scenario.
-	 *
-	 * @param assignedCityNames the assigned city names
-	 * @param assignedSectors the assigned sectors
-	 */
-	public GameScenario(Collection<String> assignedCityNames, 
-			Collection<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
-		super(Country.buildCountry("Idas Abara", 25e9, 4e9, Arrays.asList(
-				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
-				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
-				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
-				Arrays.asList(GameElementTemplate.values()), 
-				1950, 1980, 2010, isTeamScoreDisplayed, false);
-	}
-
-	/**
 	 * Creates the industrial city.
 	 *
 	 * @param assigned the assigned
@@ -89,13 +90,6 @@ public final class GameScenario extends DefaultScenario {
 						new LocalAgricultureSystem(8e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) GameElementTemplate.WHEAT_1.createElement(1940, INDUSTRIAL, INDUSTRIAL)
-										/*,(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 2008-1986, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1996-1990, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1990, 1994-1990, INDUSTRIAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new RecordedAgricultureSystem(),
@@ -103,10 +97,6 @@ public final class GameScenario extends DefaultScenario {
 						new LocalWaterSystem(true, 200e9, 200e9, 0.1e9, 0.9e-3, 1,
 								Arrays.asList(
 										(WaterElement) GameElementTemplate.RO_PLANT_1.createElement(1978, INDUSTRIAL, INDUSTRIAL)
-										/*,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1980, INDUSTRIAL, INDUSTRIAL)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, INDUSTRIAL, INDUSTRIAL)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1994, INDUSTRIAL, INDUSTRIAL)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								waterDomesticPriceModel, waterImportPriceModel):
 							new RecordedWaterSystem(),
@@ -115,7 +105,7 @@ public final class GameScenario extends DefaultScenario {
 								Arrays.asList(
 										(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_PIPELINE_1.createElement(1940, 1978-1940, INDUSTRIAL, URBAN)
-										,(PetroleumElement) GameElementTemplate.OIL_PIPELINE_1.createElement(1940, /*1990-1940, */INDUSTRIAL, RURAL)
+										,(PetroleumElement) GameElementTemplate.OIL_PIPELINE_1.createElement(1940, INDUSTRIAL, RURAL)
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1940, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1955, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1962, INDUSTRIAL, INDUSTRIAL)
@@ -123,19 +113,11 @@ public final class GameScenario extends DefaultScenario {
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1966, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1968, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_WELL_1.createElement(1970, INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1970, /*1981-1970, */INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1972, /*1982-1972, */INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1976, /*1983-1976, */INDUSTRIAL, INDUSTRIAL)
+										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1970, INDUSTRIAL, INDUSTRIAL)
+										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1972, INDUSTRIAL, INDUSTRIAL)
+										,(PetroleumElement) GameElementTemplate.OIL_WELL_2.createElement(1976, INDUSTRIAL, INDUSTRIAL)
 										,(PetroleumElement) GameElementTemplate.OIL_PIPELINE_2.createElement(1976, INDUSTRIAL, URBAN)
 										,(PetroleumElement) GameElementTemplate.OIL_PIPELINE_1.createElement(1976, INDUSTRIAL, RURAL)
-										/*,(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1984, INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1988, INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(1988, INDUSTRIAL, RURAL)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(1990, INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(1992, INDUSTRIAL, URBAN)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_WELL_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_2.createElement(2004, INDUSTRIAL, URBAN)
-										,(PetroleumElement) SaudiElementTemplate2.OIL_PIPELINE_1.createElement(2008, INDUSTRIAL, RURAL)*/
 										),
 								petroleumDomesticPriceModel, petroleumImportPriceModel, petroleumExportPriceModel):
 							new RecordedPetroleumSystem(),
@@ -143,15 +125,7 @@ public final class GameScenario extends DefaultScenario {
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_1.createElement(1960, INDUSTRIAL, INDUSTRIAL)
-										//,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1970, INDUSTRIAL, RURAL)
 										,(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1974, INDUSTRIAL, INDUSTRIAL)
-										/*,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1984, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1992, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1998, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)*/
 										),
 								electricityDomesticPriceModel):
 							new RecordedElectricitySystem(),
@@ -160,23 +134,6 @@ public final class GameScenario extends DefaultScenario {
 								new LogisticGrowthModel(1980, (long) 3e6, 0.07, (long) 17.5e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
-	}
-	
-	@Override
-	public List<? extends ElementTemplate> getTemplates(Collection<Sector> sectors) {
-		ArrayList<ElementTemplate> filteredTemplates = new ArrayList<ElementTemplate>(super.getTemplates(sectors));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.FOOD_TRANSPORT_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.OIL_PIPELINE_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.OIL_WELL_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_LINE_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_LINE_2.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_PLANT_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.PV_PLANT_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.RO_PLANT_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.WATER_PIPELINE_1.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.WATER_PIPELINE_2.getName()));
-		filteredTemplates.remove(getTemplate(GameElementTemplate.WHEAT_1.getName()));
-		return filteredTemplates;
 	}
 
 	/**
@@ -195,14 +152,6 @@ public final class GameScenario extends DefaultScenario {
 										,(AgricultureElement) GameElementTemplate.FOOD_TRANSPORT_1.createElement(1940, RURAL, INDUSTRIAL)
 										,(AgricultureElement) GameElementTemplate.FOOD_TRANSPORT_1.createElement(1940, RURAL, URBAN)
 										,(AgricultureElement) GameElementTemplate.WHEAT_1.createElement(1962, RURAL, RURAL)
-										/*,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1984, RURAL, RURAL)
-										,(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1984, RURAL, INDUSTRIAL)
-										,(AgricultureElement) SaudiElementTemplate2.FOOD_TRANSPORT_2.createElement(1984, RURAL, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, RURAL, RURAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, RURAL, RURAL)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2002, RURAL, RURAL)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new RecordedAgricultureSystem(),
@@ -219,9 +168,6 @@ public final class GameScenario extends DefaultScenario {
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_1.createElement(1966, RURAL, RURAL)
-										/*,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1986, RURAL, RURAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(1996, RURAL, RURAL)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_1.createElement(2000, RURAL, RURAL)*/
 										),
 								electricityDomesticPriceModel):
 							new RecordedElectricitySystem(),
@@ -231,7 +177,7 @@ public final class GameScenario extends DefaultScenario {
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
 	}
-
+	
 	/**
 	 * Creates the urban city.
 	 *
@@ -245,25 +191,12 @@ public final class GameScenario extends DefaultScenario {
 						new LocalAgricultureSystem(10e3, 0.04,
 								Arrays.asList(
 										(AgricultureElement) GameElementTemplate.WHEAT_1.createElement(1940, URBAN, URBAN)
-										/*,(AgricultureElement) SaudiElementTemplate2.WHEAT_1.createElement(1982, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1986, 1996-1986, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1988, 1996-1988, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1992, 1994-1992, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(1992, 1994-1992, URBAN, URBAN)
-										,(AgricultureElement) SaudiElementTemplate2.WHEAT_2.createElement(2004, 2008-2004, URBAN, URBAN)*/
 										),
 								foodDomesticPriceModel, foodImportPriceModel, foodExportPriceModel):
 							new RecordedAgricultureSystem(),
 				sectors.contains(Sector.WATER)?
 						new LocalWaterSystem(true, 150e9, 150e9, 2.2e9, 0.9e-3, 1,
-								/*Arrays.asList(
-										(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1980, URBAN, URBAN)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_1.createElement(1982, URBAN, URBAN)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1986, URBAN, URBAN)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(1990, URBAN, URBAN)
-										,(WaterElement) SaudiElementTemplate2.RO_PLANT_2.createElement(2000, URBAN, URBAN)
-										)*/ new ArrayList<WaterElement>(),
+								new ArrayList<WaterElement>(),
 								waterDomesticPriceModel, waterImportPriceModel):
 							new RecordedWaterSystem(),
 				sectors.contains(Sector.PETROLEUM)?
@@ -275,16 +208,7 @@ public final class GameScenario extends DefaultScenario {
 						new LocalElectricitySystem(0.5,
 								Arrays.asList(
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_1.createElement(1950, URBAN, URBAN)
-										//,(ElectricityElement) SaudiElementTemplate2.POWER_LINE_1.createElement(1972, URBAN, RURAL)
 										,(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1972, URBAN, URBAN)
-										/*,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1982, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1988, URBAN, URBAN)										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1990, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1994, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1996, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2002, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2004, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2006, URBAN, URBAN)
-										,(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2008, URBAN, URBAN)*/
 										),
 								electricityDomesticPriceModel):
 							new RecordedElectricitySystem(),
@@ -293,5 +217,38 @@ public final class GameScenario extends DefaultScenario {
 								new LogisticGrowthModel(1980, (long) 6e6, 0.06, (long) 20e6),
 								electricityDemandModel, foodDemandModel, waterDemandModel, petroleumDemandModel):
 							new DefaultSocialSystem());
+	}
+
+	/**
+	 * Instantiates a new game scenario.
+	 *
+	 * @param assignedCityNames the assigned city names
+	 * @param assignedSectors the assigned sectors
+	 */
+	public GameScenario(Collection<String> assignedCityNames, 
+			Collection<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
+		super(Country.buildCountry("Idas Abara", 25e9, 4e9, Arrays.asList(
+				createIndustrialCity(assignedCityNames.contains(INDUSTRIAL), assignedSectors), 
+				createRuralCity(assignedCityNames.contains(RURAL), assignedSectors), 
+				createUrbanCity(assignedCityNames.contains(URBAN), assignedSectors))),
+				Arrays.asList(GameElementTemplate.values()), 
+				1950, 1980, 2010, isTeamScoreDisplayed, false);
+	}
+
+	@Override
+	public List<? extends ElementTemplate> getTemplates(Collection<Sector> sectors) {
+		ArrayList<ElementTemplate> filteredTemplates = new ArrayList<ElementTemplate>(super.getTemplates(sectors));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.FOOD_TRANSPORT_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.OIL_PIPELINE_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.OIL_WELL_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_LINE_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_LINE_2.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.POWER_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.PV_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.RO_PLANT_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.WATER_PIPELINE_1.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.WATER_PIPELINE_2.getName()));
+		filteredTemplates.remove(getTemplate(GameElementTemplate.WHEAT_1.getName()));
+		return filteredTemplates;
 	}
 }

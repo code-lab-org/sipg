@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.scenario;
 
 import java.util.ArrayList;
@@ -31,7 +46,10 @@ import edu.mit.sips.units.TimeUnits;
 import edu.mit.sips.units.WaterUnits;
 
 /**
- * The Class SaudiScenario2.
+ * A scenario implementation for the (completed) 
+ * sustainable infrastructure planning game.
+ * 
+ * @author Paul T. Grogan
  */
 public final class GameScenarioComplete extends DefaultScenario {
 	public static final String INDUSTRIAL = "Industrial", URBAN = "Urban", RURAL = "Rural";
@@ -64,6 +82,7 @@ public final class GameScenarioComplete extends DefaultScenario {
 	 *
 	 * @param assignedCityNames the assigned city names
 	 * @param assignedSectors the assigned sectors
+	 * @param isTeamScoreDisplayed the is team score displayed
 	 */
 	public GameScenarioComplete(Collection<String> assignedCityNames, 
 			Collection<Sector> assignedSectors, boolean isTeamScoreDisplayed) {
@@ -149,9 +168,7 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1998, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2000, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2002, INDUSTRIAL, INDUSTRIAL),
-										//(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2003, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2004, INDUSTRIAL, INDUSTRIAL),
-										//(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2005, INDUSTRIAL, INDUSTRIAL),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2006, INDUSTRIAL, INDUSTRIAL)
 										),
 								electricityDomesticPriceModel):
@@ -266,8 +283,6 @@ public final class GameScenarioComplete extends DefaultScenario {
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1990, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1994, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(1996, URBAN, URBAN),
-										//(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(1998, URBAN, URBAN),
-										//(ElectricityElement) SaudiElementTemplate2.POWER_PLANT_2.createElement(2000, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2002, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2004, URBAN, URBAN),
 										(ElectricityElement) GameElementTemplate.POWER_PLANT_2.createElement(2006, URBAN, URBAN),
