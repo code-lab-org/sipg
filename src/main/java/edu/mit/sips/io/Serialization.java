@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.io;
 
 import java.lang.reflect.Type;
@@ -58,6 +73,62 @@ import edu.mit.sips.sim.hla.HlaWaterSystem;
  * The Class Serialization.
  */
 public final class Serialization {
+	/**
+	 * The Class InterfaceAdapter.
+	 * 
+	 * Written by Maciek Makowski and published on StackOverflow.
+	 * http://stackoverflow.com/questions/4795349/how-to-serialize-a-class-with-an-interface
+	 * 
+	 *
+	 * @param <T> the generic type
+	 */
+	private static class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
+
+		@Override
+		public T deserialize(JsonElement elem, Type interfaceType, JsonDeserializationContext context) throws JsonParseException {
+			final JsonObject wrapper = (JsonObject) elem;
+			final JsonElement typeName = get(wrapper, "type");
+			final JsonElement data = get(wrapper, "data");
+			final Type actualType = typeForName(typeName); 
+			return context.deserialize(data, actualType);
+		}
+
+		/**
+		 * Gets the.
+		 *
+		 * @param wrapper the wrapper
+		 * @param memberName the member name
+		 * @return the json element
+		 */
+		private JsonElement get(final JsonObject wrapper, String memberName) {
+			final JsonElement elem = wrapper.get(memberName);
+			if (elem == null) throw new JsonParseException("no '" + memberName + "' member found in what was expected to be an interface wrapper");
+			return elem;
+		}
+
+		@Override
+		public JsonElement serialize(T object, Type interfaceType, JsonSerializationContext context) {
+			final JsonObject wrapper = new JsonObject();
+			wrapper.addProperty("type", object.getClass().getName());
+			wrapper.add("data", context.serialize(object));
+			return wrapper;
+		}
+
+		/**
+		 * Type for name.
+		 *
+		 * @param typeElem the type elem
+		 * @return the type
+		 */
+		private Type typeForName(final JsonElement typeElem) {
+			try {
+				return Class.forName(typeElem.getAsString());
+			} catch (ClassNotFoundException e) {
+				throw new JsonParseException(e);
+			}
+		}
+	}
+
 	private static final GsonBuilder gsonBuilder = new GsonBuilder();
 
 	static {
@@ -118,16 +189,6 @@ public final class Serialization {
 	private static Gson gson = gsonBuilder.create();
 
 	/**
-	 * Serialize.
-	 *
-	 * @param scenario the scenario
-	 * @return the string
-	 */
-	public static String serialize(Scenario scenario) {
-		return getGson().toJson(new ScenarioWrapper(scenario));
-	}
-
-	/**
 	 * Deserialize.
 	 *
 	 * @param json the json
@@ -173,8 +234,6 @@ public final class Serialization {
 					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
 							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
-					//mutable.setInitialFoodInput(template.getInitialFoodInput());
-					//mutable.setInitialLandArea(template.getInitialLandArea());
 					mutable.setLifecycleModel(template.getLifecycleModel());
 					mutable.setMaxFoodInput(template.getMaxFoodInput());
 					mutable.setMaxLandArea(template.getMaxLandArea());
@@ -205,8 +264,6 @@ public final class Serialization {
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					mutable.setElectricalIntensityOfWaterDistribution(template.getElectricalIntensityOfWaterDistribution());
 					mutable.setElectricalIntensityOfWaterProduction(template.getElectricalIntensityOfWaterProduction());
-					//mutable.setInitialWaterInput(template.getInitialWaterInput());
-					//mutable.setInitialWaterProduction(template.getInitialWaterProduction());
 					mutable.setLifecycleModel(template.getLifecycleModel());
 					mutable.setMaxWaterInput(template.getMaxWaterInput());
 					mutable.setMaxWaterProduction(template.getMaxWaterProduction());
@@ -232,8 +289,6 @@ public final class Serialization {
 					((EditableSimpleLifecycleModel)template.getLifecycleModel()).setOperationDuration(
 							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
-					//mutable.setInitialElectricityInput(template.getInitialElectricityInput());
-					//mutable.setInitialElectricityProduction(template.getInitialElectricityProduction());
 					mutable.setLifecycleModel(template.getLifecycleModel());
 					mutable.setMaxElectricityInput(template.getMaxElectricityInput());
 					mutable.setMaxElectricityProduction(template.getMaxElectricityProduction());
@@ -261,8 +316,6 @@ public final class Serialization {
 							((EditableSimpleLifecycleModel)mutable.getLifecycleModel()).getOperationDuration());
 					mutable.setDistributionEfficiency(template.getDistributionEfficiency());
 					mutable.setElectricalIntensityOfPetroleumDistribution(template.getElectricalIntensityOfPetroleumDistribution());
-					//mutable.setInitialPetroleumInput(template.getInitialPetroleumInput());
-					//mutable.setInitialPetroleumProduction(template.getInitialPetroleumProduction());
 					mutable.setLifecycleModel(template.getLifecycleModel());
 					mutable.setMaxPetroleumInput(template.getMaxPetroleumInput());
 					mutable.setMaxPetroleumProduction(template.getMaxPetroleumProduction());
@@ -304,69 +357,17 @@ public final class Serialization {
 	}
 
 	/**
-	 * Instantiates a new serialization.
+	 * Serialize.
+	 *
+	 * @param scenario the scenario
+	 * @return the string
 	 */
-	private Serialization() {
-
+	public static String serialize(Scenario scenario) {
+		return getGson().toJson(new ScenarioWrapper(scenario));
 	}
 
 	/**
-	 * The Class InterfaceAdapter.
-	 * 
-	 * Written by Maciek Makowski and published on StackOverflow.
-	 * http://stackoverflow.com/questions/4795349/how-to-serialize-a-class-with-an-interface
-	 * 
-	 *
-	 * @param <T> the generic type
+	 * Instantiates a new serialization.
 	 */
-	private static class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
-
-		/* (non-Javadoc)
-		 * @see com.google.gson.JsonSerializer#serialize(java.lang.Object, java.lang.reflect.Type, com.google.gson.JsonSerializationContext)
-		 */
-		public JsonElement serialize(T object, Type interfaceType, JsonSerializationContext context) {
-			final JsonObject wrapper = new JsonObject();
-			wrapper.addProperty("type", object.getClass().getName());
-			wrapper.add("data", context.serialize(object));
-			return wrapper;
-		}
-
-		/* (non-Javadoc)
-		 * @see com.google.gson.JsonDeserializer#deserialize(com.google.gson.JsonElement, java.lang.reflect.Type, com.google.gson.JsonDeserializationContext)
-		 */
-		public T deserialize(JsonElement elem, Type interfaceType, JsonDeserializationContext context) throws JsonParseException {
-			final JsonObject wrapper = (JsonObject) elem;
-			final JsonElement typeName = get(wrapper, "type");
-			final JsonElement data = get(wrapper, "data");
-			final Type actualType = typeForName(typeName); 
-			return context.deserialize(data, actualType);
-		}
-
-		/**
-		 * Type for name.
-		 *
-		 * @param typeElem the type elem
-		 * @return the type
-		 */
-		private Type typeForName(final JsonElement typeElem) {
-			try {
-				return Class.forName(typeElem.getAsString());
-			} catch (ClassNotFoundException e) {
-				throw new JsonParseException(e);
-			}
-		}
-
-		/**
-		 * Gets the.
-		 *
-		 * @param wrapper the wrapper
-		 * @param memberName the member name
-		 * @return the json element
-		 */
-		private JsonElement get(final JsonObject wrapper, String memberName) {
-			final JsonElement elem = wrapper.get(memberName);
-			if (elem == null) throw new JsonParseException("no '" + memberName + "' member found in what was expected to be an interface wrapper");
-			return elem;
-		}
-	}
+	private Serialization() { }
 }
