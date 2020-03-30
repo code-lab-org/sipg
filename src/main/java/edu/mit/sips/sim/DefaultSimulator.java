@@ -136,7 +136,7 @@ public class DefaultSimulator implements Simulator {
 	 * @param time the time
 	 */
 	protected void fireCompleteEvent(long time) {
-		System.out.println("Firing complete event with time " + time);
+		logger.info("Firing complete event with time " + time);
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
 			listener.simulationCompleted(new UpdateEvent(this, time, scenario.getCountry()));
@@ -159,7 +159,7 @@ public class DefaultSimulator implements Simulator {
 	 * @param time the time
 	 */
 	protected void fireUpdateEvent(long time) {
-		System.out.println("Firing update event with time " + time);
+		logger.info("Firing update event with time " + time);
 		for(UpdateListener listener 
 				: listenerList.getListeners(UpdateListener.class)) {
 			listener.simulationUpdated(new UpdateEvent(this, time, scenario.getCountry()));

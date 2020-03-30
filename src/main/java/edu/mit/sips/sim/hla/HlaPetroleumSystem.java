@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
 
 import hla.rti1516e.AttributeHandle;
@@ -18,7 +33,9 @@ import edu.mit.sips.units.OilUnits;
 import edu.mit.sips.units.TimeUnits;
 
 /**
- * The Class HLA petroleum system.
+ * A HLA infrastructure system implementation for the petroleum sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class HlaPetroleumSystem extends HlaInfrastructureSystem implements PetroleumSystem {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -50,7 +67,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	/**
 	 * Creates the local petroleum system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param petroleumSystem the petroleum system
 	 * @return the HLA petroleum system
@@ -68,7 +85,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	/**
 	 * Creates the remote petroleum system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @return the HLA petroleum system
@@ -77,16 +94,13 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	public static HlaPetroleumSystem createRemotePetroleumSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HlaPetroleumSystem hlaSystem = new HlaPetroleumSystem(
-				rtiAmbassador, encoderFactory, instanceName);
-		//hlaSystem.requestAttributeValueUpdate();
-		return hlaSystem;
+		return new HlaPetroleumSystem(rtiAmbassador, encoderFactory, instanceName);
 	}
 	
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
@@ -106,7 +120,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
@@ -131,7 +145,7 @@ public class HlaPetroleumSystem extends HlaInfrastructureSystem implements Petro
 	/**
 	 * Instantiates a new HLA petroleum system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @throws RTIexception the RTI exception

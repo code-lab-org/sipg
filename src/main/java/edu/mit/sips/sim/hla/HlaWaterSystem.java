@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
 
 import hla.rti1516e.AttributeHandle;
@@ -18,7 +33,9 @@ import edu.mit.sips.units.TimeUnits;
 import edu.mit.sips.units.WaterUnits;
 
 /**
- * The Class HLA water system.
+ * A HLA infrastructure system implementation for the water sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSystem {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -48,7 +65,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	/**
 	 * Creates the local water system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param waterSystem the water system
 	 * @return the HLA water system
@@ -66,7 +83,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	/**
 	 * Creates the remote water system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @return the HLA water system
@@ -75,16 +92,13 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	public static HlaWaterSystem createRemoteWaterSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HlaWaterSystem hlaSystem = new HlaWaterSystem(
-				rtiAmbassador, encoderFactory, instanceName);
-		//hlaSystem.requestAttributeValueUpdate();
-		return hlaSystem;
+		return new HlaWaterSystem(rtiAmbassador, encoderFactory, instanceName);
 	}
 	
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
@@ -104,7 +118,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
@@ -128,7 +142,7 @@ public class HlaWaterSystem extends HlaInfrastructureSystem implements WaterSyst
 	/**
 	 * Instantiates a new HLA water system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @throws RTIexception the RTI exception

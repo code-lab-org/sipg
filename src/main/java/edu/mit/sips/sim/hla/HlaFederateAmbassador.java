@@ -113,7 +113,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 			Collections.synchronizedMap(new HashMap<ObjectInstanceHandle, AttributeHandleSet>());
 	
 	/**
-	 * Instantiates a new sim ambassador.
+	 * Instantiates a new HLA federate ambassador.
 	 * @throws RTIinternalError 
 	 */
 	public HlaFederateAmbassador(Simulator simulator, int unitsPerYear, int numberIterations) throws RTIexception {
@@ -571,10 +571,9 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	}
 
 	@Override
-	public void initiateFederateRestore(String label, String federateName, FederateHandle federateHandle)
-			throws FederateInternalError {
-		logger.info("Initiate federate restore (label = " 
-				+ label + ").");
+	public void initiateFederateRestore(String label, String federateName, 
+			FederateHandle federateHandle) throws FederateInternalError {
+		logger.info("Initiate federate restore (label = " + label + ").");
 		restorationInitiated.set(true);
 	}
 
@@ -588,8 +587,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	@Override
 	public void initiateFederateSave(String label, LogicalTime time)
 			throws FederateInternalError  {
-		logger.info("Initiate federate save (label = " 
-				+ label + ").");
+		logger.info("Initiate federate save (label = " + label + ").");
 		saveInitiated.set(true);
 	}
 	
@@ -626,8 +624,7 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 	public void provideAttributeValueUpdate(ObjectInstanceHandle theObject,
 			AttributeHandleSet theAttributes, byte[] userSuppliedTag) {
 		
-		System.out.println("Adding attribute update request for " 
-				+ theObject);
+		logger.trace("Adding attribute update request for " + theObject);
 		if(attributeUpdateRequests.containsKey(theObject)) {
 			attributeUpdateRequests.get(theObject).addAll(theAttributes);
 		} else {
@@ -644,11 +641,8 @@ public class HlaFederateAmbassador extends NullFederateAmbassador {
 			OrderType receivedOrdering,
 			MessageRetractionHandle retractionHandle,
 			SupplementalReflectInfo reflectInfo) {
-		// long time = (long) Math.ceil(((HLAinteger64Time)theTime).getValue()/(double)unitsPerYear) - 1;
-		
-		System.out.println("Reflecting attributes with timestamp " 
+		logger.trace("Reflecting attributes with timestamp " 
 				+ theTime + " for " + hlaObjects.get(theObject));
-		
 		if(hlaObjects.containsKey(theObject)) {
 			try {
 				HlaInfrastructureSystem system = hlaObjects.get(theObject);

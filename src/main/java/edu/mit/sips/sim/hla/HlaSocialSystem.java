@@ -1,13 +1,19 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
-
-import hla.rti1516e.AttributeHandle;
-import hla.rti1516e.AttributeHandleSet;
-import hla.rti1516e.RTIambassador;
-import hla.rti1516e.encoding.DataElement;
-import hla.rti1516e.encoding.EncoderFactory;
-import hla.rti1516e.encoding.HLAfloat64BE;
-import hla.rti1516e.encoding.HLAinteger64BE;
-import hla.rti1516e.exceptions.RTIexception;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +25,19 @@ import edu.mit.sips.units.FoodUnits;
 import edu.mit.sips.units.OilUnits;
 import edu.mit.sips.units.TimeUnits;
 import edu.mit.sips.units.WaterUnits;
+import hla.rti1516e.AttributeHandle;
+import hla.rti1516e.AttributeHandleSet;
+import hla.rti1516e.RTIambassador;
+import hla.rti1516e.encoding.DataElement;
+import hla.rti1516e.encoding.EncoderFactory;
+import hla.rti1516e.encoding.HLAfloat64BE;
+import hla.rti1516e.encoding.HLAinteger64BE;
+import hla.rti1516e.exceptions.RTIexception;
 
 /**
- * The Class HLA social system.
+ * A HLA infrastructure system implementation for the social sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSystem {
 	private static final OilUnits oilUnits = OilUnits.toe;
@@ -40,8 +56,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	FOOD_CONSUMPTION_ATTRIBUTE = "FoodConsumption",
 	WATER_CONSUMPTION_ATTRIBUTE = "WaterConsumption",
 	PETROLEUM_CONSUMPTION_ATTRIBUTE = "PetroleumConsumption",
-	POPULATION_ATTRIBUTE = "Population",
-	DOMESTIC_PRODUCT_ATTRIBUTE = "DomesticProduct";
+	POPULATION_ATTRIBUTE = "Population";
 	
 	public static final String[] ATTRIBUTES = new String[]{
 		NAME_ATTRIBUTE,
@@ -53,16 +68,15 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 		WATER_CONSUMPTION_ATTRIBUTE,
 		PETROLEUM_CONSUMPTION_ATTRIBUTE,
 		POPULATION_ATTRIBUTE,
-		DOMESTIC_PRODUCT_ATTRIBUTE
 	};
 	
 	/**
 	 * Creates the local social system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param socialSystem the social system
-	 * @return the hL asocial system
+	 * @return the HLA social system
 	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaSocialSystem createLocalSocialSystem(
@@ -77,25 +91,22 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	/**
 	 * Creates the remote social system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @return the hL asocial system
+	 * @return the HLA social system
 	 * @throws RTIexception the RTI exception
 	 */
 	public static HlaSocialSystem createRemoteSocialSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HlaSocialSystem hlaSystem = new HlaSocialSystem(rtiAmbassador, 
-				encoderFactory, instanceName);
-		//hlaSystem.requestAttributeValueUpdate();
-		return hlaSystem;
+		return new HlaSocialSystem(rtiAmbassador, encoderFactory, instanceName);
 	}
 
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
@@ -115,7 +126,7 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
@@ -136,13 +147,12 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 	private transient final HLAfloat64BE foodConsumption;
 	private transient final HLAfloat64BE waterConsumption;
 	private transient final HLAfloat64BE petroleumConsumption;
-	private transient final HLAfloat64BE domesticProduct; // TODO unused -- now calculated locally
 	private transient final HLAinteger64BE population;
 	
 	/**
-	 * Instantiates a new hL asocial system.
+	 * Instantiates a new HLA social system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @throws RTIexception the RTI exception
@@ -154,7 +164,6 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 		foodConsumption = encoderFactory.createHLAfloat64BE();
 		waterConsumption = encoderFactory.createHLAfloat64BE();
 		petroleumConsumption = encoderFactory.createHLAfloat64BE();
-		domesticProduct = encoderFactory.createHLAfloat64BE();
 		population = encoderFactory.createHLAinteger64BE();
 		attributeValues.put(getAttributeHandle(ELECTRICITY_CONSUMPTION_ATTRIBUTE), 
 				electricityConsumption);
@@ -164,8 +173,6 @@ public class HlaSocialSystem extends HlaInfrastructureSystem implements SocialSy
 				waterConsumption);
 		attributeValues.put(getAttributeHandle(PETROLEUM_CONSUMPTION_ATTRIBUTE), 
 				petroleumConsumption);
-		attributeValues.put(getAttributeHandle(DOMESTIC_PRODUCT_ATTRIBUTE), 
-				domesticProduct);
 		attributeValues.put(getAttributeHandle(POPULATION_ATTRIBUTE), 
 				population);
 	}

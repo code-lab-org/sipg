@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
 
 import java.util.HashMap;
@@ -17,7 +32,9 @@ import hla.rti1516e.encoding.HLAfloat64BE;
 import hla.rti1516e.exceptions.RTIexception;
 
 /**
- * The Class HLA water system.
+ * A HLA infrastructure system implementation for the agriculture sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class HlaAgricultureSystem extends HlaInfrastructureSystem implements AgricultureSystem {
 	private static final WaterUnits waterUnits = WaterUnits.m3;
@@ -76,16 +93,13 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	public static HlaAgricultureSystem createRemoteAgricultureSystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HlaAgricultureSystem hlaSystem = new HlaAgricultureSystem(
-				rtiAmbassador, encoderFactory, instanceName);
-		//hlaSystem.requestAttributeValueUpdate();
-		return hlaSystem;
+		return new HlaAgricultureSystem(rtiAmbassador, encoderFactory, instanceName);
 	}
 	
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
@@ -105,7 +119,7 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
@@ -130,7 +144,7 @@ public class HlaAgricultureSystem extends HlaInfrastructureSystem implements Agr
 	/**
 	 * Instantiates a new HLA agriculture system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @param agricultureSystem the agriculture system

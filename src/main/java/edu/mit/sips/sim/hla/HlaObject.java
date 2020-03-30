@@ -1,4 +1,27 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.event.EventListenerList;
+
+import org.apache.log4j.Logger;
 
 import hla.rti1516e.AttributeHandle;
 import hla.rti1516e.AttributeHandleSet;
@@ -11,16 +34,13 @@ import hla.rti1516e.encoding.DataElement;
 import hla.rti1516e.encoding.DecoderException;
 import hla.rti1516e.exceptions.RTIexception;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.event.EventListenerList;
-
 /**
- * The Class HLA object.
+ * A base class for any HLA object with distributed state.
+ * 
+ * @author Paul T. Grogan
  */
 public abstract class HlaObject {
+	private static Logger logger = Logger.getLogger(HlaObject.class);
 	private transient final boolean local;
 	private transient final RTIambassador rtiAmbassador;
 	private transient final ObjectClassHandle objectClassHandle;
@@ -35,7 +55,7 @@ public abstract class HlaObject {
 	 *
 	 * @param rtiAmbassador the rti ambassador
 	 * @param instanceName the instance name
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public HlaObject(RTIambassador rtiAmbassador, String instanceName) 
 			throws RTIexception {
@@ -63,7 +83,7 @@ public abstract class HlaObject {
 	/**
 	 * Delete.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void delete() throws RTIexception {
 		rtiAmbassador.deleteObjectInstance(getObjectInstanceHandle(), new byte[0]);
@@ -163,7 +183,7 @@ public abstract class HlaObject {
 	/**
 	 * Local delete.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void localDelete() throws RTIexception {
 		rtiAmbassador.localDeleteObjectInstance(getObjectInstanceHandle());
@@ -173,7 +193,7 @@ public abstract class HlaObject {
 	 * Provide attributes.
 	 *
 	 * @param attributeHandleSet the attribute handle set
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void provideAttributes(AttributeHandleSet attributeHandleSet) 
 			throws RTIexception {
@@ -183,7 +203,7 @@ public abstract class HlaObject {
 		for(AttributeHandle attributeHandle : attributeHandleSet) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
-		System.out.println("Providing attributes without a timestamp");
+		logger.info("Providing attributes without a timestamp");
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0]);
 	}
@@ -191,7 +211,7 @@ public abstract class HlaObject {
 	/**
 	 * Publish all attributes.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void publishAllAttributes() throws RTIexception {
 		rtiAmbassador.publishObjectClassAttributes(
@@ -201,7 +221,7 @@ public abstract class HlaObject {
 	/**
 	 * Request attribute value update.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void requestAttributeValueUpdate() throws RTIexception {
 		rtiAmbassador.requestAttributeValueUpdate(
@@ -226,7 +246,7 @@ public abstract class HlaObject {
 	/**
 	 * Subscribe all attributes.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void subscribeAllAttributes() throws RTIexception {
 		rtiAmbassador.subscribeObjectClassAttributes(
@@ -241,7 +261,7 @@ public abstract class HlaObject {
 	/**
 	 * Update all attributes.
 	 *
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void updateAllAttributes() throws RTIexception {
 		AttributeHandleValueMap attributes = 
@@ -250,7 +270,7 @@ public abstract class HlaObject {
 		for(AttributeHandle attributeHandle : getAttributeHandleSet()) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
-		System.out.println("Sending attributes with timestamp " 
+		logger.info("Sending attributes with timestamp " 
 				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0], 
@@ -261,7 +281,7 @@ public abstract class HlaObject {
 	 * Update attributes.
 	 *
 	 * @param attributeHandleSet the attribute handle set
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void updateAttributes(AttributeHandleSet attributeHandleSet) 
 			throws RTIexception {
@@ -271,7 +291,7 @@ public abstract class HlaObject {
 		for(AttributeHandle attributeHandle : attributeHandleSet) {
 			attributes.put(attributeHandle, getAttributeValues().get(attributeHandle).toByteArray());
 		}
-		System.out.println("Updating attributes with timestamp " 
+		logger.info("Updating attributes with timestamp " 
 				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0], 
@@ -289,7 +309,7 @@ public abstract class HlaObject {
 	 * Update attributes.
 	 *
 	 * @param attributeNames the attribute names
-	 * @throws RTIexception the rT iexception
+	 * @throws RTIexception the RTI exception
 	 */
 	public final void updateAttributes(List<String> attributeNames) 
 			throws RTIexception {
@@ -301,7 +321,7 @@ public abstract class HlaObject {
 					getAttributeValues().get(
 							getAttributeHandle(attributeName)).toByteArray());
 		}
-		System.out.println("Sending attributes with timestamp " 
+		logger.info("Sending attributes with timestamp " 
 				+ rtiAmbassador.queryLogicalTime().add(rtiAmbassador.queryLookahead()).toString());
 		rtiAmbassador.updateAttributeValues(
 				getObjectInstanceHandle(), attributes, new byte[0], 

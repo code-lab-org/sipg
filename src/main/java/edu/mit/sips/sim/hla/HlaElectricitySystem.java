@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sips.sim.hla;
 
 import hla.rti1516e.AttributeHandle;
@@ -19,7 +34,9 @@ import edu.mit.sips.units.TimeUnits;
 import edu.mit.sips.units.WaterUnits;
 
 /**
- * The Class HLA electricity system.
+ * A HLA infrastructure system implementation for the electricity sector.
+ * 
+ * @author Paul T. Grogan
  */
 public class HlaElectricitySystem extends HlaInfrastructureSystem implements ElectricitySystem {
 	private static final ElectricityUnits electricityUnits = ElectricityUnits.MWh;
@@ -49,7 +66,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	/**
 	 * Creates the local electricity system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param electricitySystem the electricity system
 	 * @return the HLA electricity system
@@ -67,7 +84,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	/**
 	 * Creates the remote electricity system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
 	 * @return the HLA electricity system
@@ -76,16 +93,13 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	public static HlaElectricitySystem createRemoteElectricitySystem(
 			RTIambassador rtiAmbassador, EncoderFactory encoderFactory,
 			String instanceName) throws RTIexception {
-		HlaElectricitySystem hlaSystem = new HlaElectricitySystem(
-				rtiAmbassador, encoderFactory, instanceName);
-		//hlaSystem.requestAttributeValueUpdate();
-		return hlaSystem;
+		return new HlaElectricitySystem(rtiAmbassador, encoderFactory, instanceName);
 	}
 	
 	/**
 	 * Publish all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void publishAll(RTIambassador rtiAmbassador) 
@@ -105,7 +119,7 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	/**
 	 * Subscribe all.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @throws RTIexception the RTI exception
 	 */
 	public static void subscribeAll(RTIambassador rtiAmbassador) 
@@ -129,10 +143,9 @@ public class HlaElectricitySystem extends HlaInfrastructureSystem implements Ele
 	/**
 	 * Instantiates a new HLA electricity system.
 	 *
-	 * @param rtiAmbassador the rti ambassador
+	 * @param rtiAmbassador the RTI ambassador
 	 * @param encoderFactory the encoder factory
 	 * @param instanceName the instance name
-	 * @param energySystem the energy system
 	 * @throws RTIexception the RTI exception
 	 */
 	protected HlaElectricitySystem(RTIambassador rtiAmbassador, 
