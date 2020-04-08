@@ -27,7 +27,6 @@ import edu.mit.sipg.gui.ApplicationFrame;
 import edu.mit.sipg.scenario.GameScenario;
 import edu.mit.sipg.scenario.Scenario;
 import edu.mit.sipg.scenario.Sector;
-import edu.mit.sipg.sim.DefaultConnection;
 import edu.mit.sipg.sim.DefaultSimulator;
 import edu.mit.sipg.sim.Simulator;
 
@@ -58,7 +57,7 @@ public class SuperPlayer {
 						Sector.PETROLEUM), true);
 		
 		logger.debug("Creating simulator.");
-		final Simulator simulator = new DefaultSimulator(scenario, new DefaultConnection());
+		final Simulator simulator = new DefaultSimulator(scenario);
 		//simulator.addUpdateListener(new ConsoleLogger());
 
 		logger.debug("Launching graphical user interface.");

@@ -70,7 +70,9 @@ import edu.mit.sipg.sim.hla.HlaSocialSystem;
 import edu.mit.sipg.sim.hla.HlaWaterSystem;
 
 /**
- * The Class Serialization.
+ * A utility class to assist with scenario serialization/deserialization.
+ * 
+ * @author Paul T. Grogan
  */
 public final class Serialization {
 	/**

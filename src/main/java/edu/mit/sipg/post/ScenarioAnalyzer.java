@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sipg.io;
+package edu.mit.sipg.post;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -30,12 +30,22 @@ import edu.mit.sipg.core.petroleum.PetroleumSystem;
 import edu.mit.sipg.core.water.WaterElement;
 import edu.mit.sipg.core.water.WaterSystem;
 import edu.mit.sipg.gui.event.SimulationControlEvent;
+import edu.mit.sipg.io.Serialization;
 import edu.mit.sipg.scenario.GameElementTemplate;
 import edu.mit.sipg.scenario.Scenario;
-import edu.mit.sipg.sim.hla.HlaSimulator;
+import edu.mit.sipg.sim.DefaultSimulator;
+import edu.mit.sipg.sim.Simulator;
 
 /**
- * An application to analyze a completed scenario.
+ * An application to analyze a compiled scenario.
+ * 
+ * This script assumes the data are organized as follows:
+ * 
+ * <BASE_PATH>/<SESSION_DIR>/<SCENARIO_FILE>
+ * 
+ * where <BASE_PATH> is the base path to the data directory, 
+ * <SESSION_DIR> is a directory containing all scenario files for an experimental session, and
+ * <SCENARIO_FILE> is a compiled JSON scenario (see ScenarioCombinator).
  * 
  * @author Paul T. Grogan
  */
@@ -47,24 +57,26 @@ public class ScenarioAnalyzer {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		String basePath = "C:\\Users\\Paul\\Dropbox\\research\\cces\\sirs\\sips-g\\";
-
-		String sessionPath = "session16\\";
-		String[] scenarioPaths = new String[]{};
+		String basePath = ""; // define directory path to data directory
+		String sessionDir = ""; // define session directory
+		String[] scenarioFiles = new String[]{
+				// list all compiled master scenario files
+		};
 
 		try {
-			FileWriter fw = new FileWriter(basePath+sessionPath+"count.csv");
+			FileWriter fw = new FileWriter(basePath+sessionDir+"count.csv");
 			BufferedWriter bw = new BufferedWriter(fw);
 			bw.write("path, large_wheat, large_transport, food_2009, " +
 					"large_ro, huge_ro, water_2009, " +
 					"large_well, large_pipeline, oil_2009, " +
 					"large_thermal, large_solar, electricity_2009\n");
 
-			for(int i = 0; i < scenarioPaths.length; i++) {
+			for(int i = 0; i < scenarioFiles.length; i++) {
 				Scenario scenario = getScenario(
-						basePath+sessionPath+scenarioPaths[i]);
+						basePath+sessionDir+scenarioFiles[i]);
 				
-				HlaSimulator simulator = new HlaSimulator(scenario);
+				Simulator simulator = new DefaultSimulator(scenario);
+				
 				// simulate to 2009 to avoid decommission-in-2010 effects
 				simulator.initializeSimulation(new SimulationControlEvent
 						.Initialize(simulator, 1950, 2009));
@@ -81,7 +93,6 @@ public class ScenarioAnalyzer {
 						instanceof AgricultureSystem.Local) {
 					AgricultureSystem.Local system = (AgricultureSystem.Local) 
 							scenario.getCountry().getAgricultureSystem();
-					//numAgriculture += system.getInternalElements().size();
 					for(AgricultureElement e : system.getInternalElements()) {
 						if(e.getTemplateName().equals(GameElementTemplate.WHEAT_2.getName())) {
 							numWheat++;
@@ -89,12 +100,6 @@ public class ScenarioAnalyzer {
 						if(e.getTemplateName().equals(GameElementTemplate.FOOD_TRANSPORT_2.getName())) {
 							numTransport++;
 						}
-						/*
-						if(e.getMutableElement() instanceof MutableAgricultureElement) {
-							foodProduction += ((MutableAgricultureElement)e.getMutableElement())
-									.getMaxFoodProduction()/1e6d;
-						}
-						*/
 						foodProduction += e.getMaxFoodProduction()/1e6d;
 					}
 				}
@@ -103,7 +108,6 @@ public class ScenarioAnalyzer {
 						instanceof WaterSystem.Local) {
 					WaterSystem.Local system = (WaterSystem.Local) 
 							scenario.getCountry().getWaterSystem();
-					//numWater += system.getInternalElements().size();
 					for(WaterElement e : system.getInternalElements()) {
 						if(e.getTemplateName().equals(GameElementTemplate.RO_PLANT_2.getName())) {
 							numLargeRO++;
@@ -111,12 +115,6 @@ public class ScenarioAnalyzer {
 						if(e.getTemplateName().equals(GameElementTemplate.RO_PLANT_3.getName())) {
 							numHugeRO++;
 						}
-						/*
-						if(e.getMutableElement() instanceof MutableWaterElement) {
-							waterProduction += ((MutableWaterElement)e.getMutableElement())
-									.getMaxWaterProduction()/1e6d;
-						}
-						 */
 						waterProduction += e.getMaxWaterProduction()/1e6d;
 					}
 				}
@@ -125,7 +123,6 @@ public class ScenarioAnalyzer {
 						instanceof PetroleumSystem.Local) {
 					PetroleumSystem.Local system = (PetroleumSystem.Local) 
 							scenario.getCountry().getPetroleumSystem();
-					//numEnergy += system.getInternalElements().size();
 					for(PetroleumElement e : system.getInternalElements()) {
 						if(e.getTemplateName().equals(GameElementTemplate.OIL_WELL_2.getName())) {
 							numWell++;
@@ -133,12 +130,6 @@ public class ScenarioAnalyzer {
 						if(e.getTemplateName().equals(GameElementTemplate.OIL_PIPELINE_2.getName())) {
 							numPipeline++;
 						}
-						/*
-						if(e.getMutableElement() instanceof MutablePetroleumElement) {
-							oilProduction += ((MutablePetroleumElement)e.getMutableElement())
-									.getMaxPetroleumProduction()/1e6d;
-						}
-						*/
 						oilProduction += e.getMaxPetroleumProduction()/1e6d;
 					}
 				}
@@ -147,7 +138,6 @@ public class ScenarioAnalyzer {
 						instanceof ElectricitySystem.Local) {
 					ElectricitySystem.Local system = (ElectricitySystem.Local) 
 							scenario.getCountry().getElectricitySystem();
-					//numEnergy += system.getInternalElements().size();
 					for(ElectricityElement e : system.getInternalElements()) {
 						if(e.getTemplateName().equals(GameElementTemplate.POWER_PLANT_2.getName())) {
 							numThermal++;
@@ -155,16 +145,10 @@ public class ScenarioAnalyzer {
 						if(e.getTemplateName().equals(GameElementTemplate.PV_PLANT_2.getName())) {
 							numSolar++;
 						}
-						/*
-						if(e.getMutableElement() instanceof MutableElectricityElement) {
-							electricityProduction += ((MutableElectricityElement)e.getMutableElement())
-									.getMaxElectricityProduction()/1e6d;
-						}
-						*/
 						electricityProduction += e.getMaxElectricityProduction()/1e6d;
 					}
 				}
-				bw.write(scenarioPaths[i] + ", " + 
+				bw.write(scenarioFiles[i] + ", " + 
 						numWheat + ", " + numTransport + ", " + foodProduction + ", " +
 						numLargeRO + ", " + numHugeRO + ", " + waterProduction + ", " +
 						numWell + ", " + numPipeline + ", " + oilProduction + ", " + 

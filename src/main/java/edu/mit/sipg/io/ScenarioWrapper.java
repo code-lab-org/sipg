@@ -18,10 +18,8 @@ package edu.mit.sipg.io;
 import edu.mit.sipg.scenario.Scenario;
 
 /**
- * The Class ScenarioWrapper.
- * 
- * Required to fix a "bug" (feature) of GSON not recognizing interfaces for
- * the top-level serialized class.
+ * A wrapper for the scenario class to address a "bug" (feature)
+ * of GSON not recognizing interfaces for the top-level serialized class.
  * 
  * @author Paul T. Grogan
  */

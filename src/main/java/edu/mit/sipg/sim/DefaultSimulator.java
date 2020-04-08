@@ -26,11 +26,11 @@ import edu.mit.sipg.core.electricity.ElectricitySoS;
 import edu.mit.sipg.core.petroleum.PetroleumSoS;
 import edu.mit.sipg.core.water.WaterSoS;
 import edu.mit.sipg.gui.event.SimulationControlEvent;
-import edu.mit.sipg.gui.event.UpdateEvent;
-import edu.mit.sipg.gui.event.UpdateListener;
 import edu.mit.sipg.gui.event.SimulationControlEvent.AdvanceToEnd;
 import edu.mit.sipg.gui.event.SimulationControlEvent.Execute;
 import edu.mit.sipg.gui.event.SimulationControlEvent.Reset;
+import edu.mit.sipg.gui.event.UpdateEvent;
+import edu.mit.sipg.gui.event.UpdateListener;
 import edu.mit.sipg.scenario.Scenario;
 
 /**
@@ -61,6 +61,15 @@ public class DefaultSimulator implements Simulator {
 	public DefaultSimulator(Scenario scenario, Connection connection) {
 		this.scenario = scenario;
 		this.connection = connection;
+	}
+	
+	/**
+	 * Instantiates a new default simulator.
+	 *
+	 * @param scenario the scenario
+	 */
+	public DefaultSimulator(Scenario scenario) {
+		this(scenario, new DefaultConnection());
 	}
 
 	/**

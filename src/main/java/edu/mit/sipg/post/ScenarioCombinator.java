@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *****************************************************************************/
-package edu.mit.sipg.io;
+package edu.mit.sipg.post;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,13 +35,23 @@ import edu.mit.sipg.core.water.LocalWaterSoS;
 import edu.mit.sipg.core.water.WaterElement;
 import edu.mit.sipg.gui.ApplicationFrame;
 import edu.mit.sipg.gui.event.SimulationControlEvent;
+import edu.mit.sipg.io.Serialization;
 import edu.mit.sipg.scenario.GameScenario;
 import edu.mit.sipg.scenario.Scenario;
 import edu.mit.sipg.scenario.Sector;
-import edu.mit.sipg.sim.hla.HlaSimulator;
+import edu.mit.sipg.sim.DefaultSimulator;
 
 /**
  * An application to combine scenarios from three player roles into one.
+ * 
+ * This script assumes the data are organized as follows:
+ * 
+ * <BASE_PATH>/<SESSION_DIR>/<PLAYER_DIR>/<SCENARIO_FILE>
+ * 
+ * where <BASE_PATH> is the base path to the data directory, 
+ * <SESSION_DIR> is a directory containing all scenario files for an experimental session, 
+ * <PLAYER_DIR> defines the player-specific sub-directory, and 
+ * <SCENARIO_FILE> is a saved JSON scenario assuming *equal numbers* of scenarios for each player.
  * 
  * @author Paul T. Grogan
  */
@@ -53,39 +63,46 @@ public class ScenarioCombinator {
 	 * @param args the arguments
 	 */
 	public static void main(String[] args) {
-		String basePath = "C:\\Users\\Paul\\Dropbox\\research\\cces\\sirs\\sips-g\\";
-		String agricultureBasePath = "green\\";
-		String waterBasePath = "blue\\";
-		String energyBasePath = "red\\";
+		String basePath = ""; // define directory path to data directory
+		String sessionDir = ""; // define session directory
+		String agricultureDir = ""; // define sub-directory for agriculture player data
+		String waterDir = ""; // define sub-directory for water player data
+		String energyDir = ""; // define sub-directory for energy player data
 		
-		String sessionPath = "session13\\";
-		String[] agriculturePaths = new String[]{};
-		String[] waterPaths = new String[]{};
-		String[] energyPaths = new String[]{};
+		String[] agricultureFiles = new String[]{
+				// list individual agriculture player scenarios here
+		};
+		String[] waterFiles = new String[]{
+				// list individual water player scenarios here
+		};
+		String[] energyFiles = new String[]{
+				// list individual energy player scenarios here
+		};
 
-		for(int i=0; i < agriculturePaths.length; i++) {
+		// verify that simulation runs for each player scenario
+		for(int i=0; i < agricultureFiles.length; i++) {
 			runSimulation(getScenario(
-					basePath+sessionPath+agricultureBasePath+agriculturePaths[i]));
+					basePath+sessionDir+agricultureDir+agricultureFiles[i]));
 		}
-
-		for(int i=0; i < waterPaths.length; i++) {
+		for(int i=0; i < waterFiles.length; i++) {
 			runSimulation(getScenario(
-					basePath+sessionPath+waterBasePath+waterPaths[i]));
+					basePath+sessionDir+waterDir+waterFiles[i]));
 		}
-
-		for(int i=0; i < energyPaths.length; i++) {
+		for(int i=0; i < energyFiles.length; i++) {
 			runSimulation(getScenario(
-					basePath+sessionPath+energyBasePath+energyPaths[i]));
+					basePath+sessionDir+energyDir+energyFiles[i]));
 		}
 		
-		for(int i = 0; i < agriculturePaths.length; i++) {
+		for(int i = 0; i < agricultureFiles.length; i++) {
+			// get the scenarios for each individual player
 			Scenario agricultureScenario = getScenario(
-					basePath+sessionPath+agricultureBasePath+agriculturePaths[i]);
+					basePath+sessionDir+agricultureDir+agricultureFiles[i]);
 			Scenario waterScenario = getScenario(
-					basePath+sessionPath+waterBasePath+waterPaths[i]);
+					basePath+sessionDir+waterDir+waterFiles[i]);
 			Scenario energyScenario = getScenario(
-					basePath+sessionPath+energyBasePath+energyPaths[i]);
-
+					basePath+sessionDir+energyDir+energyFiles[i]);
+			
+			// create an aggregated scenario
 			Scenario masterScenario = new GameScenario(
 					Arrays.asList(GameScenario.INDUSTRIAL, 
 							GameScenario.URBAN, 
@@ -94,6 +111,7 @@ public class ScenarioCombinator {
 									Sector.WATER,
 									Sector.ELECTRICITY,
 									Sector.PETROLEUM), true);
+			// copy over all agriculture elements
 			LocalAgricultureSoS masterAgricultureSoS = (LocalAgricultureSoS) masterScenario.getCountry().getAgricultureSystem();
 			for(AgricultureElement e : masterAgricultureSoS.getElements()) {
 				masterAgricultureSoS.removeElement(e);
@@ -102,7 +120,7 @@ public class ScenarioCombinator {
 			for(AgricultureElement e : baseAgricultureSoS.getElements()) {
 				masterAgricultureSoS.addElement(e);
 			}
-
+			// copy over all water elements
 			LocalWaterSoS masterWaterSoS = (LocalWaterSoS) masterScenario.getCountry().getWaterSystem();
 			for(WaterElement e : masterWaterSoS.getElements()) {
 				masterWaterSoS.removeElement(e);
@@ -111,7 +129,7 @@ public class ScenarioCombinator {
 			for(WaterElement e : baseWaterSoS.getElements()) {
 				masterWaterSoS.addElement(e);
 			}
-
+			// copy over all petroleum elements
 			LocalPetroleumSoS masterPetroleumSoS = (LocalPetroleumSoS) masterScenario.getCountry().getPetroleumSystem();
 			for(PetroleumElement e : masterPetroleumSoS.getElements()) {
 				masterPetroleumSoS.removeElement(e);
@@ -120,7 +138,7 @@ public class ScenarioCombinator {
 			for(PetroleumElement e : basePetroleumSoS.getElements()) {
 				masterPetroleumSoS.addElement(e);
 			}
-
+			// copy over all electricity elements
 			LocalElectricitySoS masterElectricitySoS = (LocalElectricitySoS) masterScenario.getCountry().getElectricitySystem();
 			for(ElectricityElement e : masterElectricitySoS.getElements()) {
 				masterElectricitySoS.removeElement(e);
@@ -129,9 +147,9 @@ public class ScenarioCombinator {
 			for(ElectricityElement e : baseElectricitySoS.getElements()) {
 				masterElectricitySoS.addElement(e);
 			}
-
+			// write out master scenario file
 			try {
-				FileWriter fw = new FileWriter(basePath+sessionPath+"master-"+(i+1)+".json");
+				FileWriter fw = new FileWriter(basePath+sessionDir+"master-"+(i+1)+".json");
 				BufferedWriter bw = new BufferedWriter(fw);
 				bw.write(Serialization.serialize(masterScenario));
 				bw.flush();
@@ -140,18 +158,18 @@ public class ScenarioCombinator {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
+			// verify scenario can be simulated
 			runSimulation(masterScenario);
 		}
 	}
 	
 	/**
-	 * Run simulation.
+	 * Run simulation (and launch GUI to verify results).
 	 *
 	 * @param scenario the scenario
 	 */
 	private static void runSimulation(Scenario scenario) {
-		final HlaSimulator simulator = new HlaSimulator(scenario);
+		final DefaultSimulator simulator = new DefaultSimulator(scenario);
 		try {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				public void run() {

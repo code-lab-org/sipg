@@ -1,3 +1,18 @@
+/******************************************************************************
+ * Copyright 2020 Paul T. Grogan
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *          http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *****************************************************************************/
 package edu.mit.sipg.log;
 
 import java.util.ArrayList;
@@ -18,47 +33,31 @@ import edu.mit.sipg.units.FoodUnitsOutput;
 import edu.mit.sipg.units.TimeUnits;
 
 /**
- * The Class ConsoleLogger.
+ * A simple logger that prints information to the console after each simulation step.
+ * 
+ * @author Paul T. Grogan
  */
 public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyUnitsOutput {
-
-	private final FoodUnits foodUnits = 
-			FoodUnits.GJ;
-	private final TimeUnits foodTimeUnits = 
-			TimeUnits.year;
+	private final FoodUnits foodUnits = FoodUnits.GJ;
+	private final TimeUnits foodTimeUnits = TimeUnits.year;
+	private final CurrencyUnits currencyUnits = CurrencyUnits.Bsim;
+	private final TimeUnits currencyTimeUnits = TimeUnits.year;
 	
-	private final CurrencyUnits currencyUnits = 
-			CurrencyUnits.Bsim;
-	private final TimeUnits currencyTimeUnits = 
-			TimeUnits.year;
-	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyTimeUnits()
-	 */
 	@Override
 	public TimeUnits getCurrencyTimeUnits() {
 		return currencyTimeUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.CurrencyUnitsOutput#getCurrencyUnits()
-	 */
 	@Override
 	public CurrencyUnits getCurrencyUnits() {
 		return currencyUnits;
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodTimeUnits()
-	 */
 	@Override
 	public TimeUnits getFoodTimeUnits() {
 		return foodTimeUnits;
 	}
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.sim.util.FoodUnitsOutput#getFoodUnits()
-	 */
 	@Override
 	public FoodUnits getFoodUnits() {
 		return foodUnits;
@@ -967,25 +966,14 @@ public class ConsoleLogger implements UpdateListener, FoodUnitsOutput, CurrencyU
 		System.out.println();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationCompleted(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
-	public void simulationCompleted(UpdateEvent event) {
-		// nothing to do
-	}
+	public void simulationCompleted(UpdateEvent event) { }
 	
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationInitialized(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationInitialized(UpdateEvent event) {
 		printState(event.getCountry(), event.getTime());
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.mit.sips.gui.UpdateListener#simulationUpdated(edu.mit.sips.gui.UpdateEvent)
-	 */
 	@Override
 	public void simulationUpdated(UpdateEvent event) {
 		printState(event.getCountry(), event.getTime());
