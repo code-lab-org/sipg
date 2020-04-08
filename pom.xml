@@ -2,13 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>edu.stevens</groupId>
+  <groupId>edu.mit</groupId>
   <artifactId>sipg</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>sipg</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/code-lab-org/sipg</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -28,7 +28,7 @@
     	<artifactId>prti1516e</artifactId>
     	<scope>system</scope>
     	<systemPath>${PRTI1516E_HOME}/lib/prti1516e.jar</systemPath>
-    	<version>5.3.1.0</version>
+    	<version>5.4.5.0</version>
     </dependency>
     <dependency>
     	<groupId>org.apache.commons</groupId>
